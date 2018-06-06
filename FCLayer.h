@@ -6,8 +6,8 @@
 #define RL_NONCONVEX_FCLAYER_H
 
 #include "Layer.h"
-#include  "d:\\blaze-3.3\\blaze\\Math.h"
-using blaze::DynamicVector;
+#include  <blaze/Math.h>
+using namespace blaze;
 
 // y = W*x+ b
 // where y and b is m-D vector, y is output vector;
