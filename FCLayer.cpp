@@ -8,11 +8,10 @@
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(long width, Layer* preLayer){
+FCLayer::FCLayer(long width, Layer* preLayer):Layer(width){
    m_type = "FullyConnected";
-   m_width = width;
    m_n = preLayer->m_width;
-   m_m = width;
+   m_m = m_width;
 }
 
 FCLayer::~FCLayer(){

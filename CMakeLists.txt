@@ -1,16 +1,12 @@
 project (RL_NonConvex)
+
 cmake_minimum_required (VERSION 3.8)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
-#
-#set(CMAKE_MODULE_PATH  ${CMAKE_SOURCE_DIR} D:/blaze-3.3/cmake/)
+
 set(BLAZE_INCLUDE_DIR  D:/blaze-3.3/) # for windows
-
 #find_package( blaze  REQUIRED)
-include_directories(${BLAZE_INCLUDE_DIR}) # for windows
-
-
-
+include_directories(${BLAZE_INCLUDE_DIR})
 
 set(Common_SRCS  Layer.cpp FCLayer.cpp Net.cpp)
 set(RL_NonConvexSRCS ${Common_SRCS} RL_NonConvex.cpp)

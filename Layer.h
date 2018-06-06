@@ -10,7 +10,7 @@ using namespace std;
 
 class Layer {
 public:
-    Layer();
+    Layer(long width);
     ~Layer();
 
     string m_name;
