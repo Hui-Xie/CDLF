@@ -5,14 +5,24 @@
 #ifndef RL_NONCONVEX_NET_H
 #define RL_NONCONVEX_NET_H
 
+#include "Layer.h"
+#include <list>
+
 
 class Net {
 public:
     Net();
     ~Net();
 
-    void forward();
-    void backward();
+    void forwardPropagate();
+    void backwardPropagate();
+    void addLayer(Layer* layer);
+
+
+private:
+    list<Layer*> m_layers;
+
+
 
 };
 

@@ -5,15 +5,23 @@
 #include "Net.h"
 
 Net::Net(){
-
+   m_layers.clear();
 }
 Net::~Net(){
+   while (0 != m_layers.size()){
+      Layer* pLayer = m_layers.back();
+      m_layers.pop_back();
+      delete pLayer;
+   }
+}
+
+void Net::forwardPropagate(){
+
+}
+void Net::backwardPropagate(){
 
 }
 
-void Net::forward(){
-
-}
-void Net::backward(){
+void Net::addLayer(Layer* layer){
 
 }

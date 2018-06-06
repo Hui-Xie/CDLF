@@ -16,6 +16,7 @@ public:
     string m_name;
     string m_type;
     Layer* m_preLayerPointer;
+    long m_width;
 
     virtual  void forward()=0;
     virtual  void backward()=0;

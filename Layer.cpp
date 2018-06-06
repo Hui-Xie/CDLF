@@ -7,7 +7,7 @@
 Layer::Layer(){
     m_name = "";
     m_type = "";
-    m_preLayerPointer = NULL;
+    m_preLayerPointer = nullptr;
 }
 
 
