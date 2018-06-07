@@ -8,6 +8,7 @@
 #include "Layer.h"
 
 
+
 class InputLayer : public Layer{
 public:
     InputLayer(long width);
