@@ -12,7 +12,8 @@ class InputLayer : public Layer{
 public:
     InputLayer(long width);
     ~InputLayer();
-    
+
+    virtual  void initialize(const string& initialMethod);
 };
 
 
