@@ -6,8 +6,6 @@
 #define RL_NONCONVEX_FCLAYER_H
 
 #include "Layer.h"
-#include  <blaze/Math.h>
-using namespace blaze;
 
 // y = W*x+ b
 // where y and b is m-D vector, y is output vector;
@@ -20,8 +18,9 @@ public:
 
     long m_n; //input width
     long m_m; //output width
-    DynamicVector<float>*  m_pYVector;
+
     DynamicMatrix<float>*  m_pW;
+    DynamicVector<float>*  m_pBVector;
 
     virtual  void forward();
     virtual  void backward();

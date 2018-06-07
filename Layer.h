@@ -6,6 +6,8 @@
 #define RL_NONCONVEX_LAYER_H
 
 #include <string>
+#include  <blaze/Math.h>
+using namespace blaze;
 using namespace std;
 
 class Layer {
@@ -17,6 +19,7 @@ public:
     string m_type;
     Layer* m_preLayerPointer;
     long m_width;
+    DynamicVector<float>*  m_pYVector;
 
     virtual  void forward()=0;
     virtual  void backward()=0;
