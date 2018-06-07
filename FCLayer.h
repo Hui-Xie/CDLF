@@ -13,7 +13,7 @@
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-    FCLayer(long width, Layer* preLayer);
+    FCLayer(const long width, Layer* preLayer);
     ~FCLayer();
 
     long m_n; //input width

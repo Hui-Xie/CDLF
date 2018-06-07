@@ -4,7 +4,7 @@
 
 #include "Layer.h"
 
-Layer::Layer(long width){
+Layer::Layer(const long width){
     m_name = "";
     m_type = "";
     m_prevLayerPointer = nullptr;

@@ -9,7 +9,7 @@ set(BLAZE_INCLUDE_DIR  D:/blaze-3.3/) # for windows
 include_directories(${BLAZE_INCLUDE_DIR})
 
 set(Common_SRCS  Layer.cpp FCLayer.cpp Net.cpp)
-set(RL_NonConvexSRCS ${Common_SRCS} RL_NonConvex.cpp)
+set(RL_NonConvexSRCS ${Common_SRCS} RL_NonConvex.cpp InputLayer.cpp InputLayer.h)
 add_executable(RL_NonConvex ${RL_NonConvexSRCS})
 #if( blaze_FOUND )
 #    add_library( RL_NonConvex INTERFACE )

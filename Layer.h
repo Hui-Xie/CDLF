@@ -12,7 +12,7 @@ using namespace std;
 
 class Layer {
 public:
-    Layer(long width);
+    Layer(const long width);
     ~Layer();
 
     string m_name;

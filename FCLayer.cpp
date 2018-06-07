@@ -8,7 +8,7 @@
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(long width, Layer* preLayer):Layer(width){
+FCLayer::FCLayer(const long width, Layer* preLayer):Layer(width){
    m_type = "FullyConnected";
    m_n = preLayer->m_width; //input width
    m_m = m_width;
@@ -47,7 +47,7 @@ void FCLayer::forward(){
     *m_pYVector = (*m_pW) * (*(m_prevLayerPointer->m_pYVector)) + *m_pBVector;
 }
 
-// y = W*x +b
+//   y = W*x +b
 //  dL/dW = dL/dy * dy/dW = dL/dy * x'
 //  dL/db = dL/dy * dy/db = dL/dy
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
