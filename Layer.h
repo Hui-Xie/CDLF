@@ -20,6 +20,7 @@ public:
 
     virtual  void forward()=0;
     virtual  void backward()=0;
+    virtual  void initialize(const string& initialMethod)=0;
 
 };
 
