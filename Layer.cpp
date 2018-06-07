@@ -7,7 +7,10 @@
 Layer::Layer(long width){
     m_name = "";
     m_type = "";
-    m_preLayerPointer = nullptr;
+    m_prevLayerPointer = nullptr;
+    m_nextLayerPointer = nullptr;
+    m_pYVector = nullptr;
+    m_pdYVector = nullptr;
     m_width = width;
 }
 

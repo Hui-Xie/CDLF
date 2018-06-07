@@ -25,3 +25,7 @@ void Net::backwardPropagate(){
 void Net::addLayer(Layer* layer){
 
 }
+
+void Net::sgd(const float lr){
+
+}

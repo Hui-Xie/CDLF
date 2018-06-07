@@ -17,9 +17,11 @@ public:
 
     string m_name;
     string m_type;
-    Layer* m_preLayerPointer;
+    Layer* m_prevLayerPointer;
+    Layer* m_nextLayerPointer;
     long m_width;
-    DynamicVector<float>*  m_pYVector;
+    DynamicVector<float>*  m_pYVector;   //the output of this layer
+    DynamicVector<float>*  m_pdYVector; //dL/dy,where L is Loss
 
     virtual  void forward()=0;
     virtual  void backward()=0;

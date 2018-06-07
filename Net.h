@@ -13,10 +13,15 @@ class Net {
 public:
     Net();
     ~Net();
+    int m_batchSize;
 
     void forwardPropagate();
     void backwardPropagate();
     void addLayer(Layer* layer);
+
+
+    void sgd(const float lr);
+
 
 
 private:

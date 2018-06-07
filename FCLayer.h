@@ -21,6 +21,8 @@ public:
 
     DynamicMatrix<float>*  m_pW;
     DynamicVector<float>*  m_pBVector;
+    DynamicMatrix<float>*  m_pdW;
+    DynamicVector<float>*  m_pdBVector;
 
     virtual  void forward();
     virtual  void backward();
