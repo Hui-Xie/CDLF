@@ -22,7 +22,7 @@ void xavierInitialize(DynamicMatrix<float>* pW){
     long nRow = pW->rows();
     long nCol = pW->columns();
     const float mu =0;
-    const float sigma = 1.0/nCol; //the variance of output y
+    const float sigma = 2.0/nCol; //the variance of output y with consideration of ReLU
     DynamicMatrix<float>& W =*pW;
     unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937_64 randEngine(randSeed);

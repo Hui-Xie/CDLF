@@ -10,7 +10,7 @@ include_directories(${BLAZE_INCLUDE_DIR})
 set(STATS_INCLUDE_DIR  E:/CProject/stats/include/) # for windows  stats C++ statistics library
 include_directories(${STATS_INCLUDE_DIR})
 
-set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp statisTool.cpp)
+set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp statisTool.cpp ReLU.cpp)
 set(RL_NonConvexSRCS ${Common_SRCS} RL_NonConvex.cpp)
 add_executable(RL_NonConvex ${RL_NonConvexSRCS})
 #if( blaze_FOUND )

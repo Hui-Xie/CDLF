@@ -38,7 +38,7 @@ FCLayer::~FCLayer(){
 
 void FCLayer::initialize(const string& initialMethod)
 {
-    if ("Xavier" != initialMethod) {
+    if ("Xavier" == initialMethod) {
         xavierInitialize(m_pW);
         long nRow = m_pBVector->size();
         const float sigmaB = 1.0 / nRow;

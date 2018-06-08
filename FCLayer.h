@@ -27,9 +27,6 @@ public:
     virtual  void forward();
     virtual  void backward();
     virtual  void initialize(const string& initialMethod);
-
-
-
 };
 
 
