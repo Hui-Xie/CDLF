@@ -44,7 +44,6 @@ void FCLayer::initialize(const string& initialMethod)
         const float sigmaB = 1.0 / nRow;
         generateGaussian(m_pBVector, 0, sigmaB);
     }
-
 }
 
 void FCLayer::forward(){
