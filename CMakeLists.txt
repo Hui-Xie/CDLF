@@ -14,8 +14,8 @@ include_directories(${STATS_INCLUDE_DIR})
 
 
 
-set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp)
-set(RL_NonConvexSRCS ${Common_SRCS} RL_NonConvex.cpp )
+set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp statisTool.cpp)
+set(RL_NonConvexSRCS ${Common_SRCS} RL_NonConvex.cpp)
 add_executable(RL_NonConvex ${RL_NonConvexSRCS})
 #if( blaze_FOUND )
 #    add_library( RL_NonConvex INTERFACE )
