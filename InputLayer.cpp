@@ -3,11 +3,7 @@
 //
 
 #include "InputLayer.h"
-#include "stats.hpp"
-#define STATS_USE_BLAZE
-#include <chrono>
-#include <random>
-
+#include "statisTool.h"
 
 InputLayer::InputLayer(const long width): Layer(width){
     m_type = "InputLayer";
@@ -22,12 +18,7 @@ InputLayer::~InputLayer(){
 
 void InputLayer::initialize(const string& initialMethod){
     // Gaussian random initialize
-    if ("Gaussian" != initialMethod)  return;
-    unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count();
-    std::mt19937_64 randEngine(randSeed);
-    *m_pYVector =  stats::rnorm(0,1,randEngine);
-
-
-
-
+    if ("Gaussian" == initialMethod) {
+        generateGaussian(m_pYVector,0, 1 );
+    }
 }

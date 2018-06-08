@@ -3,6 +3,7 @@
 //
 
 #include "FCLayer.h"
+#include "statisTool.h"
 
 // y = W*x+ b
 // where y and b is m-D vector, y is output vector;
@@ -37,9 +38,12 @@ FCLayer::~FCLayer(){
 
 void FCLayer::initialize(const string& initialMethod)
 {
-    if ("Xavier" != initialMethod) return;
-    //implement a Xavier initialize method.
-
+    if ("Xavier" != initialMethod) {
+        xavierInitialize(m_pW);
+        long nRow = m_pBVector->size();
+        const float sigmaB = 1.0 / nRow;
+        generateGaussian(m_pBVector, 0, sigmaB);
+    }
 
 }
 
