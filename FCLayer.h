@@ -28,8 +28,9 @@ public:
     virtual  void forward();
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method);
-    
-    void printW();
+
+    void printWandBVector();
+    void printdWanddBVector();
 };
 
 

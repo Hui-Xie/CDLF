@@ -13,8 +13,6 @@ public:
     ~LossLayer();
 
     float getLoss();
-    float getAvgLoss();
-    float setAvgLoss(const float avgLoss);
 
     virtual  void initialize(const string& initialMethod);
     virtual  void forward();
@@ -25,9 +23,8 @@ public:
 
 private:
     float lossCompute();
-    void  gradientCompute(const float avgLoss);
+    void  gradientCompute();
     float m_loss;
-    float m_avgLoss;
 
 };
 

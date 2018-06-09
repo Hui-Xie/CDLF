@@ -11,6 +11,9 @@
 
 Net::Net(){
    m_layers.clear();
+   m_learningRate = 0.01;
+   m_lossTolerance = 0.02;
+   m_maxIteration = 1000;
 }
 Net::~Net(){
    while (0 != m_layers.size()){
@@ -18,10 +21,6 @@ Net::~Net(){
       m_layers.pop_back();
       delete pLayer;
    }
-}
-
-void Net::setBatchSize(const int batchSize){
-   m_batchSize = batchSize;
 }
 
 void Net::setLearningRate(const float learningRate){
@@ -84,28 +83,23 @@ void Net::initialize(){
        (*iter)->initialize("Xavier");
     }
 }
-void Net::train(const int nIteration)
+void Net::train()
 {
    int nIter = 0;
    const int nLayers = m_layers.size();
    InputLayer* inputLayer = (InputLayer*)m_layers.front();
    LossLayer* lossLayer = (LossLayer* )m_layers.back();
-   while(nIter < m_maxIteration && lossLayer->getAvgLoss()> m_lossTolerance){
-      float avgLoss = 0.0;
-      for(int i =0; i< m_batchSize; ++i){
-         inputLayer->initialize("Gaussian");
-         forwardPropagate();
-         avgLoss += lossLayer->getLoss();
-      }
-      avgLoss = avgLoss/m_batchSize;
-      lossLayer->setAvgLoss(avgLoss);
+   while(nIter < m_maxIteration && lossLayer->getLoss()> m_lossTolerance){
+      inputLayer->initialize("Gaussian");
+      forwardPropagate();
+      backwardPropagate();
 
       //debug:
-      // printLayersY();
-      // printLayersDY();
+      //printLayersY();
+      //printLayersDY();
+      //printLayersWdW();
+      //cout<<"===================An iteration ============="<<endl;
       //end of debug
-
-      backwardPropagate();
       sgd(m_learningRate);
       printIteration(lossLayer, nIter);
       ++nIter;
@@ -116,7 +110,7 @@ void Net::train(const int nIteration)
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "
         <<"Output Result: "<< trans(*(lossLayer->m_prevLayerPointer->m_pYVector)) << "  "
-        <<"Loss: "<< lossLayer->getAvgLoss()<< endl;
+        <<"Loss: "<< lossLayer->getLoss()<< endl;
     cout<<endl;
 }
 
@@ -130,4 +124,13 @@ void Net::printLayersDY(){
     for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         (*iter)->printDY();
     }
+}
+
+void Net::printLayersWdW(){
+    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        if ("FullyConnected" == (*iter)->m_type){
+            ((FCLayer*)(*iter))->printWandBVector();
+            ((FCLayer*)(*iter))->printdWanddBVector();
+        }
+     }
 }

@@ -51,12 +51,11 @@ int main (int argc, char *argv[])
     }
     Net net;
     net.buildNet(layerWidthVector);
-    net.setBatchSize(100);
-    net.setLearningRate(0.001);
+    net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setMaxItration(1000);
     net.initialize();
-    net.train(100);
+    net.train();
     std::cout<<"====================End of This Program==================="<<std::endl;
     return 0;
 

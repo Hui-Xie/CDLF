@@ -42,7 +42,6 @@ void FCLayer::initialize(const string& initialMethod)
 {
     if ("Xavier" == initialMethod) {
         xavierInitialize(m_pW);
-        //printW();
         long nRow = m_pBVector->size();
         const float sigmaB = 1.0 / nRow;
         generateGaussian(m_pBVector, 0, sigmaB);
@@ -75,9 +74,15 @@ void FCLayer::updateParameters(const float lr, const string& method) {
     }
 }
 
-void FCLayer::printW(){
-    cout<<"LayerType: "<<m_type <<"; LayerWidth: "<<m_width<<"; W: "<<endl;
-    cout<<*m_pW;
-    cout<<endl;
+void FCLayer::printWandBVector(){
+    cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<m_n<<"; W: "<<endl;
+    cout<<*m_pW<<endl;
+    cout<<"B-transpose:"<<trans(*m_pBVector)<<endl;
 }
 
+void FCLayer::printdWanddBVector(){
+    cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<m_n<<"; dW: "<<endl;
+    cout<<*m_pdW<<endl;
+    cout<<"dB-transpose:"<<trans(*m_pdBVector)<<endl;
+
+}

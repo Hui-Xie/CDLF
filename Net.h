@@ -16,7 +16,6 @@ public:
     Net();
     ~Net();
 
-    void setBatchSize(const int batchSize);
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);
     void setMaxItration(const int maxIteration);
@@ -29,15 +28,15 @@ public:
     //Notes: this layerWidthVector does not include LossLayer
     void buildNet(const vector<long> layerWidthVector);
     void initialize();
-    void train(const int nIteration);
+    void train();
     void printIteration(LossLayer* lossLayer,const int nIter);
     void printLayersY();
     void printLayersDY();
+    void printLayersWdW();
 
 
 private:
     list<Layer*> m_layers;
-    int m_batchSize;
     float m_learningRate;
     float m_lossTolerance;
     float m_maxIteration;

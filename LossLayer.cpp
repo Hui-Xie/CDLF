@@ -11,8 +11,7 @@ LossLayer::LossLayer(Layer* preLayer) : Layer(0){
     m_type = "LossLayer";
     m_prevLayerPointer = preLayer;
     m_prevLayerPointer->m_nextLayerPointer = this;
-    m_loss = 0;
-    m_avgLoss= 1e+10;
+    m_loss = 1e+10;
 }
 
 LossLayer::~LossLayer(){
@@ -23,7 +22,7 @@ void LossLayer::forward(){
     lossCompute();
 }
 void LossLayer::backward(){
-    gradientCompute(m_avgLoss);
+    gradientCompute();
 }
 void LossLayer::initialize(const string& initialMethod){
     //null
@@ -57,27 +56,20 @@ void LossLayer::printGroundTruth(){
 }
 
 // f= \sum (x_i-i)^2
-// Loss = (f-0)^2
-// dL/dx_i = dL/df * df/dx_i = 2* f* 2* (x_i-i)
-void  LossLayer::gradientCompute(const float avgLoss){
+// Loss = f-0
+// dL/dx_i = dL/df * df/dx_i =  2* (x_i-i)
+void  LossLayer::gradientCompute(){
     //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYVector
     // An Example
     long N = m_prevLayerPointer->m_pYVector->size();
     DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYVector);
     DynamicVector<float> & prevdY = *(m_prevLayerPointer->m_pdYVector);
     for (long i=0; i< N ;++i){
-        prevdY[i] = 4*avgLoss* ( prevY[i] - i);
+        prevdY[i] = 2 * ( prevY[i] - i);
     }
 }
 
 float LossLayer::getLoss(){
     return m_loss;
-}
-
-float LossLayer::getAvgLoss(){
-    return m_avgLoss;
-}
-float LossLayer::setAvgLoss(const float avgLoss){
-    m_avgLoss = avgLoss;
 }
 
