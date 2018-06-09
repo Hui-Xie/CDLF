@@ -22,3 +22,10 @@ void InputLayer::initialize(const string& initialMethod){
         generateGaussian(m_pYVector,0, 1 );
     }
 }
+
+void InputLayer::forward(){
+    //null
+}
+void InputLayer::backward(){
+    //null
+}

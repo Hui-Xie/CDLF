@@ -14,6 +14,8 @@ public:
     InputLayer(long width);
     ~InputLayer();
 
+    virtual  void forward();
+    virtual  void backward();
     virtual  void initialize(const string& initialMethod);
 };
 
