@@ -79,7 +79,7 @@ void Net::buildNet(const vector<long> layerWidthVector){
    addLayer(lossLayer);
 }
 
-void Net::initilize(){
+void Net::initialize(){
    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        (*iter)->initialize("Xavier");
     }

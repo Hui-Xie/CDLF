@@ -28,7 +28,7 @@ public:
 
     //Notes: this layerWidthVector does not include LossLayer
     void buildNet(const vector<long> layerWidthVector);
-    void initilize();
+    void initialize();
     void train(const int nIteration);
     void printIteration(LossLayer* lossLayer,const int nIter);
     void printLayersY();

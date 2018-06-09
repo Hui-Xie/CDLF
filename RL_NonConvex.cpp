@@ -55,7 +55,7 @@ int main (int argc, char *argv[])
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
     net.setMaxItration(1000);
-    net.initilize();
+    net.initialize();
     net.train(100);
     std::cout<<"====================End of This Program==================="<<std::endl;
     return 0;
