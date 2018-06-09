@@ -29,3 +29,7 @@ void InputLayer::forward(){
 void InputLayer::backward(){
     //null
 }
+
+void InputLayer::updateParameters(const float lr, const string& method){
+    //null
+}

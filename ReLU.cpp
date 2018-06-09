@@ -41,3 +41,7 @@ void ReLU::initialize(const string& initialMethod){
     // this is null for ReLU
     return;
 }
+
+void ReLU::updateParameters(const float lr, const string& method) {
+    //null
+}

@@ -24,9 +24,10 @@ public:
     DynamicMatrix<float>*  m_pdW;
     DynamicVector<float>*  m_pdBVector;
 
+    virtual  void initialize(const string& initialMethod);
     virtual  void forward();
     virtual  void backward();
-    virtual  void initialize(const string& initialMethod);
+    virtual  void updateParameters(const float lr, const string& method);
 };
 
 

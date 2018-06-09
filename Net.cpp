@@ -34,7 +34,9 @@ void Net::forwardPropagate(){
    }
 }
 void Net::backwardPropagate(){
-
+   for (list<Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
+      (*rit)->backward();
+   }
 }
 
 void Net::addLayer(Layer* layer){
@@ -42,7 +44,9 @@ void Net::addLayer(Layer* layer){
 }
 
 void Net::sgd(const float lr){
-
+    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        (*iter)->updateParameters(lr, "sgd");
+    }
 }
 
 //Notes: this layerWidthVector does not include LossLayer,  and ReLU dose not count as a single layer
@@ -91,6 +95,7 @@ void Net::train(const int nIteration)
       avgLoss = avgLoss/m_batchSize;
       lossLayer->setAvgLoss(avgLoss);
       backwardPropagate();
+      sgd(m_learningRate);
       ++nIter;
    }
 }

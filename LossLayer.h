@@ -15,9 +15,11 @@ public:
     float getLoss();
     float getAvgLoss();
     float setAvgLoss(const float avgLoss);
+
+    virtual  void initialize(const string& initialMethod);
     virtual  void forward();
     virtual  void backward();
-    virtual  void initialize(const string& initialMethod);
+    virtual  void updateParameters(const float lr, const string& method);
 
 private:
     float lossCompute();

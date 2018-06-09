@@ -60,3 +60,11 @@ void FCLayer::backward(){
     *m_pdBVector = dLdy;
     *(m_prevLayerPointer->m_pdYVector) = trans(*m_pW) * dLdy;
 }
+
+void FCLayer::updateParameters(const float lr, const string& method) {
+    if ("sgd" == method){
+        *m_pW -= lr* (*m_pdW);
+        *m_pBVector -= lr* (*m_pdBVector);
+    }
+}
+

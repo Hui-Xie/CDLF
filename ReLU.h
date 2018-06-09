@@ -11,9 +11,10 @@ public:
     ReLU(Layer* preLayer);
     ~ReLU();
 
+    virtual  void initialize(const string& initialMethod);
     virtual  void forward();
     virtual  void backward();
-    virtual  void initialize(const string& initialMethod);
+    virtual  void updateParameters(const float lr, const string& method);
 };
 
 

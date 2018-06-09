@@ -27,6 +27,10 @@ void LossLayer::initialize(const string& initialMethod){
     //null
 }
 
+void LossLayer::updateParameters(const float lr, const string& method) {
+    //null
+}
+
 float LossLayer::lossCompute(){
     //use m_prevLayerPointer->m_pYVector,
     // An Example
@@ -63,3 +67,4 @@ float LossLayer::getAvgLoss(){
 float LossLayer::setAvgLoss(const float avgLoss){
     m_avgLoss = avgLoss;
 }
+

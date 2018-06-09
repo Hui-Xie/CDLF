@@ -23,9 +23,11 @@ public:
     DynamicVector<float>*  m_pYVector;   //the output of this layer
     DynamicVector<float>*  m_pdYVector; //dL/dy,where L is Loss
 
+    virtual  void initialize(const string& initialMethod)=0;
     virtual  void forward()=0;
     virtual  void backward()=0;
-    virtual  void initialize(const string& initialMethod)=0;
+    virtual  void updateParameters(const float lr, const string& method) = 0;
+
 
 };
 
