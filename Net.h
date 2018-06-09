@@ -8,6 +8,7 @@
 #include "Layer.h"
 #include <list>
 #include <vector>
+#include "LossLayer.h"
 using namespace std;
 
 class Net {
@@ -27,6 +28,7 @@ public:
     void buildNet(const vector<long> layerWidthVector);
     void initilize();
     void train(const int nIteration);
+    void printIteration(LossLayer* lossLayer,const int nIter);
 
 
 private:

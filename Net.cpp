@@ -96,6 +96,14 @@ void Net::train(const int nIteration)
       lossLayer->setAvgLoss(avgLoss);
       backwardPropagate();
       sgd(m_learningRate);
+      printIteration(lossLayer, nIter);
       ++nIter;
    }
+}
+
+void Net::printIteration(LossLayer* lossLayer, const int nIter){
+    cout<<"Iteration: " << nIter << "  "
+        <<"Output Result: "<< lossLayer->m_prevLayerPointer->m_pYVector << "  "
+        <<"Loss: "<< lossLayer->getAvgLoss()<< endl;
+    cout<<endl;
 }
