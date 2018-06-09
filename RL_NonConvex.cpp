@@ -54,7 +54,7 @@ int main (int argc, char *argv[])
     net.setBatchSize(10);
     net.setLearningRate(0.001);
     net.initilize();
-    net.train();
+    net.train(100);
 
 
 
