@@ -21,6 +21,8 @@ public:
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method);
 
+    void printGroundTruth();
+
 private:
     float lossCompute();
     void  gradientCompute(const float avgLoss);

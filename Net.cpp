@@ -108,6 +108,7 @@ void Net::train(const int nIteration)
       printIteration(lossLayer, nIter);
       ++nIter;
    }
+   lossLayer->printGroundTruth();
 }
 
 void Net::printIteration(LossLayer* lossLayer, const int nIter){

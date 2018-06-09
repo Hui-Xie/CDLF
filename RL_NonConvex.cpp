@@ -53,11 +53,11 @@ int main (int argc, char *argv[])
     net.buildNet(layerWidthVector);
     net.setBatchSize(10);
     net.setLearningRate(0.001);
-    net.setLossTolerance(0.05);
+    net.setLossTolerance(0.02);
     net.setMaxItration(1000);
     net.initilize();
     net.train(100);
-    std::cout<<"I Love this game."<<std::endl;
+    std::cout<<"====================End of This Program==================="<<std::endl;
     return 0;
 
 }

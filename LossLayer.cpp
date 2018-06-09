@@ -4,6 +4,8 @@
 
 #include "LossLayer.h"
 #include <cmath>
+#include <iostream>
+using namespace std;
 
 LossLayer::LossLayer(Layer* preLayer) : Layer(0){
     m_type = "LossLayer";
@@ -41,6 +43,18 @@ float LossLayer::lossCompute(){
         m_loss += pow( prevY[i] - i , 2);
     }
     return m_loss;
+}
+
+void LossLayer::printGroundTruth(){
+    cout<<"For this specific Loss function, Ground Truth should be: ";
+    long N = m_prevLayerPointer->m_width;
+    cout<<"( ";
+    for (long i=0; i< N; ++i){
+        if (i != N-1 ) cout<<i<<", ";
+        else cout<<i;
+    }
+    cout<<" )"<<endl;
+
 }
 
 // f= \sum (x_i-i)^2
