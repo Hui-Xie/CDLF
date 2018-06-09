@@ -11,7 +11,7 @@
 void generateGaussian(DynamicVector<float>* yVector,const float mu, const float sigma ){
     long N = yVector->size();
     DynamicVector<float>& vector = *yVector;
-    unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count();
+    unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count() + rand()%1000;
     std::mt19937_64 randEngine(randSeed);
     for(int i=0; i<N; ++i){
        vector[i] =  stats::rnorm(mu,sigma,randEngine);

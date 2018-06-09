@@ -28,6 +28,15 @@ void Net::setLearningRate(const float learningRate){
    m_learningRate = learningRate;
 }
 
+void Net::setLossTolerance(const float tolerance){
+   m_lossTolerance = tolerance;
+}
+
+void Net::setMaxItration(const int maxIteration){
+    m_maxIteration = maxIteration;
+}
+
+
 void Net::forwardPropagate(){
    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
       (*iter)->forward();
@@ -85,7 +94,7 @@ void Net::train(const int nIteration)
    const int nLayers = m_layers.size();
    InputLayer* inputLayer = (InputLayer*)m_layers.front();
    LossLayer* lossLayer = (LossLayer* )m_layers.back();
-   while(nIter < nIteration && lossLayer->getAvgLoss()> 2){
+   while(nIter < m_maxIteration && lossLayer->getAvgLoss()> m_lossTolerance){
       float avgLoss = 0.0;
       for(int i =0; i< m_batchSize; ++i){
          inputLayer->initialize("Gaussian");
@@ -103,7 +112,7 @@ void Net::train(const int nIteration)
 
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "
-        <<"Output Result: "<< lossLayer->m_prevLayerPointer->m_pYVector << "  "
+        <<"Output Result: "<< trans(*(lossLayer->m_prevLayerPointer->m_pYVector)) << "  "
         <<"Loss: "<< lossLayer->getAvgLoss()<< endl;
     cout<<endl;
 }

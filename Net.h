@@ -18,6 +18,8 @@ public:
 
     void setBatchSize(const int batchSize);
     void setLearningRate(const float learningRate);
+    void setLossTolerance(const float tolerance);
+    void setMaxItration(const int maxIteration);
 
     void forwardPropagate();
     void backwardPropagate();
@@ -35,9 +37,8 @@ private:
     list<Layer*> m_layers;
     int m_batchSize;
     float m_learningRate;
-
-
-
+    float m_lossTolerance;
+    float m_maxIteration;
 };
 
 
