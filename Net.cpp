@@ -80,13 +80,9 @@ void Net::buildNet(const vector<long> layerWidthVector){
 }
 
 void Net::initilize(){
-   int i=0;
    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-      if (0 == i) continue;
-      else (*iter)->initialize("Xavier");
-      ++i;
-   }
-
+       (*iter)->initialize("Xavier");
+    }
 }
 void Net::train(const int nIteration)
 {
@@ -105,10 +101,10 @@ void Net::train(const int nIteration)
       lossLayer->setAvgLoss(avgLoss);
 
       //debug:
-       printLayersY();
-       printLayersDY();
+      // printLayersY();
+      // printLayersDY();
       //end of debug
-       
+
       backwardPropagate();
       sgd(m_learningRate);
       printIteration(lossLayer, nIter);

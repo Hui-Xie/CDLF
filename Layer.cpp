@@ -22,12 +22,12 @@ Layer::~Layer(){
 }
 
 void Layer::printY(){
-    cout<<"LayerName: "<<m_name <<"; LayerWidth: "<<m_width<<";  Y: ";
+    cout<<"LayerType: "<<m_type <<"; LayerWidth: "<<m_width<<"; Y: ";
     printVector(m_pYVector);
 }
 
 void Layer::printDY(){
-    cout<<"LayerName: "<<m_name <<"; LayerWidth: "<<m_width<<"; dY: ";
+    cout<<"LayerType: "<<m_type <<"; LayerWidth: "<<m_width<<"; dY: ";
     printVector(m_pdYVector);
 }
 

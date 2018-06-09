@@ -4,6 +4,8 @@
 
 #include "FCLayer.h"
 #include "statisTool.h"
+#include <iostream>
+using namespace std;
 
 // y = W*x+ b
 // where y and b is m-D vector, y is output vector;
@@ -40,9 +42,14 @@ void FCLayer::initialize(const string& initialMethod)
 {
     if ("Xavier" == initialMethod) {
         xavierInitialize(m_pW);
+        //printW();
         long nRow = m_pBVector->size();
         const float sigmaB = 1.0 / nRow;
         generateGaussian(m_pBVector, 0, sigmaB);
+    }
+    else{
+        cout<<"Error: Initialize Error in FCLayer."<<endl;
+
     }
 }
 
@@ -66,5 +73,11 @@ void FCLayer::updateParameters(const float lr, const string& method) {
         *m_pW -= lr* (*m_pdW);
         *m_pBVector -= lr* (*m_pdBVector);
     }
+}
+
+void FCLayer::printW(){
+    cout<<"LayerType: "<<m_type <<"; LayerWidth: "<<m_width<<"; W: "<<endl;
+    cout<<*m_pW;
+    cout<<endl;
 }
 
