@@ -103,6 +103,12 @@ void Net::train(const int nIteration)
       }
       avgLoss = avgLoss/m_batchSize;
       lossLayer->setAvgLoss(avgLoss);
+
+      //debug:
+       printLayersY();
+       printLayersDY();
+      //end of debug
+       
       backwardPropagate();
       sgd(m_learningRate);
       printIteration(lossLayer, nIter);
@@ -116,4 +122,16 @@ void Net::printIteration(LossLayer* lossLayer, const int nIter){
         <<"Output Result: "<< trans(*(lossLayer->m_prevLayerPointer->m_pYVector)) << "  "
         <<"Loss: "<< lossLayer->getAvgLoss()<< endl;
     cout<<endl;
+}
+
+void Net::printLayersY(){
+    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        (*iter)->printY();
+    }
+}
+
+void Net::printLayersDY(){
+    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        (*iter)->printDY();
+    }
 }

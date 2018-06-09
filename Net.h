@@ -31,6 +31,8 @@ public:
     void initilize();
     void train(const int nIteration);
     void printIteration(LossLayer* lossLayer,const int nIter);
+    void printLayersY();
+    void printLayersDY();
 
 
 private:

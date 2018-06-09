@@ -51,7 +51,7 @@ int main (int argc, char *argv[])
     }
     Net net;
     net.buildNet(layerWidthVector);
-    net.setBatchSize(10);
+    net.setBatchSize(100);
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
     net.setMaxItration(1000);

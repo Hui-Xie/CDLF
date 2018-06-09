@@ -46,7 +46,7 @@ float LossLayer::lossCompute(){
 }
 
 void LossLayer::printGroundTruth(){
-    cout<<"For this specific Loss function, Ground Truth should be: ";
+    cout<<"For this specific Loss function, Ground Truth is: ";
     long N = m_prevLayerPointer->m_width;
     cout<<"( ";
     for (long i=0; i< N; ++i){
@@ -54,7 +54,6 @@ void LossLayer::printGroundTruth(){
         else cout<<i;
     }
     cout<<" )"<<endl;
-
 }
 
 // f= \sum (x_i-i)^2
