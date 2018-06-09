@@ -29,7 +29,9 @@ void Net::setLearningRate(const float learningRate){
 }
 
 void Net::forwardPropagate(){
-
+   for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+      (*iter)->forward();
+   }
 }
 void Net::backwardPropagate(){
 
@@ -75,7 +77,20 @@ void Net::initilize(){
 }
 void Net::train(const int nIteration)
 {
-
-
-
+   int nIter = 0;
+   const int nLayers = m_layers.size();
+   InputLayer* inputLayer = (InputLayer*)m_layers.front();
+   LossLayer* lossLayer = (LossLayer* )m_layers.back();
+   while(nIter < nIteration && lossLayer->getAvgLoss()> 2){
+      float avgLoss = 0.0;
+      for(int i =0; i< m_batchSize; ++i){
+         inputLayer->initialize("Gaussian");
+         forwardPropagate();
+         avgLoss += lossLayer->getLoss();
+      }
+      avgLoss = avgLoss/m_batchSize;
+      lossLayer->setAvgLoss(avgLoss);
+      backwardPropagate();
+      ++nIter;
+   }
 }

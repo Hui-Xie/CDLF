@@ -11,15 +11,19 @@ class LossLayer : public Layer {
 public:
     LossLayer(Layer* preLayer);
     ~LossLayer();
-    float m_loss;
 
+    float getLoss();
+    float getAvgLoss();
+    float setAvgLoss(const float avgLoss);
     virtual  void forward();
     virtual  void backward();
     virtual  void initialize(const string& initialMethod);
 
 private:
     float lossCompute();
-    void  gradientCompute();
+    void  gradientCompute(const float avgLoss);
+    float m_loss;
+    float m_avgLoss;
 
 };
 
