@@ -19,23 +19,18 @@ FCLayer::FCLayer(const long width, Layer* preLayer):Layer(width){
    m_prevLayerPointer = preLayer;
    m_prevLayerPointer->m_nextLayerPointer = this;
 
-   m_pYVector = new DynamicVector<float>(m_m);
    m_pW = new DynamicMatrix<float>(m_m,m_n);
    m_pBVector =  new DynamicVector<float>(m_m);
-
-   m_pdYVector = new DynamicVector<float>(m_m);
    m_pdW = new DynamicMatrix<float>(m_m,m_n);
    m_pdBVector =  new DynamicVector<float>(m_m);
 }
 
 FCLayer::~FCLayer(){
-  if (nullptr != m_pYVector) delete m_pYVector;
   if (nullptr != m_pW) delete m_pW;
   if (nullptr != m_pBVector) delete m_pBVector;
 
-  if (nullptr != m_pdYVector) delete m_pYVector;
-  if (nullptr != m_pdW) delete m_pW;
-  if (nullptr != m_pdBVector) delete m_pBVector;
+  if (nullptr != m_pdW) delete m_pdW;
+  if (nullptr != m_pdBVector) delete m_pdBVector;
 }
 
 void FCLayer::initialize(const string& initialMethod)

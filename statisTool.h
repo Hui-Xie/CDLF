@@ -10,6 +10,8 @@ using namespace blaze;
 
 void generateGaussian(DynamicVector<float>* yVector,const float mu, const float sigma );
 void xavierInitialize(DynamicMatrix<float>* pW);
+float average(DynamicVector<float>* yVector);
+float variance(DynamicVector<float>* yVector);
 
 
 

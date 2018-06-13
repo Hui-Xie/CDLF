@@ -7,8 +7,10 @@
 #include "Layer.h"
 
 class NormalizationLayer: public Layer {
+public:
     NormalizationLayer(Layer* preLayer);
     ~NormalizationLayer();
+    float m_epsilon;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void forward();

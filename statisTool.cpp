@@ -7,13 +7,14 @@
 #define STATS_USE_BLAZE
 #include <chrono>
 #include <random>
+#include <cmath>
 
 void generateGaussian(DynamicVector<float>* yVector,const float mu, const float sigma ){
     long N = yVector->size();
     DynamicVector<float>& vector = *yVector;
     unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count() + rand()%5000;
     std::mt19937_64 randEngine(randSeed);
-    for(int i=0; i<N; ++i){
+    for(long i=0; i<N; ++i){
        vector[i] =  stats::rnorm(mu,sigma,randEngine);
     }
 }
@@ -33,3 +34,24 @@ void xavierInitialize(DynamicMatrix<float>* pW){
     }
 }
 
+float average(DynamicVector<float>* yVector){
+    long N = yVector->size();
+    if (0 == N) return 0;
+    DynamicVector<float>& vector = *yVector;
+    float sum = 0.0;
+    for(long i=0; i<N; ++i){
+        sum += vector[i];
+    }
+    return sum/N;
+}
+float variance(DynamicVector<float>* yVector) {
+    float mu = average(yVector);
+    long N = yVector->size();
+    if (1 == N || 0 == N) return 0;
+    DynamicVector<float> &vector = *yVector;
+    float sum = 0.0;
+    for (long i = 0; i < N; ++i) {
+        sum += pow((vector[i] - mu), 2);
+    }
+    return sum * N / (N - 1); // population variance
+}

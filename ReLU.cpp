@@ -9,13 +9,11 @@ ReLU::ReLU(Layer* preLayer): Layer(preLayer->m_width){
     m_prevLayerPointer = preLayer;
     m_prevLayerPointer->m_nextLayerPointer = this;
 
-    m_pYVector = new DynamicVector<float>(m_width);
-    m_pdYVector = new DynamicVector<float>(m_width);
+
 }
 
 ReLU::~ReLU(){
-    if (nullptr != m_pYVector) delete m_pYVector;
-    if (nullptr != m_pdYVector) delete m_pYVector;
+
 }
 
 // Y = X if X>=0; Y =0 else;

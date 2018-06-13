@@ -11,14 +11,23 @@ Layer::Layer(const long width){
     m_type = "";
     m_prevLayerPointer = nullptr;
     m_nextLayerPointer = nullptr;
-    m_pYVector = nullptr;
-    m_pdYVector = nullptr;
+
     m_width = width;
+    if (0 != m_width){
+        m_pYVector = new DynamicVector<float>(m_width);
+        m_pdYVector = new DynamicVector<float>(m_width);
+    }
+    else{
+        m_pYVector = nullptr;
+        m_pdYVector = nullptr;
+    }
+
 }
 
 
 Layer::~Layer(){
-
+    if (nullptr != m_pYVector) delete m_pYVector;
+    if (nullptr != m_pdYVector) delete m_pdYVector;
 }
 
 void Layer::printY(){

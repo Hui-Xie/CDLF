@@ -7,6 +7,7 @@
 #include "FCLayer.h"
 #include "ReLU.h"
 #include "LossLayer.h"
+#include "NormalizationLayer.h"
 #include <iostream>
 
 Net::Net(){
@@ -57,7 +58,8 @@ void Net::sgd(const float lr){
     }
 }
 
-//Notes: this layerWidthVector does not include LossLayer,  and ReLU dose not count as a single layer
+//Notes: this layerWidthVector does not include LossLayer,  and ReLU and NormalizationLayer do not count as a single layer
+// Normalization layer generally put after ReLU
 void Net::buildNet(const vector<long> layerWidthVector){
    int nLayers = layerWidthVector.size();
    if (0 == nLayers) {
@@ -72,6 +74,8 @@ void Net::buildNet(const vector<long> layerWidthVector){
       if (i != nLayers -1){
          ReLU* reLU = new ReLU(m_layers.back());
          addLayer(reLU);
+         NormalizationLayer* normalLayer = new NormalizationLayer(m_layers.back());
+         addLayer(normalLayer);
       }
    }
    LossLayer* lossLayer = new LossLayer(m_layers.back());
