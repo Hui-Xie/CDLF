@@ -53,5 +53,5 @@ float variance(DynamicVector<float>* yVector) {
     for (long i = 0; i < N; ++i) {
         sum += pow((vector[i] - mu), 2);
     }
-    return sum * N / (N - 1); // population variance
+    return sum / (N - 1); // population variance
 }
