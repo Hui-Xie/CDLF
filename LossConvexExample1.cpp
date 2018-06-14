@@ -16,7 +16,6 @@ LossConvexExample1::~LossConvexExample1(){
 
 float LossConvexExample1::lossCompute(){
     //use m_prevLayerPointer->m_pYVector,
-    // An Example
     m_loss = 0;
     long N = m_prevLayerPointer->m_pYVector->size();
     DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYVector);
@@ -31,7 +30,6 @@ float LossConvexExample1::lossCompute(){
 // dL/dx_i = dL/df * df/dx_i =  2* (x_i-i)
 void  LossConvexExample1::gradientCompute(){
     //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYVector
-    // An Example
     long N = m_prevLayerPointer->m_pYVector->size();
     DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYVector);
     DynamicVector<float> & prevdY = *(m_prevLayerPointer->m_pdYVector);

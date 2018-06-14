@@ -15,6 +15,7 @@ Net::Net(){
    m_learningRate = 0.01;
    m_lossTolerance = 0.02;
    m_maxIteration = 1000;
+   m_judgeLoss = true;
 }
 Net::~Net(){
    while (0 != m_layers.size()){
@@ -36,6 +37,9 @@ void Net::setMaxItration(const int maxIteration){
     m_maxIteration = maxIteration;
 }
 
+void Net::setJudgeLoss(const bool judgeLoss){
+    m_judgeLoss = judgeLoss;
+}
 
 void Net::forwardPropagate(){
    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
@@ -93,10 +97,14 @@ void Net::train()
    const int nLayers = m_layers.size();
    InputLayer* inputLayer = (InputLayer*)m_layers.front();
    LossLayer* lossLayer = (LossLayer* )m_layers.back();
-   while(nIter < m_maxIteration && lossLayer->getLoss()> m_lossTolerance){
+   while(nIter < m_maxIteration && (m_judgeLoss ? lossLayer->getLoss()> m_lossTolerance: true))
+   {
       inputLayer->initialize("Gaussian");
       forwardPropagate();
       backwardPropagate();
+
+      float loss = lossLayer->getLoss();
+      if (isinf(loss)) break;
 
       //debug:
       //printLayersY();

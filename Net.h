@@ -19,6 +19,7 @@ public:
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);
     void setMaxItration(const int maxIteration);
+    void setJudgeLoss(const bool judgeLoss);
 
     void forwardPropagate();
     void backwardPropagate();
@@ -40,6 +41,7 @@ private:
     float m_learningRate;
     float m_lossTolerance;
     float m_maxIteration;
+    bool m_judgeLoss;
 };
 
 

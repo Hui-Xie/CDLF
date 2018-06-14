@@ -9,6 +9,8 @@
 #include <sstream>
 #include "Net.h"
 #include "LossConvexExample1.h"
+#include "LossNonConvexExample1.h"
+
 using namespace std;
 
 void printUsage(){
@@ -51,12 +53,17 @@ int main (int argc, char *argv[])
         return -1;
     }
     Net net;
-    LossConvexExample1* lossLayer = new LossConvexExample1(nullptr);
+
+    //LossConvexExample1* lossLayer = new LossConvexExample1(nullptr);
+    LossNonConvexExample1* lossLayer = new LossNonConvexExample1(nullptr);
+    net.setJudgeLoss(false); //for nonconvex case
+
     net.buildNet(layerWidthVector, lossLayer);
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setMaxItration(1000);
     net.initialize();
+
     net.train();
     std::cout<<"====================End of This Program==================="<<std::endl;
     return 0;

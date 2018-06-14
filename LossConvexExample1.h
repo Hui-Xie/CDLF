@@ -6,7 +6,7 @@
 #define RL_NONCONVEX_LOSSCONVEXEXAMPLE1_H
 #include "LossLayer.h"
 
-class LossConvexExample1 :public LossLayer {
+class LossConvexExample1 : public LossLayer {
 public:
     LossConvexExample1(Layer* preLayer);
     ~LossConvexExample1();
