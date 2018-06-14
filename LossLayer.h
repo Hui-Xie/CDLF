@@ -19,11 +19,9 @@ public:
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method);
 
-    void printGroundTruth();
-
-private:
-    float lossCompute();
-    void  gradientCompute();
+    virtual float lossCompute()=0;
+    virtual void  gradientCompute()=0;
+    virtual void printGroundTruth()=0;
     float m_loss;
 
 };

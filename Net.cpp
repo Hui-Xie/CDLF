@@ -8,6 +8,7 @@
 #include "ReLU.h"
 #include "LossLayer.h"
 #include "NormalizationLayer.h"
+#include "LossConvexExample1.h"
 #include <iostream>
 
 Net::Net(){
@@ -78,7 +79,7 @@ void Net::buildNet(const vector<long> layerWidthVector){
          addLayer(normalLayer);
       }
    }
-   LossLayer* lossLayer = new LossLayer(m_layers.back());
+   LossLayer* lossLayer = new LossConvexExample1(m_layers.back());
    addLayer(lossLayer);
 }
 
