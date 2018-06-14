@@ -15,10 +15,7 @@ FCLayer::FCLayer(const long width, Layer* preLayer):Layer(width){
    m_type = "FullyConnected";
    m_n = preLayer->m_width; //input width
    m_m = m_width;
-
-   m_prevLayerPointer = preLayer;
-   m_prevLayerPointer->m_nextLayerPointer = this;
-
+   setPreviousLayer(preLayer);
    m_pW = new DynamicMatrix<float>(m_m,m_n);
    m_pBVector =  new DynamicVector<float>(m_m);
    m_pdW = new DynamicMatrix<float>(m_m,m_n);

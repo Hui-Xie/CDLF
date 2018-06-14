@@ -8,6 +8,7 @@
 #include <vector>
 #include <sstream>
 #include "Net.h"
+#include "LossConvexExample1.h"
 using namespace std;
 
 void printUsage(){
@@ -50,7 +51,8 @@ int main (int argc, char *argv[])
         return -1;
     }
     Net net;
-    net.buildNet(layerWidthVector);
+    LossConvexExample1* lossLayer = new LossConvexExample1(nullptr);
+    net.buildNet(layerWidthVector, lossLayer);
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setMaxItration(1000);

@@ -49,3 +49,14 @@ void Layer::printVector(DynamicVector<float>* vector){
     }
     cout<<" )"<<endl;
 }
+
+void Layer::setPreviousLayer(Layer* preLayer){
+    if (nullptr != preLayer){
+        m_prevLayerPointer = preLayer;
+        m_prevLayerPointer->m_nextLayerPointer = this;
+    }
+    else{
+        m_prevLayerPointer = nullptr;
+        m_nextLayerPointer = nullptr;
+    }
+}

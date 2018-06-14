@@ -9,8 +9,7 @@ using namespace std;
 
 LossLayer::LossLayer(Layer* preLayer) : Layer(0){
     m_type = "LossLayer";
-    m_prevLayerPointer = preLayer;
-    m_prevLayerPointer->m_nextLayerPointer = this;
+    setPreviousLayer(preLayer);
     m_loss = 1e+10;
 }
 

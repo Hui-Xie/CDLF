@@ -6,10 +6,7 @@
 
 ReLU::ReLU(Layer* preLayer): Layer(preLayer->m_width){
     m_type = "ReLU";
-    m_prevLayerPointer = preLayer;
-    m_prevLayerPointer->m_nextLayerPointer = this;
-
-
+    setPreviousLayer(preLayer);
 }
 
 ReLU::~ReLU(){

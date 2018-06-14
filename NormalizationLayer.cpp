@@ -7,8 +7,7 @@
 
 NormalizationLayer::NormalizationLayer(Layer* preLayer):Layer(preLayer->m_width){
     m_type = "NormalizationLayer";
-    m_prevLayerPointer = preLayer;
-    m_prevLayerPointer->m_nextLayerPointer = this;
+    setPreviousLayer(preLayer);
     m_epsilon = 1e-6;
 }
 NormalizationLayer::~NormalizationLayer(){

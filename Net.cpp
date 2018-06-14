@@ -8,7 +8,6 @@
 #include "ReLU.h"
 #include "LossLayer.h"
 #include "NormalizationLayer.h"
-#include "LossConvexExample1.h"
 #include <iostream>
 
 Net::Net(){
@@ -61,7 +60,7 @@ void Net::sgd(const float lr){
 
 //Notes: this layerWidthVector does not include LossLayer,  and ReLU and NormalizationLayer do not count as a single layer
 // Normalization layer generally put after ReLU
-void Net::buildNet(const vector<long> layerWidthVector){
+void Net::buildNet(const vector<long> layerWidthVector, Layer* lossLayer){
    int nLayers = layerWidthVector.size();
    if (0 == nLayers) {
       cout<<"Net has at least one layer."<<endl;
@@ -79,7 +78,7 @@ void Net::buildNet(const vector<long> layerWidthVector){
          addLayer(normalLayer);
       }
    }
-   LossLayer* lossLayer = new LossConvexExample1(m_layers.back());
+   lossLayer->setPreviousLayer(m_layers.back());
    addLayer(lossLayer);
 }
 
