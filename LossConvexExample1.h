@@ -14,7 +14,7 @@ public:
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();
-    virtual void printGroundTruth();
+    virtual void  printGroundTruth();
 
 };
 

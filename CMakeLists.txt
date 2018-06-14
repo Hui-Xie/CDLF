@@ -13,11 +13,7 @@ set(STATS_INCLUDE_DIR  E:/CProject/stats/include/) # for windows  stats C++ stat
 include_directories(${STATS_INCLUDE_DIR})
 
 set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp statisTool.cpp ReLU.cpp NormalizationLayer.cpp)
-set(RL_NonConvexSRCS ${Common_SRCS} RL_Test.cpp LossConvexExample1.cpp )
+set(RL_NonConvexSRCS ${Common_SRCS} RL_Test.cpp LossConvexExample1.cpp LossNonConvexExample1.cpp LossNonConvexExample1.h)
 add_executable(RL_NonConvex ${RL_NonConvexSRCS})
-#if( blaze_FOUND )
-#    add_library( RL_NonConvex INTERFACE )
-#    target_link_libraries( RL_NonConvex INTERFACE blaze::blaze )
-# endif()
 
 
