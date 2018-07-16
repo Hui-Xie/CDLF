@@ -17,12 +17,12 @@ Net::Net(){
    m_maxIteration = 1000;
    m_judgeLoss = true;
 }
-Net::~Net(){
-   while (0 != m_layers.size()){
-      Layer* pLayer = m_layers.back();
-      m_layers.pop_back();
-      delete pLayer;
-   }
+
+Net::~Net() {
+    for (map<int, Layer *>::iterator it = m_layers.begin(); it != m_layers.end(); ++it) {
+        delete it->second;
+        it->second = nullptr;
+    }
 }
 
 void Net::setLearningRate(const float learningRate){
@@ -42,23 +42,32 @@ void Net::setJudgeLoss(const bool judgeLoss){
 }
 
 void Net::forwardPropagate(){
-   for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-      (*iter)->forward();
+   for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+      iter->second->forward();
    }
 }
 void Net::backwardPropagate(){
-   for (list<Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
-      (*rit)->backward();
+   for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
+      rit->second->backward();
    }
 }
 
 void Net::addLayer(Layer* layer){
-     m_layers.push_back(layer);
+     if (nullptr == layer) return;
+     if (0 == m_layers.count(layer->m_id)){
+         m_layers[layer->m_id] = layer;
+     }
+     else{
+         cout<<"Error: repeated layer ID in adding layer."<<endl;
+         cout<<"\t layer ID: "<< layer->m_id<<endl;
+         cout<<"\t already existed layer: "<<m_layers[layer->m_id]->m_name<<endl;
+         cout<<"\t new adding layer: "<<layer->m_name<<endl;
+     }
 }
 
 void Net::sgd(const float lr){
-    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        (*iter)->updateParameters(lr, "sgd");
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        iter->second->updateParameters(lr, "sgd");
     }
 }
 
@@ -70,33 +79,34 @@ void Net::buildNet(const vector<long> layerWidthVector, Layer* lossLayer){
       cout<<"Net has at least one layer."<<endl;
       return;
    }
-   InputLayer* inputLayer = new InputLayer(layerWidthVector.at(0));
+   int layerID = 1;
+   InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",layerWidthVector.at(0));
    addLayer(inputLayer);
    for(int i =1; i< nLayers; ++i){
-      FCLayer* fcLayer = new FCLayer(layerWidthVector.at(i),m_layers.back());
+      FCLayer* fcLayer = new FCLayer(layerID++, "FCLayer"+to_string(i), layerWidthVector.at(i),m_layers.rbegin()->second);
       addLayer(fcLayer);
       if (i != nLayers -1){
-         ReLU* reLU = new ReLU(m_layers.back());
+         ReLU* reLU = new ReLU(layerID++, "ReLU"+to_string(i), m_layers.rbegin()->second);
          addLayer(reLU);
-         NormalizationLayer* normalLayer = new NormalizationLayer(m_layers.back());
+         NormalizationLayer* normalLayer = new NormalizationLayer(layerID++, "NormLayer"+to_string(i),m_layers.rbegin()->second);
          addLayer(normalLayer);
       }
    }
-   lossLayer->setPreviousLayer(m_layers.back());
+   lossLayer->setPreviousLayer(m_layers.rbegin()->second);
    addLayer(lossLayer);
 }
 
 void Net::initialize(){
-   for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-       (*iter)->initialize("Xavier");
+   for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+       iter->second->initialize("Xavier");
     }
 }
 void Net::train()
 {
    int nIter = 0;
    const int nLayers = m_layers.size();
-   InputLayer* inputLayer = (InputLayer*)m_layers.front();
-   LossLayer* lossLayer = (LossLayer* )m_layers.back();
+   InputLayer* inputLayer = (InputLayer*)m_layers.begin()->second;
+   LossLayer* lossLayer = (LossLayer* )m_layers.rbegin()->second;
    while(nIter < m_maxIteration && (m_judgeLoss ? lossLayer->getLoss()> m_lossTolerance: true))
    {
       inputLayer->initialize("Gaussian");
@@ -127,22 +137,22 @@ void Net::printIteration(LossLayer* lossLayer, const int nIter){
 }
 
 void Net::printLayersY(){
-    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        (*iter)->printY();
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        iter->second->printY();
     }
 }
 
 void Net::printLayersDY(){
-    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        (*iter)->printDY();
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        iter->second->printDY();
     }
 }
 
 void Net::printLayersWdW(){
-    for(list<Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        if ("FullyConnected" == (*iter)->m_type){
-            ((FCLayer*)(*iter))->printWandBVector();
-            ((FCLayer*)(*iter))->printdWanddBVector();
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        if ("FullyConnected" == iter->second->m_type){
+            ((FCLayer*)(iter->second))->printWandBVector();
+            ((FCLayer*)(iter->second))->printdWanddBVector();
         }
      }
 }

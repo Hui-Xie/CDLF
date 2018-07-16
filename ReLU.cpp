@@ -4,7 +4,7 @@
 
 #include "ReLU.h"
 
-ReLU::ReLU(Layer* preLayer): Layer(preLayer->m_width){
+ReLU::ReLU(const int id, const string name,Layer* preLayer): Layer(id,name, preLayer->m_width){
     m_type = "ReLU";
     setPreviousLayer(preLayer);
 }

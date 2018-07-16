@@ -5,7 +5,7 @@
 #include "InputLayer.h"
 #include "statisTool.h"
 
-InputLayer::InputLayer(const long width): Layer(width){
+InputLayer::InputLayer(const int id, const string name, const long width): Layer(id, name, width){
     m_type = "InputLayer";
 
 }

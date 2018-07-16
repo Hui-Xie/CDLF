@@ -6,8 +6,9 @@
 #include <iostream>
 using namespace std;
 
-Layer::Layer(const long width){
-    m_name = "";
+Layer::Layer(const int id, const string name, const long width){
+    m_id = id;
+    m_name = name;
     m_type = "";
     m_prevLayerPointer = nullptr;
     m_nextLayerPointer = nullptr;

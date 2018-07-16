@@ -5,7 +5,7 @@
 #include "NormalizationLayer.h"
 #include "statisTool.h"
 
-NormalizationLayer::NormalizationLayer(Layer* preLayer):Layer(preLayer->m_width){
+NormalizationLayer::NormalizationLayer(const int id, const string name,Layer* preLayer):Layer(id,name, preLayer->m_width){
     m_type = "NormalizationLayer";
     setPreviousLayer(preLayer);
     m_epsilon = 1e-6;

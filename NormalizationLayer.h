@@ -8,7 +8,7 @@
 
 class NormalizationLayer: public Layer {
 public:
-    NormalizationLayer(Layer* preLayer);
+    NormalizationLayer(const int id, const string name,Layer* preLayer);
     ~NormalizationLayer();
     float m_epsilon;
 

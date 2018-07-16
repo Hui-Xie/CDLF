@@ -7,18 +7,20 @@
 
 #include <string>
 #include  <blaze/Math.h>
+#include <list>
 using namespace blaze;
 using namespace std;
 
 class Layer {
 public:
-    Layer(const long width);
+    Layer(const int id, const string name, const long width);
     ~Layer();
 
+    int m_id;
     string m_name;
     string m_type;
-    Layer* m_prevLayerPointer;
-    Layer* m_nextLayerPointer;
+    list<Layer*> m_prevLayers;
+    list<Layer*> m_nextLayers;
     long m_width;
     DynamicVector<float>*  m_pYVector;   //the output of this layer
     DynamicVector<float>*  m_pdYVector; //dL/dy,where L is Loss

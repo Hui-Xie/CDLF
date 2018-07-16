@@ -6,7 +6,7 @@
 #define RL_NONCONVEX_NET_H
 
 #include "Layer.h"
-#include <list>
+#include <map>
 #include <vector>
 #include "LossLayer.h"
 using namespace std;
@@ -37,7 +37,7 @@ public:
 
 
 private:
-    list<Layer*> m_layers;
+    map<int, Layer*> m_layers;
     float m_learningRate;
     float m_lossTolerance;
     float m_maxIteration;

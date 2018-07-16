@@ -11,7 +11,7 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const long width, Layer* preLayer):Layer(width){
+FCLayer::FCLayer(const int id, const string name,const long width, Layer* preLayer):Layer(id, name, width){
    m_type = "FullyConnected";
    m_n = preLayer->m_width; //input width
    m_m = m_width;
