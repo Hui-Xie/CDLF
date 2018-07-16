@@ -33,7 +33,7 @@ void Net::setLossTolerance(const float tolerance){
    m_lossTolerance = tolerance;
 }
 
-void Net::setMaxItration(const int maxIteration){
+void Net::setMaxIteration(const int maxIteration){
     m_maxIteration = maxIteration;
 }
 

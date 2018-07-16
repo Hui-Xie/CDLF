@@ -18,7 +18,7 @@ public:
 
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);
-    void setMaxItration(const int maxIteration);
+    void setMaxIteration(const int maxIteration);
     void setJudgeLoss(const bool judgeLoss);
 
     void forwardPropagate();
