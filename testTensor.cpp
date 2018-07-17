@@ -37,6 +37,24 @@ int main (int argc, char *argv[]) {
     cout <<"tensor3 = tensor1* tensor2 = "<<endl;
     tensor3.printElements();
 
+    Tensor<float> tensor4({3,4});
+    k =0;
+    for (int i=0; i<3; ++i){
+        for(int j=0; j<4;++j){
+            tensor4.e(k) = 1;
+            ++k;
+        }
+    }
+    cout <<"tensor4:"<<endl;
+    tensor4.printElements();
+
+    Tensor<float> tensor5 = tensor1+  tensor4;
+    cout <<"tensor5 = tensor1+  tensor4 = "<<endl;
+    tensor5.printElements();
+
+    Tensor<float> tensor6 = tensor1-  tensor4;
+    cout <<"tensor6 = tensor1-  tensor4; = "<<endl;
+    tensor6.printElements();
 
 
 

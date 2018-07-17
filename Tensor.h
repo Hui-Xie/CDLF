@@ -20,12 +20,12 @@ public:
     long getLength() const;
 
     ValueType& e(const vector<int>& index)const;
-    ValueType& e(long index);
+    ValueType& e(long index) const;
     Tensor transpose();
     Tensor operator* (const Tensor& other);
     Tensor& operator= (const Tensor& other);
-    Tensor& operator+ (const Tensor& other);
-    Tensor& operator- (const Tensor& other);
+    Tensor operator+ (const Tensor& other);
+    Tensor operator- (const Tensor& other);
     void printElements();
 
 

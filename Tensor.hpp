@@ -64,7 +64,7 @@ void  Tensor<ValueType>::freeMem(){
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::e(long index){
+ValueType& Tensor<ValueType>::e(long index) const{
     return m_data[index];
 }
 
@@ -139,13 +139,26 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
 
 
 template<class ValueType>
-Tensor<ValueType>& Tensor<ValueType>::operator+ (const Tensor& other){
+Tensor<ValueType> Tensor<ValueType>::operator+ (const Tensor<ValueType>& other){
+   assert(sameVector(m_dims, other.getDims()));
+   Tensor tensor (m_dims);
+   long length = getLength();
+   for (long i=0; i<length; ++i){
+       tensor.e(i) = e(i) + other.e(i);
+    }
+    return tensor;
 
 }
 
 template<class ValueType>
-Tensor<ValueType>& Tensor<ValueType>::operator- (const Tensor& other){
-
+Tensor<ValueType> Tensor<ValueType>::operator- (const Tensor<ValueType>& other){
+    assert(sameVector(m_dims, other.getDims()));
+    Tensor tensor (m_dims);
+    long length = getLength();
+    for (long i=0; i<length; ++i){
+        tensor.e(i) = e(i) - other.e(i);
+    }
+    return tensor;
 }
 
 template<class ValueType>
@@ -157,6 +170,4 @@ void Tensor<ValueType>::printElements(){
         }
         cout<<endl;
     }
-
-
 }
