@@ -13,16 +13,16 @@
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-    FCLayer(const int id, const string name, const long width, Layer* preLayer);
+    FCLayer(const int id, const string name, const vector<int>& tensorSize, Layer* preLayer);
     ~FCLayer();
 
     long m_n; //input width
     long m_m; //output width
 
-    DynamicMatrix<float>*  m_pW;
-    DynamicVector<float>*  m_pBVector;
-    DynamicMatrix<float>*  m_pdW;
-    DynamicVector<float>*  m_pdBVector;
+    Tensor<float>*  m_pW;
+    Tensor<float>*  m_pBTensor;
+    Tensor<float>*  m_pdW;
+    Tensor<float>*  m_pdBTensor;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void forward();

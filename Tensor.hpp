@@ -18,8 +18,24 @@ Tensor<ValueType>::Tensor(const vector<int>& dims){
 template<class ValueType>
 Tensor<ValueType>::Tensor(const Tensor& other){
     if (this != &other){
+        m_data = nullptr;
         *this = other;
     }
+}
+
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other){
+    if (this != &other) {
+        long length = other.getLength();
+        if (!sameVector(m_dims, other.getDims())){
+            freeMem();
+            m_dims = other.getDims();
+            allocateMem();
+        }
+        memcpy(m_data, other.getData(), length*sizeof(ValueType));
+    }
+    return *this;
 }
 
 template<class ValueType>
@@ -99,19 +115,6 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     return tensor;
 }
 
-template<class ValueType>
-Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other){
-    if (this != &other) {
-        long length = other.getLength();
-        if (!sameVector(m_dims, other.getDims())){
-             freeMem();
-             m_dims = other.getDims();
-             allocateMem();
-        }
-        memcpy(m_data, other.getData(), length*sizeof(ValueType));
-    }
-    return *this;
-}
 
 
 template<class ValueType>
@@ -136,14 +139,44 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     return tensor;
 }
 
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::operator+ (const float other){
+    Tensor tensor (m_dims);
+    long N = tensor.getLength();
+    for (long i=0; i<N; ++i){
+        tensor.e(i) =e(i)+ other;
+    }
+    return tensor;
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::operator- (const float other){
+    Tensor tensor (m_dims);
+    long N = tensor.getLength();
+    for (long i=0; i<N; ++i){
+        tensor.e(i) =e(i)- other;
+    }
+    return tensor;
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::operator* (const float factor){
+    Tensor tensor (m_dims);
+    long N = tensor.getLength();
+    for (long i=0; i<N; ++i){
+         tensor.e(i) =e(i)* factor;
+    }
+    return tensor;
+}
+
 
 
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator+ (const Tensor<ValueType>& other){
    assert(sameVector(m_dims, other.getDims()));
    Tensor tensor (m_dims);
-   long length = getLength();
-   for (long i=0; i<length; ++i){
+   long N = getLength();
+   for (long i=0; i<N; ++i){
        tensor.e(i) = e(i) + other.e(i);
     }
     return tensor;
@@ -154,8 +187,8 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator- (const Tensor<ValueType>& other){
     assert(sameVector(m_dims, other.getDims()));
     Tensor tensor (m_dims);
-    long length = getLength();
-    for (long i=0; i<length; ++i){
+    long N = getLength();
+    for (long i=0; i<N; ++i){
         tensor.e(i) = e(i) - other.e(i);
     }
     return tensor;
@@ -167,12 +200,70 @@ Tensor<ValueType> Tensor<ValueType>::operator/ (const float divisor){
     }
     else{
         Tensor tensor (m_dims);
-        long length = getLength();
-        for (long i=0; i<length; ++i){
+        long N = getLength();
+        for (long i=0; i<N; ++i){
             tensor.e(i) = e(i)/divisor;
         }
         return tensor;
     }
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator+= (const Tensor& right){
+    assert(sameVector(m_dims, right.getDims()));
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        e(i) += right.e(i);
+    }
+    return *this;
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator-= (const Tensor& right){
+    assert(sameVector(m_dims, right.getDims()));
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        e(i) -= right.e(i);
+    }
+    return *this;
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator+= (const float right){
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        e(i) += right;
+    }
+    return *this;
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator-= (const float right){
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        e(i) -= right;
+    }
+    return *this;
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator*= (const float factor){
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        e(i) *= factor;
+    }
+    return *this;
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::operator/= (const float divisor){
+    if (0 != divisor) {
+        long N = getLength();
+        for (long i = 0; i < N; ++i) {
+            e(i) /= divisor;
+        }
+    }
+    return *this;
 }
 
 template<class ValueType>
@@ -184,4 +275,35 @@ void Tensor<ValueType>::printElements(){
         }
         cout<<endl;
     }
+}
+
+template<class ValueType>
+float Tensor<ValueType>::sum(){
+    long N = getLength();
+    float sum = 0.0;
+    for(long i=0; i<N; ++i){
+        sum += e(i);
+    }
+    return sum;
+}
+
+template<class ValueType>
+float Tensor<ValueType>::average(){
+    long N = getLength();
+    if (0 == N) return 0;
+    else {
+        return sum()/N;
+    }
+}
+
+template<class ValueType>
+float Tensor<ValueType>::variance(){
+    float mu = average();
+    long N = getLength();
+    if (1 == N || 0 == N) return 0;
+    float sum = 0.0;
+    for (long i = 0; i < N; ++i) {
+        sum += pow((e(i) - mu), 2);
+    }
+    return sum / (N - 1); // population variance
 }

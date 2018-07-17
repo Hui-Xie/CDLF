@@ -13,6 +13,7 @@ class Tensor {
 public:
     Tensor(const vector<int>& dims);
     Tensor(const Tensor& other);
+    Tensor& operator= (const Tensor& other);
     ~Tensor();
 
     vector<int> getDims() const;
@@ -22,12 +23,30 @@ public:
     ValueType& e(const vector<int>& index)const;
     ValueType& e(long index) const;
     Tensor transpose();
-    Tensor& operator= (const Tensor& other);
-    Tensor operator* (const Tensor& other);
+
+
     Tensor operator+ (const Tensor& other);
     Tensor operator- (const Tensor& other);
+    Tensor operator* (const Tensor& other);
+
+    Tensor operator+ (const float other);
+    Tensor operator- (const float other);
+    Tensor operator* (const float factor);
     Tensor operator/ (const float divisor);
+
+    Tensor& operator+= (const Tensor& right);
+    Tensor& operator-= (const Tensor& right);
+
+    Tensor& operator+= (const float right);
+    Tensor& operator-= (const float right);
+    Tensor& operator*= (const float factor);
+    Tensor& operator/= (const float divisor);
+
     void printElements();
+
+    float sum();
+    float average();
+    float variance();
 
 private:
     vector<int> m_dims;

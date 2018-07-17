@@ -41,8 +41,8 @@ void Layer::printDY(){
 }
 
 /*
-void Layer::printVector(DynamicVector<float>* vector){
-    DynamicVector<float>& Y =   *vector;
+void Layer::printVector(Tensor<float>* vector){
+    Tensor<float>& Y =   *vector;
     cout<<"( ";
     for (long i=0; i< m_tensorSize; ++i){
         if (i != m_tensorSize-1 ) cout<<Y[i]<<", ";

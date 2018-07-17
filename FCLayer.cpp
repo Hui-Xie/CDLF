@@ -11,32 +11,32 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const int id, const string name,const long width, Layer* preLayer):Layer(id, name, width){
+FCLayer::FCLayer(const int id, const string name,const vector<int>& tensorSize, Layer* preLayer):Layer(id, name, tensorSize){
    m_type = "FullyConnected";
-   m_n = preLayer->m_tensorSize; //input width
-   m_m = m_tensorSize;
+   m_n = preLayer->m_tensorSize[0]; //input width
+   m_m = m_tensorSize[0];
    setPreviousLayer(preLayer);
-   m_pW = new DynamicMatrix<float>(m_m,m_n);
-   m_pBVector =  new DynamicVector<float>(m_m);
-   m_pdW = new DynamicMatrix<float>(m_m,m_n);
-   m_pdBVector =  new DynamicVector<float>(m_m);
+   m_pW = new Tensor<float>({m_m,m_n});
+   m_pBTensor =  new Tensor<float>({m_m,1});
+   m_pdW = new Tensor<float>({m_m,m_n});
+   m_pdBTensor =  new Tensor<float>({m_m,1});
 }
 
 FCLayer::~FCLayer(){
   if (nullptr != m_pW) delete m_pW;
-  if (nullptr != m_pBVector) delete m_pBVector;
+  if (nullptr != m_pBTensor) delete m_pBTensor;
 
   if (nullptr != m_pdW) delete m_pdW;
-  if (nullptr != m_pdBVector) delete m_pdBVector;
+  if (nullptr != m_pdBTensor) delete m_pdBTensor;
 }
 
 void FCLayer::initialize(const string& initialMethod)
 {
     if ("Xavier" == initialMethod) {
         xavierInitialize(m_pW);
-        long nRow = m_pBVector->size();
+        long nRow = m_pBTensor->getDims()[0];
         const float sigmaB = 1.0 / nRow;
-        generateGaussian(m_pBVector, 0, sigmaB);
+        generateGaussian(m_pBTensor, 0, sigmaB);
     }
     else{
         cout<<"Error: Initialize Error in FCLayer."<<endl;
@@ -45,7 +45,7 @@ void FCLayer::initialize(const string& initialMethod)
 }
 
 void FCLayer::forward(){
-    *m_pYTensor = (*m_pW) * (*(m_prevLayerPointer->m_pYTensor)) + *m_pBVector;
+    *m_pYTensor = (*m_pW) * (*(m_prevLayerPointer->m_pYTensor)) + *m_pBTensor;
 }
 
 //   y = W*x +b
@@ -53,28 +53,28 @@ void FCLayer::forward(){
 //  dL/db = dL/dy * dy/db = dL/dy
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
 void FCLayer::backward(){
-    DynamicVector<float>& dLdy = *m_pdYTensor;
+    Tensor<float>& dLdy = *m_pdYTensor;
     *m_pdW = dLdy * trans(*(m_prevLayerPointer->m_pYTensor));
-    *m_pdBVector = dLdy;
+    *m_pdBTensor = dLdy;
     *(m_prevLayerPointer->m_pdYTensor) = trans(*m_pW) * dLdy;
 }
 
 void FCLayer::updateParameters(const float lr, const string& method) {
     if ("sgd" == method){
         *m_pW -= lr* (*m_pdW);
-        *m_pBVector -= lr* (*m_pdBVector);
+        *m_pBTensor -= lr* (*m_pdBTensor);
     }
 }
 
 void FCLayer::printWandBVector(){
     cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<m_n<<"; W: "<<endl;
     cout<<*m_pW<<endl;
-    cout<<"B-transpose:"<<trans(*m_pBVector)<<endl;
+    cout<<"B-transpose:"<<trans(*m_pBTensor)<<endl;
 }
 
 void FCLayer::printdWanddBVector(){
     cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<m_n<<"; dW: "<<endl;
     cout<<*m_pdW<<endl;
-    cout<<"dB-transpose:"<<trans(*m_pdBVector)<<endl;
+    cout<<"dB-transpose:"<<trans(*m_pdBTensor)<<endl;
 
 }

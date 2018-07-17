@@ -23,8 +23,8 @@ void NormalizationLayer::initialize(const string& initialMethod){
 // sigma = sigma + m_epsilon,   avoid sigma == 0
 // dL/dX = dL/dY * dY/dX = dL/dY * (1/sigma)
 void NormalizationLayer::forward(){
-    DynamicVector<float>& Y = *m_pYTensor;
-    DynamicVector<float>& X = *m_prevLayerPointer->m_pYTensor;
+    Tensor<float>& Y = *m_pYTensor;
+    Tensor<float>& X = *m_prevLayerPointer->m_pYTensor;
     float mean = average(&X);
     float sigma = sqrt(variance(&X));
     for (long i=0; i< m_tensorSize; ++i){
@@ -32,9 +32,9 @@ void NormalizationLayer::forward(){
     }
 }
 void NormalizationLayer::backward(){
-    DynamicVector<float>& dY = *m_pdYTensor;
-    DynamicVector<float>& dX = *m_prevLayerPointer->m_pdYTensor;
-    DynamicVector<float>& X = *m_prevLayerPointer->m_pYTensor;
+    Tensor<float>& dY = *m_pdYTensor;
+    Tensor<float>& dX = *m_prevLayerPointer->m_pdYTensor;
+    Tensor<float>& X = *m_prevLayerPointer->m_pYTensor;
     float sigma = sqrt(variance(&X));
     for(long i=0; i< m_tensorSize; ++i){
         dX[i] = dY[i]/(sigma+m_epsilon);

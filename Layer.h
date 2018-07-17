@@ -37,7 +37,7 @@ public:
     void printDY();
 
 private:
-    //void printVector(DynamicVector<float>* vector);
+    //void printVector(Tensor<float>* vector);
 
 
 };

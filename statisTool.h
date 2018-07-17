@@ -5,13 +5,12 @@
 #ifndef RL_NONCONVEX_STATISTOOL_H
 #define RL_NONCONVEX_STATISTOOL_H
 
-#include  <blaze/Math.h>
-using namespace blaze;
+//#include  <blaze/Math.h>
+#include "Tensor.h"
+//using namespace blaze;
 
-void generateGaussian(DynamicVector<float>* yVector,const float mu, const float sigma );
-void xavierInitialize(DynamicMatrix<float>* pW);
-float average(DynamicVector<float>* yVector);
-float variance(DynamicVector<float>* yVector);
+void generateGaussian(Tensor<float>* yTensor,const float mu, const float sigma  );
+void xavierInitialize(Tensor<float>* pW);
 
 
 

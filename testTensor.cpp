@@ -59,6 +59,52 @@ int main (int argc, char *argv[]) {
     Tensor<float> tensor7 = tensor6/2;
     cout <<"tensor7 = tensor6/2 = "<<endl;
     tensor7.printElements();
+
+    tensor7 += 2;
+    cout <<"tensor7 += 2; = "<<endl;
+    tensor7.printElements();
+
+    tensor7 -= 2;
+    cout <<"tensor7 -= 2; = "<<endl;
+    tensor7.printElements();
+
+    tensor7 *= 2;
+    cout <<"tensor7 *= 2; = "<<endl;
+    tensor7.printElements();
+
+    tensor7 /= 2;
+    cout <<"tensor7 /= 2; = "<<endl;
+    tensor7.printElements();
+
+    Tensor<float> tensor8 = tensor7 +2;
+    cout <<"tensor8 = tensor7 +2; = "<<endl;
+    tensor8.printElements();
+
+    Tensor<float> tensor9 = tensor8- 2;
+    cout <<" tensor9 = tensor8- 2; = "<<endl;
+    tensor9.printElements();
+
+    Tensor<float> tensor10 = tensor9* 2;
+    cout <<" tensor10 = tensor9* 2 = "<<endl;
+    tensor10.printElements();
+
+    Tensor<float> tensor11 = tensor10/ 2;
+    cout <<" tensor11 = tensor10/ 2; = "<<endl;
+    tensor11.printElements();
+
+    cout <<"tensor1:"<<endl;
+    tensor1.printElements();
+
+    cout <<"tensor4:"<<endl;
+    tensor4.printElements();
+
+    tensor1 -= tensor4;
+    cout <<" tensor1 -= tensor4; = "<<endl;
+    tensor1.printElements();
+
+    tensor1 += tensor4;
+    cout <<" tensor1 += tensor4; = "<<endl;
+    tensor1.printElements();
 }
 
 
