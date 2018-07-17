@@ -26,6 +26,7 @@ public:
     Tensor& operator= (const Tensor& other);
     Tensor& operator+ (const Tensor& other);
     Tensor& operator- (const Tensor& other);
+    void printElements();
 
 
 

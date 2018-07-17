@@ -8,36 +8,36 @@
 #include <assert.h>
 
 template<class ValueType>
-Tensor::Tensor(const vector<int>& dims){
+Tensor<ValueType>::Tensor(const vector<int>& dims){
    m_dims = dims;
    m_data = nullptr;
    allocateMem();
 }
 
 template<class ValueType>
-Tensor::Tensor(const Tensor& other){
+Tensor<ValueType>::Tensor(const Tensor& other){
     if (this != &other){
         *this = other;
     }
 }
 
 template<class ValueType>
-Tensor::~Tensor(){
+Tensor<ValueType>::~Tensor(){
    freeMem();
 }
 
 template<class ValueType>
-vector<int> Tensor::getDims()const {
+vector<int> Tensor<ValueType>::getDims()const {
    return m_dims;
 }
 
 template<class ValueType>
-ValueType* Tensor::getData(){
+ValueType* Tensor<ValueType>::getData(){
     return m_data;
 }
 
 template<class ValueType>
-long Tensor::getLength() const{
+long Tensor<ValueType>::getLength() const{
     unsigned long length=1;
     int dim = m_dims.size();
     for(int i =0; i< dim; ++i){
@@ -47,7 +47,7 @@ long Tensor::getLength() const{
 }
 
 template<class ValueType>
-void  Tensor::allocateMem(){
+void  Tensor<ValueType>::allocateMem(){
    if (nullptr != m_data){
        delete[] m_data;
    }
@@ -55,7 +55,7 @@ void  Tensor::allocateMem(){
 }
 
 template<class ValueType>
-void  Tensor::freeMem(){
+void  Tensor<ValueType>::freeMem(){
    if (nullptr != m_data){
       delete[] m_data;
       m_data = nullptr;
@@ -63,20 +63,21 @@ void  Tensor::freeMem(){
 }
 
 template<class ValueType>
-ValueType& Tensor::e(long index){
+ValueType& Tensor<ValueType>::e(long index){
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType& Tensor::e(const vector<int>& index){
-   if (index.size() != m_dims.size()){
-      cout<<"Error: Tensor index and dims have different dimension."<<endl;
-      return nullptr;
-   }
+ValueType& Tensor<ValueType>::e(const vector<int>& index){
+   assert(index.size() == m_dims.size());
    int dim = m_dims.size();
    unsigned  long pos = 0;
    for (int i=0; i< dim-1; ++i){
-      pos += m_dims[i]*index[i];
+       long iSpan = 1;
+       for (int j=i+1; j<dim; ++j){
+           iSpan *= m_dims[j];
+       }
+      pos += iSpan*index[i];
    }
    pos += index[dim-1];
    return m_data[pos];
@@ -84,9 +85,9 @@ ValueType& Tensor::e(const vector<int>& index){
 
 // transpose operation only supports 2D matrix
 template<class ValueType>
-Tensor Tensor::transpose(){
+Tensor<ValueType> Tensor<ValueType>::transpose(){
     vector<int> newDims = reverseVector(m_dims);
-    Tensor<ValueType> tensor(newDims);
+    Tensor tensor (newDims);
     int dim = m_dims.size();
     assert(dim ==2 );
     for (int i=0; i<newDims[0]; ++i){
@@ -98,7 +99,7 @@ Tensor Tensor::transpose(){
 }
 
 template<class ValueType>
-Tensor& Tensor::operator= (const Tensor& other){
+Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor& other){
     if (this != &other) {
         long length = other.getLength();
         if (!sameVector(m_dims, other.getDims())){
@@ -113,7 +114,7 @@ Tensor& Tensor::operator= (const Tensor& other){
 
 
 template<class ValueType>
-Tensor Tensor::operator* (const Tensor& other){
+Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor& other){
     int thisDim = m_dims.size();
     vector<int> otherDims = other.getDims();
     int otherDim = otherDims.size();
@@ -132,11 +133,24 @@ Tensor Tensor::operator* (const Tensor& other){
 
 
 template<class ValueType>
-Tensor& Tensor::operator+ (const Tensor& other){
+Tensor<ValueType>& Tensor<ValueType>::operator+ (const Tensor& other){
 
 }
 
 template<class ValueType>
-Tensor& Tensor::operator- (const Tensor& other){
+Tensor<ValueType>& Tensor<ValueType>::operator- (const Tensor& other){
+
+}
+
+template<class ValueType>
+void Tensor<ValueType>::printElements(){
+    assert(2 == m_dims.size());
+    for (int i=0; i< m_dims[0];++i){
+        for(int j=0; j<m_dims[1];++j) {
+            cout << e({i, j}) << "  ";
+        }
+        cout<<endl;
+    }
+
 
 }
