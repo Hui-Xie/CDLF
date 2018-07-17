@@ -9,7 +9,7 @@ using namespace std;
 
 LossLayer::LossLayer(const int id, const string name,Layer* preLayer) : Layer(id,name,0){
     m_type = "LossLayer";
-    setPreviousLayer(preLayer);
+    addPreviousLayer(preLayer);
     m_loss = 1e+10;
 }
 

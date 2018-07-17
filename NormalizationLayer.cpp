@@ -7,7 +7,7 @@
 
 NormalizationLayer::NormalizationLayer(const int id, const string name,Layer* preLayer):Layer(id,name, preLayer->m_tensorSize){
     m_type = "NormalizationLayer";
-    setPreviousLayer(preLayer);
+    addPreviousLayer(preLayer);
     m_epsilon = 1e-6;
 }
 NormalizationLayer::~NormalizationLayer(){

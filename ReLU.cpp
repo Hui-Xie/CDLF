@@ -6,7 +6,7 @@
 
 ReLU::ReLU(const int id, const string name,Layer* preLayer): Layer(id,name, preLayer->m_tensorSize){
     m_type = "ReLU";
-    setPreviousLayer(preLayer);
+    addPreviousLayer(preLayer);
 }
 
 ReLU::~ReLU(){

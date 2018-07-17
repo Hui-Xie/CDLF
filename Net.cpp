@@ -92,7 +92,7 @@ void Net::buildNet(const vector<long> layerWidthVector, Layer* lossLayer){
          addLayer(normalLayer);
       }
    }
-   lossLayer->setPreviousLayer(m_layers.rbegin()->second);
+   lossLayer->addPreviousLayer(m_layers.rbegin()->second);
    addLayer(lossLayer);
 }
 

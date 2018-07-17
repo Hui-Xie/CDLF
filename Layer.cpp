@@ -52,7 +52,7 @@ void Layer::printVector(Tensor<float>* vector){
 }
 */
 
-void Layer::setPreviousLayer(Layer* preLayer){
+void Layer::addPreviousLayer(Layer* preLayer){
     if (nullptr != preLayer){
         m_prevLayers.push_back(preLayer);
         preLayer->m_nextLayers.push_back(this);

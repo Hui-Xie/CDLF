@@ -9,6 +9,7 @@
 #include  <blaze/Math.h>
 #include <list>
 #include "Tensor.h"
+#include <map>
 using namespace blaze;
 using namespace std;
 
@@ -31,7 +32,7 @@ public:
     virtual  void backward()=0;
     virtual  void updateParameters(const float lr, const string& method) = 0;
 
-    void setPreviousLayer(Layer* preLayer);
+    void addPreviousLayer(Layer* preLayer);
 
     void printY();
     void printDY();

@@ -11,41 +11,57 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const int id, const string name,const vector<int>& tensorSize, Layer* preLayer):Layer(id, name, tensorSize){
+FCLayer::FCLayer(const int id, const string name,const vector<int>& tensorSize, list<Layer*>& preLayers):Layer(id, name, tensorSize){
    m_type = "FullyConnected";
-   m_n = preLayer->m_tensorSize[0]; //input width
+   m_layerParaMap.clear();
    m_m = m_tensorSize[0];
-   setPreviousLayer(preLayer);
-   m_pW = new Tensor<float>({m_m,m_n});
-   m_pBTensor =  new Tensor<float>({m_m,1});
-   m_pdW = new Tensor<float>({m_m,m_n});
-   m_pdBTensor =  new Tensor<float>({m_m,1});
+
+   for(list<Layer*>::const_iterator iter=preLayers.begin(); iter != preLayers.end(); ++iter){
+       Layer* preLayer = *iter;
+       LayerPara layerPara;
+       layerPara.m_n = preLayer->m_tensorSize[0]; //input width
+       layerPara.m_pW = new Tensor<float>({m_m,layerPara.m_n});
+       layerPara.m_pBTensor =  new Tensor<float>({m_m,1});
+       layerPara.m_pdW = new Tensor<float>({m_m,layerPara.m_n});
+       layerPara.m_pdBTensor =  new Tensor<float>({m_m,1});
+       m_layerParaMap[preLayer] = layerPara;
+       addPreviousLayer(preLayer);
+   }
 }
 
 FCLayer::~FCLayer(){
-  if (nullptr != m_pW) delete m_pW;
-  if (nullptr != m_pBTensor) delete m_pBTensor;
+  for(map<Layer*, LayerPara>::iterator iter = m_layerParaMap.begin(); iter != m_layerParaMap.end(); ++iter){
+      LayerPara& layerPara = iter->second;
+      if (nullptr != layerPara.m_pW) delete layerPara.m_pW;
+      if (nullptr != layerPara.m_pBTensor) delete layerPara.m_pBTensor;
 
-  if (nullptr != m_pdW) delete m_pdW;
-  if (nullptr != m_pdBTensor) delete m_pdBTensor;
+      if (nullptr != layerPara.m_pdW) delete layerPara.m_pdW;
+      if (nullptr != layerPara.m_pdBTensor) delete layerPara.m_pdBTensor;
+  }
 }
 
 void FCLayer::initialize(const string& initialMethod)
 {
-    if ("Xavier" == initialMethod) {
-        xavierInitialize(m_pW);
-        long nRow = m_pBTensor->getDims()[0];
-        const float sigmaB = 1.0 / nRow;
-        generateGaussian(m_pBTensor, 0, sigmaB);
+    for(map<Layer*, LayerPara>::iterator iter = m_layerParaMap.begin(); iter != m_layerParaMap.end(); ++iter) {
+        LayerPara &layerPara = iter->second;
+        if ("Xavier" == initialMethod) {
+            xavierInitialize(layerPara.m_pW);
+            long nRow = layerPara.m_pBTensor->getDims()[0];
+            const float sigmaB = 1.0 / nRow;
+            generateGaussian(layerPara.m_pBTensor, 0, sigmaB);
+        }
+        else{
+            cout<<"Error: Initialize Error in FCLayer."<<endl;
+        }
     }
-    else{
-        cout<<"Error: Initialize Error in FCLayer."<<endl;
 
-    }
 }
 
 void FCLayer::forward(){
-    *m_pYTensor = (*m_pW) * (*(m_prevLayerPointer->m_pYTensor)) + *m_pBTensor;
+    for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
+        LayerPara &layerPara = m_layerParaMap[*iter];
+        *m_pYTensor += (*layerPara.m_pW) * (*((*iter)->m_pYTensor)) + *(layerPara.m_pBTensor);
+    }
 }
 
 //   y = W*x +b

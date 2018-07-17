@@ -7,22 +7,26 @@
 
 #include "Layer.h"
 
+
 // y = W*x+ b
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-    FCLayer(const int id, const string name, const vector<int>& tensorSize, Layer* preLayer);
+    FCLayer(const int id, const string name, const vector<int>& tensorSize, list<Layer*>& preLayers);
     ~FCLayer();
 
-    long m_n; //input width
     long m_m; //output width
+    struct LayerPara{
+        long m_n; //input width
+        Tensor<float>*  m_pW;
+        Tensor<float>*  m_pBTensor;
+        Tensor<float>*  m_pdW;
+        Tensor<float>*  m_pdBTensor;
+    };
+    map<Layer*, LayerPara> m_layerParaMap;
 
-    Tensor<float>*  m_pW;
-    Tensor<float>*  m_pBTensor;
-    Tensor<float>*  m_pdW;
-    Tensor<float>*  m_pdBTensor;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void forward();
