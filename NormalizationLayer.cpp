@@ -5,7 +5,7 @@
 #include "NormalizationLayer.h"
 #include "statisTool.h"
 
-NormalizationLayer::NormalizationLayer(const int id, const string name,Layer* preLayer):Layer(id,name, preLayer->m_width){
+NormalizationLayer::NormalizationLayer(const int id, const string name,Layer* preLayer):Layer(id,name, preLayer->m_tensorSize){
     m_type = "NormalizationLayer";
     setPreviousLayer(preLayer);
     m_epsilon = 1e-6;
@@ -23,20 +23,20 @@ void NormalizationLayer::initialize(const string& initialMethod){
 // sigma = sigma + m_epsilon,   avoid sigma == 0
 // dL/dX = dL/dY * dY/dX = dL/dY * (1/sigma)
 void NormalizationLayer::forward(){
-    DynamicVector<float>& Y = *m_pYVector;
-    DynamicVector<float>& X = *m_prevLayerPointer->m_pYVector;
+    DynamicVector<float>& Y = *m_pYTensor;
+    DynamicVector<float>& X = *m_prevLayerPointer->m_pYTensor;
     float mean = average(&X);
     float sigma = sqrt(variance(&X));
-    for (long i=0; i< m_width; ++i){
+    for (long i=0; i< m_tensorSize; ++i){
         Y[i] = (X[i]- mean)/(sigma+m_epsilon);
     }
 }
 void NormalizationLayer::backward(){
-    DynamicVector<float>& dY = *m_pdYVector;
-    DynamicVector<float>& dX = *m_prevLayerPointer->m_pdYVector;
-    DynamicVector<float>& X = *m_prevLayerPointer->m_pYVector;
+    DynamicVector<float>& dY = *m_pdYTensor;
+    DynamicVector<float>& dX = *m_prevLayerPointer->m_pdYTensor;
+    DynamicVector<float>& X = *m_prevLayerPointer->m_pYTensor;
     float sigma = sqrt(variance(&X));
-    for(long i=0; i< m_width; ++i){
+    for(long i=0; i< m_tensorSize; ++i){
         dX[i] = dY[i]/(sigma+m_epsilon);
     }
 }

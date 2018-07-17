@@ -17,7 +17,7 @@ InputLayer::~InputLayer(){
 void InputLayer::initialize(const string& initialMethod){
     // Gaussian random initialize
     if ("Gaussian" == initialMethod) {
-        generateGaussian(m_pYVector,0, 1 );
+        generateGaussian(m_pYTensor,0, 1 );
     }
 }
 

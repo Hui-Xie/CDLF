@@ -15,10 +15,10 @@ LossConvexExample1::~LossConvexExample1(){
 
 
 float LossConvexExample1::lossCompute(){
-    //use m_prevLayerPointer->m_pYVector,
+    //use m_prevLayerPointer->m_pYTensor,
     m_loss = 0;
-    long N = m_prevLayerPointer->m_pYVector->size();
-    DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYVector);
+    long N = m_prevLayerPointer->m_pYTensor->size();
+    DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYTensor);
     for (long i=0; i< N ;++i){
         m_loss += pow( prevY[i] - i , 2);
     }
@@ -29,10 +29,10 @@ float LossConvexExample1::lossCompute(){
 // Loss = f-0
 // dL/dx_i = dL/df * df/dx_i =  2* (x_i-i)
 void  LossConvexExample1::gradientCompute(){
-    //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYVector
-    long N = m_prevLayerPointer->m_pYVector->size();
-    DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYVector);
-    DynamicVector<float> & prevdY = *(m_prevLayerPointer->m_pdYVector);
+    //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYTensor
+    long N = m_prevLayerPointer->m_pYTensor->size();
+    DynamicVector<float> & prevY = *(m_prevLayerPointer->m_pYTensor);
+    DynamicVector<float> & prevdY = *(m_prevLayerPointer->m_pdYTensor);
     for (long i=0; i< N ;++i){
         prevdY[i] = 2 * ( prevY[i] - i);
     }
@@ -40,7 +40,7 @@ void  LossConvexExample1::gradientCompute(){
 
 void  LossConvexExample1::printGroundTruth(){
     cout<<"For this specific Loss function, Ground Truth is: ";
-    long N = m_prevLayerPointer->m_width;
+    long N = m_prevLayerPointer->m_tensorSize;
     cout<<"( ";
     for (long i=0; i< N; ++i){
         if (i != N-1 ) cout<<i<<", ";

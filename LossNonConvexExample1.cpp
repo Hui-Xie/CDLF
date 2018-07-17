@@ -16,7 +16,7 @@ LossNonConvexExample1::~LossNonConvexExample1(){
 
 
 float LossNonConvexExample1::lossCompute(){
-    DynamicVector<float> & X = *(m_prevLayerPointer->m_pYVector);
+    DynamicVector<float> & X = *(m_prevLayerPointer->m_pYTensor);
     m_loss = 3*X[1]*sin(X[0])+5*X[0]*cos(X[1])+0.5*X[0]*X[1]+X[0]*X[0]-X[1]*X[1];
 }
 
@@ -25,8 +25,8 @@ float LossNonConvexExample1::lossCompute(){
 //dL/dx = dL/df* df/dx = 3ycos(x)+ 5cos(y) + 0.5y +2x
 //dL/dy = dL/df* df/dy = 3sin(x)- 5xsin(y)+ 0.5x-2y
 void  LossNonConvexExample1::gradientCompute(){
-    DynamicVector<float> & X = *(m_prevLayerPointer->m_pYVector);
-    DynamicVector<float> & dY = *(m_prevLayerPointer->m_pdYVector);
+    DynamicVector<float> & X = *(m_prevLayerPointer->m_pYTensor);
+    DynamicVector<float> & dY = *(m_prevLayerPointer->m_pdYTensor);
     dY[0] = 3*X[1]*cos(X[0])+5*cos(X[1])+0.5*X[1]+2*X[0];
     dY[1] = 3*sin(X[0])-5*X[0]*sin(X[1])+0.5*X[0]-2*X[1];
 }

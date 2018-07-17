@@ -28,10 +28,6 @@ public:
     Tensor operator- (const Tensor& other);
     void printElements();
 
-
-
-
-
 private:
     vector<int> m_dims;
     ValueType* m_data;

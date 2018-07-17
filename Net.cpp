@@ -131,7 +131,7 @@ void Net::train()
 
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "
-        <<"Output Result: "<< trans(*(lossLayer->m_prevLayerPointer->m_pYVector)) << "  "
+        <<"Output Result: "<< trans(*(lossLayer->m_prevLayerPointer->m_pYTensor)) << "  "
         <<"Loss: "<< lossLayer->getLoss()<< endl;
     cout<<endl;
 }

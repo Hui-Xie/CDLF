@@ -27,3 +27,12 @@ vector<int> reverseVector(const vector<int>& src){
 }
 
 
+string vector2String(const vector<int>& src){
+    string outputString;
+    int length = src.size();
+    for(int i=0; i< length; ++i){
+        outputString += to_string(src[i])+ ((i==length-1)? " ": "*");
+    }
+    return outputString;
+}
+

@@ -13,8 +13,8 @@ using namespace std;
 //       W is m*n dimensional matrix
 FCLayer::FCLayer(const int id, const string name,const long width, Layer* preLayer):Layer(id, name, width){
    m_type = "FullyConnected";
-   m_n = preLayer->m_width; //input width
-   m_m = m_width;
+   m_n = preLayer->m_tensorSize; //input width
+   m_m = m_tensorSize;
    setPreviousLayer(preLayer);
    m_pW = new DynamicMatrix<float>(m_m,m_n);
    m_pBVector =  new DynamicVector<float>(m_m);
@@ -45,7 +45,7 @@ void FCLayer::initialize(const string& initialMethod)
 }
 
 void FCLayer::forward(){
-    *m_pYVector = (*m_pW) * (*(m_prevLayerPointer->m_pYVector)) + *m_pBVector;
+    *m_pYTensor = (*m_pW) * (*(m_prevLayerPointer->m_pYTensor)) + *m_pBVector;
 }
 
 //   y = W*x +b
@@ -53,10 +53,10 @@ void FCLayer::forward(){
 //  dL/db = dL/dy * dy/db = dL/dy
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
 void FCLayer::backward(){
-    DynamicVector<float>& dLdy = *m_pdYVector;
-    *m_pdW = dLdy * trans(*(m_prevLayerPointer->m_pYVector));
+    DynamicVector<float>& dLdy = *m_pdYTensor;
+    *m_pdW = dLdy * trans(*(m_prevLayerPointer->m_pYTensor));
     *m_pdBVector = dLdy;
-    *(m_prevLayerPointer->m_pdYVector) = trans(*m_pW) * dLdy;
+    *(m_prevLayerPointer->m_pdYTensor) = trans(*m_pW) * dLdy;
 }
 
 void FCLayer::updateParameters(const float lr, const string& method) {

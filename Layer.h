@@ -8,22 +8,23 @@
 #include <string>
 #include  <blaze/Math.h>
 #include <list>
+#include "Tensor.h"
 using namespace blaze;
 using namespace std;
 
 class Layer {
 public:
-    Layer(const int id, const string name, const long width);
+    Layer(const int id, const string name, const vector<int>& tensorSize);
     ~Layer();
 
     int m_id;
     string m_name;
     string m_type;
-    list<Layer*> m_prevLayers;
-    list<Layer*> m_nextLayers;
-    long m_width;
-    DynamicVector<float>*  m_pYVector;   //the output of this layer
-    DynamicVector<float>*  m_pdYVector; //dL/dy,where L is Loss
+    list<Layer*>  m_prevLayers;
+    list<Layer*>  m_nextLayers;
+    vector<int>  m_tensorSize;
+    Tensor<float>* m_pYTensor;             //the output of this layer
+    Tensor<float>* m_pdYTensor;          //dL/dy,where L is Loss
 
     virtual  void initialize(const string& initialMethod)=0;
     virtual  void forward()=0;
@@ -36,7 +37,7 @@ public:
     void printDY();
 
 private:
-    void printVector(DynamicVector<float>* vector);
+    //void printVector(DynamicVector<float>* vector);
 
 
 };
