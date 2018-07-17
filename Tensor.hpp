@@ -5,12 +5,20 @@
 #include "Tensor.h"
 #include <iostream>
 #include "Tools.h"
+#include <assert.h>
 
 template<class ValueType>
 Tensor::Tensor(const vector<int>& dims){
    m_dims = dims;
    m_data = nullptr;
    allocateMem();
+}
+
+template<class ValueType>
+Tensor::Tensor(const Tensor& other){
+    if (this != &other){
+        *this = other;
+    }
 }
 
 template<class ValueType>
@@ -55,6 +63,11 @@ void  Tensor::freeMem(){
 }
 
 template<class ValueType>
+ValueType& Tensor::e(long index){
+    return m_data[index];
+}
+
+template<class ValueType>
 ValueType& Tensor::e(const vector<int>& index){
    if (index.size() != m_dims.size()){
       cout<<"Error: Tensor index and dims have different dimension."<<endl;
@@ -69,13 +82,19 @@ ValueType& Tensor::e(const vector<int>& index){
    return m_data[pos];
 }
 
+// transpose operation only supports 2D matrix
 template<class ValueType>
 Tensor Tensor::transpose(){
-    Tensor<ValueType> tensor(m_dims);
-
-
+    vector<int> newDims = reverseVector(m_dims);
+    Tensor<ValueType> tensor(newDims);
+    int dim = m_dims.size();
+    assert(dim ==2 );
+    for (int i=0; i<newDims[0]; ++i){
+        for (int j=0; j< newDims[1];++j){
+            tensor.e(i*newDims[0]+j) = e(i*m_dims[0]+j);
+        }
+    }
     return tensor;
-
 }
 
 template<class ValueType>

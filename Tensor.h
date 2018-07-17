@@ -12,6 +12,7 @@ template<class ValueType>
 class Tensor {
 public:
     Tensor(const vector<int>& dims);
+    Tensor(const Tensor& other);
     ~Tensor();
 
     vector<int> getDims() const;
@@ -19,6 +20,7 @@ public:
     long getLength() const;
 
     ValueType& e(const vector<int>& index);
+    ValueType& e(long index);
     Tensor transpose();
     Tensor operator* (const Tensor& other);
     Tensor& operator= (const Tensor& other);
