@@ -160,6 +160,20 @@ Tensor<ValueType> Tensor<ValueType>::operator- (const Tensor<ValueType>& other){
     }
     return tensor;
 }
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::operator/ (const float divisor){
+    if (0 == divisor){
+        return *this;
+    }
+    else{
+        Tensor tensor (m_dims);
+        long length = getLength();
+        for (long i=0; i<length; ++i){
+            tensor.e(i) = e(i)/divisor;
+        }
+        return tensor;
+    }
+}
 
 template<class ValueType>
 void Tensor<ValueType>::printElements(){

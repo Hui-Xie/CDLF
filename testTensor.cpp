@@ -55,6 +55,10 @@ int main (int argc, char *argv[]) {
     Tensor<float> tensor6 = tensor1-  tensor4;
     cout <<"tensor6 = tensor1-  tensor4; = "<<endl;
     tensor6.printElements();
+
+    Tensor<float> tensor7 = tensor6/2;
+    cout <<"tensor7 = tensor6/2 = "<<endl;
+    tensor7.printElements();
 }
 
 
