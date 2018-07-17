@@ -16,6 +16,13 @@ int main (int argc, char *argv[]) {
     }
     tensor.printElements();
 
+    Tensor<float> tensorTranspose = tensor.transpose();
+
+    cout<<"Transpose: "<<endl;
+    tensorTranspose.printElements();
+
+
+
 }
 
 

@@ -16,7 +16,7 @@ public:
     ~Tensor();
 
     vector<int> getDims() const;
-    ValueType* getData();
+    ValueType* getData() const;
     long getLength() const;
 
     ValueType& e(const vector<int>& index);

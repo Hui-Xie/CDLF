@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Tools.h"
 #include <assert.h>
+#include <cstring>  //for memcpy function
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<int>& dims){
@@ -32,7 +33,7 @@ vector<int> Tensor<ValueType>::getDims()const {
 }
 
 template<class ValueType>
-ValueType* Tensor<ValueType>::getData(){
+ValueType* Tensor<ValueType>::getData() const{
     return m_data;
 }
 
@@ -92,14 +93,14 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     assert(dim ==2 );
     for (int i=0; i<newDims[0]; ++i){
         for (int j=0; j< newDims[1];++j){
-            tensor.e(i*newDims[0]+j) = e(i*m_dims[0]+j);
+            tensor.e(i*newDims[1]+j) = e(i*m_dims[1]+j);
         }
     }
     return tensor;
 }
 
 template<class ValueType>
-Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor& other){
+Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other){
     if (this != &other) {
         long length = other.getLength();
         if (!sameVector(m_dims, other.getDims())){
@@ -107,7 +108,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor& other){
              m_dims = other.getDims();
              allocateMem();
         }
-        std::copy(other.getData(), other.getData() + length, m_data);
+        memcpy(m_data, other.getData(), length*sizeof(ValueType));
     }
     return *this;
 }

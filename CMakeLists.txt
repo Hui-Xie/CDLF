@@ -13,7 +13,7 @@ set(STATS_INCLUDE_DIR  E:/CProject/stats/include/) # for windows  stats C++ stat
 include_directories(${STATS_INCLUDE_DIR})
 
 set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp
-                  statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp Tools.h)
+                  statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp)
 set(RL_NonConvexSRCS ${Common_SRCS}
                   RL_Test.cpp LossConvexExample1.cpp LossNonConvexExample1.cpp
                   LossNonConvexExample1.h LossNonConvexExample2.cpp LossNonConvexExample2.h)
@@ -21,7 +21,7 @@ add_executable(RL_NonConvex ${RL_NonConvexSRCS})
 
 
 # for test Tensor class
-set(Test_Tensor Tensor.h testTensor.cpp)
+set(Test_Tensor Tensor.h Tools.cpp testTensor.cpp)
 add_executable(testTensor ${Test_Tensor})
 
 
