@@ -19,7 +19,7 @@ public:
     ValueType* getData() const;
     long getLength() const;
 
-    ValueType& e(const vector<int>& index);
+    ValueType& e(const vector<int>& index)const;
     ValueType& e(long index);
     Tensor transpose();
     Tensor operator* (const Tensor& other);

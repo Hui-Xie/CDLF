@@ -6,20 +6,37 @@
 
 
 int main (int argc, char *argv[]) {
-    Tensor<float> tensor({3,4});
+    Tensor<float> tensor1({3,4});
     int k=0;
     for (int i=0; i<3; ++i){
         for(int j=0; j<4;++j){
-            tensor.e(k) = k;
+            tensor1.e(k) = k;
             ++k;
         }
     }
-    tensor.printElements();
+    cout <<"tensor1:"<<endl;
+    tensor1.printElements();
 
-    Tensor<float> tensorTranspose = tensor.transpose();
+    Tensor<float> tensorTranspose = tensor1.transpose();
 
     cout<<"Transpose: "<<endl;
     tensorTranspose.printElements();
+
+    Tensor<float> tensor2({4,2});
+    k =0;
+    for (int i=0; i<4; ++i){
+        for(int j=0; j<2;++j){
+            tensor2.e(k) = 1;
+            ++k;
+        }
+    }
+    cout <<"tensor2:"<<endl;
+    tensor2.printElements();
+
+    Tensor<float> tensor3 = tensor1* tensor2;
+    cout <<"tensor3 = tensor1* tensor2 = "<<endl;
+    tensor3.printElements();
+
 
 
 

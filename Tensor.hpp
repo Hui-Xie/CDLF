@@ -69,7 +69,7 @@ ValueType& Tensor<ValueType>::e(long index){
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::e(const vector<int>& index){
+ValueType& Tensor<ValueType>::e(const vector<int>& index) const{
    assert(index.size() == m_dims.size());
    int dim = m_dims.size();
    unsigned  long pos = 0;
@@ -93,7 +93,7 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     assert(dim ==2 );
     for (int i=0; i<newDims[0]; ++i){
         for (int j=0; j< newDims[1];++j){
-            tensor.e(i*newDims[1]+j) = e(i*m_dims[1]+j);
+            tensor.e({i,j}) = e({j,i});
         }
     }
     return tensor;
@@ -115,20 +115,25 @@ Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other)
 
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor& other){
+Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     int thisDim = m_dims.size();
     vector<int> otherDims = other.getDims();
     int otherDim = otherDims.size();
-    if (m_dims[thisDim-1] != otherDims[otherDim -1]){
-        cout<<"Error: tensor product should has matching dimension."<<endl;
-        return nullptr;
+    assert (m_dims[thisDim-1] == otherDims[0]);
+    assert (2 == thisDim && 2 == otherDim);
+
+    vector<int> newDims{m_dims[0], otherDims[1]};
+    Tensor tensor (newDims);
+    for (int i=0; i<newDims[0]; ++i){
+        for (int j=0; j< newDims[1];++j){
+            ValueType value =0;
+            for (int k=0; k< m_dims[1]; ++k){
+                value += e({i,k})*other.e({k,j});
+            }
+            tensor.e({i,j}) = value;
+        }
     }
-    else {
-
-
-    }
-
-
+    return tensor;
 }
 
 
