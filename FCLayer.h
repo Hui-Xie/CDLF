@@ -29,6 +29,8 @@ public:
     };
     map<Layer*, LayerPara> m_layerParaMap;
 
+    void constructLayerParaMap(list<Layer*>& prevLayers);
+
 
     virtual  void initialize(const string& initialMethod);
     virtual  void forward();

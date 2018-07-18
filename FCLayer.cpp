@@ -15,25 +15,33 @@ FCLayer::FCLayer(const int id, const string& name,const vector<int>& tensorSize,
    m_type = "FullyConnected";
    m_layerParaMap.clear();
    m_m = m_tensorSize[0];
-
-   for(list<Layer*>::const_iterator iter=prevLayers.begin(); iter != prevLayers.end(); ++iter){
-       Layer* preLayer = *iter;
-       LayerPara layerPara;
-       layerPara.m_n = preLayer->m_tensorSize[0]; //input width
-       layerPara.m_pW = new Tensor<float>({m_m,layerPara.m_n});
-       layerPara.m_pBTensor =  new Tensor<float>({m_m,1});
-       layerPara.m_pdW = new Tensor<float>({m_m,layerPara.m_n});
-       layerPara.m_pdBTensor =  new Tensor<float>({m_m,1});
-       m_layerParaMap[preLayer] = layerPara;
-       addPreviousLayer(preLayer);
-   }
+   constructLayerParaMap(prevLayers);
 }
 
 FCLayer::FCLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayer):Layer(id, name, tensorSize){
+    m_type = "FullyConnected";
+    m_layerParaMap.clear();
+    m_m = m_tensorSize[0];
+
     list<Layer*> prevLayers;
     prevLayers.push_back(prevLayer);
-    FCLayer(id,name, tensorSize,prevLayers);
+    constructLayerParaMap(prevLayers);
 }
+
+void FCLayer::constructLayerParaMap(list<Layer*>& prevLayers){
+    for(list<Layer*>::const_iterator iter=prevLayers.begin(); iter != prevLayers.end(); ++iter){
+        Layer* preLayer = *iter;
+        LayerPara layerPara;
+        layerPara.m_n = preLayer->m_tensorSize[0]; //input width
+        layerPara.m_pW = new Tensor<float>({m_m,layerPara.m_n});
+        layerPara.m_pBTensor =  new Tensor<float>({m_m,1});
+        layerPara.m_pdW = new Tensor<float>({m_m,layerPara.m_n});
+        layerPara.m_pdBTensor =  new Tensor<float>({m_m,1});
+        m_layerParaMap[preLayer] = layerPara;
+        addPreviousLayer(preLayer);
+    }
+}
+
 
 FCLayer::~FCLayer(){
   for(map<Layer*, LayerPara>::iterator iter = m_layerParaMap.begin(); iter != m_layerParaMap.end(); ++iter){
@@ -86,7 +94,7 @@ void FCLayer::backward(){
 
 void FCLayer::updateParameters(const float lr, const string& method) {
     if ("sgd" == method){
-        for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
+         for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
             LayerPara &layerPara = m_layerParaMap[*iter];
             *layerPara.m_pW -= (*layerPara.m_pdW)*lr;
             *layerPara.m_pBTensor -=  (*layerPara.m_pdBTensor)*lr;
