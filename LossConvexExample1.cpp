@@ -34,7 +34,6 @@ void  LossConvexExample1::gradientCompute(){
     Tensor<float> & prevY = *(m_prevLayers.front()->m_pYTensor);
     Tensor<float> & prevdY = *(m_prevLayers.front()->m_pdYTensor);
     long N = prevY.getLength();
-
     for (long i=0; i< N ;++i){
         prevdY[i] = 2 * ( prevY[i] - i);
     }
@@ -42,7 +41,7 @@ void  LossConvexExample1::gradientCompute(){
 
 void  LossConvexExample1::printGroundTruth(){
     cout<<"For this specific Loss function, Ground Truth is: ";
-    long N = m_prevLayerPointer->m_tensorSize;
+    long N = m_prevLayers.front()->m_pYTensor->getLength();
     cout<<"( ";
     for (long i=0; i< N; ++i){
         if (i != N-1 ) cout<<i<<", ";
