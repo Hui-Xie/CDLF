@@ -113,6 +113,11 @@ int main (int argc, char *argv[]) {
     cout<<"tensor1(0,2)="<<tensor1(0,2)<<endl;
     cout<<"tensor1(1,2)="<<tensor1(1,2)<<endl;
     cout<<"tensor1(2,1)="<<tensor1(2,1)<<endl;
+    cout<<"tensor1(2,1)= tensor(2,1)+3"<<endl;
+    tensor1(2,1) += 3;
+    cout<<"tensor1(2,1)="<<tensor1(2,1)<<endl;
+    tensor1.printElements();
+
 }
 
 
