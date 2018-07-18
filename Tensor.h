@@ -9,6 +9,7 @@
 using namespace std;
 
 // Vector is a Tensor({n,1})
+// Now this Network has finished Tensor Reconstruction, and supported DAG network.
 
 
 template<class ValueType>
