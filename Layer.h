@@ -15,7 +15,7 @@ using namespace std;
 
 class Layer {
 public:
-    Layer(const int id, const string name, const vector<int>& tensorSize);
+    Layer(const int id, const string& name, const vector<int>& tensorSize);
     ~Layer();
 
     int m_id;

@@ -8,6 +8,9 @@
 #include <vector>
 using namespace std;
 
+// Vector is a Tensor({n,1})
+
+
 template<class ValueType>
 class Tensor {
 public:

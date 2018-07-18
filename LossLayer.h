@@ -7,9 +7,11 @@
 
 #include "Layer.h"
 
+//LossLayer is an abstract class.
+
 class LossLayer : public Layer {
 public:
-    LossLayer(const int id, const string name,Layer* preLayer);
+    LossLayer(const int id, const string& name,list<Layer*>& preLayers);
     ~LossLayer();
 
     float getLoss();

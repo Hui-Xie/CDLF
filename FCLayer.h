@@ -15,7 +15,7 @@
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-    FCLayer(const int id, const string name, const vector<int>& tensorSize, list<Layer*>& preLayers);
+    FCLayer(const int id, const string& name, const vector<int>& tensorSize, list<Layer*>& preLayers);
     ~FCLayer();
 
     long m_m; //output width
