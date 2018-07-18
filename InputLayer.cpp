@@ -5,7 +5,7 @@
 #include "InputLayer.h"
 #include "statisTool.h"
 
-InputLayer::InputLayer(const int id, const string name, const long width): Layer(id, name, width){
+InputLayer::InputLayer(const int id, const string& name, const vector<int>& tensorSize): Layer(id, name, tensorSize){
     m_type = "InputLayer";
 
 }
@@ -14,6 +14,7 @@ InputLayer::~InputLayer(){
 
 }
 
+//this initialize method is just for random input case
 void InputLayer::initialize(const string& initialMethod){
     // Gaussian random initialize
     if ("Gaussian" == initialMethod) {

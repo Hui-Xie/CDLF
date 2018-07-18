@@ -6,6 +6,7 @@
 #define RL_NONCONVEX_FCLAYER_H
 
 #include "Layer.h"
+#include <map>
 
 
 // y = W*x+ b
