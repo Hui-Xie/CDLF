@@ -24,6 +24,14 @@ Tensor<ValueType>::Tensor(const Tensor& other){
     }
 }
 
+template<class ValueType>
+void Tensor<ValueType>::zeroInitialize(){
+    long N= getLength();
+    for(long i=0; i<N;++i){
+        e(i) = 0;
+    }
+}
+
 
 template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other){

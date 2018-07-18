@@ -52,6 +52,7 @@ public:
     Tensor& operator/= (const float divisor);
 
     void printElements();
+    void zeroInitialize();
 
     float sum();
     float average();

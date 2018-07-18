@@ -72,6 +72,7 @@ void FCLayer::initialize(const string& initialMethod)
 }
 
 void FCLayer::forward(){
+    m_pYTensor->zeroInitialize();
     for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
         LayerPara &layerPara = m_layerParaMap[*iter];
         *m_pYTensor += (*layerPara.m_pW) * (*((*iter)->m_pYTensor)) + *(layerPara.m_pBTensor);
