@@ -7,6 +7,7 @@
 #include "Tools.h"
 #include <assert.h>
 #include <cstring>  //for memcpy function
+#include <cmath> //for pow()
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<int>& dims){

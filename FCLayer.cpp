@@ -29,6 +29,12 @@ FCLayer::FCLayer(const int id, const string& name,const vector<int>& tensorSize,
    }
 }
 
+FCLayer::FCLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayer):Layer(id, name, tensorSize){
+    list<Layer*> prevLayers;
+    prevLayers.push_back(prevLayer);
+    FCLayer(id,name, tensorSize,prevLayers);
+}
+
 FCLayer::~FCLayer(){
   for(map<Layer*, LayerPara>::iterator iter = m_layerParaMap.begin(); iter != m_layerParaMap.end(); ++iter){
       LayerPara& layerPara = iter->second;

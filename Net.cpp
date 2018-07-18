@@ -9,6 +9,7 @@
 #include "LossLayer.h"
 #include "NormalizationLayer.h"
 #include <iostream>
+#include <cmath> //for isinf()
 
 Net::Net(){
    m_layers.clear();
@@ -80,10 +81,10 @@ void Net::buildNet(const vector<long> layerWidthVector, Layer* lossLayer){
       return;
    }
    int layerID = 1;
-   InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",layerWidthVector.at(0));
+   InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",{layerWidthVector.at(0),1});
    addLayer(inputLayer);
    for(int i =1; i< nLayers; ++i){
-      FCLayer* fcLayer = new FCLayer(layerID++, "FCLayer"+to_string(i), layerWidthVector.at(i),m_layers.rbegin()->second);
+      FCLayer* fcLayer = new FCLayer(layerID++, "FCLayer"+to_string(i), {layerWidthVector.at(i),1},m_layers.rbegin()->second);
       addLayer(fcLayer);
       if (i != nLayers -1){
          ReLU* reLU = new ReLU(layerID++, "ReLU"+to_string(i), m_layers.rbegin()->second);
@@ -130,9 +131,9 @@ void Net::train()
 }
 
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
-    cout<<"Iteration: " << nIter << "  "
-        <<"Output Result: "<< trans(*(lossLayer->m_prevLayerPointer->m_pYTensor)) << "  "
-        <<"Loss: "<< lossLayer->getLoss()<< endl;
+    cout<<"Iteration: " << nIter << "  "  <<"Output Result: "<<endl;
+    lossLayer->m_prevLayers.front()->m_pYTensor->transpose().printElements();
+    cout<<"Loss: "<< lossLayer->getLoss()<< endl;
     cout<<endl;
 }
 

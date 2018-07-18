@@ -9,7 +9,7 @@
 
 class LossNonConvexExample2 : public LossLayer {
 public:
-    LossNonConvexExample2(Layer* preLayer);
+    LossNonConvexExample2(const int id, const string& name);
     ~LossNonConvexExample2();
 
 private:
