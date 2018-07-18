@@ -70,27 +70,40 @@ void FCLayer::forward(){
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
 void FCLayer::backward(){
     Tensor<float>& dLdy = *m_pdYTensor;
-    *m_pdW = dLdy * trans(*(m_prevLayerPointer->m_pYTensor));
-    *m_pdBTensor = dLdy;
-    *(m_prevLayerPointer->m_pdYTensor) = trans(*m_pW) * dLdy;
+    for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
+        LayerPara &layerPara = m_layerParaMap[*iter];
+        *layerPara.m_pdW = dLdy * ((*iter)->m_pYTensor->transpose());
+        *layerPara.m_pdBTensor = dLdy;
+        *((*iter)->m_pdYTensor) = layerPara.m_pW->transpose() * dLdy;
+    }
 }
 
 void FCLayer::updateParameters(const float lr, const string& method) {
     if ("sgd" == method){
-        *m_pW -= lr* (*m_pdW);
-        *m_pBTensor -= lr* (*m_pdBTensor);
+        for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
+            LayerPara &layerPara = m_layerParaMap[*iter];
+            *layerPara.m_pW -= (*layerPara.m_pdW)*lr;
+            *layerPara.m_pBTensor -=  (*layerPara.m_pdBTensor)*lr;
+        }
     }
 }
 
 void FCLayer::printWandBVector(){
-    cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<m_n<<"; W: "<<endl;
-    cout<<*m_pW<<endl;
-    cout<<"B-transpose:"<<trans(*m_pBTensor)<<endl;
+    for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
+        LayerPara &layerPara = m_layerParaMap[*iter];
+        cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<layerPara.m_n<<"; W: "<<endl;
+        layerPara.m_pW->printElements();
+        cout<<"B-transpose:"<<endl;
+        layerPara.m_pBTensor->transpose().printElements();
+    }
 }
 
 void FCLayer::printdWanddBVector(){
-    cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<m_n<<"; dW: "<<endl;
-    cout<<*m_pdW<<endl;
-    cout<<"dB-transpose:"<<trans(*m_pdBTensor)<<endl;
-
+    for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter) {
+        LayerPara &layerPara = m_layerParaMap[*iter];
+        cout<<"LayerType: "<<m_type <<"; MatrixSize "<<m_m<<"*"<<layerPara.m_n<<"; dW: "<<endl;
+        layerPara.m_pdW->printElements();
+        cout<<"dB-transpose:"<<endl;
+        layerPara.m_pdBTensor->transpose().printElements();
+    }
 }

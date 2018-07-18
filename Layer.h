@@ -6,11 +6,11 @@
 #define RL_NONCONVEX_LAYER_H
 
 #include <string>
-#include  <blaze/Math.h>
+//#include  <blaze/Math.h>
 #include <list>
 #include "Tensor.h"
 #include <map>
-using namespace blaze;
+//using namespace blaze;
 using namespace std;
 
 class Layer {
