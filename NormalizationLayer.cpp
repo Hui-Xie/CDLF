@@ -4,8 +4,9 @@
 
 #include "NormalizationLayer.h"
 #include "statisTool.h"
+#include <math.h>       /* sqrt */
 
-NormalizationLayer::NormalizationLayer(const int id, const string name,Layer* preLayer):Layer(id,name, preLayer->m_tensorSize){
+NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* preLayer):Layer(id,name, preLayer->m_tensorSize){
     m_type = "NormalizationLayer";
     addPreviousLayer(preLayer);
     m_epsilon = 1e-6;
@@ -24,20 +25,22 @@ void NormalizationLayer::initialize(const string& initialMethod){
 // dL/dX = dL/dY * dY/dX = dL/dY * (1/sigma)
 void NormalizationLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
-    Tensor<float>& X = *m_prevLayerPointer->m_pYTensor;
-    float mean = average(&X);
-    float sigma = sqrt(variance(&X));
-    for (long i=0; i< m_tensorSize; ++i){
-        Y[i] = (X[i]- mean)/(sigma+m_epsilon);
+    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    float mean = X.average();
+    float sigma = sqrt(X.variance());
+    long N = Y.getLength();
+    for (long i=0; i< N; ++i){
+        Y.e(i) = (X.e(i)- mean)/(sigma+m_epsilon);
     }
 }
 void NormalizationLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *m_prevLayerPointer->m_pdYTensor;
-    Tensor<float>& X = *m_prevLayerPointer->m_pYTensor;
-    float sigma = sqrt(variance(&X));
-    for(long i=0; i< m_tensorSize; ++i){
-        dX[i] = dY[i]/(sigma+m_epsilon);
+    Tensor<float>& dX = *m_prevLayers.front()->m_pdYTensor;
+    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    float sigma = sqrt(X.variance());
+    long N = dY.getLength();
+    for(long i=0; i< N; ++i){
+        dX.e(i) = dY.e(i)/(sigma+m_epsilon);
     }
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method){

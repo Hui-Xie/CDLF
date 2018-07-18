@@ -7,11 +7,8 @@
 #include <iostream>
 using namespace std;
 
-LossLayer::LossLayer(const int id, const string& name,list<Layer*>& preLayers) : Layer(id,name,{}){
+LossLayer::LossLayer(const int id, const string& name) : Layer(id,name,{}){
     m_type = "LossLayer";
-    for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
-        addPreviousLayer(*iter);
-    }
     m_loss = 1e+10;
 }
 

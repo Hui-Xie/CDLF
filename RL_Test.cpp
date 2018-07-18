@@ -18,7 +18,7 @@ void printUsage(){
     cout<<"A Fully-Connected Network compute loss function using statistic gradient descent."<<endl;
     cout<<"Usage: cmd layerWidthVector"<<endl
         <<"For example: cmd 5,7,8,10,5"<<endl
-        <<"Where layerWidthVector use comma as separator, and it does not include ReLU"<<endl;
+        <<"Where layerWidthVector use comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl;
 
 }
 
@@ -56,14 +56,14 @@ int main (int argc, char *argv[])
     Net net;
 
     //convex example 1: f= \sum (x_i-i)^2
-    //LossConvexExample1* lossLayer = new LossConvexExample1(nullptr);
+    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "LossLayer",nullptr);
 
     //non-convex example 1: f(x,y) = 3ysin(x)+5xcos(y)+0.5xy+x^2-y^2
-    LossNonConvexExample1* lossLayer = new LossNonConvexExample1(nullptr);
-    net.setJudgeLoss(false); //for nonconvex case
+    //LossNonConvexExample1* lossLayer = new LossNonConvexExample1(nullptr);
+    //net.setJudgeLoss(false); //for nonconvex case
 
     // non-convex example 2: f(x) = x*sin(x)
-    // In low -D space, the deeplearning network can not escape the the local minima
+    // In low -D space, the deep learning network can not escape the the local minima
     // LossNonConvexExample2* lossLayer = new LossNonConvexExample2(nullptr);
     // net.setJudgeLoss(false); //for nonconvex case
 

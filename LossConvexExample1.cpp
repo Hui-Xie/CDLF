@@ -4,9 +4,10 @@
 
 #include "LossConvexExample1.h"
 #include <iostream>
+#include <math.h>       /* pow */
 using namespace std;
 
-LossConvexExample1::LossConvexExample1(Layer* preLayer): LossLayer(preLayer){
+LossConvexExample1::LossConvexExample1(const int id, const string& name): LossLayer(id,name){
 
 }
 LossConvexExample1::~LossConvexExample1(){
@@ -17,10 +18,10 @@ LossConvexExample1::~LossConvexExample1(){
 float LossConvexExample1::lossCompute(){
     //use m_prevLayerPointer->m_pYTensor,
     m_loss = 0;
-    long N = m_prevLayerPointer->m_pYTensor->size();
-    Tensor<float> & prevY = *(m_prevLayerPointer->m_pYTensor);
+    Tensor<float> & prevY = *(m_prevLayers.front()->m_pYTensor);
+    long N = prevY.getLength();
     for (long i=0; i< N ;++i){
-        m_loss += pow( prevY[i] - i , 2);
+        m_loss += pow( prevY.e(i) - i , 2);
     }
     return m_loss;
 }
@@ -30,9 +31,10 @@ float LossConvexExample1::lossCompute(){
 // dL/dx_i = dL/df * df/dx_i =  2* (x_i-i)
 void  LossConvexExample1::gradientCompute(){
     //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYTensor
-    long N = m_prevLayerPointer->m_pYTensor->size();
-    Tensor<float> & prevY = *(m_prevLayerPointer->m_pYTensor);
-    Tensor<float> & prevdY = *(m_prevLayerPointer->m_pdYTensor);
+    Tensor<float> & prevY = *(m_prevLayers.front()->m_pYTensor);
+    Tensor<float> & prevdY = *(m_prevLayers.front()->m_pdYTensor);
+    long N = prevY.getLength();
+
     for (long i=0; i< N ;++i){
         prevdY[i] = 2 * ( prevY[i] - i);
     }

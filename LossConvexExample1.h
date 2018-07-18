@@ -8,7 +8,7 @@
 
 class LossConvexExample1 : public LossLayer {
 public:
-    LossConvexExample1(Layer* preLayer);
+    LossConvexExample1(const int id, const string& name);
     ~LossConvexExample1();
 
 private:

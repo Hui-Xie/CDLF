@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-LossNonConvexExample1::LossNonConvexExample1(Layer* preLayer): LossLayer(preLayer){
+LossNonConvexExample1::LossNonConvexExample1(const int id, const string& name,list<Layer*>& prevLayers): LossLayer(id, name, prevLayers){
     //previousLayer's width must be 2 for this nonconvex function
     cout<<"Notes: Make sure that final layer only 2 neurons."<<endl;
 }

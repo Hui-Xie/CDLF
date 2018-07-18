@@ -6,9 +6,11 @@
 #define RL_NONCONVEX_NORMALIZATIONLAYER_H
 #include "Layer.h"
 
+// NormalizationLayer only has one previous layer.
+
 class NormalizationLayer: public Layer {
 public:
-    NormalizationLayer(const int id, const string name,Layer* preLayer);
+    NormalizationLayer(const int id, const string& name,Layer* preLayer);
     ~NormalizationLayer();
     float m_epsilon;
 

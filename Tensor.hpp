@@ -79,25 +79,61 @@ void  Tensor<ValueType>::freeMem(){
    }
 }
 
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::e(const vector<int>& index) const{
+    assert(index.size() == m_dims.size());
+    int dim = m_dims.size();
+    unsigned  long pos = 0;
+    for (int i=0; i< dim-1; ++i){
+        long iSpan = 1;
+        for (int j=i+1; j<dim; ++j){
+            iSpan *= m_dims[j];
+        }
+        pos += iSpan*index[i];
+    }
+    pos += index[dim-1];
+    return m_data[pos];
+}
+
 template<class ValueType>
 ValueType& Tensor<ValueType>::e(long index) const{
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::e(const vector<int>& index) const{
-   assert(index.size() == m_dims.size());
-   int dim = m_dims.size();
-   unsigned  long pos = 0;
-   for (int i=0; i< dim-1; ++i){
-       long iSpan = 1;
-       for (int j=i+1; j<dim; ++j){
-           iSpan *= m_dims[j];
-       }
-      pos += iSpan*index[i];
-   }
-   pos += index[dim-1];
-   return m_data[pos];
+ValueType& Tensor<ValueType>::operator[] (long index){
+    return m_data[index];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::operator() (long index){
+    return m_data[index];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::operator() (long i, long j){
+    assert(2 == m_dims.size());
+    return m_data[i*m_dims[1]+j];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k){
+    assert(3 == m_dims.size());
+    return m_data[i*m_dims[1]*m_dims[2]+j*m_dims[2]+k];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l){
+    assert(4 == m_dims.size());
+    return m_data[i*m_dims[1]*m_dims[2]*m_dims[3]+j*m_dims[2]*m_dims[3]+k*m_dims[3]+l];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m){
+    assert(5 == m_dims.size());
+    return m_data[i*m_dims[1]*m_dims[2]*m_dims[3]*m_dims[4]+j*m_dims[2]*m_dims[3]*m_dims[4]+k*m_dims[3]*m_dims[4]
+                   +l*m_dims[4] +m];
 }
 
 // transpose operation only supports 2D matrix

@@ -25,6 +25,12 @@ public:
 
     ValueType& e(const vector<int>& index)const;
     ValueType& e(long index) const;
+    ValueType& operator[] (long index);
+    ValueType& operator() (long index);
+    ValueType& operator() (long i, long j);
+    ValueType& operator() (long i, long j, long k);
+    ValueType& operator() (long i, long j, long k, long l);
+    ValueType& operator() (long i, long j, long k, long l, long m);
     Tensor transpose();
 
 
