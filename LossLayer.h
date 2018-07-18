@@ -8,6 +8,7 @@
 #include "Layer.h"
 
 //LossLayer is an abstract class.
+//LossLayer has no learning parameters.
 
 class LossLayer : public Layer {
 public:

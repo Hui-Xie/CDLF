@@ -56,16 +56,18 @@ int main (int argc, char *argv[])
     Net net;
 
     //convex example 1: f= \sum (x_i-i)^2
-    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "LossLayer");
+    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConexLossLayer");
 
     //non-convex example 1: f(x,y) = 3ysin(x)+5xcos(y)+0.5xy+x^2-y^2
-    //LossNonConvexExample1* lossLayer = new LossNonConvexExample1(nullptr);
+    //Notes: Make sure that final layer only 2 neurons.
+    //LossNonConvexExample1* lossLayer = new LossNonConvexExample1(10001,"NonConvexLossLayer");
     //net.setJudgeLoss(false); //for nonconvex case
 
     // non-convex example 2: f(x) = x*sin(x)
     // In low -D space, the deep learning network can not escape the the local minima
-    // LossNonConvexExample2* lossLayer = new LossNonConvexExample2(nullptr);
-    // net.setJudgeLoss(false); //for nonconvex case
+    // Notes: Make sure that final layer only 1 neuron.
+     //LossNonConvexExample2* lossLayer = new LossNonConvexExample2(1002,"NonConvexLossLayer2");
+     //net.setJudgeLoss(false); //for nonconvex case
 
     net.buildNet(layerWidthVector, lossLayer);
     net.setLearningRate(0.01);
