@@ -46,11 +46,23 @@ void FCLayer::constructLayerParaMap(list<Layer*>& prevLayers){
 FCLayer::~FCLayer(){
   for(map<Layer*, LayerPara>::iterator iter = m_layerParaMap.begin(); iter != m_layerParaMap.end(); ++iter){
       LayerPara& layerPara = iter->second;
-      if (nullptr != layerPara.m_pW) delete layerPara.m_pW;
-      if (nullptr != layerPara.m_pBTensor) delete layerPara.m_pBTensor;
+      if (nullptr != layerPara.m_pW){
+          delete layerPara.m_pW;
+          layerPara.m_pW = nullptr;
+      }
+      if (nullptr != layerPara.m_pBTensor) {
+          delete layerPara.m_pBTensor;
+          layerPara.m_pBTensor = nullptr;
+      }
 
-      if (nullptr != layerPara.m_pdW) delete layerPara.m_pdW;
-      if (nullptr != layerPara.m_pdBTensor) delete layerPara.m_pdBTensor;
+      if (nullptr != layerPara.m_pdW) {
+          delete layerPara.m_pdW;
+          layerPara.m_pdW = nullptr;
+      }
+      if (nullptr != layerPara.m_pdBTensor) {
+          delete layerPara.m_pdBTensor;
+          layerPara.m_pdBTensor = nullptr;
+      }
   }
 }
 

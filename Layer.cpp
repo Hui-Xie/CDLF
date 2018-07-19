@@ -26,8 +26,14 @@ Layer::Layer(const int id, const string& name, const vector<int>& tensorSize){
 
 
 Layer::~Layer(){
-    if (nullptr != m_pYTensor) delete m_pYTensor;
-    if (nullptr != m_pdYTensor) delete m_pdYTensor;
+    if (nullptr != m_pYTensor){
+        delete m_pYTensor;
+        m_pYTensor = nullptr;
+    }
+    if (nullptr != m_pdYTensor){
+        delete m_pdYTensor;
+        m_pdYTensor = nullptr;
+    }
 }
 
 void Layer::printY(){

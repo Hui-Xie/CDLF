@@ -8,12 +8,22 @@
 #include <map>
 
 /** Convolution layer
- * Y = W*X +b
+ * Y = W*X
  * where Y is the output at each voxel;
  *       W is the convolution filter, which is uniform in entire input;
  *       X is the receipt region of original input image;
  *       b is bias which is different at different voxel location
  *       * indicate convolution
+ *
+ * Notes:
+ * 1  currently only supports one previous layeer
+ * 2  in convolution layer, we do not consider bias, as there is separate BiasLayer for use;
+ * 3  Size changes: |Y| = |X|-|W|+1, in their different dimension;
+ * 4  the dimension of tensorSize of filter = dimension of tensorSize of X +1;
+ *    the adding dimension express the number of filter;
+ *
+ *
+ *
  *
  *
  *
@@ -24,19 +34,13 @@
 
 class ConvolutionLayer :  public Layer {
 public:
-    ConvolutionLayer(const int id, const string& name, const vector<int>& tensorSize, list<Layer*>& prevLayers);
-    ConvolutionLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayer);
+    ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer, const int stride);
     ~ConvolutionLayer();
 
-    struct LayerPara{
-        Tensor<float>*  m_pW;
-        Tensor<float>*  m_pBTensor;
-        Tensor<float>*  m_pdW;
-        Tensor<float>*  m_pdBTensor;
-    };
-    map<Layer*, LayerPara> m_layerParaMap;
+    Tensor<float>*  m_pW;
+    Tensor<float>*  m_pdW;
 
-    void constructLayerParaMap(list<Layer*>& prevLayers);
+    void constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer);
 
 
     virtual  void initialize(const string& initialMethod);
@@ -46,6 +50,7 @@ public:
 
 private:
     int m_stride;
+    bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
 
 
 
