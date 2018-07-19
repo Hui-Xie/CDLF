@@ -16,7 +16,7 @@
 class FCLayer :  public Layer{
 public:
     FCLayer(const int id, const string& name, const vector<int>& tensorSize, list<Layer*>& prevLayers);
-    FCLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayers);
+    FCLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayer);
     ~FCLayer();
 
     long m_m; //output width
