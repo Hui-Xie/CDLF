@@ -6,9 +6,9 @@
 #include "statisTool.h"
 #include <math.h>       /* sqrt */
 
-NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* preLayer):Layer(id,name, preLayer->m_tensorSize){
+NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize){
     m_type = "NormalizationLayer";
-    addPreviousLayer(preLayer);
+    addPreviousLayer(prevLayer);
     m_epsilon = 1e-6;
 }
 NormalizationLayer::~NormalizationLayer(){

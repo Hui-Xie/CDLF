@@ -32,7 +32,7 @@ public:
     virtual  void backward()=0;
     virtual  void updateParameters(const float lr, const string& method) = 0;
 
-    void addPreviousLayer(Layer* preLayer);
+    void addPreviousLayer(Layer* prevLayer);
 
     void printY();
     void printDY();

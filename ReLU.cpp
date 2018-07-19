@@ -6,9 +6,9 @@
 
 //ReLU has just one previous layer.
 
-ReLU::ReLU(const int id, const string& name,Layer* preLayer): Layer(id,name, preLayer->m_tensorSize){
+ReLU::ReLU(const int id, const string& name,Layer* prevLayer): Layer(id,name, prevLayer->m_tensorSize){
     m_type = "ReLU";
-    addPreviousLayer(preLayer);
+    addPreviousLayer(prevLayer);
 }
 
 ReLU::~ReLU(){

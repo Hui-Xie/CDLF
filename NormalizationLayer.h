@@ -10,7 +10,7 @@
 
 class NormalizationLayer: public Layer {
 public:
-    NormalizationLayer(const int id, const string& name,Layer* preLayer);
+    NormalizationLayer(const int id, const string& name,Layer* prevLayer);
     ~NormalizationLayer();
     float m_epsilon;
 

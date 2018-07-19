@@ -30,15 +30,15 @@ FCLayer::FCLayer(const int id, const string& name, const vector<int>& tensorSize
 
 void FCLayer::constructLayerParaMap(list<Layer*>& prevLayers){
     for(list<Layer*>::const_iterator iter=prevLayers.begin(); iter != prevLayers.end(); ++iter){
-        Layer* preLayer = *iter;
+        Layer* prevLayer = *iter;
         LayerPara layerPara;
-        layerPara.m_n = preLayer->m_tensorSize[0]; //input width
+        layerPara.m_n = prevLayer->m_tensorSize[0]; //input width
         layerPara.m_pW = new Tensor<float>({m_m,layerPara.m_n});
         layerPara.m_pBTensor =  new Tensor<float>({m_m,1});
         layerPara.m_pdW = new Tensor<float>({m_m,layerPara.m_n});
         layerPara.m_pdBTensor =  new Tensor<float>({m_m,1});
-        m_layerParaMap[preLayer] = layerPara;
-        addPreviousLayer(preLayer);
+        m_layerParaMap[prevLayer] = layerPara;
+        addPreviousLayer(prevLayer);
     }
 }
 

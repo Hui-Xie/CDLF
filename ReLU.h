@@ -8,7 +8,7 @@
 
 class ReLU : public Layer {
 public:
-    ReLU(const int id, const string& name,Layer* preLayer);
+    ReLU(const int id, const string& name,Layer* prevLayer);
     ~ReLU();
 
     virtual  void initialize(const string& initialMethod);
