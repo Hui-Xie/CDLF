@@ -110,6 +110,7 @@ int main (int argc, char *argv[]) {
     cout<<"Test [] overload"<<endl;
     cout<<"tensor1[3]="<<tensor1[3]<<endl;
     cout<<"tensor1(3)="<<tensor1(3)<<endl;
+    cout<<"tensor1.e({2,2}) = "<< tensor1.e({2,2})<<endl;
     cout<<"tensor1(0,2)="<<tensor1(0,2)<<endl;
     cout<<"tensor1(1,2)="<<tensor1(1,2)<<endl;
     cout<<"tensor1(2,1)="<<tensor1(2,1)<<endl;

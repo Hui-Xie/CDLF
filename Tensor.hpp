@@ -12,6 +12,7 @@
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<int>& dims){
    m_dims = dims;
+   generateDimsSpan();
    m_data = nullptr;
    allocateMem();
 }
@@ -40,6 +41,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other)
         if (!sameVector(m_dims, other.getDims())){
             freeMem();
             m_dims = other.getDims();
+            generateDimsSpan();
             allocateMem();
         }
         memcpy(m_data, other.getData(), length*sizeof(ValueType));
@@ -88,21 +90,33 @@ void  Tensor<ValueType>::freeMem(){
    }
 }
 
+template<class ValueType>
+void Tensor<ValueType>::generateDimsSpan(){
+    int N = m_dims.size();
+    m_dimsSpan.clear();
+    for (int i=0; i<N; ++i){
+        long span = 1;
+        for(int j=i+1; j<N; ++j){
+            span *= m_dims[j];
+        }
+        m_dimsSpan.push_back(span);
+    }
+}
+
+template<class ValueType>
+long Tensor<ValueType>::index2Offset(const vector<int>& index)const{
+    int N = index.size();
+    long offset =0;
+    for (int i=0; i<N; ++i){
+        offset += index[i]*m_dimsSpan[i];
+    }
+    return offset;
+}
 
 template<class ValueType>
 ValueType& Tensor<ValueType>::e(const vector<int>& index) const{
     assert(index.size() == m_dims.size());
-    int dim = m_dims.size();
-    unsigned  long pos = 0;
-    for (int i=0; i< dim-1; ++i){
-        long iSpan = 1;
-        for (int j=i+1; j<dim; ++j){
-            iSpan *= m_dims[j];
-        }
-        pos += iSpan*index[i];
-    }
-    pos += index[dim-1];
-    return m_data[pos];
+    return m_data[index2Offset(index)];
 }
 
 template<class ValueType>
@@ -123,26 +137,25 @@ ValueType& Tensor<ValueType>::operator() (long index){
 template<class ValueType>
 ValueType& Tensor<ValueType>::operator() (long i, long j){
     assert(2 == m_dims.size());
-    return m_data[i*m_dims[1]+j];
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]];
 }
 
 template<class ValueType>
 ValueType& Tensor<ValueType>::operator() (long i, long j, long k){
     assert(3 == m_dims.size());
-    return m_data[i*m_dims[1]*m_dims[2]+j*m_dims[2]+k];
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]];
 }
 
 template<class ValueType>
 ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l){
     assert(4 == m_dims.size());
-    return m_data[i*m_dims[1]*m_dims[2]*m_dims[3]+j*m_dims[2]*m_dims[3]+k*m_dims[3]+l];
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3]];
 }
 
 template<class ValueType>
 ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m){
     assert(5 == m_dims.size());
-    return m_data[i*m_dims[1]*m_dims[2]*m_dims[3]*m_dims[4]+j*m_dims[2]*m_dims[3]*m_dims[4]+k*m_dims[3]*m_dims[4]
-                   +l*m_dims[4] +m];
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]];
 }
 
 // transpose operation only supports 2D matrix

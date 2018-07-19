@@ -61,10 +61,13 @@ public:
 
 private:
     vector<int> m_dims;
+    vector<long> m_dimsSpan; //express change of index leads how many data storage span.
     ValueType* m_data;
+
     void allocateMem();
     void freeMem();
-
+    void generateDimsSpan();
+    long index2Offset(const vector<int>& index) const;
 };
 
 #include "Tensor.hpp"
