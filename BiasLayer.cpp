@@ -21,7 +21,7 @@ BiasLayer::~BiasLayer() {
 
 void BiasLayer::initialize(const string& initialMethod){
   long N = m_pBTensor->getLength();
-  generateGaussian(m_pBTensor, 0, 1.0/N);
+  generateGaussian(m_pBTensor, 0, sqrt(1.0/N));
 }
 
 //Y = X + b

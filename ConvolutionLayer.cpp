@@ -3,6 +3,7 @@
 //
 
 #include "ConvolutionLayer.h"
+#include "statisTool.h"
 
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer, const int stride)
@@ -11,6 +12,13 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
     if (checkFilterSize(filterSize, prevLayer)){
         m_type = "Convolution";
         m_stride = stride;
+
+        int N = filterSize.size();
+        m_filterN = 1;
+        for (int i=0; i<N-1;++i){
+            m_filterN *= filterSize[i];
+        }
+
         addPreviousLayer(prevLayer);
         constructFilterAndY(filterSize, prevLayer);
     }
@@ -74,9 +82,10 @@ void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer*
 
 
 void ConvolutionLayer::initialize(const string& initialMethod){
-
+    generateGaussian(m_pW, 0, sqrt(1.0/m_filterN));
 }
 
+// Y = W*X
 void ConvolutionLayer::forward(){
 
 }
