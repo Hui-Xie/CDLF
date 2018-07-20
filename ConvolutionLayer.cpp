@@ -6,24 +6,23 @@
 #include "statisTool.h"
 
 
-ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer, const int stride)
+ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize,
+                                   Layer* prevLayer, const int numFilters, const int stride)
 : Layer(id,name,{})
 {
     if (checkFilterSize(filterSize, prevLayer)){
         m_type = "Convolution";
         m_stride = stride;
-        m_OneFilterSize.clear();
+        m_filterSize = filterSize;
+        m_numFilters = numFilters;
 
         int N = filterSize.size();
         m_OneFilterN = 1;
-        for (int i=0; i<N-1;++i){
+        for (int i=0; i<N;++i){
             m_OneFilterN *= filterSize[i];
-            m_OneFilterSize.push_back(filterSize[i]);
         }
-        m_NumFilters = filterSize[N-1];
-
         addPreviousLayer(prevLayer);
-        constructFilterAndY(filterSize, prevLayer);
+        constructFilterAndY(filterSize, prevLayer, numFilters);
     }
     else{
         cout<<"Error: can not construct Convolution Layer: "<<name<<endl;
@@ -47,7 +46,7 @@ ConvolutionLayer::~ConvolutionLayer(){
 bool ConvolutionLayer::checkFilterSize(const vector<int>& filterSize, Layer* prevLayer){
     int dimFilter = filterSize.size();
     int dimX = prevLayer->m_tensorSize.size();
-    if (dimFilter == dimX +1){
+    if (dimFilter == dimX){
         for (int i= 0; i< dimX; ++i){
             if (0 == filterSize[i]%2){
                 cout<<"Error: filter Size should be odd."<<endl;
@@ -57,13 +56,14 @@ bool ConvolutionLayer::checkFilterSize(const vector<int>& filterSize, Layer* pre
         return true;
     }
     else{
-        cout<<"Error: dimension of filter should be one greater than that of the tensorSize of previous Layer."<<endl;
+        cout<<"Error: dimension of filter should be consistent with the previous Layer."<<endl;
         return false;
     }
 }
 
 
-void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer){
+void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer,
+                                           const int numFilters, const int stride){
     m_pW = new Tensor<float>(filterSize);
     m_pdW = new Tensor<float>(filterSize);
     const vector<int>& prevTensorSize = prevLayer->m_tensorSize;
@@ -90,6 +90,8 @@ void ConvolutionLayer::initialize(const string& initialMethod){
 
 // Y = W*X
 void ConvolutionLayer::forward(){
+
+
 
 }
 

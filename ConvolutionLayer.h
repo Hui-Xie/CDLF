@@ -33,13 +33,14 @@
 
 class ConvolutionLayer :  public Layer {
 public:
-    ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer, const int stride);
+    ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer,
+                     const int numFilters=1, const int stride=1);
     ~ConvolutionLayer();
 
     Tensor<float>*  m_pW;
     Tensor<float>*  m_pdW;
 
-    void constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer);
+    void constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer, const int numFilters=1, const int stride=1);
 
 
     virtual  void initialize(const string& initialMethod);
@@ -50,14 +51,10 @@ public:
 private:
     int m_stride;
     int m_OneFilterN;
-    vector<int> m_OneFilterSize;
-    int m_NumFilters;
+    vector<int> m_filterSize;
+    int m_numFilters;
 
     bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
-
-
-
-
 };
 
 

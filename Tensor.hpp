@@ -510,3 +510,18 @@ Tensor<ValueType> Tensor<ValueType>::reduceDimension(const int index){
     return tensor;
 
 }
+
+
+//convolution or cross-correlation
+template<class ValueType>
+ValueType Tensor<ValueType>::conv(const Tensor &left, const Tensor &right) {
+    assert(sameVector(left.getDims(), right.getDims()));
+    Tensor tensor(left.getDims());
+    long N = tensor.getLength();
+    ValueType sum = 0;
+    for (long i = 0; i < N; ++i) {
+        sum += left[i] * right[i];
+    }
+    return sum;
+
+}
