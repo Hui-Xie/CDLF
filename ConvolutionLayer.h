@@ -37,8 +37,8 @@ public:
                      const int numFilters=1, const int stride=1);
     ~ConvolutionLayer();
 
-    Tensor<float>*  m_pW;
-    Tensor<float>*  m_pdW;
+    Tensor<float>*  m_pW[];
+    Tensor<float>*  m_pdW[];
 
     void constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer, const int numFilters=1, const int stride=1);
 

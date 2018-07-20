@@ -22,7 +22,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
             m_OneFilterN *= filterSize[i];
         }
         addPreviousLayer(prevLayer);
-        constructFilterAndY(filterSize, prevLayer, numFilters);
+        constructFilterAndY(filterSize, prevLayer, numFilters, stride);
     }
     else{
         cout<<"Error: can not construct Convolution Layer: "<<name<<endl;
@@ -32,15 +32,16 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
 
 ConvolutionLayer::~ConvolutionLayer(){
     //delete Filter Space; the Y space  will delete by base class;
-    if (nullptr != m_pW){
-        delete m_pW;
-        m_pW = nullptr;
+    for(int i=0; i< m_numFilters;++i){
+        if (nullptr != m_pW[i]){
+            delete m_pW[i];
+            m_pW[i] = nullptr;
+        }
+        if (nullptr != m_pdW[i]){
+            delete m_pdW[i];
+            m_pdW[i] = nullptr;
+        }
     }
-    if (nullptr != m_pdW){
-        delete m_pdW;
-        m_pdW = nullptr;
-    }
-
 }
 
 bool ConvolutionLayer::checkFilterSize(const vector<int>& filterSize, Layer* prevLayer){
@@ -64,15 +65,19 @@ bool ConvolutionLayer::checkFilterSize(const vector<int>& filterSize, Layer* pre
 
 void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer,
                                            const int numFilters, const int stride){
-    m_pW = new Tensor<float>(filterSize);
-    m_pdW = new Tensor<float>(filterSize);
-    const vector<int>& prevTensorSize = prevLayer->m_tensorSize;
-    m_tensorSize.clear();
-    int dim = prevTensorSize.size();
-    for (int i =0; i<dim; ++i){
-        int range = prevTensorSize[i]- filterSize[i] +1;
-        m_tensorSize.push_back(range);
+    for (int i=0; i<numFilters;++i){
+        m_pW[i] = new Tensor<float>(filterSize);
+        m_pdW[i] = new Tensor<float>(filterSize);
     }
+
+    //get pYTensor size
+    m_tensorSize = prevLayer->m_tensorSize;
+    const int dim = m_tensorSize.size();
+    for (int i =0; i<dim; ++i){
+        m_tensorSize[i] += 1-filterSize[i];
+    }
+    m_tensorSize.push_back(numFilters);
+
     if (0 != m_tensorSize.size()){
         m_pYTensor = new Tensor<float>(m_tensorSize);
         m_pdYTensor = new Tensor<float>(m_tensorSize);
@@ -85,7 +90,9 @@ void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer*
 
 
 void ConvolutionLayer::initialize(const string& initialMethod){
-    generateGaussian(m_pW, 0, sqrt(1.0/m_OneFilterN));
+    for(int i=0; i< m_numFilters; ++i){
+        generateGaussian(m_pW[i], 0, sqrt(1.0/m_OneFilterN));
+    }
 }
 
 // Y = W*X
