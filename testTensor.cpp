@@ -4,6 +4,16 @@
 #include <iostream>
 #include "Tensor.h"
 #include <list>
+#include "Tools.h"
+
+void printVector(const vector<int> aVector){
+    int N = aVector.size();
+    cout<<"{";
+    for (int i=0; i< N; ++i){
+        cout<<aVector[i]<<", ";
+    }
+    cout<<"}"<<endl;
+}
 
 
 int main (int argc, char *argv[]) {
@@ -118,6 +128,35 @@ int main (int argc, char *argv[]) {
     tensor1(2,1) += 3;
     cout<<"tensor1(2,1)="<<tensor1(2,1)<<endl;
     tensor1.printElements();
+
+    cout<<"Test operator + "<<endl;
+    vector<int> aVector={1,2,3,4,5};
+    cout<<"Original Vector:";
+    printVector(aVector);
+    vector<int> bVector = aVector+2;
+    cout<<" bVector = aVector+2; "<<endl;
+    printVector(bVector);
+
+    cout<<"bVecotr*3: "<<endl;
+    printVector(bVector*3);
+
+    cout<<"test subTensor"<<endl;
+    Tensor<float> tensor20({10,10});
+    k=0;
+    for (int i=0; i<10; ++i){
+        for(int j=0; j<10;++j){
+            tensor20.e(k) = k;
+            ++k;
+        }
+    }
+    cout <<"tensor20:"<<endl;
+    tensor20.printElements();
+
+    cout<<"tensor21 = tensor20.subTensor({2,3}, {5,5});"<<endl;
+    Tensor<float> tensor21 = tensor20.subTensor({2,3}, {5,5});
+    tensor21.printElements();
+
+
 
 }
 

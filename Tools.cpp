@@ -2,6 +2,7 @@
 // Created by Sheen156 on 7/16/2018.
 //
 #include "Tools.h"
+#include "assert.h"
 
 
 bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
@@ -35,4 +36,33 @@ string vector2String(const vector<int>& src){
     }
     return outputString;
 }
+
+vector<int> operator+ (const vector<int>& left, const int offset){
+    const int N = left.size();
+    vector<int> result(left);
+    for (int i=0; i<N;++i){
+        result[i] += offset;
+    }
+    return result;
+}
+
+vector<int> operator+ (const vector<int>& left, const vector<int>& right){
+    assert(left.size() == right.size());
+    const int N = left.size();
+    vector<int> result(left);
+    for (int i=0; i<N;++i){
+        result[i] += right[i];
+    }
+    return result;
+}
+
+vector<int> operator* (const vector<int>& left, const int factor){
+    const int N = left.size();
+    vector<int> result(left);
+    for (int i=0; i<N;++i){
+        result[i] *= factor;
+    }
+    return result;
+}
+
 

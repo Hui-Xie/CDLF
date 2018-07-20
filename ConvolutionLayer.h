@@ -49,7 +49,10 @@ public:
 
 private:
     int m_stride;
-    int m_filterN;
+    int m_OneFilterN;
+    vector<int> m_OneFilterSize;
+    int m_NumFilters;
+
     bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
 
 

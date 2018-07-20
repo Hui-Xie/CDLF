@@ -26,6 +26,10 @@ public:
 
     ValueType& e(const vector<int>& index)const;
     ValueType& e(long index) const;
+    ValueType& e(long i, long j) const;
+    ValueType& e(long i, long j, long k) const;
+    ValueType& e(long i, long j, long k, long l)const;
+    ValueType& e(long i, long j, long k, long l, long m)const;
     ValueType& operator[] (long index);
     ValueType& operator() (long index);
     ValueType& operator() (long i, long j);
@@ -58,6 +62,8 @@ public:
     float sum();
     float average();
     float variance();
+
+    Tensor subTensor(const vector<int>& centralIndex,const vector<int>& span);
 
 private:
     vector<int> m_dims;

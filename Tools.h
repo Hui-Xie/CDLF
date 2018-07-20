@@ -14,4 +14,11 @@ vector<int> reverseVector(const vector<int>& src);
 
 string vector2String(const vector<int>& src);
 
+vector<int> operator+ (const vector<int>& left, const int offset);
+
+vector<int> operator+ (const vector<int>& left, const vector<int>& right);
+
+vector<int> operator* (const vector<int>& left, const int factor);
+
+
 #endif //RL_NONCONVEX_TOOLS_H

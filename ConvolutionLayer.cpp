@@ -12,12 +12,15 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
     if (checkFilterSize(filterSize, prevLayer)){
         m_type = "Convolution";
         m_stride = stride;
+        m_OneFilterSize.clear();
 
         int N = filterSize.size();
-        m_filterN = 1;
+        m_OneFilterN = 1;
         for (int i=0; i<N-1;++i){
-            m_filterN *= filterSize[i];
+            m_OneFilterN *= filterSize[i];
+            m_OneFilterSize.push_back(filterSize[i]);
         }
+        m_NumFilters = filterSize[N-1];
 
         addPreviousLayer(prevLayer);
         constructFilterAndY(filterSize, prevLayer);
@@ -82,7 +85,7 @@ void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer*
 
 
 void ConvolutionLayer::initialize(const string& initialMethod){
-    generateGaussian(m_pW, 0, sqrt(1.0/m_filterN));
+    generateGaussian(m_pW, 0, sqrt(1.0/m_OneFilterN));
 }
 
 // Y = W*X

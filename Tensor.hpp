@@ -125,6 +125,30 @@ ValueType& Tensor<ValueType>::e(long index) const{
 }
 
 template<class ValueType>
+ValueType& Tensor<ValueType>::e(long i, long j) const{
+    assert(2 == m_dims.size());
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::e(long i, long j, long k) const{
+    assert(3 == m_dims.size());
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::e(long i, long j, long k, long l)const{
+    assert(4 == m_dims.size());
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3]];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::e(long i, long j, long k, long l, long m)const{
+    assert(5 == m_dims.size());
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]];
+}
+
+template<class ValueType>
 ValueType& Tensor<ValueType>::operator[] (long index){
     return m_data[index];
 }
@@ -364,4 +388,63 @@ float Tensor<ValueType>::variance(){
         sum += pow((e(i) - mu), 2);
     }
     return sum / (N - 1); // population variance
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::subTensor(const vector<int>& centralIndex,const vector<int>& span){
+    Tensor tensor (span);
+    int N = span.size();
+    vector<int> halfSpan; //also the central voxel in the tensor(span)
+    for(int i =0; i<N; ++i){
+        halfSpan.push_back(span[i]/2);
+    }
+
+    if (2 == N){
+        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
+                tensor(halfSpan[0]+i, halfSpan[1]+j) = e(centralIndex[0]+i, centralIndex[1]+j);
+            }
+        }
+    }
+    else if (3 == N){
+        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
+                for (int k=-halfSpan[2];k<=halfSpan[2];++k){
+                    tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k)
+                       = e(centralIndex[0]+i, centralIndex[1]+j, centralIndex[2]+k);
+                }
+             }
+        }
+    }
+    else if (4 ==N){
+        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
+                for (int k=-halfSpan[2];k<=halfSpan[2];++k){
+                    for (int l=-halfSpan[3];l<=halfSpan[3];++l){
+                        tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l)
+                                = e(centralIndex[0]+i, centralIndex[1]+j, centralIndex[2]+k, centralIndex[3]+l);
+                    }
+                }
+            }
+        }
+    }
+    else if (5 == N){
+        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
+                for (int k=-halfSpan[2];k<=halfSpan[2];++k){
+                    for (int l=-halfSpan[3];l<=halfSpan[3];++l){
+                        for (int m=-halfSpan[4];m<=halfSpan[4]; ++m){
+                            tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l,halfSpan[4]+m )
+                               = e(centralIndex[0]+i, centralIndex[1]+j, centralIndex[2]+k, centralIndex[3]+l,centralIndex[4]+m);
+                        }
+                     }
+                }
+            }
+        }
+    }
+    else{
+        cout<<"Error: currently do not support 6 and higher dimension in tensor."<<endl;
+    }
+    return tensor;
+
 }
