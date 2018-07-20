@@ -156,6 +156,13 @@ int main (int argc, char *argv[]) {
     Tensor<float> tensor21 = tensor20.subTensor({2,3}, {5,5});
     tensor21.printElements();
 
+    cout <<"tensor20:"<<endl;
+    tensor20.printElements();
+
+    Tensor<float> tensor22 = tensor20.reduceDimension(3);
+    cout<<" tensor22 = tensor20.reduceDimension(3);"<<endl;
+    tensor22.printElements();
+
 
 
 }

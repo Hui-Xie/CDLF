@@ -457,3 +457,56 @@ Tensor<ValueType> Tensor<ValueType>::subTensor(const vector<int>& centralIndex,c
     return tensor;
 
 }
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::reduceDimension(const int index){
+    const int oldN= m_dims.size();
+    vector<int> newDims;
+    if (2 == oldN){
+         newDims.push_back(m_dims[0]);
+         newDims.push_back(1);
+    }
+    else{
+         newDims = m_dims;
+         newDims.erase(newDims.end()-1);
+    }
+    Tensor tensor(newDims);
+    const int newN = newDims.size();
+
+    if (2 == newN && 2 == oldN){
+       for (int i=0; i< newDims[0]; ++i){
+           tensor[i] = e(i,index);
+       }
+    }
+    else if (2 == newN && 3 == oldN){
+        for (int i=0; i< newDims[0]; ++i){
+            for(int j=0; j<newDims[1];++j){
+                tensor(i,j) = e(i,j,index);
+            }
+        }
+     }
+    else if (3 == newN){
+        for (int i=0; i< newDims[0]; ++i){
+            for(int j=0; j<newDims[1];++j){
+                for (int k=0; k<newDims[2];++k){
+                     tensor(i,j,k) = e(i,j,k,index);
+                }
+            }
+        }
+    }
+    else if (4 == newN){
+        for (int i=0; i< newDims[0]; ++i){
+            for(int j=0; j<newDims[1];++j){
+                for (int k=0; k<newDims[2];++k){
+                    for(int l=0; l<newDims[3];++l){
+                         tensor(i,j,k,l) = e(i,j,k,l,index);
+                    }
+                }
+            }
+        }
+    }
+    else{
+        cout<<"Error: we only support 5D Tensor at most"<<endl;
+    }
+    return tensor;
+
+}

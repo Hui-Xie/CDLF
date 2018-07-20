@@ -65,6 +65,7 @@ public:
     float variance();
 
     Tensor subTensor(const vector<int>& centralIndex,const vector<int>& span);
+    Tensor reduceDimension(const int index); //index is the indexOfLastDim
 
 private:
     vector<int> m_dims;
