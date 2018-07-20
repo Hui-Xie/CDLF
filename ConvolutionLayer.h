@@ -40,7 +40,7 @@ public:
     Tensor<float>*  m_pW[];
     Tensor<float>*  m_pdW[];
 
-    void constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer, const int numFilters=1, const int stride=1);
+    void constructFiltersAndY();
 
 
     virtual  void initialize(const string& initialMethod);

@@ -15,6 +15,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
+        m_tensorSize = prevLayer->m_tensorSize; // this is initial, not final size
 
         int N = filterSize.size();
         m_OneFilterN = 1;
@@ -22,7 +23,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
             m_OneFilterN *= filterSize[i];
         }
         addPreviousLayer(prevLayer);
-        constructFilterAndY(filterSize, prevLayer, numFilters, stride);
+        constructFiltersAndY();
     }
     else{
         cout<<"Error: can not construct Convolution Layer: "<<name<<endl;
@@ -63,20 +64,19 @@ bool ConvolutionLayer::checkFilterSize(const vector<int>& filterSize, Layer* pre
 }
 
 
-void ConvolutionLayer::constructFilterAndY(const vector<int>& filterSize, Layer* prevLayer,
-                                           const int numFilters, const int stride){
-    for (int i=0; i<numFilters;++i){
-        m_pW[i] = new Tensor<float>(filterSize);
-        m_pdW[i] = new Tensor<float>(filterSize);
+void ConvolutionLayer::constructFiltersAndY(){
+    for (int i=0; i<m_numFilters;++i){
+        m_pW[i] = new Tensor<float>(m_filterSize);
+        m_pdW[i] = new Tensor<float>(m_filterSize);
     }
 
-    //get pYTensor size
-    m_tensorSize = prevLayer->m_tensorSize;
+    //get refined pYTensor size
     const int dim = m_tensorSize.size();
     for (int i =0; i<dim; ++i){
-        m_tensorSize[i] += 1-filterSize[i];
+        m_tensorSize[i] = ( m_tensorSize[i] -m_filterSize[i])/m_stride +1;
+        // ref formula: http://cs231n.github.io/convolutional-networks/
     }
-    m_tensorSize.push_back(numFilters);
+    m_tensorSize.push_back(m_numFilters);
 
     if (0 != m_tensorSize.size()){
         m_pYTensor = new Tensor<float>(m_tensorSize);
@@ -97,6 +97,7 @@ void ConvolutionLayer::initialize(const string& initialMethod){
 
 // Y = W*X
 void ConvolutionLayer::forward(){
+   const int N = m_filterSize.size();
 
 
 
