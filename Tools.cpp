@@ -65,4 +65,13 @@ vector<int> operator* (const vector<int>& left, const int factor){
     return result;
 }
 
+vector<int> operator/ (const vector<int>& left, const int divisor){
+    const int N = left.size();
+    vector<int> result(left);
+    for (int i=0; i<N;++i){
+        result[i] /= divisor;
+    }
+    return result;
+}
+
 

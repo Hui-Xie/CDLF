@@ -66,7 +66,7 @@ public:
 
     Tensor subTensor(const vector<int>& centralIndex,const vector<int>& span);
     Tensor reduceDimension(const int index); //index is the indexOfLastDim
-    ValueType conv(const Tensor& left, const Tensor& right); //convolution or cross-correlation
+    ValueType conv(const Tensor& other) const; //convolution or cross-correlation
 
 private:
     vector<int> m_dims;

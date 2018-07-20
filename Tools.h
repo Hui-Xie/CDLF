@@ -20,5 +20,6 @@ vector<int> operator+ (const vector<int>& left, const vector<int>& right);
 
 vector<int> operator* (const vector<int>& left, const int factor);
 
+vector<int> operator/ (const vector<int>& left, const int divisor);
 
 #endif //RL_NONCONVEX_TOOLS_H
