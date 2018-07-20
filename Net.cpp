@@ -74,7 +74,7 @@ void Net::sgd(const float lr){
 
 //Notes: this layerWidthVector does not include LossLayer,  and ReLU and NormalizationLayer do not count as a single layer
 // Normalization layer generally put after ReLU
-void Net::buildNet(const vector<long> layerWidthVector, Layer* lossLayer){
+void Net::buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer){
    int nLayers = layerWidthVector.size();
    if (0 == nLayers) {
       cout<<"Net has at least one layer."<<endl;

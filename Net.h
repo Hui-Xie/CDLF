@@ -27,7 +27,7 @@ public:
     void sgd(const float lr);
 
     //Notes: this layerWidthVector does not include LossLayer
-    void buildNet(const vector<long> layerWidthVector, Layer* lossLayer);
+    void buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer);
     void initialize();
     void train();
     void printIteration(LossLayer* lossLayer,const int nIter);

@@ -149,35 +149,35 @@ ValueType& Tensor<ValueType>::e(long i, long j, long k, long l, long m)const{
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator[] (long index){
+ValueType& Tensor<ValueType>::operator[] (long index) const {
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator() (long index){
+ValueType& Tensor<ValueType>::operator() (long index) const {
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator() (long i, long j){
+ValueType& Tensor<ValueType>::operator() (long i, long j) const {
     assert(2 == m_dims.size());
     return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]];
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator() (long i, long j, long k){
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k) const {
     assert(3 == m_dims.size());
     return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]];
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l){
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l) const {
     assert(4 == m_dims.size());
     return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3]];
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m){
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m) const {
     assert(5 == m_dims.size());
     return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]];
 }
@@ -198,27 +198,36 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
 }
 
 
-
+//Only support 2 dimensional tensor
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     int thisDim = m_dims.size();
     vector<int> otherDims = other.getDims();
     int otherDim = otherDims.size();
-    assert (m_dims[thisDim-1] == otherDims[0]);
-    assert (2 == thisDim && 2 == otherDim);
-
-    vector<int> newDims{m_dims[0], otherDims[1]};
-    Tensor tensor (newDims);
-    for (int i=0; i<newDims[0]; ++i){
-        for (int j=0; j< newDims[1];++j){
-            ValueType value =0;
-            for (int k=0; k< m_dims[1]; ++k){
-                value += e({i,k})*other.e({k,j});
-            }
-            tensor.e({i,j}) = value;
-        }
+    if  (m_dims[thisDim-1] != otherDims[0]){
+        cout<<"Error: Tensor product has un-matching dimension."<<endl;
+        return *this;
     }
-    return tensor;
+
+    if (2 == thisDim && 2 == otherDim){
+        vector<int> newDims{m_dims[0], otherDims[1]};
+        Tensor tensor (newDims);
+        for (int i=0; i<newDims[0]; ++i){
+            for (int j=0; j< newDims[1];++j){
+                ValueType value =0;
+                for (int k=0; k< m_dims[1]; ++k){
+                    value += e({i,k})*other.e({k,j});
+                }
+                tensor.e({i,j}) = value;
+            }
+        }
+        return tensor;
+    }
+    else {
+        cout <<"Error: Tensor product only support 2D tensor."<<endl;
+        return *this;
+     }
+
 }
 
 template<class ValueType>

@@ -56,7 +56,7 @@ int main (int argc, char *argv[])
     Net net;
 
     //convex example 1: f= \sum (x_i-i)^2
-    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConexLossLayer");
+    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer");
 
     //non-convex example 1: f(x,y) = 3ysin(x)+5xcos(y)+0.5xy+x^2-y^2
     //Notes: Make sure that final layer only 2 neurons.
@@ -69,7 +69,7 @@ int main (int argc, char *argv[])
      //LossNonConvexExample2* lossLayer = new LossNonConvexExample2(1002,"NonConvexLossLayer2");
      //net.setJudgeLoss(false); //for nonconvex case
 
-    net.buildNet(layerWidthVector, lossLayer);
+    net.buildFullConnectedNet(layerWidthVector, lossLayer);
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setMaxIteration(1000);

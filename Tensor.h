@@ -8,7 +8,8 @@
 #include <vector>
 using namespace std;
 
-// Vector is a Tensor({n,1})
+// Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect express.;
+// Row Vector is a Tensor({1,n});
 // Now this Network has finished Tensor Reconstruction, and supported DAG network.
 
 
@@ -30,12 +31,12 @@ public:
     ValueType& e(long i, long j, long k) const;
     ValueType& e(long i, long j, long k, long l)const;
     ValueType& e(long i, long j, long k, long l, long m)const;
-    ValueType& operator[] (long index);
-    ValueType& operator() (long index);
-    ValueType& operator() (long i, long j);
-    ValueType& operator() (long i, long j, long k);
-    ValueType& operator() (long i, long j, long k, long l);
-    ValueType& operator() (long i, long j, long k, long l, long m);
+    ValueType& operator[] (long index) const;
+    ValueType& operator() (long index) const;
+    ValueType& operator() (long i, long j) const;
+    ValueType& operator() (long i, long j, long k) const;
+    ValueType& operator() (long i, long j, long k, long l) const;
+    ValueType& operator() (long i, long j, long k, long l, long m) const;
     Tensor transpose();
 
 
