@@ -162,33 +162,40 @@ void ConvolutionLayer::forward(){
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(){
-    // first compute the dL/dw
+    // dX needs to consider the accumulation of different filters
+    Tensor<float>* dX = m_prevLayers.front()->m_pdYTensor;
+    dX->zeroInitialize();
+
     for (int idxF=0; idxF< m_numFilters; ++idxF){  //index of Filter
-
-
+         Tensor<float> dY = m_pdYTensor->reduceDimension(idxF);
+         computeDW(&dY, m_pdW[idxF]);
+         computeDX(&dY, m_pW[idxF]);//Note: dx need to accumulate along filters
     }
-
-
-
-    // then compute the DL/dx
-
 }
 
 void ConvolutionLayer::updateParameters(const float lr, const string& method){
-
+    if ("sgd" == method){
+        for(int idxF=0;idxF < m_numFilters; ++idxF){
+            *m_pW[idxF] -= *m_pdW[idxF] * lr;
+        }
+    }
 }
 
-void ConvolutionLayer::expandDyTensor() {
+void ConvolutionLayer::freeExpandDy(){
     if (nullptr != m_expandDy){
         delete m_expandDy;
         m_expandDy = nullptr;
     }
+}
+
+void ConvolutionLayer::expandDyTensor(Tensor<float>* pdY) {
+    freeExpandDy();
     const vector<int> Xdims = m_prevLayers.front()->m_pYTensor->getDims();
     vector<int> expandDyDims = Xdims+ m_filterSize;
     m_expandDy = new Tensor<float>(expandDyDims);
     m_expandDy->zeroInitialize();
 
-    Tensor<float>& dY = *m_pdYTensor;
+    Tensor<float>& dY = *pdY;
 
     //copy DyTensor to expandDy, according to  m_stride
     int N = m_tensorSize.size();  //dyTensor's size
@@ -232,4 +239,89 @@ void ConvolutionLayer::expandDyTensor() {
     else{
         cout<<"Error: dimension>=4  does not support in convolution expandDyTensor."<<endl;
     }
+}
+
+void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
+    const vector<int> dWDims = pdW->getDims();
+    const int N = dWDims.size();
+    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    const vector<int> dYDims = pdY->getDims();
+
+    if (2 == N){
+        for (int i=0; i< dWDims[0]; ++i){
+            for (int j=0; j<dWDims[1]; ++j){
+                Tensor<float> Xsub = X.subTensorFromTopLeft({i*m_stride,j*m_stride}, dYDims, m_stride);
+                pdW->e(i,j) = Xsub.conv(*pdY);
+              }
+        }
+    }
+    else if (3 ==N){
+        for (int i=0; i< dWDims[0]; ++i){
+            for (int j=0; j<dWDims[1]; ++j){
+                for (int k=0; k<dWDims[2]; ++k) {
+                    Tensor<float> Xsub = X.subTensorFromTopLeft({i*m_stride, j*m_stride,k*m_stride}, dYDims, m_stride);
+                    pdW->e(i, j,k) = Xsub.conv(*pdY);
+                }
+            }
+        }
+    }
+    else if (4 == N){
+        for (int i=0; i< dWDims[0]; ++i){
+            for (int j=0; j<dWDims[1]; ++j){
+                for (int k=0; k<dWDims[2]; ++k) {
+                    for (int l=0; l<dWDims[3]; ++l) {
+                        Tensor<float> Xsub = X.subTensorFromTopLeft({i*m_stride, j*m_stride, k*m_stride,l*m_stride}, dYDims, m_stride);
+                        pdW->e(i, j, k,l) = Xsub.conv(*pdY);
+                    }
+                }
+            }
+        }
+    }
+    else{
+        cout<<"Error: Dimension >=5 does not support in ConvolutionLayer::computeDW"<<endl;
+    }
+
+}
+
+//Note: dx need to accumulate along filters
+void ConvolutionLayer::computeDX(Tensor<float> *pdY, Tensor<float> *pW) {
+    expandDyTensor(pdY);
+    Tensor<float>& dX = *m_prevLayers.front()->m_pdYTensor;
+    const vector<int> dXdims = dX.getDims();
+    const int N = dXdims.size();
+
+    if (2 == N){
+        for(int i=0; i<dXdims[0];++i){
+            for(int j=0; j<dXdims[1];++j){
+                Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i,j}, m_filterSize, 1);
+                dX(i,j) += subExpandDy.flip().conv(*pW);
+             }
+        }
+    }
+    else if (3 == N){
+        for(int i=0; i<dXdims[0];++i){
+            for(int j=0; j<dXdims[1];++j){
+                for(int k=0; k<dXdims[2];++k) {
+                    Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k}, m_filterSize, 1);
+                    dX(i, j) += subExpandDy.flip().conv(*pW);
+                }
+            }
+        }
+    }
+    else if (4 == N) {
+        for (int i = 0; i < dXdims[0]; ++i) {
+            for (int j = 0; j < dXdims[1]; ++j) {
+                for (int k = 0; k < dXdims[2]; ++k) {
+                    for (int l = 0; l < dXdims[3]; ++l) {
+                        Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l}, m_filterSize, 1);
+                        dX(i, j) += subExpandDy.flip().conv(*pW);
+                    }
+                }
+            }
+        }
+    }
+    else {
+        cout<<"Error: Dimension >=5 does not support in ConvolutionLayer::computeDX."<<endl;
+    }
+    freeExpandDy();
 }

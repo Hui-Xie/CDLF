@@ -64,10 +64,11 @@ public:
     float average();
     float variance();
 
-    Tensor subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span);
-    Tensor subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span);
+    Tensor subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span, const int stride =1);
+    Tensor subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span, const int stride =1);
     Tensor reduceDimension(const int index); //index is the indexOfLastDim
     ValueType conv(const Tensor& other) const; //convolution or cross-correlation
+    Tensor& flip();
 
 private:
     vector<int> m_dims;

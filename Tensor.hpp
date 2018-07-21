@@ -400,7 +400,7 @@ float Tensor<ValueType>::variance(){
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span){
+Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span, const int stride){
     Tensor tensor (span);
     int N = span.size();
     vector<int> halfSpan = span/2; //also the central voxel in the tensor(span)
@@ -408,7 +408,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& cent
     if (2 == N){
         for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
             for (int j=-halfSpan[1];j<=halfSpan[1];++j){
-                tensor(halfSpan[0]+i, halfSpan[1]+j) = e(centralIndex[0]+i, centralIndex[1]+j);
+                tensor(halfSpan[0]+i, halfSpan[1]+j) = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride);
             }
         }
     }
@@ -417,7 +417,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& cent
             for (int j=-halfSpan[1];j<=halfSpan[1];++j){
                 for (int k=-halfSpan[2];k<=halfSpan[2];++k){
                     tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k)
-                       = e(centralIndex[0]+i, centralIndex[1]+j, centralIndex[2]+k);
+                       = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride);
                 }
              }
         }
@@ -428,7 +428,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& cent
                 for (int k=-halfSpan[2];k<=halfSpan[2];++k){
                     for (int l=-halfSpan[3];l<=halfSpan[3];++l){
                         tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l)
-                                = e(centralIndex[0]+i, centralIndex[1]+j, centralIndex[2]+k, centralIndex[3]+l);
+                                = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride, centralIndex[3]+l*stride);
                     }
                 }
             }
@@ -441,7 +441,8 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& cent
                     for (int l=-halfSpan[3];l<=halfSpan[3];++l){
                         for (int m=-halfSpan[4];m<=halfSpan[4]; ++m){
                             tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l,halfSpan[4]+m )
-                               = e(centralIndex[0]+i, centralIndex[1]+j, centralIndex[2]+k, centralIndex[3]+l,centralIndex[4]+m);
+                               = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride,
+                                       centralIndex[3]+l*stride,centralIndex[4]+m*stride);
                         }
                      }
                 }
@@ -457,9 +458,9 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& cent
 
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span){
-    vector<int> centralIndex  = tfIndex + span/2;
-    return subTensorFromCenter(centralIndex,span);
+Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span, const int stride){
+    vector<int> centralIndex  = tfIndex + span/2*stride;
+    return subTensorFromCenter(centralIndex,span, stride);
 }
 
 template<class ValueType>
@@ -527,5 +528,19 @@ ValueType Tensor<ValueType>::conv(const Tensor &other) const{
         sum += e(i) * other[i];
     }
     return sum;
+
+}
+
+template<class ValueType>
+Tensor<ValueType>& Tensor<ValueType>::flip(){
+    long N = getLength();
+    long M = N/2;
+    ValueType temp =0;
+    for (int i=0; i<M;++i){
+        temp = e(i);
+        e(i) = e(N-1-i);
+        e(N-1-i) =temp;
+    }
+    return *this;
 
 }

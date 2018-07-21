@@ -56,8 +56,11 @@ private:
     int m_numFilters;
 
     bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
+    void expandDyTensor(Tensor<float>* pdY);
+    void freeExpandDy();
+    void computeDW(Tensor<float>* pdY, Tensor<float>* pdW);
+    void computeDX(Tensor<float>* pdY, Tensor<float>* pW);//Note: dx need to accumulate along filters
 
-    void expandDyTensor();
 };
 
 
