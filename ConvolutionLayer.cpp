@@ -144,7 +144,10 @@ void ConvolutionLayer::forward(){
         cout<<"Error: dimension does not support in convolution forward."<<endl;
     }
 }
-
+// Y =W*X
+// dL/dW = dL/dY * dY/dW;
+// dL/dX = dL/dY * dY/dX;
+// algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(){
 
 }
