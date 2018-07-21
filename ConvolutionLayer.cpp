@@ -13,6 +13,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string& name, const vecto
     if (checkFilterSize(filterSize, prevLayer)){
         m_type = "Convolution";
         m_stride = stride;
+        m_expandDy = nullptr;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
         m_tensorSize = prevLayer->m_tensorSize; // this is initial, not final size
@@ -43,6 +44,12 @@ ConvolutionLayer::~ConvolutionLayer(){
             m_pdW[i] = nullptr;
         }
     }
+
+    if (nullptr != m_expandDy){
+        delete m_expandDy;
+        m_expandDy = nullptr;
+    }
+
 }
 
 bool ConvolutionLayer::checkFilterSize(const vector<int>& filterSize, Layer* prevLayer){
@@ -147,7 +154,7 @@ void ConvolutionLayer::forward(){
     }
 
     else{
-        cout<<"Error: dimension does not support in convolution forward."<<endl;
+        cout<<"Error: dimension>=4  does not support in convolution forward."<<endl;
     }
 }
 // Y =W*X
@@ -160,4 +167,60 @@ void ConvolutionLayer::backward(){
 
 void ConvolutionLayer::updateParameters(const float lr, const string& method){
 
+}
+
+void ConvolutionLayer::expandDyTensor() {
+    if (nullptr != m_expandDy){
+        delete m_expandDy;
+        m_expandDy = nullptr;
+    }
+    const vector<int> Xdims = m_prevLayers.front()->m_pYTensor->getDims();
+    vector<int> expandDyDims = Xdims+ m_filterSize;
+    m_expandDy = new Tensor<float>(expandDyDims);
+    m_expandDy->zeroInitialize();
+
+    Tensor<float>& dY = *m_pdYTensor;
+
+    //copy DyTensor to expandDy, according to  m_stride
+    int N = m_tensorSize.size();  //dyTensor's size
+    vector<int> Xc = m_filterSize - 1 ; //X starting coordinate for copying dy
+    if(2 == N){
+        for(int i=0; i< m_tensorSize[0]; ++i){
+            Xc[0] += i*m_stride;
+            for (int j=0; j< m_tensorSize[1];++j){
+                 Xc[1] += j*m_stride;
+                 m_expandDy->e(Xc) = dY(i,j);
+            }
+        }
+    }
+    else if (3 ==N){
+        for(int i=0; i< m_tensorSize[0]; ++i){
+            Xc[0] += i*m_stride;
+            for (int j=0; j< m_tensorSize[1];++j){
+                Xc[1] += j*m_stride;
+                for (int k=0; k< m_tensorSize[2];++k){
+                    Xc[2] += k*m_stride;
+                    m_expandDy->e(Xc) = dY(i,j,k);
+                }
+             }
+        }
+    }
+    else if (4 == N){
+        for(int i=0; i< m_tensorSize[0]; ++i){
+            Xc[0] += i*m_stride;
+            for (int j=0; j< m_tensorSize[1];++j){
+                Xc[1] += j*m_stride;
+                for (int k=0; k< m_tensorSize[2];++k){
+                    Xc[2] += k*m_stride;
+                    for (int l=0; l< m_tensorSize[3];++l){
+                        Xc[3] += l*m_stride;
+                        m_expandDy->e(Xc) = dY(i,j,k,l);
+                    }
+                }
+            }
+        }
+    }
+    else{
+        cout<<"Error: dimension>=4  does not support in convolution expandDyTensor."<<endl;
+    }
 }

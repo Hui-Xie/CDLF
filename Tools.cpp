@@ -56,6 +56,16 @@ vector<int> operator+ (const vector<int>& left, const vector<int>& right){
     return result;
 }
 
+vector<int> operator- (const vector<int> &minuend, const int subtrahend) {
+    const int N = minuend.size();
+    vector<int> result(minuend);
+    for (int i=0; i<N;++i){
+        result[i] -= subtrahend;
+    }
+    return result;
+}
+
+
 vector<int> operator* (const vector<int>& left, const int factor){
     const int N = left.size();
     vector<int> result(left);
@@ -73,5 +83,6 @@ vector<int> operator/ (const vector<int>& left, const int divisor){
     }
     return result;
 }
+
 
 

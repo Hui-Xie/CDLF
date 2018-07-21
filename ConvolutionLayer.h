@@ -39,6 +39,7 @@ public:
 
     Tensor<float>*  m_pW[];
     Tensor<float>*  m_pdW[];
+    Tensor<float>*  m_expandDy;
 
     void constructFiltersAndY();
 
@@ -55,6 +56,8 @@ private:
     int m_numFilters;
 
     bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
+
+    void expandDyTensor();
 };
 
 

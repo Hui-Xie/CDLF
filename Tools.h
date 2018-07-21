@@ -18,6 +18,8 @@ vector<int> operator+ (const vector<int>& left, const int offset);
 
 vector<int> operator+ (const vector<int>& left, const vector<int>& right);
 
+vector<int> operator- (const vector<int>& minuend, const int subtrahend);
+
 vector<int> operator* (const vector<int>& left, const int factor);
 
 vector<int> operator/ (const vector<int>& left, const int divisor);
