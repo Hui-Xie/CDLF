@@ -400,13 +400,10 @@ float Tensor<ValueType>::variance(){
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensor(const vector<int>& centralIndex,const vector<int>& span){
+Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span){
     Tensor tensor (span);
     int N = span.size();
-    vector<int> halfSpan; //also the central voxel in the tensor(span)
-    for(int i =0; i<N; ++i){
-        halfSpan.push_back(span[i]/2);
-    }
+    vector<int> halfSpan = span/2; //also the central voxel in the tensor(span)
 
     if (2 == N){
         for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
@@ -457,6 +454,14 @@ Tensor<ValueType> Tensor<ValueType>::subTensor(const vector<int>& centralIndex,c
     return tensor;
 
 }
+
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span){
+    vector<int> centralIndex  = tfIndex + span/2;
+    return subTensorFromCenter(centralIndex,span);
+}
+
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::reduceDimension(const int index){
     const int oldN= m_dims.size();

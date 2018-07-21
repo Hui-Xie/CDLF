@@ -140,7 +140,7 @@ int main (int argc, char *argv[]) {
     cout<<"bVecotr*3: "<<endl;
     printVector(bVector*3);
 
-    cout<<"test subTensor"<<endl;
+    cout<<"test subTensorFromCenter"<<endl;
     Tensor<float> tensor20({10,10});
     k=0;
     for (int i=0; i<10; ++i){
@@ -152,8 +152,8 @@ int main (int argc, char *argv[]) {
     cout <<"tensor20:"<<endl;
     tensor20.printElements();
 
-    cout<<"tensor21 = tensor20.subTensor({2,3}, {5,5});"<<endl;
-    Tensor<float> tensor21 = tensor20.subTensor({2,3}, {5,5});
+    cout<<"tensor21 = tensor20.subTensorFromCenter({2,3}, {5,5});"<<endl;
+    Tensor<float> tensor21 = tensor20.subTensorFromCenter({2,3}, {5,5});
     tensor21.printElements();
 
     cout <<"tensor20:"<<endl;

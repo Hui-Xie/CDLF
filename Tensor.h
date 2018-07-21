@@ -64,7 +64,8 @@ public:
     float average();
     float variance();
 
-    Tensor subTensor(const vector<int>& centralIndex,const vector<int>& span);
+    Tensor subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span);
+    Tensor subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span);
     Tensor reduceDimension(const int index); //index is the indexOfLastDim
     ValueType conv(const Tensor& other) const; //convolution or cross-correlation
 

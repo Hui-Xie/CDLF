@@ -105,14 +105,14 @@ void ConvolutionLayer::initialize(const string& initialMethod){
 // Y = W*X
 void ConvolutionLayer::forward(){
     const int N = m_filterSize.size();
-    vector<int> Xc = m_filterSize /2; //X central for each subTensor at first point
+    vector<int> Xc = m_filterSize /2; //X central for each subTensorFromCenter at first point
     Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
     if (2 == N) {
         for (int i = 0; i < m_tensorSize[0]; ++i){
             Xc[0] += i*m_stride;
             for (int j = 0; j < m_tensorSize[1]; ++j){
                 Xc[1] += j*m_stride;
-                Tensor<float> subX = X.subTensor(Xc,m_filterSize);
+                Tensor<float> subX = X.subTensorFromCenter(Xc,m_filterSize);
                 for (int idxF =0; idxF < m_numFilters; ++idxF) {  //indexFilter
                      m_pYTensor->e(i,j, idxF)= subX.conv(*m_pW[idxF]);
                 }
@@ -126,7 +126,7 @@ void ConvolutionLayer::forward(){
                 Xc[1] += j*m_stride;
                 for (int k=0; k < m_tensorSize[2]; ++k){
                     Xc[2] += k*m_stride;
-                    Tensor<float> subX = X.subTensor(Xc,m_filterSize);
+                    Tensor<float> subX = X.subTensorFromCenter(Xc,m_filterSize);
                     for (int idxF =0; idxF < m_numFilters; ++idxF) {  //indexFilter
                         m_pYTensor->e(i,j, k,idxF)= subX.conv(*m_pW[idxF]);
                     }
@@ -143,7 +143,7 @@ void ConvolutionLayer::forward(){
                     Xc[2] += k*m_stride;
                     for (int l=0; l < m_tensorSize[3]; ++l){
                         Xc[3] += l*m_stride;
-                        Tensor<float> subX = X.subTensor(Xc,m_filterSize);
+                        Tensor<float> subX = X.subTensorFromCenter(Xc,m_filterSize);
                         for (int idxF =0; idxF < m_numFilters; ++idxF) {  //indexFilter
                             m_pYTensor->e(i,j, k,l,idxF)= subX.conv(*m_pW[idxF]);
                         }
@@ -162,6 +162,15 @@ void ConvolutionLayer::forward(){
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(){
+    // first compute the dL/dw
+    for (int idxF=0; idxF< m_numFilters; ++idxF){  //index of Filter
+
+
+    }
+
+
+
+    // then compute the DL/dx
 
 }
 
