@@ -60,9 +60,10 @@ public:
     void printElements();
     void zeroInitialize();
 
-    float sum();
-    float average();
-    float variance();
+    ValueType sum();
+    ValueType average();
+    ValueType variance();
+    ValueType max();
 
     Tensor subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span, const int stride =1);
     Tensor subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span, const int stride =1);
