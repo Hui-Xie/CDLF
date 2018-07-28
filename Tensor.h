@@ -25,18 +25,18 @@ public:
     ValueType* getData() const;
     long getLength() const;
 
-    ValueType& e(const vector<int>& index)const;
-    ValueType& e(long index) const;
-    ValueType& e(long i, long j) const;
-    ValueType& e(long i, long j, long k) const;
-    ValueType& e(long i, long j, long k, long l)const;
-    ValueType& e(long i, long j, long k, long l, long m)const;
-    ValueType& operator[] (long index) const;
-    ValueType& operator() (long index) const;
-    ValueType& operator() (long i, long j) const;
-    ValueType& operator() (long i, long j, long k) const;
-    ValueType& operator() (long i, long j, long k, long l) const;
-    ValueType& operator() (long i, long j, long k, long l, long m) const;
+    inline ValueType& e(const vector<int>& index)const;
+    inline ValueType& e(long index) const;
+    inline ValueType& e(long i, long j) const;
+    inline ValueType& e(long i, long j, long k) const;
+    inline ValueType& e(long i, long j, long k, long l)const;
+    inline ValueType& e(long i, long j, long k, long l, long m)const;
+    inline ValueType& operator[] (long index) const;
+    inline ValueType& operator() (long index) const;
+    inline ValueType& operator() (long i, long j) const;
+    inline ValueType& operator() (long i, long j, long k) const;
+    inline ValueType& operator() (long i, long j, long k, long l) const;
+    inline ValueType& operator() (long i, long j, long k, long l, long m) const;
     Tensor transpose();
 
 
@@ -78,7 +78,7 @@ private:
     void allocateMem();
     void freeMem();
     void generateDimsSpan();
-    long index2Offset(const vector<int>& index) const;
+    inline long index2Offset(const vector<int>& index) const;
 };
 
 #include "Tensor.hpp"
