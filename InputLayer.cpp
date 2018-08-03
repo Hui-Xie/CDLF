@@ -33,6 +33,6 @@ void InputLayer::backward(){
     //null
 }
 
-void InputLayer::updateParameters(const float lr, const string& method){
+void InputLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null
 }

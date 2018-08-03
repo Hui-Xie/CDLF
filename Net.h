@@ -18,14 +18,15 @@ public:
 
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);
-    void setMaxIteration(const int maxIteration);
+    void setMaxIteration(const long maxIteration);
     void setJudgeLoss(const bool judgeLoss);
     void setBatchSize(const int batchSize);
 
     void forwardPropagate();
     void backwardPropagate();
+    void zeroParaGradient();
     void addLayer(Layer* layer);
-    void sgd(const float lr);
+    void sgd(const float lr, const int batchSize);
 
     //Notes: this layerWidthVector does not include LossLayer
     void buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer);
@@ -41,7 +42,7 @@ private:
     map<int, Layer*> m_layers;
     float m_learningRate;
     float m_lossTolerance;
-    float m_maxIteration;
+    long m_maxIteration;
     bool m_judgeLoss;
     int m_batchSize;
 };

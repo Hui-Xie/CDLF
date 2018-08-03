@@ -26,7 +26,7 @@ public:
     virtual  void zeroParaGradient();
     virtual  void forward();
     virtual  void backward();
-    virtual  void updateParameters(const float lr, const string& method);
+    virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
 
 private:
     int m_stride;

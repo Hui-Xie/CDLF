@@ -50,6 +50,6 @@ void SoftMaxLayer::backward(){
         dX(i) = dY(i)*exp(X(i))*(m_sumExpX-exp(X(i)))/m_sumExpX2;
     }
 }
-void SoftMaxLayer::updateParameters(const float lr, const string& method){
+void SoftMaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //Null
 }

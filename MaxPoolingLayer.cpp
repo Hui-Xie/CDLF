@@ -171,7 +171,7 @@ void MaxPoolingLayer::backward(){
 
 }
 
-void MaxPoolingLayer::updateParameters(const float lr, const string& method){
+void MaxPoolingLayer::updateParameters(const float lr, const string& method, const int batchSize){
    //null
 }
 

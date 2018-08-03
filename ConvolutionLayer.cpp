@@ -179,10 +179,10 @@ void ConvolutionLayer::backward(){
     }
 }
 
-void ConvolutionLayer::updateParameters(const float lr, const string& method){
+void ConvolutionLayer::updateParameters(const float lr, const string& method, const int batchSize){
     if ("sgd" == method){
         for(int idxF=0;idxF < m_numFilters; ++idxF){
-            *m_pW[idxF] -= *m_pdW[idxF] * lr;
+            *m_pW[idxF] -= *m_pdW[idxF] * (lr/batchSize);
         }
     }
 }
@@ -257,7 +257,7 @@ void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
         for (int i=0; i< dWDims[0]; ++i){
             for (int j=0; j<dWDims[1]; ++j){
                 Tensor<float> Xsub = X.subTensorFromTopLeft({i*m_stride,j*m_stride}, dYDims, m_stride);
-                pdW->e(i,j) = Xsub.conv(*pdY);
+                pdW->e(i,j) += Xsub.conv(*pdY);
               }
         }
     }
@@ -266,7 +266,7 @@ void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
             for (int j=0; j<dWDims[1]; ++j){
                 for (int k=0; k<dWDims[2]; ++k) {
                     Tensor<float> Xsub = X.subTensorFromTopLeft({i*m_stride, j*m_stride,k*m_stride}, dYDims, m_stride);
-                    pdW->e(i, j,k) = Xsub.conv(*pdY);
+                    pdW->e(i, j,k) += Xsub.conv(*pdY);
                 }
             }
         }
@@ -277,7 +277,7 @@ void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
                 for (int k=0; k<dWDims[2]; ++k) {
                     for (int l=0; l<dWDims[3]; ++l) {
                         Tensor<float> Xsub = X.subTensorFromTopLeft({i*m_stride, j*m_stride, k*m_stride,l*m_stride}, dYDims, m_stride);
-                        pdW->e(i, j, k,l) = Xsub.conv(*pdY);
+                        pdW->e(i, j, k,l) += Xsub.conv(*pdY);
                     }
                 }
             }

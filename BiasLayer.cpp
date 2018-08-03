@@ -36,12 +36,12 @@ void BiasLayer::forward(){
 // dL/dX = dL/dY    Where L is Loss
 // dL/db = dL/dY
 void BiasLayer::backward(){
-    *m_pdBTensor = *m_pdYTensor;
+    *m_pdBTensor += *m_pdYTensor;
     *m_prevLayers.front()->m_pdYTensor = *m_pdYTensor;
 }
 
-void BiasLayer::updateParameters(const float lr, const string& method){
+void BiasLayer::updateParameters(const float lr, const string& method, const int batchSize){
     if ("sgd" == method){
-        *m_pBTensor -=  (*m_pdBTensor)*lr;
+        *m_pBTensor -=  (*m_pdBTensor)*(lr/batchSize);
     }
 }

@@ -35,7 +35,7 @@ void Net::setLossTolerance(const float tolerance){
    m_lossTolerance = tolerance;
 }
 
-void Net::setMaxIteration(const int maxIteration){
+void Net::setMaxIteration(const long maxIteration){
     m_maxIteration = maxIteration;
 }
 
@@ -58,6 +58,12 @@ void Net::backwardPropagate(){
    }
 }
 
+void Net::zeroParaGradient(){
+    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
+        rit->second->zeroParaGradient();
+    }
+}
+
 void Net::addLayer(Layer* layer){
      if (nullptr == layer) return;
      if (0 == m_layers.count(layer->m_id)){
@@ -71,9 +77,9 @@ void Net::addLayer(Layer* layer){
      }
 }
 
-void Net::sgd(const float lr){
+void Net::sgd(const float lr, const int batchSize){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        iter->second->updateParameters(lr, "sgd");
+        iter->second->updateParameters(lr, "sgd", batchSize);
     }
 }
 
@@ -109,18 +115,31 @@ void Net::initialize(){
 }
 void Net::train()
 {
-   int nIter = 0;
-   const int nLayers = m_layers.size();
+   long nIter = 0;
    InputLayer* inputLayer = (InputLayer*)m_layers.begin()->second;
    LossLayer* lossLayer = (LossLayer* )m_layers.rbegin()->second;
-   while(nIter < m_maxIteration && (m_judgeLoss ? lossLayer->getLoss()> m_lossTolerance: true))
-   {
-      inputLayer->initialize("Gaussian");
-      forwardPropagate();
-      backwardPropagate();
+   long numBatch =  m_maxIteration / m_batchSize;
+   if (0 !=  m_maxIteration % m_batchSize){
+       numBatch += 1;
+   }
 
-      float loss = lossLayer->getLoss();
-      if (isinf(loss)) break;
+   long nBatch = 0;
+   while(nBatch < numBatch)
+   {
+      if (m_judgeLoss && lossLayer->getLoss()< m_lossTolerance){
+         break;
+       }
+      if (isinf(lossLayer->getLoss())) break;
+
+      zeroParaGradient();
+      int i=0;
+      for(i=0; i< m_batchSize && nIter < m_maxIteration; ++i){
+          inputLayer->initialize("Gaussian");
+          forwardPropagate();
+          backwardPropagate();
+          ++nIter;
+      }
+      sgd(m_learningRate,i);
 
       //debug:
       //printLayersY();
@@ -128,9 +147,9 @@ void Net::train()
       //printLayersWdW();
       //cout<<"===================An iteration ============="<<endl;
       //end of debug
-      sgd(m_learningRate);
+
       printIteration(lossLayer, nIter);
-      ++nIter;
+      ++nBatch;
    }
    lossLayer->printGroundTruth();
 }

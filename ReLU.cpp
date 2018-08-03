@@ -44,6 +44,6 @@ void ReLU::zeroParaGradient(){
     //null
 }
 
-void ReLU::updateParameters(const float lr, const string& method) {
+void ReLU::updateParameters(const float lr, const string& method, const int batchSize) {
     //null
 }

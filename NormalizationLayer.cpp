@@ -47,6 +47,6 @@ void NormalizationLayer::backward(){
         dX.e(i) = dY.e(i)/(sigma+m_epsilon);
     }
 }
-void NormalizationLayer::updateParameters(const float lr, const string& method){
-    return;
+void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
+    //null
 }

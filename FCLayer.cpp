@@ -112,18 +112,18 @@ void FCLayer::backward(){
     Tensor<float>& dLdy = *m_pdYTensor;
     for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
         LayerPara &layerPara = m_layerParaMap[*iter];
-        *layerPara.m_pdW = dLdy * ((*iter)->m_pYTensor->transpose());
-        *layerPara.m_pdBTensor = dLdy;
+        *layerPara.m_pdW += dLdy * ((*iter)->m_pYTensor->transpose());
+        *layerPara.m_pdBTensor += dLdy;
         *((*iter)->m_pdYTensor) = layerPara.m_pW->transpose() * dLdy;
     }
 }
 
-void FCLayer::updateParameters(const float lr, const string& method) {
+void FCLayer::updateParameters(const float lr, const string& method, const int batchSize) {
     if ("sgd" == method){
          for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
             LayerPara &layerPara = m_layerParaMap[*iter];
-            *layerPara.m_pW -= (*layerPara.m_pdW)*lr;
-            *layerPara.m_pBTensor -=  (*layerPara.m_pdBTensor)*lr;
+            *layerPara.m_pW -= (*layerPara.m_pdW)*(lr/batchSize);
+            *layerPara.m_pBTensor -=  (*layerPara.m_pdBTensor)*(lr/batchSize);
         }
     }
 }

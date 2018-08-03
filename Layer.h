@@ -31,7 +31,7 @@ public:
     virtual  void zeroParaGradient() = 0;
     virtual  void forward()=0;
     virtual  void backward()=0;
-    virtual  void updateParameters(const float lr, const string& method) = 0;
+    virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;
 
 
     void addPreviousLayer(Layer* prevLayer);
