@@ -57,10 +57,10 @@ int main (int argc, char *argv[])
     Net net;
 
     //convex example 1: f= \sum (x_i-i)^2
-    //LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer");
+    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer");
 
     //convex example 2: f= = \sum exp(x_i -i)
-    LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer");
+    //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer");
 
     //non-convex example 1: f(x,y) = 3ysin(x)+5xcos(y)+0.5xy+x^2-y^2
     //Notes: Make sure that final layer only 2 neurons.
