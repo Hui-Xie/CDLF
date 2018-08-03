@@ -53,6 +53,10 @@ void Net::forwardPropagate(){
    }
 }
 void Net::backwardPropagate(){
+   // first initialize all dy into zero.
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+       iter->second->zeroDYTensor();
+   }
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
       rit->second->backward();
    }

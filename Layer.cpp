@@ -36,6 +36,12 @@ Layer::~Layer(){
     }
 }
 
+void Layer::zeroDYTensor(){
+    if (nullptr != m_pdYTensor){
+        m_pdYTensor->zeroInitialize();
+    }
+}
+
 void Layer::printY(){
     cout<<"LayerType: "<<m_type <<"; LayerTensorSize: "<<vector2String(m_tensorSize)<<"; Y: "<<endl;;
     m_pYTensor->printElements();

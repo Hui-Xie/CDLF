@@ -8,6 +8,7 @@
 
 /* Identity Layer same with  a residual edge
  * Identity's ID should be between the IDs of its previous layer and its next layer
+ * there is no case that there are sum before the Identity Layer.
  * */
 
 class IdentityLayer : public Layer {

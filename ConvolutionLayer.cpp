@@ -169,9 +169,6 @@ void ConvolutionLayer::forward(){
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(){
     // dX needs to consider the accumulation of different filters
-    Tensor<float>* dX = m_prevLayers.front()->m_pdYTensor;
-    dX->zeroInitialize();
-
     for (int idxF=0; idxF< m_numFilters; ++idxF){  //index of Filter
          Tensor<float> dY = m_pdYTensor->reduceDimension(idxF);
          computeDW(&dY, m_pdW[idxF]);
@@ -292,42 +289,45 @@ void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
 //Note: dx need to accumulate along filters
 void ConvolutionLayer::computeDX(Tensor<float> *pdY, Tensor<float> *pW) {
     expandDyTensor(pdY);
-    Tensor<float>& dX = *m_prevLayers.front()->m_pdYTensor;
-    const vector<int> dXdims = dX.getDims();
-    const int N = dXdims.size();
 
-    if (2 == N){
-        for(int i=0; i<dXdims[0];++i){
-            for(int j=0; j<dXdims[1];++j){
-                Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i,j}, m_filterSize, 1);
-                dX(i,j) += subExpandDy.flip().conv(*pW);
-             }
-        }
-    }
-    else if (3 == N){
-        for(int i=0; i<dXdims[0];++i){
-            for(int j=0; j<dXdims[1];++j){
-                for(int k=0; k<dXdims[2];++k) {
-                    Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k}, m_filterSize, 1);
-                    dX(i, j) += subExpandDy.flip().conv(*pW);
+    for (list<Layer*>::iterator it=m_prevLayers.begin(); it != m_prevLayers.end(); ++it){
+        Tensor<float>& dX = *((*it)->m_pdYTensor);
+        const vector<int> dXdims = dX.getDims();
+        const int N = dXdims.size();
+
+        if (2 == N){
+            for(int i=0; i<dXdims[0];++i){
+                for(int j=0; j<dXdims[1];++j){
+                    Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i,j}, m_filterSize, 1);
+                    dX(i,j) += subExpandDy.flip().conv(*pW);
                 }
             }
         }
-    }
-    else if (4 == N) {
-        for (int i = 0; i < dXdims[0]; ++i) {
-            for (int j = 0; j < dXdims[1]; ++j) {
-                for (int k = 0; k < dXdims[2]; ++k) {
-                    for (int l = 0; l < dXdims[3]; ++l) {
-                        Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l}, m_filterSize, 1);
+        else if (3 == N){
+            for(int i=0; i<dXdims[0];++i){
+                for(int j=0; j<dXdims[1];++j){
+                    for(int k=0; k<dXdims[2];++k) {
+                        Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k}, m_filterSize, 1);
                         dX(i, j) += subExpandDy.flip().conv(*pW);
                     }
                 }
             }
         }
-    }
-    else {
-        cout<<"Error: Dimension >=5 does not support in ConvolutionLayer::computeDX."<<endl;
+        else if (4 == N) {
+            for (int i = 0; i < dXdims[0]; ++i) {
+                for (int j = 0; j < dXdims[1]; ++j) {
+                    for (int k = 0; k < dXdims[2]; ++k) {
+                        for (int l = 0; l < dXdims[3]; ++l) {
+                            Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l}, m_filterSize, 1);
+                            dX(i, j) += subExpandDy.flip().conv(*pW);
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            cout<<"Error: Dimension >=5 does not support in ConvolutionLayer::computeDX."<<endl;
+        }
     }
     freeExpandDy();
 }

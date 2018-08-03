@@ -29,6 +29,7 @@ public:
 
     virtual  void initialize(const string& initialMethod)=0;
     virtual  void zeroParaGradient() = 0;
+    void zeroDYTensor();
     virtual  void forward()=0;
     virtual  void backward()=0;
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;

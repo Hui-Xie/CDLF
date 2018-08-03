@@ -31,12 +31,15 @@ float LossConvexExample1::lossCompute(){
 // dL/dx_i = dL/df * df/dx_i =  2* (x_i-i)
 void  LossConvexExample1::gradientCompute(){
     //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYTensor
-    Tensor<float> & prevY = *(m_prevLayers.front()->m_pYTensor);
-    Tensor<float> & prevdY = *(m_prevLayers.front()->m_pdYTensor);
-    long N = prevY.getLength();
-    for (long i=0; i< N ;++i){
-        prevdY[i] = 2 * ( prevY[i] - i);
+    for (list<Layer*>::iterator it=m_prevLayers.begin(); it != m_prevLayers.end(); ++it){
+        Tensor<float> & prevY = *((*it)->m_pYTensor);
+        Tensor<float> & prevdY = *((*it)->m_pdYTensor);
+        long N = prevY.getLength();
+        for (long i=0; i< N ;++i){
+            prevdY[i] = 2 * ( prevY[i] - i);
+        }
     }
+
 }
 
 void  LossConvexExample1::printGroundTruth(){

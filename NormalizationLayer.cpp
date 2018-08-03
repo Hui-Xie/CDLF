@@ -39,13 +39,16 @@ void NormalizationLayer::forward(){
 }
 void NormalizationLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *m_prevLayers.front()->m_pdYTensor;
-    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
-    float sigma = sqrt(X.variance());
-    long N = dY.getLength();
-    for(long i=0; i< N; ++i){
-        dX.e(i) = dY.e(i)/(sigma+m_epsilon);
+    for (list<Layer*>::iterator it=m_prevLayers.begin(); it != m_prevLayers.end(); ++it){
+        Tensor<float>& dX = *((*it)->m_pdYTensor);
+        Tensor<float>& X =  *((*it)->m_pYTensor);
+        float sigma = sqrt(X.variance());
+        long N = dY.getLength();
+        for(long i=0; i< N; ++i){
+            dX.e(i) += dY.e(i)/(sigma+m_epsilon);
+        }
     }
+
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null

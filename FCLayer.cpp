@@ -114,7 +114,7 @@ void FCLayer::backward(){
         LayerPara &layerPara = m_layerParaMap[*iter];
         *layerPara.m_pdW += dLdy * ((*iter)->m_pYTensor->transpose());
         *layerPara.m_pdBTensor += dLdy;
-        *((*iter)->m_pdYTensor) = layerPara.m_pW->transpose() * dLdy;
+        *((*iter)->m_pdYTensor) += layerPara.m_pW->transpose() * dLdy;
     }
 }
 

@@ -37,7 +37,9 @@ void BiasLayer::forward(){
 // dL/db = dL/dY
 void BiasLayer::backward(){
     *m_pdBTensor += *m_pdYTensor;
-    *m_prevLayers.front()->m_pdYTensor = *m_pdYTensor;
+    for (list<Layer*>::iterator it=m_prevLayers.begin(); it != m_prevLayers.end(); ++it){
+        *((*it)->m_pdYTensor) += *m_pdYTensor;
+    }
 }
 
 void BiasLayer::updateParameters(const float lr, const string& method, const int batchSize){
