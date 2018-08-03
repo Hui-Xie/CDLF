@@ -17,6 +17,7 @@ Net::Net(){
    m_lossTolerance = 0.02;
    m_maxIteration = 1000;
    m_judgeLoss = true;
+   m_batchSize = 1;
 }
 
 Net::~Net() {
@@ -40,6 +41,10 @@ void Net::setMaxIteration(const int maxIteration){
 
 void Net::setJudgeLoss(const bool judgeLoss){
     m_judgeLoss = judgeLoss;
+}
+
+void Net::setBatchSize(const int batchSize){
+    m_batchSize = batchSize;
 }
 
 void Net::forwardPropagate(){

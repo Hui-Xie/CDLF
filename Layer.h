@@ -28,9 +28,11 @@ public:
     Tensor<float>* m_pdYTensor;          //dL/dy,where L is Loss
 
     virtual  void initialize(const string& initialMethod)=0;
+    virtual  void zeroParaGradient() = 0;
     virtual  void forward()=0;
     virtual  void backward()=0;
     virtual  void updateParameters(const float lr, const string& method) = 0;
+
 
     void addPreviousLayer(Layer* prevLayer);
 

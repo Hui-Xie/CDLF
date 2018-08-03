@@ -15,6 +15,7 @@ public:
     float m_epsilon;
 
     virtual  void initialize(const string& initialMethod);
+    virtual  void zeroParaGradient();
     virtual  void forward();
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method);

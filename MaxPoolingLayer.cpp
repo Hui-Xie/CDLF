@@ -50,6 +50,10 @@ void MaxPoolingLayer::initialize(const string& initialMethod){
     //null
 }
 
+void MaxPoolingLayer::zeroParaGradient(){
+    //null
+}
+
 // Y_i = max(X_i) in filterSize range
 void MaxPoolingLayer::forward(){
     const int N = m_filterSize.size();

@@ -29,6 +29,10 @@ void LossLayer::initialize(const string& initialMethod){
     //null
 }
 
+void LossLayer::zeroParaGradient(){
+    //null
+}
+
 void LossLayer::updateParameters(const float lr, const string& method) {
     //null
 }

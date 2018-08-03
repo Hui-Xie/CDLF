@@ -18,6 +18,10 @@ void SoftMaxLayer::initialize(const string& initialMethod){
     //null
 }
 
+void SoftMaxLayer::zeroParaGradient(){
+    //null
+}
+
 // Y_i = exp(X_i)/ (\sum exp(x_i))
 // dL/dX = dL/dY * dY/dX = dL/dY * exp(x_i)*(\sum exp(x_i)-exp(x_i))/(\sum exp(x_i))^2
 void SoftMaxLayer::forward(){

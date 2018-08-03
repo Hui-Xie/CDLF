@@ -22,6 +22,10 @@ void InputLayer::initialize(const string& initialMethod){
     }
 }
 
+void InputLayer::zeroParaGradient(){
+   //null
+}
+
 void InputLayer::forward(){
     //null
 }

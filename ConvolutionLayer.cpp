@@ -102,6 +102,12 @@ void ConvolutionLayer::initialize(const string& initialMethod){
     }
 }
 
+void ConvolutionLayer::zeroParaGradient(){
+    for (int i=0; i<m_numFilters;++i){
+        m_pdW[i]->zeroInitialize();
+    }
+}
+
 // Y = W*X
 void ConvolutionLayer::forward(){
     const int N = m_filterSize.size();

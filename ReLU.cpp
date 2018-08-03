@@ -37,8 +37,11 @@ void ReLU::backward(){
     }
 }
 void ReLU::initialize(const string& initialMethod){
-    // this is null for ReLU
-    return;
+    //null
+}
+
+void ReLU::zeroParaGradient(){
+    //null
 }
 
 void ReLU::updateParameters(const float lr, const string& method) {

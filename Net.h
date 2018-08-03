@@ -20,6 +20,7 @@ public:
     void setLossTolerance(const float tolerance);
     void setMaxIteration(const int maxIteration);
     void setJudgeLoss(const bool judgeLoss);
+    void setBatchSize(const int batchSize);
 
     void forwardPropagate();
     void backwardPropagate();
@@ -42,6 +43,7 @@ private:
     float m_lossTolerance;
     float m_maxIteration;
     bool m_judgeLoss;
+    int m_batchSize;
 };
 
 

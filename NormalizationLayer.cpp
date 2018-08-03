@@ -17,7 +17,11 @@ NormalizationLayer::~NormalizationLayer(){
 
 void NormalizationLayer::initialize(const string& initialMethod){
      //null
-    return;
+
+}
+
+void NormalizationLayer::zeroParaGradient(){
+    //null
 }
 
 // Y = (X-mu)/sigma

@@ -24,6 +24,10 @@ void BiasLayer::initialize(const string& initialMethod){
   generateGaussian(m_pBTensor, 0, sqrt(1.0/N));
 }
 
+void BiasLayer::zeroParaGradient(){
+    if (nullptr != m_pdBTensor) m_pdBTensor->zeroInitialize();
+}
+
 //Y = X + b
 void BiasLayer::forward(){
   *m_pYTensor = *m_prevLayers.front()->m_pYTensor + *m_pBTensor;

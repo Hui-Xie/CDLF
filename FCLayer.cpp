@@ -83,6 +83,19 @@ void FCLayer::initialize(const string& initialMethod)
 
 }
 
+void FCLayer::zeroParaGradient(){
+    for(map<Layer*, LayerPara>::iterator iter = m_layerParaMap.begin(); iter != m_layerParaMap.end(); ++iter){
+        LayerPara& layerPara = iter->second;
+        if (nullptr != layerPara.m_pdW) {
+            layerPara.m_pdW->zeroInitialize();
+        }
+        if (nullptr != layerPara.m_pdBTensor) {
+            layerPara.m_pdBTensor->zeroInitialize();
+        }
+    }
+
+}
+
 void FCLayer::forward(){
     m_pYTensor->zeroInitialize();
     for(list<Layer*>::iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
