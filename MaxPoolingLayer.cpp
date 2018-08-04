@@ -113,7 +113,7 @@ void MaxPoolingLayer::backward() {
                 const float maxValue = X.subTensorFromTopLeft(Xc, m_filterSize).max();
                 for (int ii = 0; ii < m_filterSize[0]; ++ii)
                     for (int jj = 0; jj < m_filterSize[1]; ++jj)
-                        if (maxValue == X(Xc[0] + ii, Xc[1] + jj)) dX(Xc[0] + ii, Xc[1] + jj) += dLdy(i, j);
+                        if (maxValue == X(Xc[0] + ii, Xc[1] + jj)) dX(Xc[0] + ii, Xc[1] + jj) = dLdy(i, j);
             }
         }
     } else if (3 == N) {
@@ -129,7 +129,7 @@ void MaxPoolingLayer::backward() {
                         for (int jj = 0; jj < m_filterSize[1]; ++jj)
                             for (int kk = 0; kk < m_filterSize[2]; ++kk)
                                 if (maxValue == X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk))
-                                    dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk) += dLdy(i, j, k);
+                                    dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk) = dLdy(i, j, k);
                 }
             }
         }
@@ -149,7 +149,7 @@ void MaxPoolingLayer::backward() {
                                 for (int kk = 0; kk < m_filterSize[2]; ++kk)
                                     for (int ll = 0; ll < m_filterSize[3]; ++ll)
                                         if (maxValue == X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll))
-                                            dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll) += dLdy(i, j, k, l);
+                                            dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll) = dLdy(i, j, k, l);
                     }
                 }
             }

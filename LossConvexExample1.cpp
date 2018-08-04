@@ -30,7 +30,7 @@ float LossConvexExample1::lossCompute(){
 // Loss = f-0
 // dL/dx_i = dL/df * df/dx_i =  2* (x_i-i)
 void LossConvexExample1::gradientCompute() {
-    //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYTensor
+    //symbol deduced formula to compute gradient to prevLayer->m_pdYTensor
     Tensor<float> &prevY = *(m_prevLayer->m_pYTensor);
     Tensor<float> &prevdY = *(m_prevLayer->m_pdYTensor);
     long N = prevY.getLength();

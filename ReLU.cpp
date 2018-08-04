@@ -33,7 +33,7 @@ void ReLU::backward(){
     long N = dY.getLength();
     for(long i=0; i< N; ++i){
         if (X.e(i) >= 0) dX.e(i) = dY.e(i);
-        else dX.e(i) = 0;
+        // all dX.e(i) = 0 in zeroDYTensor() method.
     }
 }
 void ReLU::initialize(const string& initialMethod){
