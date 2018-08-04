@@ -78,6 +78,7 @@ template<class ValueType>
 void  Tensor<ValueType>::allocateMem(){
    if (nullptr != m_data){
        delete[] m_data;
+       m_data = nullptr;
    }
    m_data = new ValueType[getLength()];
 }

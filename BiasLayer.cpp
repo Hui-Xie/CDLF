@@ -14,8 +14,14 @@ BiasLayer::BiasLayer(const int id, const string& name, Layer* prevLayer): Layer(
 }
 
 BiasLayer::~BiasLayer() {
-  if (nullptr != m_pBTensor) delete m_pBTensor;
-  if (nullptr != m_pdBTensor) delete m_pdBTensor;
+  if (nullptr != m_pBTensor) {
+      delete m_pBTensor;
+      m_pBTensor = nullptr;
+  }
+  if (nullptr != m_pdBTensor) {
+      delete m_pdBTensor;
+      m_pdBTensor = nullptr;
+  }
 }
 
 
