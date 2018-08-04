@@ -35,7 +35,7 @@ public:
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;
 
 
-    void addPreviousLayer(Layer* prevLayer);
+    virtual void addPreviousLayer(Layer* prevLayer);
 
     void printY();
     void printDY();

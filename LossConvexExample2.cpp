@@ -37,7 +37,7 @@ void  LossConvexExample2::gradientCompute(){
     Tensor<float> & prevdY = *(m_prevLayer->m_pdYTensor);
     long N = prevY.getLength();
     for (long i=0; i< N ;++i){
-        prevdY[i] = exp ( prevY[i] - i);
+        prevdY[i] += exp ( prevY[i] - i);
     }
 }
 

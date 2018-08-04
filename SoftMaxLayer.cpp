@@ -47,7 +47,7 @@ void SoftMaxLayer::backward(){
     long N = dY.getLength();
     float m_sumExpX2 = m_sumExpX*m_sumExpX;
     for(long i=0; i< N; ++i){
-        dX(i) = dY(i)*exp(X(i))*(m_sumExpX-exp(X(i)))/m_sumExpX2;
+        dX(i) += dY(i)*exp(X(i))*(m_sumExpX-exp(X(i)))/m_sumExpX2;
     }
 }
 void SoftMaxLayer::updateParameters(const float lr, const string& method, const int batchSize){

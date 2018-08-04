@@ -27,7 +27,7 @@ float LossNonConvexExample2::lossCompute(){
 void  LossNonConvexExample2::gradientCompute(){
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dY = *(m_prevLayer->m_pdYTensor);
-    dY[0] = sin(X[0])+X[0]*cos(X[0]);
+    dY[0] += sin(X[0])+X[0]*cos(X[0]);
 }
 
 void  LossNonConvexExample2::printGroundTruth(){

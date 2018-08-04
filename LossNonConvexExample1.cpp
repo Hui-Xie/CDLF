@@ -27,8 +27,8 @@ float LossNonConvexExample1::lossCompute(){
 void  LossNonConvexExample1::gradientCompute(){
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dY = *(m_prevLayer->m_pdYTensor);
-    dY[0] = 3*X[1]*cos(X[0])+5*cos(X[1])+0.5*X[1]+2*X[0];
-    dY[1] = 3*sin(X[0])-5*X[0]*sin(X[1])+0.5*X[0]-2*X[1];
+    dY[0] += 3*X[1]*cos(X[0])+5*cos(X[1])+0.5*X[1]+2*X[0];
+    dY[1] += 3*sin(X[0])-5*X[0]*sin(X[1])+0.5*X[0]-2*X[1];
 }
 
 void  LossNonConvexExample1::printGroundTruth(){

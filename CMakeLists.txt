@@ -13,7 +13,7 @@ set(STATS_INCLUDE_DIR  E:/CProject/stats/include/) # for windows  stats C++ stat
 include_directories(${STATS_INCLUDE_DIR})
 
 set(Common_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp
-                  statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp ConvolutionLayer.cpp ConvolutionLayer.h BiasLayer.cpp BiasLayer.h SoftMaxLayer.cpp SoftMaxLayer.h MaxPoolingLayer.cpp MaxPoolingLayer.h IdentityLayer.cpp IdentityLayer.h)
+                  statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp ConvolutionLayer.cpp ConvolutionLayer.h BiasLayer.cpp BiasLayer.h SoftMaxLayer.cpp SoftMaxLayer.h MaxPoolingLayer.cpp MaxPoolingLayer.h IdentityLayer.cpp IdentityLayer.h SumLayer.cpp SumLayer.h)
 set(RL_NonConvexSRCS ${Common_SRCS}
                   RL_Test.cpp LossConvexExample1.cpp LossNonConvexExample1.cpp
                   LossNonConvexExample1.h LossNonConvexExample2.cpp LossNonConvexExample2.h LossConvexExample2.cpp LossConvexExample2.h)

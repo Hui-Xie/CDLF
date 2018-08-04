@@ -12,8 +12,9 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const int id, const string &name, const vector<int> &tensorSize, Layer *prevLayer) : Layer(id, name,
-                                                                                                            tensorSize) {
+FCLayer::FCLayer(const int id, const string &name, const vector<int> &tensorSize, Layer *prevLayer)
+: Layer(id, name,tensorSize)
+{
     m_type = "FullyConnected";
     m_m = m_tensorSize[0];
     m_n = prevLayer->m_tensorSize[0]; //input width
@@ -75,7 +76,7 @@ void FCLayer::backward() {
     Tensor<float> &dLdy = *m_pdYTensor;
     *m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
     *m_pdBTensor += dLdy;
-    *(m_prevLayer->m_pdYTensor) = m_pW->transpose() * dLdy;
+    *(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;
 }
 
 void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {

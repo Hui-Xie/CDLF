@@ -55,6 +55,7 @@ void Net::forwardPropagate(){
 void Net::backwardPropagate(){
    // first initialize all dy into zero.
    // this is a necessary step. as ConvolutionalLayer, MaxPoolLayer, ReLULayer all need this.
+   // the previous layer of any layer may be a branch Layer, so when we compute m_pdYTensor, always use +=
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->zeroDYTensor();
    }

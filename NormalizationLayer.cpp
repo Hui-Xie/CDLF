@@ -44,7 +44,7 @@ void NormalizationLayer::backward(){
     float sigma = sqrt(X.variance());
     long N = dY.getLength();
     for(long i=0; i< N; ++i){
-       dX.e(i) = dY.e(i)/(sigma+m_epsilon);
+       dX.e(i) += dY.e(i)/(sigma+m_epsilon);
     }
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
