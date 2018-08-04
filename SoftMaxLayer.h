@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 7/28/2018.
+// Created by Hui Xie on 7/28/2018.
 //
 
 #ifndef RL_NONCONVEX_SOFTMAXLAYER_H

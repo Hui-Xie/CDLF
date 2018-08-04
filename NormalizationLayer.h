@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 6/12/2018.
+// Created by Hui Xie on 6/12/2018.
 //
 
 #ifndef RL_NONCONVEX_NORMALIZATIONLAYER_H

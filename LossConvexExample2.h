@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 7/24/2018.
+// Created by Hui Xie on 7/24/2018.
 //
 
 #ifndef RL_NONCONVEX_LOSSCONVEXEXAMPLE2_H

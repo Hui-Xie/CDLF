@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 7/16/2018.
+// Created by Hui Xie on 7/16/2018.
 //
 
 #include "Tensor.h"

@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 6/7/2018.
+// Created by Hui Xie on 6/7/2018.
 //
 
 #ifndef RL_NONCONVEX_RELU_H

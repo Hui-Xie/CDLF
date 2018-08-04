@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 8/4/2018.
+// Created by Hui Xie on 8/4/2018.
 //
 
 #ifndef RL_NONCONVEX_SIGMOIDLAYER_H
