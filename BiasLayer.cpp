@@ -30,16 +30,14 @@ void BiasLayer::zeroParaGradient(){
 
 //Y = X + b
 void BiasLayer::forward(){
-  *m_pYTensor = *m_prevLayers.front()->m_pYTensor + *m_pBTensor;
+  *m_pYTensor = *m_prevLayer->m_pYTensor + *m_pBTensor;
 }
 
 // dL/dX = dL/dY    Where L is Loss
 // dL/db = dL/dY
 void BiasLayer::backward(){
     *m_pdBTensor += *m_pdYTensor;
-    for (list<Layer*>::iterator it=m_prevLayers.begin(); it != m_prevLayers.end(); ++it){
-        *((*it)->m_pdYTensor) += *m_pdYTensor;
-    }
+    *(m_prevLayer->m_pdYTensor) = *m_pdYTensor;
 }
 
 void BiasLayer::updateParameters(const float lr, const string& method, const int batchSize){

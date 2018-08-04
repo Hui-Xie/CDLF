@@ -21,15 +21,15 @@ public:
     int m_id;
     string m_name;
     string m_type;
-    list<Layer*>  m_prevLayers;
-    list<Layer*>  m_nextLayers;
+    Layer*  m_prevLayer;
+    Layer*  m_nextLayer;
     vector<int>  m_tensorSize;
     Tensor<float>* m_pYTensor;             //the output of this layer
     Tensor<float>* m_pdYTensor;          //dL/dy,where L is Loss
 
     virtual  void initialize(const string& initialMethod)=0;
     virtual  void zeroParaGradient() = 0;
-    void zeroDYTensor();
+    void zeroDYTensor(); //ConvolutionLayer, MaxPoolLayer, ReLu all needs dX =0;
     virtual  void forward()=0;
     virtual  void backward()=0;
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;

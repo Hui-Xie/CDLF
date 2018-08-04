@@ -10,8 +10,8 @@ Layer::Layer(const int id, const string& name, const vector<int>& tensorSize){
     m_id = id;
     m_name = name;
     m_type = "";
-    m_prevLayers.clear();
-    m_nextLayers.clear();
+    m_prevLayer = nullptr;
+    m_nextLayer = nullptr;
 
     m_tensorSize = tensorSize;
     if (0 != m_tensorSize.size()){
@@ -66,7 +66,7 @@ void Layer::printVector(Tensor<float>* vector){
 
 void Layer::addPreviousLayer(Layer* prevLayer){
     if (nullptr != prevLayer){
-        m_prevLayers.push_back(prevLayer);
-        prevLayer->m_nextLayers.push_back(this);
+        m_prevLayer = prevLayer;
+        prevLayer->m_nextLayer= this;
     }
 }

@@ -26,7 +26,7 @@ void SoftMaxLayer::zeroParaGradient(){
 // dL/dX = dL/dY * dY/dX = dL/dY * exp(x_i)*(\sum exp(x_i)-exp(x_i))/(\sum exp(x_i))^2
 void SoftMaxLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
-    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = Y.getLength();
     m_sumExpX = 0;
     for (long i=0; i< N; ++i){
@@ -42,8 +42,8 @@ void SoftMaxLayer::forward(){
 }
 void SoftMaxLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *m_prevLayers.front()->m_pdYTensor;
-    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
+    Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = dY.getLength();
     float m_sumExpX2 = m_sumExpX*m_sumExpX;
     for(long i=0; i< N; ++i){

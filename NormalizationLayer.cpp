@@ -29,7 +29,7 @@ void NormalizationLayer::zeroParaGradient(){
 // dL/dX = dL/dY * dY/dX = dL/dY * (1/sigma)
 void NormalizationLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
-    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    Tensor<float>& X = *m_prevLayer->m_pYTensor;
     float mean = X.average();
     float sigma = sqrt(X.variance());
     long N = Y.getLength();
@@ -39,16 +39,13 @@ void NormalizationLayer::forward(){
 }
 void NormalizationLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
-    for (list<Layer*>::iterator it=m_prevLayers.begin(); it != m_prevLayers.end(); ++it){
-        Tensor<float>& dX = *((*it)->m_pdYTensor);
-        Tensor<float>& X =  *((*it)->m_pYTensor);
-        float sigma = sqrt(X.variance());
-        long N = dY.getLength();
-        for(long i=0; i< N; ++i){
-            dX.e(i) += dY.e(i)/(sigma+m_epsilon);
-        }
+    Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
+    Tensor<float>& X =  *(m_prevLayer->m_pYTensor);
+    float sigma = sqrt(X.variance());
+    long N = dY.getLength();
+    for(long i=0; i< N; ++i){
+       dX.e(i) += dY.e(i)/(sigma+m_epsilon);
     }
-
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null

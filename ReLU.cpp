@@ -19,7 +19,7 @@ ReLU::~ReLU(){
 // dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
 void ReLU::forward(){
     Tensor<float>& Y = *m_pYTensor;
-    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = Y.getLength();
     for (long i=0; i< N; ++i){
        if (X.e(i) >= 0 ) Y.e(i) = X.e(i);
@@ -28,8 +28,8 @@ void ReLU::forward(){
 }
 void ReLU::backward(){
     Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *m_prevLayers.front()->m_pdYTensor;
-    Tensor<float>& X = *m_prevLayers.front()->m_pYTensor;
+    Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
+    Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = dY.getLength();
     for(long i=0; i< N; ++i){
         if (X.e(i) >= 0) dX.e(i) = dY.e(i);

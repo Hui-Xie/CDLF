@@ -15,22 +15,15 @@
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-    FCLayer(const int id, const string& name, const vector<int>& tensorSize, list<Layer*>& prevLayers);
-    FCLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayer);
+     FCLayer(const int id, const string& name, const vector<int>& tensorSize, Layer* prevLayer);
     ~FCLayer();
 
     long m_m; //output width
-    struct LayerPara{
-        long m_n; //input width
-        Tensor<float>*  m_pW;
-        Tensor<float>*  m_pBTensor;
-        Tensor<float>*  m_pdW;
-        Tensor<float>*  m_pdBTensor;
-    };
-    map<Layer*, LayerPara> m_layerParaMap;
-
-    void constructLayerParaMap(list<Layer*>& prevLayers);
-
+    long m_n; //input width
+    Tensor<float>*  m_pW;
+    Tensor<float>*  m_pBTensor;
+    Tensor<float>*  m_pdW;
+    Tensor<float>*  m_pdBTensor;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();

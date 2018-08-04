@@ -160,7 +160,7 @@ void Net::train()
 
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "  <<"Output Result: "<<endl;
-    lossLayer->m_prevLayers.front()->m_pYTensor->transpose().printElements();
+    lossLayer->m_prevLayer->m_pYTensor->transpose().printElements();
     cout<<"Loss: "<< lossLayer->lossCompute()<< endl;
     cout<<endl;
 }
