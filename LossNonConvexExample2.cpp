@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 6/15/2018.
+// Created by Hui Xie on 6/15/2018.
 //
 
 #include "LossNonConvexExample2.h"

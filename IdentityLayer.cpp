@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 8/3/2018.
+// Created by Hui Xie on 8/3/2018.
 //
 
 #include "IdentityLayer.h"
