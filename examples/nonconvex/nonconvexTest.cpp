@@ -2,14 +2,12 @@
 // Created by Hui Xie on 6/5/2018.
 //
 
-#include "RL_Test.h"
+#include "nonconvexTest.h"
 #include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
 #include "Net.h"
-#include "LossConvexExample1.h"
-#include "LossConvexExample2.h"
 #include "LossNonConvexExample1.h"
 #include "LossNonConvexExample2.h"
 
@@ -57,7 +55,7 @@ int main (int argc, char *argv[])
     Net net;
 
     //convex example 1: f= \sum (x_i-i)^2
-    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer");
+    //LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer");
 
     //convex example 2: f= = \sum exp(x_i -i)
     //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer");
@@ -70,8 +68,8 @@ int main (int argc, char *argv[])
     // non-convex example 2: f(x) = x*sin(x)
     // In low -D space, the deep learning network can not escape the the local minima
     // Notes: Make sure that final layer only 1 neuron.
-     //LossNonConvexExample2* lossLayer = new LossNonConvexExample2(1002,"NonConvexLossLayer2");
-     //net.setJudgeLoss(false); //for nonconvex case
+     LossNonConvexExample2* lossLayer = new LossNonConvexExample2(1002,"NonConvexLossLayer2");
+     net.setJudgeLoss(false); //for nonconvex case
 
     net.buildFullConnectedNet(layerWidthVector, lossLayer);
     net.setLearningRate(0.01);

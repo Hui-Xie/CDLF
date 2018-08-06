@@ -2,9 +2,9 @@
 // Created by Hui Xie on 7/17/2018.
 //
 #include <iostream>
-#include "Tensor.h"
+#include "../../CDLF/Tensor.h"
 #include <list>
-#include "Tools.h"
+#include "../../CDLF/Tools.h"
 
 void printVector(const vector<int> aVector){
     int N = aVector.size();
