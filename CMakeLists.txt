@@ -10,7 +10,8 @@ include_directories(${CDLF_SRC_DIR})
 link_directories(${CMAKE_BINARY_DIR}/CDLF)
 
 message("*************************************")
-message("Notes: you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your environmental variable. ")
+message("Notes: you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
+message("In Windows, after setting envionmental varialbles, you need to reboot your system.")
 message("*************************************")
 
 set(CDLFLib libCDLF.dll)
