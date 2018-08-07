@@ -5,10 +5,10 @@
 #include "MnistTools.h"
 #include <fstream>
 
-unsigned int hexchar4ToUInt(char* buff){
-    unsigned int  temp =0;
+long hexchar4ToLong(char *buff){
+    long  temp =0;
     for (int i=0; i<4; ++i){
-       temp += buff[i]* pow(16,(3-i)*2);
+       temp += ((unsigned char)buff[i])* pow(16,(3-i)*2);
     }
     return temp;
 }
@@ -33,18 +33,17 @@ int readMNISTIdxFile(const string &fileName, Tensor<unsigned char> *pTensor) {
     ifs.read(magicNum, 4);
     if (0x00 == magicNum[0] && 0x00 == magicNum[1] && 0x08 == magicNum[2]) {
         if (0x03 == magicNum[3]) {//Image file
+            ifs.read(dim, 4);
+            numImages =  hexchar4ToLong(dim);
+            ifs.read(dim, 4);
+            rows = hexchar4ToLong(dim);
+            ifs.read(dim, 4);
+            cols = hexchar4ToLong(dim);
+            isImage = true;
 
-            /*ifs.read(dim, 4);
-            numImages = hexchar4ToUInt(dim);
-            ifs.read(dim, 4); rows = hexchar4ToUInt(dim);
-            ifs.read(dim, 4); cols = hexchar4ToUInt(dim);
-            isImage = true;*/
-            ifs >>std::hex >>numImages;
-            ifs >>std::hex >>rows;
-            ifs >>std::hex >>cols;
         }else if (0x01 == magicNum[3]) {// Label file
             ifs.read(dim, 4);
-            numImages = hexchar4ToUInt(dim);
+            numImages = hexchar4ToLong(dim);
             isImage = false;
         }
         else{
