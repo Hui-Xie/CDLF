@@ -159,8 +159,8 @@ int main (int argc, char *argv[]) {
     cout <<"tensor20:"<<endl;
     tensor20.printElements();
 
-    Tensor<float> tensor22 = tensor20.reduceDimension(3);
-    cout<<" tensor22 = tensor20.reduceDimension(3);"<<endl;
+    Tensor<float> tensor22 = tensor20.extractLowerDTensor(3);
+    cout<<" tensor22 = tensor20.extractLowerDTensor(3);"<<endl;
     tensor22.printElements();
 
     cout <<"tensor20:"<<endl;
@@ -169,6 +169,15 @@ int main (int argc, char *argv[]) {
     Tensor<float> tensor23 = tensor20.subTensorFromTopLeft({0,0},{3,3},2);
     cout<<"tensor23 = tensor20.subTensorFromTopLeft({0,0},{3,3},2) ="<<endl;
     tensor23.printElements();
+
+    cout <<"tensor20:"<<endl;
+    tensor20.printElements();
+
+    cout<<"row(4) = tensor20.row(4)="<<endl;
+    tensor20.row(4).printElements();
+
+    cout<<"colunmn(3) = tensor20.column(3)="<<endl;
+    tensor20.column(3).printElements();
 
 
 

@@ -121,6 +121,11 @@ ValueType& Tensor<ValueType>::e(const vector<int>& index) const{
 }
 
 template<class ValueType>
+void Tensor<ValueType>::copyDataTo(Tensor* pTensor, const long offset, const long length){
+    memcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType));
+}
+
+template<class ValueType>
 ValueType& Tensor<ValueType>::e(long index) const{
     return m_data[index];
 }
@@ -475,57 +480,77 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<int>& tfI
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::reduceDimension(const int index){
-    const int oldN= m_dims.size();
+Tensor<ValueType> Tensor<ValueType>::column(const int index){
+    assert(2 == m_dims.size());
     vector<int> newDims;
-    if (2 == oldN){
-         newDims.push_back(m_dims[0]);
-         newDims.push_back(1);
-    }
-    else{
-         newDims = m_dims;
-         newDims.erase(newDims.end()-1);
-    }
+    newDims.push_back(m_dims[0]);
+    newDims.push_back(1);
     Tensor tensor(newDims);
-    const int newN = newDims.size();
-
-    if (2 == newN && 2 == oldN){
-       for (int i=0; i< newDims[0]; ++i){
-           tensor[i] = e(i,index);
-       }
-    }
-    else if (2 == newN && 3 == oldN){
-        for (int i=0; i< newDims[0]; ++i){
-            for(int j=0; j<newDims[1];++j){
-                tensor(i,j) = e(i,j,index);
-            }
-        }
-     }
-    else if (3 == newN){
-        for (int i=0; i< newDims[0]; ++i){
-            for(int j=0; j<newDims[1];++j){
-                for (int k=0; k<newDims[2];++k){
-                     tensor(i,j,k) = e(i,j,k,index);
-                }
-            }
-        }
-    }
-    else if (4 == newN){
-        for (int i=0; i< newDims[0]; ++i){
-            for(int j=0; j<newDims[1];++j){
-                for (int k=0; k<newDims[2];++k){
-                    for(int l=0; l<newDims[3];++l){
-                         tensor(i,j,k,l) = e(i,j,k,l,index);
-                    }
-                }
-            }
-        }
-    }
-    else{
-        cout<<"Error: we only support 5D Tensor at most"<<endl;
+    for (int i=0; i<m_dims[0]; ++i){
+        tensor.e(i) = e(i,index);
     }
     return tensor;
+}
 
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::row(const int index){
+    assert(2 == m_dims.size());
+    vector<int> newDims;
+    newDims.push_back(1);
+    newDims.push_back(m_dims[1]);
+    Tensor tensor(newDims);
+    copyDataTo(&tensor, index*m_dims[1], m_dims[1]);
+    return tensor;
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::slice(const int index){
+    assert(3 == m_dims.size());
+    vector<int> newDims;
+    newDims = m_dims;
+    newDims.erase(newDims.begin());
+    Tensor tensor(newDims);
+    long N = tensor.getLength();
+    copyDataTo(&tensor, index*N , N );
+    return tensor;
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::volume(const int index){
+    assert(4 == m_dims.size());
+    vector<int> newDims;
+    newDims = m_dims;
+    newDims.erase(newDims.begin());
+    Tensor tensor(newDims);
+    long N = tensor.getLength();
+    copyDataTo(&tensor, index*N , N );
+    return tensor;
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::fourDVolume(const int index){
+    assert(5 == m_dims.size());
+    vector<int> newDims;
+    newDims = m_dims;
+    newDims.erase(newDims.begin());
+    Tensor tensor(newDims);
+    long N = tensor.getLength();
+    copyDataTo(&tensor, index*N , N );
+    return tensor;
+}
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::extractLowerDTensor(const int index){
+    vector<int> newDims;
+    newDims = m_dims;
+    newDims.erase(newDims.begin());
+    if (1 == newDims.size()){
+        newDims.insert(newDims.begin(),1);
+    }
+    Tensor tensor(newDims);
+    long N = tensor.getLength();
+    copyDataTo(&tensor, index*N , N );
+    return tensor;
 }
 
 

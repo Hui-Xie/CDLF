@@ -9,6 +9,6 @@ int readMNISTIdxFile(const string& fileName, Tensor<unsigned  char>* pTensor)
 {
     ifstream ifs (fileName, ifstream::in | ifstream::binary);
 
-    
+
     return 0;
 }

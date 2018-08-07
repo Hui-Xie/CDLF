@@ -163,7 +163,7 @@ void ConvolutionLayer::forward() {
 void ConvolutionLayer::backward() {
     // dX needs to consider the accumulation of different filters
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //index of Filter
-        Tensor<float> dY = m_pdYTensor->reduceDimension(idxF);
+        Tensor<float> dY = m_pdYTensor->extractLowerDTensor(idxF);
         computeDW(&dY, m_pdW[idxF]);
         computeDX(&dY, m_pW[idxF]);//Note: dx need to accumulate along filters
     }

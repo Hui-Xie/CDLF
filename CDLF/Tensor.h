@@ -9,9 +9,10 @@
 using namespace std;
 
 // Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect express.;
-// Row Vector is a Tensor({1,n});
-// Now this Network has finished Tensor Reconstruction, and supported DAG network.
-
+// Row Vector is a Tensor({1,n}); Namely, there is no 1D tensor.
+// For 3D Tensor, the dimensional order is nSlice*Height*Width;
+// For 4D Tensor, the dimensional order is nVolume*nSlice*Height*Width;
+// For 5D Tensor, the dimensional order is n4D*nVolume*nSlice*Height*Width;
 
 template<class ValueType>
 class Tensor {
@@ -67,7 +68,15 @@ public:
 
     Tensor subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span, const int stride =1);
     Tensor subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span, const int stride =1);
-    Tensor reduceDimension(const int index); //index is the indexOfLastDim
+
+    // extractLowerDTensor will be repalced by slice, volume, fourDVolume
+    Tensor column(const int index);
+    Tensor row(const int index);
+    Tensor slice(const int index);
+    Tensor volume(const int index);
+    Tensor fourDVolume(const int index);
+    Tensor extractLowerDTensor(const int index);
+
     ValueType conv(const Tensor& other) const; //convolution or cross-correlation
     Tensor& flip();
 
@@ -80,6 +89,7 @@ private:
     void freeMem();
     void generateDimsSpan();
     inline long index2Offset(const vector<int>& index) const;
+    void copyDataTo(Tensor* pTensor, const long offset, const long length);
 };
 
 #include "Tensor.hpp"
