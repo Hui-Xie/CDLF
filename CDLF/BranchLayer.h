@@ -14,7 +14,7 @@
 
 class BranchLayer : public Layer {
 public:
-    BranchLayer(const int id, const string& name, const vector<int>& tensorSize, Layer *prevLayer);
+    BranchLayer(const int id, const string& name, const vector<long>& tensorSize, Layer *prevLayer);
     ~BranchLayer();
 
     list<Layer*> m_nextLayers;

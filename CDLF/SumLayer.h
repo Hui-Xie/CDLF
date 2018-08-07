@@ -14,7 +14,7 @@
 
 class SumLayer : public Layer {
 public:
-    SumLayer(const int id, const string& name, const vector<int>& tensorSize);
+    SumLayer(const int id, const string& name, const vector<long>& tensorSize);
     ~SumLayer();
 
     list<Layer*> m_prevLayers;

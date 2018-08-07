@@ -15,7 +15,7 @@ using namespace std;
 
 class Layer {
 public:
-    Layer(const int id, const string& name, const vector<int>& tensorSize);
+    Layer(const int id, const string& name, const vector<long>& tensorSize);
     ~Layer();
 
     int m_id;
@@ -23,7 +23,7 @@ public:
     string m_type;
     Layer*  m_prevLayer;
     Layer*  m_nextLayer;
-    vector<int>  m_tensorSize;
+    vector<long>  m_tensorSize;
     Tensor<float>* m_pYTensor;             //the output of this layer
     Tensor<float>* m_pdYTensor;          //dL/dy,where L is Loss
 

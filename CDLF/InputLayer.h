@@ -11,7 +11,7 @@
 
 class InputLayer : public Layer{
 public:
-    InputLayer(const int id, const string& name,const vector<int>& tensorSize);
+    InputLayer(const int id, const string& name,const vector<long>& tensorSize);
     ~InputLayer();
 
     virtual  void initialize(const string& initialMethod);

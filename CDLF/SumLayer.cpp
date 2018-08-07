@@ -4,7 +4,7 @@
 
 #include "SumLayer.h"
 
-SumLayer::SumLayer(const int id, const string& name, const vector<int>& tensorSize): Layer(id, name, tensorSize)
+SumLayer::SumLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize)
 {
     m_type = "SumLayer";
 }

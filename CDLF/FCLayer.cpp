@@ -12,7 +12,7 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const int id, const string &name, const vector<int> &tensorSize, Layer *prevLayer)
+FCLayer::FCLayer(const int id, const string &name, const vector<long> &tensorSize, Layer *prevLayer)
 : Layer(id, name,tensorSize)
 {
     m_type = "FullyConnected";

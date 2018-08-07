@@ -6,7 +6,7 @@
 #include <iostream>
 using namespace std;
 
-Layer::Layer(const int id, const string& name, const vector<int>& tensorSize){
+Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
     m_id = id;
     m_name = name;
     m_type = "";

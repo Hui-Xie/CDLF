@@ -4,7 +4,7 @@
 
 #include "BranchLayer.h"
 
-BranchLayer::BranchLayer(const int id, const string& name, const vector<int>& tensorSize, Layer *prevLayer): Layer(id, name, tensorSize)
+BranchLayer::BranchLayer(const int id, const string& name, const vector<long>& tensorSize, Layer *prevLayer): Layer(id, name, tensorSize)
 {
     m_type = "BranchLayer";
     addPreviousLayer(prevLayer);

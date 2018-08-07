@@ -24,7 +24,7 @@
 
 class ConvolutionLayer :  public Layer {
 public:
-    ConvolutionLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer,
+    ConvolutionLayer(const int id, const string& name, const vector<long>& filterSize, Layer* prevLayer,
                      const int numFilters=1, const int stride=1);
     ~ConvolutionLayer();
 
@@ -44,10 +44,10 @@ public:
 private:
     int m_stride;
     int m_OneFilterN;
-    vector<int> m_filterSize;
+    vector<long> m_filterSize;
     int m_numFilters;
 
-    bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
+    bool checkFilterSize(const vector<long>& filterSize, Layer* prevLayer);
     void expandDyTensor(Tensor<float>* pdY);
     void freeExpandDy();
     void computeDW(Tensor<float>* pdY, Tensor<float>* pdW);

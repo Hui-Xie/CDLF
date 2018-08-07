@@ -10,7 +10,7 @@
 #include <cmath> //for pow()
 
 template<class ValueType>
-Tensor<ValueType>::Tensor(const vector<int>& dims){
+Tensor<ValueType>::Tensor(const vector<long>& dims){
    m_dims = dims;
    generateDimsSpan();
    m_data = nullptr;
@@ -55,7 +55,7 @@ Tensor<ValueType>::~Tensor(){
 }
 
 template<class ValueType>
-vector<int> Tensor<ValueType>::getDims()const {
+vector<long> Tensor<ValueType>::getDims()const {
    return m_dims;
 }
 
@@ -105,7 +105,7 @@ void Tensor<ValueType>::generateDimsSpan(){
 }
 
 template<class ValueType>
-long Tensor<ValueType>::index2Offset(const vector<int>& index)const{
+long Tensor<ValueType>::index2Offset(const vector<long>& index)const{
     int N = index.size();
     long offset =0;
     for (int i=0; i<N; ++i){
@@ -115,7 +115,7 @@ long Tensor<ValueType>::index2Offset(const vector<int>& index)const{
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::e(const vector<int>& index) const{
+ValueType& Tensor<ValueType>::e(const vector<long>& index) const{
     assert(index.size() == m_dims.size());
     return m_data[index2Offset(index)];
 }
@@ -191,12 +191,12 @@ ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m
 // transpose operation only supports 2D matrix
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::transpose(){
-    vector<int> newDims = reverseVector(m_dims);
+    vector<long> newDims = reverseVector(m_dims);
     Tensor tensor (newDims);
     int dim = m_dims.size();
     assert(dim ==2 );
-    for (int i=0; i<newDims[0]; ++i){
-        for (int j=0; j< newDims[1];++j){
+    for (long i=0; i<newDims[0]; ++i){
+        for (long j=0; j< newDims[1];++j){
             tensor.e({i,j}) = e({j,i});
         }
     }
@@ -208,7 +208,7 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     int thisDim = m_dims.size();
-    vector<int> otherDims = other.getDims();
+    vector<long> otherDims = other.getDims();
     int otherDim = otherDims.size();
     if  (m_dims[thisDim-1] != otherDims[0]){
         cout<<"Error: Tensor product has un-matching dimension."<<endl;
@@ -216,12 +216,12 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     }
 
     if (2 == thisDim && 2 == otherDim){
-        vector<int> newDims{m_dims[0], otherDims[1]};
+        vector<long> newDims{m_dims[0], otherDims[1]};
         Tensor tensor (newDims);
-        for (int i=0; i<newDims[0]; ++i){
-            for (int j=0; j< newDims[1];++j){
+        for (long i=0; i<newDims[0]; ++i){
+            for (long j=0; j< newDims[1];++j){
                 ValueType value =0;
-                for (int k=0; k< m_dims[1]; ++k){
+                for (long k=0; k< m_dims[1]; ++k){
                     value += e({i,k})*other.e({k,j});
                 }
                 tensor.e({i,j}) = value;
@@ -416,10 +416,10 @@ ValueType Tensor<ValueType>::max(){
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span, const int stride){
+Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride){
     Tensor tensor (span);
     int N = span.size();
-    vector<int> halfSpan = span/2; //also the central voxel in the tensor(span)
+    vector<long> halfSpan = span/2; //also the central voxel in the tensor(span)
 
     if (2 == N){
         for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
@@ -474,15 +474,15 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<int>& cent
 
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span, const int stride){
-    vector<int> centralIndex  = tfIndex + span/2*stride;
+Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, const int stride){
+    vector<long> centralIndex  = tfIndex + span/2*stride;
     return subTensorFromCenter(centralIndex,span, stride);
 }
 
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::column(const int index){
     assert(2 == m_dims.size());
-    vector<int> newDims;
+    vector<long> newDims;
     newDims.push_back(m_dims[0]);
     newDims.push_back(1);
     Tensor tensor(newDims);
@@ -495,7 +495,7 @@ Tensor<ValueType> Tensor<ValueType>::column(const int index){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::row(const int index){
     assert(2 == m_dims.size());
-    vector<int> newDims;
+    vector<long> newDims;
     newDims.push_back(1);
     newDims.push_back(m_dims[1]);
     Tensor tensor(newDims);
@@ -506,7 +506,7 @@ Tensor<ValueType> Tensor<ValueType>::row(const int index){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::slice(const int index){
     assert(3 == m_dims.size());
-    vector<int> newDims;
+    vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     Tensor tensor(newDims);
@@ -518,7 +518,7 @@ Tensor<ValueType> Tensor<ValueType>::slice(const int index){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::volume(const int index){
     assert(4 == m_dims.size());
-    vector<int> newDims;
+    vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     Tensor tensor(newDims);
@@ -530,7 +530,7 @@ Tensor<ValueType> Tensor<ValueType>::volume(const int index){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::fourDVolume(const int index){
     assert(5 == m_dims.size());
-    vector<int> newDims;
+    vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     Tensor tensor(newDims);
@@ -541,7 +541,7 @@ Tensor<ValueType> Tensor<ValueType>::fourDVolume(const int index){
 
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::extractLowerDTensor(const int index){
-    vector<int> newDims;
+    vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     if (1 == newDims.size()){

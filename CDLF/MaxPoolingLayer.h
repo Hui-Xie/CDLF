@@ -15,7 +15,7 @@
 
 class MaxPoolingLayer :  public Layer {
 public:
-    MaxPoolingLayer(const int id, const string& name, const vector<int>& filterSize, Layer* prevLayer,
+    MaxPoolingLayer(const int id, const string& name, const vector<long>& filterSize, Layer* prevLayer,
                      const int stride=1);
     ~MaxPoolingLayer();
 
@@ -31,7 +31,7 @@ public:
 private:
     int m_stride;
     int m_OneFilterN;
-    vector<int> m_filterSize;
+    vector<long> m_filterSize;
 
 };
 

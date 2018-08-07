@@ -17,16 +17,16 @@ using namespace std;
 template<class ValueType>
 class Tensor {
 public:
-    Tensor(const vector<int>& dims);
+    Tensor(const vector<long>& dims);
     Tensor(const Tensor& other);
     Tensor& operator= (const Tensor& other);
     ~Tensor();
 
-    vector<int> getDims() const;
+    vector<long> getDims() const;
     ValueType* getData() const;
     long getLength() const;
 
-    inline ValueType& e(const vector<int>& index)const;
+    inline ValueType& e(const vector<long>& index)const;
     inline ValueType& e(long index) const;
     inline ValueType& e(long i, long j) const;
     inline ValueType& e(long i, long j, long k) const;
@@ -66,8 +66,8 @@ public:
     ValueType variance();
     ValueType max();
 
-    Tensor subTensorFromCenter(const vector<int>& centralIndex,const vector<int>& span, const int stride =1);
-    Tensor subTensorFromTopLeft(const vector<int>& tfIndex,const vector<int>& span, const int stride =1);
+    Tensor subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride =1);
+    Tensor subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, const int stride =1);
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);
@@ -81,14 +81,14 @@ public:
     Tensor& flip();
 
 private:
-    vector<int> m_dims;
+    vector<long> m_dims;
     vector<long> m_dimsSpan; //express change of index leads how many data storage span.
     ValueType* m_data;
 
     void allocateMem();
     void freeMem();
     void generateDimsSpan();
-    inline long index2Offset(const vector<int>& index) const;
+    inline long index2Offset(const vector<long>& index) const;
     void copyDataTo(Tensor* pTensor, const long offset, const long length);
 };
 

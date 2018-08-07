@@ -6,7 +6,7 @@
 #include <list>
 #include "../../CDLF/Tools.h"
 
-void printVector(const vector<int> aVector){
+void printVector(const vector<long> aVector){
     int N = aVector.size();
     cout<<"{";
     for (int i=0; i< N; ++i){
@@ -130,10 +130,10 @@ int main (int argc, char *argv[]) {
     tensor1.printElements();
 
     cout<<"Test operator + "<<endl;
-    vector<int> aVector={1,2,3,4,5};
+    vector<long> aVector={1,2,3,4,5};
     cout<<"Original Vector:";
     printVector(aVector);
-    vector<int> bVector = aVector+2;
+    vector<long> bVector = aVector+2;
     cout<<" bVector = aVector+2; "<<endl;
     printVector(bVector);
 

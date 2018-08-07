@@ -9,21 +9,21 @@
 
 using namespace std;
 
-bool sameVector(const vector<int>& vec1, const vector<int>& vec2);
+bool sameVector(const vector<long>& vec1, const vector<long>& vec2);
 
-vector<int> reverseVector(const vector<int>& src);
+vector<long> reverseVector(const vector<long>& src);
 
-string vector2String(const vector<int>& src);
+string vector2String(const vector<long>& src);
 
-vector<int> operator+ (const vector<int>& left, const int offset);
+vector<long> operator+ (const vector<long>& left, const int offset);
 
-vector<int> operator+ (const vector<int>& left, const vector<int>& right);
+vector<long> operator+ (const vector<long>& left, const vector<long>& right);
 
-vector<int> operator- (const vector<int>& minuend, const int subtrahend);
+vector<long> operator- (const vector<long>& minuend, const int subtrahend);
 
-vector<int> operator* (const vector<int>& left, const int factor);
+vector<long> operator* (const vector<long>& left, const int factor);
 
-vector<int> operator/ (const vector<int>& left, const int divisor);
+vector<long> operator/ (const vector<long>& left, const int divisor);
 
 
 

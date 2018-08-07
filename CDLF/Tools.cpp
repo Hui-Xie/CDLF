@@ -5,7 +5,7 @@
 #include "assert.h"
 
 
-bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
+bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
     if (vec1.size() != vec2.size()){
         return false;
     }
@@ -18,9 +18,9 @@ bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
     }
 }
 
-vector<int> reverseVector(const vector<int>& src){
+vector<long> reverseVector(const vector<long>& src){
     int size = src.size();
-    vector<int> target;
+    vector<long> target;
     for(int i = size-1; i>=0; --i){
         target.push_back(src[i]);
     }
@@ -28,7 +28,7 @@ vector<int> reverseVector(const vector<int>& src){
 }
 
 
-string vector2String(const vector<int>& src){
+string vector2String(const vector<long>& src){
     string outputString;
     int length = src.size();
     for(int i=0; i< length; ++i){
@@ -37,28 +37,28 @@ string vector2String(const vector<int>& src){
     return outputString;
 }
 
-vector<int> operator+ (const vector<int>& left, const int offset){
+vector<long> operator+ (const vector<long>& left, const int offset){
     const int N = left.size();
-    vector<int> result(left);
+    vector<long> result(left);
     for (int i=0; i<N;++i){
         result[i] += offset;
     }
     return result;
 }
 
-vector<int> operator+ (const vector<int>& left, const vector<int>& right){
+vector<long> operator+ (const vector<long>& left, const vector<long>& right){
     assert(left.size() == right.size());
     const int N = left.size();
-    vector<int> result(left);
+    vector<long> result(left);
     for (int i=0; i<N;++i){
         result[i] += right[i];
     }
     return result;
 }
 
-vector<int> operator- (const vector<int> &minuend, const int subtrahend) {
+vector<long> operator- (const vector<long> &minuend, const int subtrahend) {
     const int N = minuend.size();
-    vector<int> result(minuend);
+    vector<long> result(minuend);
     for (int i=0; i<N;++i){
         result[i] -= subtrahend;
     }
@@ -66,18 +66,18 @@ vector<int> operator- (const vector<int> &minuend, const int subtrahend) {
 }
 
 
-vector<int> operator* (const vector<int>& left, const int factor){
+vector<long> operator* (const vector<long>& left, const int factor){
     const int N = left.size();
-    vector<int> result(left);
+    vector<long> result(left);
     for (int i=0; i<N;++i){
         result[i] *= factor;
     }
     return result;
 }
 
-vector<int> operator/ (const vector<int>& left, const int divisor){
+vector<long> operator/ (const vector<long>& left, const int divisor){
     const int N = left.size();
-    vector<int> result(left);
+    vector<long> result(left);
     for (int i=0; i<N;++i){
         result[i] /= divisor;
     }

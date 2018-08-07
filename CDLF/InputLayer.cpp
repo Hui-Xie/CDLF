@@ -5,7 +5,7 @@
 #include "InputLayer.h"
 #include "statisTool.h"
 
-InputLayer::InputLayer(const int id, const string& name, const vector<int>& tensorSize): Layer(id, name, tensorSize){
+InputLayer::InputLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize){
     m_type = "InputLayer";
 
 }
