@@ -15,17 +15,8 @@
  *       * indicate convolution
  *
  * Notes:
- * 1  currently only supports one previous layer
- * 2  in convolution layer, we do not consider bias, as there is a separate BiasLayer for use;
- * 3  Size changes: |Y| = |X|-|W|+1, in their different dimension;
- * 4  the dimension of tensorSize of filter = dimension of tensorSize of X +1;
- *    the adding dimension expresses the number of filter;
- *
- *
- *
- *
- *
- *
+ * 1  in convolution layer, we do not consider bias, as there is a separate BiasLayer for use;
+ * 2  Size changes: |Y| = |X|-|W|+1, in their different dimension;
  *
  *
  * */

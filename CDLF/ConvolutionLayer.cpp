@@ -5,10 +5,10 @@
 #include "ConvolutionLayer.h"
 #include "statisTool.h"
 
-
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, const vector<int> &filterSize,
                                    Layer *prevLayer, const int numFilters, const int stride)
-        : Layer(id, name, {}) {
+        : Layer(id, name, {})
+{
     if (checkFilterSize(filterSize, prevLayer)) {
         m_type = "Convolution";
         m_stride = stride;
@@ -25,7 +25,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, const vecto
         addPreviousLayer(prevLayer);
         constructFiltersAndY();
     } else {
-        cout << "Error: can not construct Convolution Layer: " << name << endl;
+        cout << "Error: can not construct Convolution Layer as incorrect Filter Size." << name << endl;
     }
 
 }
@@ -47,7 +47,6 @@ ConvolutionLayer::~ConvolutionLayer() {
         delete m_expandDy;
         m_expandDy = nullptr;
     }
-
 }
 
 bool ConvolutionLayer::checkFilterSize(const vector<int> &filterSize, Layer *prevLayer) {
@@ -80,7 +79,7 @@ void ConvolutionLayer::constructFiltersAndY() {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
-    m_tensorSize.push_back(m_numFilters);
+    m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
 
     if (0 != m_tensorSize.size()) {
         m_pYTensor = new Tensor<float>(m_tensorSize);
@@ -116,7 +115,7 @@ void ConvolutionLayer::forward() {
                 Xc[1] += j * m_stride;
                 Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
                 for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                    m_pYTensor->e(i, j, idxF) = subX.conv(*m_pW[idxF]);
+                    m_pYTensor->e(idxF, i, j) = subX.conv(*m_pW[idxF]);
                 }
             }
         }
@@ -129,7 +128,7 @@ void ConvolutionLayer::forward() {
                     Xc[2] += k * m_stride;
                     Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
                     for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                        m_pYTensor->e(i, j, k, idxF) = subX.conv(*m_pW[idxF]);
+                        m_pYTensor->e(idxF,i, j, k) = subX.conv(*m_pW[idxF]);
                     }
                 }
             }
@@ -145,7 +144,7 @@ void ConvolutionLayer::forward() {
                         Xc[3] += l * m_stride;
                         Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
                         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                            m_pYTensor->e(i, j, k, l, idxF) = subX.conv(*m_pW[idxF]);
+                            m_pYTensor->e( idxF,i, j, k, l) = subX.conv(*m_pW[idxF]);
                         }
                     }
                 }
