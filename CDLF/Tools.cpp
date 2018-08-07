@@ -86,3 +86,5 @@ vector<int> operator/ (const vector<int>& left, const int divisor){
 
 
 
+
+
