@@ -48,7 +48,7 @@ long MNIST::hexChar4ToLong(char *buff){
     return temp;
 }
 
-int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *pTensor){
+int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor){
     ifstream ifs(fileName, ifstream::in | ifstream::binary);
     ifs.seekg(ios_base::beg);
     if (!ifs.good()) {
@@ -113,4 +113,9 @@ void MNIST::loadData(){
     readIdxFile(m_trainLabelFile,m_pTrainLabels);
     readIdxFile(m_testImageFile,m_pTestImages);
     readIdxFile(m_testLabelFile,m_pTestLabels);
+}
+
+void MNIST::displayImage(Tensor<unsigned char>* pImages, const long index){
+    Tensor<unsigned char> slice = pImages->slice(index);
+    slice.printElements();
 }

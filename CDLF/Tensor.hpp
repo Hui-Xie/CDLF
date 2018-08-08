@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <cstring>  //for memcpy function
 #include <cmath> //for pow()
+#include <iomanip>      // std::setw
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<long>& dims){
@@ -379,7 +380,7 @@ void Tensor<ValueType>::printElements(){
     assert(2 == m_dims.size());
     for (int i=0; i< m_dims[0];++i){
         for(int j=0; j<m_dims[1];++j) {
-            cout << e({i, j}) << "  ";
+            cout << setw(3)<<(int)e({i, j});
         }
         cout<<endl;
     }

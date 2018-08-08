@@ -19,6 +19,7 @@ public:
     Tensor<unsigned char> * m_pTestLabels;
 
     void loadData();
+    void displayImage(Tensor<unsigned char>* pImages, const long index);
 
 
 
@@ -29,7 +30,7 @@ private:
     string m_testImageFile;
     string m_testLabelFile;
 
-    int readIdxFile(const string &fileName, Tensor<unsigned char> *pTensor);
+    int readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor);
     long hexChar4ToLong(char *buff);
 
 
