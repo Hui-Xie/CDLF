@@ -23,12 +23,7 @@ void VectorizationLayer::forward(){
 void VectorizationLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
-    Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = dY.getLength();
-    for(long i=0; i< N; ++i){
-        if (X.e(i) >= 0) dX.e(i) += dY.e(i);
-        // all dX.e(i) = 0 in zeroDYTensor() method.
-    }
+    dX += dY.reshape(dX.getDims());
 }
 void VectorizationLayer::initialize(const string& initialMethod){
     //null
