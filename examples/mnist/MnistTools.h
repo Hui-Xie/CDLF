@@ -7,6 +7,5 @@
 
 #include "Tensor.h"
 
-int readMNISTIdxFile(const string& fileName, Tensor<unsigned char>* pTensor);
 
 #endif //CDLF_FRAMEWORK_MMISTTOOLS_H

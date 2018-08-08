@@ -22,6 +22,8 @@ public:
     Tensor& operator= (const Tensor& other);
     ~Tensor();
 
+    void copyDataFrom(void* buff, const long numBytes);
+
     vector<long> getDims() const;
     ValueType* getData() const;
     long getLength() const;

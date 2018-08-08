@@ -55,6 +55,17 @@ Tensor<ValueType>::~Tensor(){
 }
 
 template<class ValueType>
+void Tensor<ValueType>::copyDataFrom(void* buff, const long numBytes){
+    if (numBytes > getLength()*sizeof(ValueType)){
+        cout<<"Error: numBytes of Tensor::copyDataFrom is bigger than data space."<<endl;
+        return;
+    }
+    else{
+        memcpy(m_data, buff, numBytes);
+    }
+}
+
+template<class ValueType>
 vector<long> Tensor<ValueType>::getDims()const {
    return m_dims;
 }
