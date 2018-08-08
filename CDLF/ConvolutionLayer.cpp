@@ -79,7 +79,16 @@ void ConvolutionLayer::constructFiltersAndY() {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
-    m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
+    if (1 != m_numFilters){
+        m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
+    }
+    // delete 1 in the tensorSize
+    for (vector<long>::iterator it = m_tensorSize.begin(); it!=m_tensorSize.end();++it){
+        if (1 == *it && m_tensorSize.size() >2){
+            it = m_tensorSize.erase(it);
+            --it;
+        }
+    }
 
     if (0 != m_tensorSize.size()) {
         m_pYTensor = new Tensor<float>(m_tensorSize);

@@ -465,6 +465,24 @@ Tensor<ValueType> Tensor<ValueType>::vectorize(){
 }
 
 template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims){
+    int dim = newDims.size();
+    long newN = 1;
+    for (int i=0; i<dim; ++i){
+        newN *=newDims[i];
+    }
+    if (newN != getLength()){
+        cout<<"Error: Tensor reshape has different length. "<<endl;
+        return *this;
+    }
+    else{
+        Tensor tensor = *this;
+        tensor.m_dims = newDims;
+        return tensor;
+    }
+}
+
+template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride){
     Tensor tensor (span);
     int N = span.size();
