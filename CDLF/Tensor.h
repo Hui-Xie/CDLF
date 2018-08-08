@@ -70,6 +70,7 @@ public:
 
     Tensor ln();//natural logarithm
     Tensor hadamard(const Tensor& right); //element-wise product
+    Tensor vectorize();
 
 
     Tensor subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride =1);

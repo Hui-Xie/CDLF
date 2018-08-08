@@ -456,6 +456,14 @@ Tensor<ValueType> Tensor<ValueType>::hadamard(const Tensor& right){
     return tensor;
 }
 
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::vectorize(){
+    Tensor tensor = *this;
+    tensor.m_dims = {getLength(),1};
+    return tensor;
+}
+
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride){
     Tensor tensor (span);
