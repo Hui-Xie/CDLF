@@ -12,10 +12,10 @@ int main (int argc, char *argv[])
     MNIST mnist(MnistDir);
     mnist.loadData();
 
-    //test the matching between image and label
-    long index = 25031;
-    mnist.displayImage(mnist.m_pTrainImages, index);
-    cout<<"Image is "<<(int)(mnist.m_pTrainLabels->e(index))<<endl;
+    //test the matching between image and label, it is good.
+    long index = 5031;
+    mnist.displayImage(mnist.m_pTestImages, index);
+    cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
     cout<<"Info: MNIST Test finished."<<endl;
     return 0;
