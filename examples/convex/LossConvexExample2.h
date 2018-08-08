@@ -15,7 +15,7 @@ public:
     ~LossConvexExample2();
 
 private:
-    virtual float lossCompute();
+    virtual float lossCompute(Tensor<float>* pGroundTruth = nullptr);
     virtual void  gradientCompute();
     virtual void  printGroundTruth();
 

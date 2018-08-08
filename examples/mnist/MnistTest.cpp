@@ -5,18 +5,18 @@
 #include "MnistTools.h"
 #include "MNIST.h"
 
-const string MnistDir= "E:\\CProject\\mnist";
+const string mnistDir= "E:\\CProject\\mnist";
 
 int main (int argc, char *argv[])
 {
-    MNIST mnist(MnistDir);
+    MNIST mnist(mnistDir);
     mnist.loadData();
 
     //test the matching between image and label, it is good.
-    long index = 5031;
+    long index = 4879;
     mnist.displayImage(mnist.m_pTestImages, index);
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
-    cout<<"Info: MNIST Test finished."<<endl;
+    cout<<"==========End of Mnist Test==========="<<endl;
     return 0;
 }

@@ -6,6 +6,7 @@
 #define RL_NONCONVEX_LOSSLAYER_H
 
 #include "Layer.h"
+#include "Tensor.h"
 
 //LossLayer is an abstract class.
 //LossLayer has no learning parameters.
@@ -23,7 +24,7 @@ public:
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
-    virtual float lossCompute()=0;
+    virtual float lossCompute(Tensor<float>* pGroundTruth = nullptr)=0;
     virtual void  gradientCompute()=0;
     virtual void printGroundTruth()=0;
     float m_loss;

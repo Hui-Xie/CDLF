@@ -15,7 +15,7 @@ LossNonConvexExample1::~LossNonConvexExample1(){
 }
 
 
-float LossNonConvexExample1::lossCompute(){
+float LossNonConvexExample1::lossCompute(Tensor<float>* pGroundTruth){
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     m_loss = 3*X[1]*sin(X[0])+5*X[0]*cos(X[1])+0.5*X[0]*X[1]+X[0]*X[0]-X[1]*X[1];
 }

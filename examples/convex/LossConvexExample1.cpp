@@ -15,7 +15,7 @@ LossConvexExample1::~LossConvexExample1(){
 }
 
 
-float LossConvexExample1::lossCompute(){
+float LossConvexExample1::lossCompute(Tensor<float>* pGroundTruth){
     //use m_prevLayerPointer->m_pYTensor,
     m_loss = 0;
     Tensor<float> & prevY = *(m_prevLayer->m_pYTensor);

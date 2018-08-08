@@ -376,11 +376,16 @@ Tensor<ValueType>& Tensor<ValueType>::operator/= (const float divisor){
 }
 
 template<class ValueType>
-void Tensor<ValueType>::printElements(){
+void Tensor<ValueType>::printElements(bool fixWidth){
     assert(2 == m_dims.size());
     for (int i=0; i< m_dims[0];++i){
         for(int j=0; j<m_dims[1];++j) {
-            cout << setw(3)<<(int)e({i, j});
+            if (fixWidth) {
+                cout << setw(3)<<(int)e({i, j});
+            }
+            else {
+                cout << e({i, j})<<" ";
+            }
         }
         cout<<endl;
     }
@@ -425,6 +430,30 @@ ValueType Tensor<ValueType>::max(){
         if (e(i) > maxValue) maxValue = e(i);
     }
     return maxValue;
+}
+
+//natural logarithm
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::ln(){
+    Tensor tensor (m_dims);
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        tensor.e(i) = log(e(i));
+    }
+    return tensor;
+}
+
+//element-wise product
+
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::hadamard(const Tensor& right){
+    assert(sameVector(m_dims, right.m_dims));
+    Tensor tensor (m_dims);
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        tensor.e(i) = e(i)*right.e(i);
+    }
+    return tensor;
 }
 
 template<class ValueType>

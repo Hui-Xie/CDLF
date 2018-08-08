@@ -60,13 +60,17 @@ public:
     Tensor& operator*= (const float factor);
     Tensor& operator/= (const float divisor);
 
-    void printElements();
+    void printElements(bool fixWidth = false);
     void zeroInitialize();
 
     ValueType sum();
     ValueType average();
     ValueType variance();
     ValueType max();
+
+    Tensor ln();//natural logarithm
+    Tensor hadamard(const Tensor& right); //element-wise product
+
 
     Tensor subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride =1);
     Tensor subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, const int stride =1);

@@ -117,5 +117,5 @@ void MNIST::loadData(){
 
 void MNIST::displayImage(Tensor<unsigned char>* pImages, const long index){
     Tensor<unsigned char> slice = pImages->slice(index);
-    slice.printElements();
+    slice.printElements(true);
 }
