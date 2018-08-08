@@ -13,7 +13,8 @@ set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp
         ConvolutionLayer.cpp ConvolutionLayer.h BiasLayer.cpp BiasLayer.h
         SoftMaxLayer.cpp SoftMaxLayer.h MaxPoolingLayer.cpp MaxPoolingLayer.h
         IdentityLayer.cpp IdentityLayer.h SumLayer.cpp SumLayer.h BranchLayer.cpp
-        BranchLayer.h SigmoidLayer.cpp SigmoidLayer.h CrossEntropyLoss.cpp CrossEntropyLoss.h VectorizationLayer.cpp VectorizationLayer.h)
+        BranchLayer.h SigmoidLayer.cpp SigmoidLayer.h CrossEntropyLoss.cpp CrossEntropyLoss.h
+        VectorizationLayer.cpp VectorizationLayer.h CDLF.h)
 
 add_library(CDLF SHARED ${CDLF_SRCS})
 

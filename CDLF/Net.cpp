@@ -48,6 +48,22 @@ void Net::setBatchSize(const int batchSize){
     m_batchSize = batchSize;
 }
 
+float Net::getLearningRate(){
+    return m_learningRate;
+}
+float Net::getLossTolerance(){
+   return m_lossTolerance;
+}
+long Net::getMaxIteration(){
+  return m_maxIteration;
+}
+bool Net::getJudgeLoss(){
+  return m_judgeLoss;
+}
+int  Net::getBatchSize(){
+  return m_batchSize;
+}
+
 void Net::forwardPropagate(){
    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
       iter->second->forward();
@@ -90,6 +106,14 @@ void Net::sgd(const float lr, const int batchSize){
     }
 }
 
+Layer* Net::getInputLayer(){
+    return m_layers.begin()->second;
+}
+
+Layer* Net::getLossLayer(){
+    return m_layers.rbegin()->second;
+}
+
 //Notes: this layerWidthVector does not include LossLayer,  and ReLU and NormalizationLayer do not count as a single layer
 // Normalization layer generally put after ReLU
 void Net::buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer){
@@ -123,8 +147,8 @@ void Net::initialize(){
 void Net::train()
 {
    long nIter = 0;
-   InputLayer* inputLayer = (InputLayer*)m_layers.begin()->second;
-   LossLayer* lossLayer = (LossLayer* )m_layers.rbegin()->second;
+   InputLayer* inputLayer = (InputLayer*)getInputLayer();
+   LossLayer* lossLayer = (LossLayer* )getLossLayer();
    long numBatch =  m_maxIteration / m_batchSize;
    if (0 !=  m_maxIteration % m_batchSize){
        numBatch += 1;

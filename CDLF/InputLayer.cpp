@@ -37,3 +37,11 @@ void InputLayer::updateParameters(const float lr, const string& method, const in
 void InputLayer::setInputTensor(const Tensor<float>& inputTensor){
     *m_pYTensor = inputTensor;
 }
+
+void InputLayer::setInputTensor(const Tensor<unsigned char>& inputTensor){
+    assert(m_tensorSize == inputTensor.getDims());
+    long N = m_pYTensor->getLength();
+    for (long i=0; i<N; ++i){
+        m_pYTensor->e(i) = (float) inputTensor.e(i);
+    }
+}

@@ -22,11 +22,21 @@ public:
     void setJudgeLoss(const bool judgeLoss);
     void setBatchSize(const int batchSize);
 
+    float getLearningRate();
+    float getLossTolerance();
+    long getMaxIteration();
+    bool getJudgeLoss();
+    int  getBatchSize();
+
+
     void forwardPropagate();
     void backwardPropagate();
     void zeroParaGradient();
     void addLayer(Layer* layer);
     void sgd(const float lr, const int batchSize);
+
+    Layer* getInputLayer();
+    Layer* getLossLayer();
 
     //Notes: this layerWidthVector does not include LossLayer
     void buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer);

@@ -6,6 +6,7 @@
 #define CDLF_FRAMEWORK_MNIST_H
 
 #include "Tensor.h"
+#include "CDLF.h"
 
 
 class MNIST {
@@ -21,6 +22,10 @@ public:
     void loadData();
     void displayImage(Tensor<unsigned char>* pImages, const long index);
     void buildNet();
+    void setNetParameters();
+    void trainNet();
+
+    Net m_net;
 
 
 

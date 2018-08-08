@@ -20,6 +20,7 @@ public:
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
     void setInputTensor(const Tensor<float>& inputTensor);
+    void setInputTensor(const Tensor<unsigned char>& inputTensor);
 };
 
 

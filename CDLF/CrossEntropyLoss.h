@@ -19,10 +19,12 @@ public:
     CrossEntropyLoss(const int id, const string& name);
     ~CrossEntropyLoss();
 
+    virtual void  printGroundTruth();
+
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();
-    virtual void  printGroundTruth();
+
 };
 
 

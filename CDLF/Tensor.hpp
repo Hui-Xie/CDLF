@@ -461,6 +461,7 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::vectorize(){
     Tensor tensor = *this;
     tensor.m_dims = {getLength(),1};
+    tensor.generateDimsSpan();
     return tensor;
 }
 
@@ -478,6 +479,7 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims){
     else{
         Tensor tensor = *this;
         tensor.m_dims = newDims;
+        tensor.generateDimsSpan();
         return tensor;
     }
 }
