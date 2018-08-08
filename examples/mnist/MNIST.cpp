@@ -127,9 +127,9 @@ void MNIST::buildNet(){
   m_net.addLayer(inputLayer);
   ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1",{3,3},inputLayer, 1, 1); //output size: 26*26
   m_net.addLayer(conv1);
-  ConvolutionLayer* conv2 = new ConvolutionLayer(layerID++, "Conv2",{5,5},conv1, 1, 1);//output size: 21*21
+  ConvolutionLayer* conv2 = new ConvolutionLayer(layerID++, "Conv2",{5,5},conv1, 1, 1);//output size: 22*22
   m_net.addLayer(conv2);
-  VectorizationLayer* vecLayer1 = new VectorizationLayer(layerID++, "Vec1", conv2); //output size: 441*1
+  VectorizationLayer* vecLayer1 = new VectorizationLayer(layerID++, "Vec1", conv2); //output size: 484*1
   m_net.addLayer(vecLayer1);
   FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {10,1}, vecLayer1); ////output size: 10*1
   m_net.addLayer(fcLayer1);

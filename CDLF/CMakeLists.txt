@@ -10,11 +10,9 @@ include_directories(${STATS_INCLUDE_DIR})
 
 set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp
         statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp
-        ConvolutionLayer.cpp ConvolutionLayer.h BiasLayer.cpp BiasLayer.h
-        SoftMaxLayer.cpp SoftMaxLayer.h MaxPoolingLayer.cpp MaxPoolingLayer.h
-        IdentityLayer.cpp IdentityLayer.h SumLayer.cpp SumLayer.h BranchLayer.cpp
-        BranchLayer.h SigmoidLayer.cpp SigmoidLayer.h CrossEntropyLoss.cpp CrossEntropyLoss.h
-        VectorizationLayer.cpp VectorizationLayer.h CDLF.h)
+        ConvolutionLayer.cpp BiasLayer.cpp SoftMaxLayer.cpp MaxPoolingLayer.cpp
+        IdentityLayer.cpp SumLayer.cpp BranchLayer.cpp
+        SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp)
 
 add_library(CDLF SHARED ${CDLF_SRCS})
 
