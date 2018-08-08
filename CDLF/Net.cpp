@@ -10,6 +10,7 @@
 #include "NormalizationLayer.h"
 #include <iostream>
 #include <cmath> //for isinf()
+#include "statisTool.h"
 
 Net::Net(){
    m_layers.clear();
@@ -140,7 +141,9 @@ void Net::train()
       zeroParaGradient();
       int i=0;
       for(i=0; i< m_batchSize && nIter < m_maxIteration; ++i){
-          inputLayer->initialize("Gaussian");
+          Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
+          generateGaussian(&inputTensor, 0,1);
+          inputLayer->setInputTensor(inputTensor);
           forwardPropagate();
           backwardPropagate();
           ++nIter;

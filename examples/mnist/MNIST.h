@@ -10,7 +10,7 @@
 
 class MNIST {
 public:
-    MNIST(const string& MnistDir);
+    MNIST(const string& mnistDir);
     ~MNIST();
 
     Tensor<unsigned char> * m_pTrainImages;
@@ -20,6 +20,7 @@ public:
 
     void loadData();
     void displayImage(Tensor<unsigned char>* pImages, const long index);
+    void buildNet();
 
 
 

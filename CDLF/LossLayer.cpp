@@ -41,5 +41,9 @@ void LossLayer::updateParameters(const float lr, const string& method, const int
     //null
 }
 
+void LossLayer::setGroundTruth( const Tensor<float>& groundTruth){
+    * m_pGroundTruth = groundTruth;
+}
+
 
 

@@ -16,10 +16,7 @@ InputLayer::~InputLayer(){
 
 //this initialize method is just for random input case
 void InputLayer::initialize(const string& initialMethod){
-    // Gaussian random initialize
-    if ("Gaussian" == initialMethod) {
-        generateGaussian(m_pYTensor,0, 1 );
-    }
+    //null
 }
 
 void InputLayer::zeroParaGradient(){
@@ -35,4 +32,8 @@ void InputLayer::backward(){
 
 void InputLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null
+}
+
+void InputLayer::setInputTensor(const Tensor<float>& inputTensor){
+    *m_pYTensor = inputTensor;
 }

@@ -31,6 +31,8 @@ public:
 
     Tensor<float>* m_pGroundTruth;
 
+    void setGroundTruth( const Tensor<float>& groundTruth);
+
 };
 
 
