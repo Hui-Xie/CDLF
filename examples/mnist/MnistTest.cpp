@@ -18,7 +18,7 @@ int main (int argc, char *argv[])
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
     mnist.buildNet();
-
+    mnist.setNetParameters();
     mnist.trainNet();
 
     cout<<"==========End of Mnist Test==========="<<endl;
