@@ -16,11 +16,10 @@ CrossEntropyLoss::~CrossEntropyLoss(){
  *       x_i is the output of previous layer, e.g. softmax;
  *       */
 
-float CrossEntropyLoss::lossCompute(Tensor<float>* pGroundTruth){
+float CrossEntropyLoss::lossCompute(){
     //use m_prevLayerPointer->m_pYTensor,
-    m_loss = 0;
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
-    m_loss = pGroundTruth->hadamard(X.ln()).sum()*(-1);
+    m_loss = m_pGroundTruth->hadamard(X.ln()).sum()*(-1);
     return m_loss;
 }
 
@@ -28,21 +27,15 @@ float CrossEntropyLoss::lossCompute(Tensor<float>* pGroundTruth){
 // dL/dx_i = - p_i/x_i
 void CrossEntropyLoss::gradientCompute() {
     //symbol deduced formula to compute gradient to prevLayer->m_pdYTensor
-    Tensor<float> &prevY = *(m_prevLayer->m_pYTensor);
-    Tensor<float> &prevdY = *(m_prevLayer->m_pdYTensor);
-    long N = prevY.getLength();
+    Tensor<float> &X = *(m_prevLayer->m_pYTensor);
+    Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
+    long N = dX.getLength();
     for (long i = 0; i < N; ++i) {
-        prevdY[i] += 2 * (prevY[i] - i);
+        dX[i] -= m_pGroundTruth->e(i)/X.e(i);
     }
 }
 
 void  CrossEntropyLoss::printGroundTruth() {
     cout << "For this specific Loss function, Ground Truth is: ";
-    long N = m_prevLayer->m_pYTensor->getLength();
-    cout << "( ";
-    for (long i = 0; i < N; ++i) {
-        if (i != N - 1) cout << i << ", ";
-        else cout << i;
-    }
-    cout << " )" << endl;
+    m_pGroundTruth->printElements(false);
 }

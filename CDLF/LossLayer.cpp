@@ -10,10 +10,14 @@ using namespace std;
 LossLayer::LossLayer(const int id, const string& name) : Layer(id,name,{}){
     m_type = "LossLayer";
     m_loss = 1e+10;
+    m_pGroundTruth = nullptr;
 }
 
 LossLayer::~LossLayer(){
-
+   if (nullptr != m_pGroundTruth){
+       delete m_pGroundTruth;
+       m_pGroundTruth = nullptr;
+   }
 }
 float LossLayer::getLoss(){
     return m_loss;

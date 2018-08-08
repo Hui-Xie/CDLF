@@ -24,10 +24,12 @@ public:
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
-    virtual float lossCompute(Tensor<float>* pGroundTruth = nullptr)=0;
+    virtual float lossCompute()=0;
     virtual void  gradientCompute()=0;
     virtual void printGroundTruth()=0;
     float m_loss;
+
+    Tensor<float>* m_pGroundTruth;
 
 };
 
