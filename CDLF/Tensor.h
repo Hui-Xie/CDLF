@@ -67,6 +67,7 @@ public:
     ValueType average();
     ValueType variance();
     ValueType max();
+    long maxPosition();
 
     Tensor ln();//natural logarithm
     Tensor hadamard(const Tensor& right); //element-wise product

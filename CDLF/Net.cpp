@@ -48,6 +48,10 @@ void Net::setBatchSize(const int batchSize){
     m_batchSize = batchSize;
 }
 
+void Net::setEpoch(const long epoch){
+    m_epoch = epoch;
+}
+
 float Net::getLearningRate(){
     return m_learningRate;
 }
@@ -62,6 +66,10 @@ bool Net::getJudgeLoss(){
 }
 int  Net::getBatchSize(){
   return m_batchSize;
+}
+
+long  Net::getEpoch(){
+  return m_epoch;
 }
 
 void Net::forwardPropagate(){

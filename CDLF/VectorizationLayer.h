@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 8/8/2018.
+// Created by Hui Xie on 8/8/2018.
 //
 
 #ifndef CDLF_FRAMEWORK_VECTORIZATIONLAYER_H

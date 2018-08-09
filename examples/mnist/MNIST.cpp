@@ -1,17 +1,16 @@
 //
-// Created by Sheen156 on 8/8/2018.
+// Created by Hui Xie on 8/8/2018.
 //
 
 #include "MNIST.h"
 #include <fstream>
 
 
-
-MNIST::MNIST(const string& mnistDir){
+MNIST::MNIST(const string &mnistDir) {
     m_mnistDir = mnistDir;
     m_trainImageFile = m_mnistDir + "\\train-images.idx3-ubyte";
     m_trainLabelFile = m_mnistDir + "\\train-labels.idx1-ubyte";
-    m_testImageFile =  m_mnistDir +"\\t10k-images.idx3-ubyte";
+    m_testImageFile = m_mnistDir + "\\t10k-images.idx3-ubyte";
     m_testLabelFile = m_mnistDir + "\\t10k-labels.idx1-ubyte";
 
     m_pTrainImages = nullptr;
@@ -19,42 +18,43 @@ MNIST::MNIST(const string& mnistDir){
     m_pTestImages = nullptr;
     m_pTestLabels = nullptr;
 }
-MNIST::~MNIST(){
-    if (nullptr != m_pTrainImages){
+
+MNIST::~MNIST() {
+    if (nullptr != m_pTrainImages) {
         delete m_pTrainImages;
         m_pTrainImages = nullptr;
     }
 
-    if (nullptr != m_pTrainLabels){
+    if (nullptr != m_pTrainLabels) {
         delete m_pTrainLabels;
         m_pTrainLabels = nullptr;
     }
 
-    if (nullptr != m_pTestImages){
+    if (nullptr != m_pTestImages) {
         delete m_pTestImages;
         m_pTestImages = nullptr;
     }
 
-    if (nullptr != m_pTestLabels){
+    if (nullptr != m_pTestLabels) {
         delete m_pTestLabels;
         m_pTestLabels = nullptr;
     }
 }
 
-long MNIST::hexChar4ToLong(char *buff){
-    long  temp =0;
-    for (int i=0; i<4; ++i){
-        temp += ((unsigned char)buff[i])* pow(16,(3-i)*2);
+long MNIST::hexChar4ToLong(char *buff) {
+    long temp = 0;
+    for (int i = 0; i < 4; ++i) {
+        temp += ((unsigned char) buff[i]) * pow(16, (3 - i) * 2);
     }
     return temp;
 }
 
-int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor){
+int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *&pTensor) {
     ifstream ifs(fileName, ifstream::in | ifstream::binary);
     ifs.seekg(ios_base::beg);
     if (!ifs.good()) {
         ifs.close();
-        cout << "Error: read file error: " << fileName<<endl;
+        cout << "Error: read file error: " << fileName << endl;
         return 1;
     }
 
@@ -77,12 +77,11 @@ int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor){
             cols = hexChar4ToLong(dim);
             isImage = true;
 
-        }else if (0x01 == magicNum[3]) {// Label file
+        } else if (0x01 == magicNum[3]) {// Label file
             ifs.read(dim, 4);
             numImages = hexChar4ToLong(dim);
             isImage = false;
-        }
-        else{
+        } else {
             cout << "Error: incorrect magic number in Idx file. Exit." << endl;
             ifs.close();
             return 2;
@@ -93,14 +92,13 @@ int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor){
         return 3;
     }
 
-    if (isImage){
-        pTensor = new Tensor<unsigned char>({numImages,rows, cols});
-    }
-    else{
+    if (isImage) {
+        pTensor = new Tensor<unsigned char>({numImages, rows, cols});
+    } else {
         pTensor = new Tensor<unsigned char>({numImages, 1});
     }
-    long numBytes = pTensor->getLength()* sizeof(unsigned char);
-    char* buff = new char[numBytes];
+    long numBytes = pTensor->getLength() * sizeof(unsigned char);
+    char *buff = new char[numBytes];
     ifs.read(buff, numBytes);
     pTensor->copyDataFrom(buff, numBytes);
     delete[] buff;
@@ -109,14 +107,14 @@ int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor){
     return 0;
 }
 
-void MNIST::loadData(){
-    readIdxFile(m_trainImageFile,m_pTrainImages);
-    readIdxFile(m_trainLabelFile,m_pTrainLabels);
-    readIdxFile(m_testImageFile,m_pTestImages);
-    readIdxFile(m_testLabelFile,m_pTestLabels);
+void MNIST::loadData() {
+    readIdxFile(m_trainImageFile, m_pTrainImages);
+    readIdxFile(m_trainLabelFile, m_pTrainLabels);
+    readIdxFile(m_testImageFile, m_pTestImages);
+    readIdxFile(m_testLabelFile, m_pTestLabels);
 }
 
-void MNIST::displayImage(Tensor<unsigned char>* pImages, const long index){
+void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
     Tensor<unsigned char> slice = pImages->slice(index);
     slice.printElements(true);
 }
@@ -168,64 +166,86 @@ void MNIST::buildNet() {
 
     SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "softmax", reLU6); //output size: 10*1
     m_net.addLayer(softmaxLayer);
-    CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy", softmaxLayer); // output size: 1
+    CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
+                                                              softmaxLayer); // output size: 1
     m_net.addLayer(crossEntropyLoss);
 
 }
 
 
-
-void MNIST::setNetParameters(){
-    m_net.setLearningRate(0.01);
+void MNIST::setNetParameters() {
+    m_net.setLearningRate(0.001);
     m_net.setLossTolerance(0.02);
     m_net.setMaxIteration(60000);
-    m_net.setBatchSize(50);
+    m_net.setBatchSize(20);
     m_net.initialize();
+
 }
 
 //construct a 10*1 one-hot vector
-Tensor<float> MNIST::constructGroundTruth(Tensor<unsigned char> * pLabels, const long index){
-    Tensor<float> tensor({10,1});
+Tensor<float> MNIST::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
+    Tensor<float> tensor({10, 1});
     tensor.zeroInitialize();
     tensor.e(pLabels->e(index)) = 1;
     return tensor;
 }
 
-void MNIST::trainNet(){
-    long nIter = 0;
-    InputLayer* inputLayer = (InputLayer*)m_net.getInputLayer();
-    CrossEntropyLoss* lossLayer = (CrossEntropyLoss* ) m_net.getFinalLayer();
+void MNIST::trainNet() {
+    InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
+    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
+
+    long NTrain = 60000;
     long maxIteration = m_net.getMaxIteration();
+    maxIteration = 1000;
+
     int batchSize = m_net.getBatchSize();
     float learningRate = m_net.getLearningRate();
-    long numBatch =  maxIteration / batchSize;
-    if (0 !=  maxIteration % batchSize){
+    long numBatch = maxIteration / batchSize;
+    if (0 != maxIteration % batchSize) {
         numBatch += 1;
     }
 
+
+    long nIter = 0;
     long nBatch = 0;
-    while(nBatch < numBatch)
-    {
-        if (m_net.getJudgeLoss() && lossLayer->getLoss()< m_net.getLossTolerance()){
+    vector<long> randSeq = generateRandomSequence(NTrain);
+    while (nBatch < numBatch) {
+        if (m_net.getJudgeLoss() && lossLayer->getLoss() < m_net.getLossTolerance()) {
             break;
         }
         if (isinf(lossLayer->getLoss())) break;
 
         m_net.zeroParaGradient();
-        int i=0;
-        for(i=0; i< batchSize && nIter < maxIteration; ++i){
-            inputLayer->setInputTensor(m_pTrainImages->slice(nIter));
-            lossLayer->setGroundTruth(constructGroundTruth(m_pTrainLabels,nIter));
+        int i = 0;
+        for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
+            inputLayer->setInputTensor(m_pTrainImages->slice(randSeq[nIter]));
+            lossLayer->setGroundTruth(constructGroundTruth(m_pTrainLabels, randSeq[nIter]));
             m_net.forwardPropagate();
             m_net.backwardPropagate();
             ++nIter;
         }
-        m_net.sgd(learningRate,i);
-        cout<<"Progress batch: "<<nBatch<<endl;
-
-
+        m_net.sgd(learningRate, i);
+        cout << "  Progress batch: " << nBatch << endl;
         m_net.printIteration(lossLayer, nIter);
         ++nBatch;
     }
-    lossLayer->printGroundTruth();
+
+}
+
+void MNIST::testNet() {
+    InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
+    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
+    long n = 0;
+    long nSuccess = 0;
+    const long Ntest = 100;
+    while (n++ < Ntest) {
+        inputLayer->setInputTensor(m_pTestImages->slice(n));
+        lossLayer->setGroundTruth(constructGroundTruth(m_pTestLabels, n));
+        m_net.forwardPropagate();
+        if (lossLayer->predictSuccess()) ++nSuccess;
+    }
+    m_accuracy = nSuccess * 1.0 / Ntest;
+    cout << "**********************************" << endl;
+    cout << "Test Accuracy =  " << m_accuracy<<endl;
+    cout << "**********************************" << endl;
 }

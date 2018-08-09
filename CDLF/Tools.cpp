@@ -4,6 +4,7 @@
 #include "Tools.h"
 #include "assert.h"
 #include <iostream>
+#include <ctime>
 
 
 bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
@@ -117,6 +118,24 @@ string vector2Str(const vector<long>& vec){
      }
     result +=" }";
     return result;
+}
+
+vector<long> generateRandomSequence(const long range) {
+    vector<long> sequence;
+    sequence.reserve(range);
+    for (long i = 0; i < range; ++i) {
+       sequence.push_back(i);
+    }
+    long M = range/2;
+    srand (time(NULL));
+    for (long i= 0; i<M; ++i){
+        long r1 = rand() % range;
+        long r2 = rand() % range;
+        long temp = sequence[r1];
+        sequence[r1] = sequence[r2];
+        sequence[r2] = temp;
+    }
+    return sequence;
 }
 
 

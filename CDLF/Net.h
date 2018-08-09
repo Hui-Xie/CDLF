@@ -21,12 +21,14 @@ public:
     void setMaxIteration(const long maxIteration);
     void setJudgeLoss(const bool judgeLoss);
     void setBatchSize(const int batchSize);
+    void setEpoch(const long epoch);
 
     float getLearningRate();
     float getLossTolerance();
     long getMaxIteration();
     bool getJudgeLoss();
     int  getBatchSize();
+    long getEpoch();
 
 
     void forwardPropagate();
@@ -56,6 +58,7 @@ private:
     long m_maxIteration;
     bool m_judgeLoss;
     int m_batchSize;
+    long m_epoch;
 };
 
 

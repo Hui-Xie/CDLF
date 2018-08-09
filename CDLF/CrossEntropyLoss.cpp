@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 8/8/2018.
+// Created by Hui Xie on 8/8/2018.
 //
 
 #include "CrossEntropyLoss.h"
@@ -38,4 +38,15 @@ void CrossEntropyLoss::gradientCompute() {
 void  CrossEntropyLoss::printGroundTruth() {
     cout << "For this specific Loss function, Ground Truth is: ";
     m_pGroundTruth->printElements(false);
+}
+
+bool CrossEntropyLoss::predictSuccess(){
+    Tensor<float> &X = *(m_prevLayer->m_pYTensor);
+    Tensor<float> &Y = *m_pGroundTruth;
+    if (X.maxPosition() == Y.maxPosition()) {
+        return true;
+    }
+    else{
+        return false;
+    }
 }

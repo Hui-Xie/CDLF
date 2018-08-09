@@ -31,5 +31,7 @@ void printVector(const vector<long>& vec);
 
 string vector2Str(const vector<long>& vec);
 
+vector<long> generateRandomSequence(const long range);
+
 
 #endif //RL_NONCONVEX_TOOLS_H

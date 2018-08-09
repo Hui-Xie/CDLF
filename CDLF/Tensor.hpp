@@ -432,6 +432,20 @@ ValueType Tensor<ValueType>::max(){
     return maxValue;
 }
 
+template<class ValueType>
+long Tensor<ValueType>::maxPosition(){
+    long N = getLength();
+    ValueType maxValue = e(0);
+    long maxPos = 0;
+    for(long i=1; i<N; ++i){
+        if (e(i) > maxValue) {
+            maxValue = e(i);
+            maxPos = i;
+        }
+    }
+    return maxPos;
+}
+
 //natural logarithm
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::ln(){

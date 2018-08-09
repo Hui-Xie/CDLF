@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 8/8/2018.
+// Created by Hui Xie on 8/8/2018.
 //
 
 #ifndef CDLF_FRAMEWORK_MNIST_H
@@ -25,9 +25,11 @@ public:
     void setNetParameters();
     void trainNet();
     Tensor<float> constructGroundTruth(Tensor<unsigned char> * m_pLabels, const long index);
+    void testNet();
 
     Net m_net;
 
+    float m_accuracy;
 
 
 private:

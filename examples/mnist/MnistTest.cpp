@@ -1,5 +1,5 @@
 //
-// Created by Sheen156 on 8/6/2018.
+// Created by Hui Xie on 8/6/2018.
 //
 
 #include "MnistTools.h"
@@ -13,15 +13,21 @@ int main (int argc, char *argv[])
     mnist.loadData();
 
     //test the matching between image and label, it is good.
-    long index = 4879;
+    srand (time(NULL));
+    long index = rand() % 10000;
     mnist.displayImage(mnist.m_pTestImages, index);
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
     mnist.buildNet();
     mnist.setNetParameters();
     mnist.m_net.printArchitecture();
-    mnist.trainNet();
-
+    long epoch= 10;
+    for (long i=0; i<epoch; ++i){
+        cout<<" %%%%%%%%%%%%%%%%%%%%%%%% Start Epoch: "<<i<<endl;
+        mnist.trainNet();
+        mnist.testNet();
+        cout<<" %%%%%%%%%%%%%%%%%%%%%%%% Enf of Epoch: "<<i<<endl;
+    }
     cout<<"==========End of Mnist Test==========="<<endl;
     return 0;
 }
