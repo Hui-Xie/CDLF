@@ -222,7 +222,7 @@ void Net::printArchitecture(){
     cout<<"Network Architecture: "<<endl;
     int i=1;
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        cout<<i++<<": "<<iter->second->m_name<<": "<<"size = "<<vector2Str(iter->second->m_tensorSize)<<endl;
+        cout<<i++<<": "<<iter->second->m_name<<": "<<"output size = "<<vector2Str(iter->second->m_tensorSize)<<endl;
     }
     cout<<"=======end of network architecture =============="<<endl;
 }

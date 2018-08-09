@@ -156,15 +156,19 @@ void MNIST::buildNet() {
 
     VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vec1", norm4); //output size: 400*1
     m_net.addLayer(vecLayer1);
-    FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {10, 1}, vecLayer1); //output size: 10*1
+    FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {100, 1}, vecLayer1); //output size: 100*1
     m_net.addLayer(fcLayer1);
     ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1);
     m_net.addLayer(reLU5);
 
-    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "softmax", reLU5); //output size: 10*1
+    FCLayer *fcLayer2 = new FCLayer(layerID++, "fc2", {10, 1}, reLU5); //output size: 10*1
+    m_net.addLayer(fcLayer2);
+    ReLU *reLU6 = new ReLU(layerID++, "ReLU6", fcLayer2);
+    m_net.addLayer(reLU6);
+
+    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "softmax", reLU6); //output size: 10*1
     m_net.addLayer(softmaxLayer);
-    CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
-                                                              softmaxLayer); // output size: 1
+    CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy", softmaxLayer); // output size: 1
     m_net.addLayer(crossEntropyLoss);
 
 }
