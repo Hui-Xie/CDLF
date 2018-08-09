@@ -66,6 +66,7 @@ int  Net::getBatchSize(){
 
 void Net::forwardPropagate(){
    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+       cout<<"Start to run: "<<iter->second->m_name<<"==";
        iter->second->forward();
    }
 }

@@ -131,11 +131,11 @@ void MNIST::buildNet(){
   m_net.addLayer(conv2);
   VectorizationLayer* vecLayer1 = new VectorizationLayer(layerID++, "Vec1", conv2); //output size: 484*1
   m_net.addLayer(vecLayer1);
-  FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {10,1}, vecLayer1); ////output size: 10*1
+  FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {10,1}, vecLayer1); //output size: 10*1
   m_net.addLayer(fcLayer1);
   SoftMaxLayer * softmaxLayer = new SoftMaxLayer(layerID++, "softmaxLayer",fcLayer1); //output size: 10*1
   m_net.addLayer(softmaxLayer);
-  CrossEntropyLoss* crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy"); // output size: 1
+  CrossEntropyLoss* crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy", softmaxLayer); // output size: 1
   m_net.addLayer(crossEntropyLoss);
 
 }
@@ -148,6 +148,14 @@ void MNIST::setNetParameters(){
     m_net.setMaxIteration(60000);
     m_net.setBatchSize(200);
     m_net.initialize();
+}
+
+//construct a 10*1 one-hot vector
+Tensor<float> MNIST::constructGroundTruth(Tensor<unsigned char> * pLabels, const long index){
+    Tensor<float> tensor({10,1});
+    tensor.zeroInitialize();
+    tensor.e(pLabels->e(index)) = 1;
+    return tensor;
 }
 
 void MNIST::trainNet(){
@@ -174,6 +182,7 @@ void MNIST::trainNet(){
         int i=0;
         for(i=0; i< batchSize && nIter < maxIteration; ++i){
             inputLayer->setInputTensor(m_pTrainImages->slice(nIter));
+            lossLayer->setGroundTruth(constructGroundTruth(m_pTrainLabels,nIter));
             m_net.forwardPropagate();
             m_net.backwardPropagate();
             ++nIter;

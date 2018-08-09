@@ -52,6 +52,8 @@ private:
     void freeExpandDy();
     void computeDW(Tensor<float>* pdY, Tensor<float>* pdW);
     void computeDX(Tensor<float>* pdY, Tensor<float>* pW);//Note: dx need to accumulate along filters
+    void updateTensorSize();
+    void computeOneFiterN();
 
 };
 

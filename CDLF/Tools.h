@@ -25,6 +25,7 @@ vector<long> operator* (const vector<long>& left, const int factor);
 
 vector<long> operator/ (const vector<long>& left, const int divisor);
 
+void deleteOnes(vector<long>& vec);
 
 
 #endif //RL_NONCONVEX_TOOLS_H

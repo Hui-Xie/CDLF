@@ -24,6 +24,7 @@ public:
     void buildNet();
     void setNetParameters();
     void trainNet();
+    Tensor<float> constructGroundTruth(Tensor<unsigned char> * m_pLabels, const long index);
 
     Net m_net;
 

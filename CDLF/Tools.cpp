@@ -84,6 +84,16 @@ vector<long> operator/ (const vector<long>& left, const int divisor){
     return result;
 }
 
+// delete 1 in the tensorSize when dim >2
+void deleteOnes(vector<long>& vec){
+    for (vector<long>::iterator it = vec.begin(); it!=vec.end();++it){
+        if (1 == *it && vec.size() >2){
+            it = vec.erase(it);
+            --it;
+        }
+    }
+}
+
 
 
 
