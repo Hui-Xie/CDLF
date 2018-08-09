@@ -488,7 +488,11 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride){
     Tensor tensor (span);
     int N = span.size();
+    cout<<"span: "<<endl;
+    printVector(span);
     vector<long> halfSpan = span/2; //also the central voxel in the tensor(span)
+    cout<<"hafspan"<<endl;
+    printVector(halfSpan);
 
     if (2 == N){
         for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){

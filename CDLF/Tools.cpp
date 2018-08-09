@@ -3,6 +3,7 @@
 //
 #include "Tools.h"
 #include "assert.h"
+#include <iostream>
 
 
 bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
@@ -77,7 +78,7 @@ vector<long> operator* (const vector<long>& left, const int factor){
 
 vector<long> operator/ (const vector<long>& left, const int divisor){
     const int N = left.size();
-    vector<long> result(left);
+    vector<long> result = left;
     for (int i=0; i<N;++i){
         result[i] /= divisor;
     }
@@ -92,6 +93,15 @@ void deleteOnes(vector<long>& vec){
             --it;
         }
     }
+}
+
+void printVector(const vector<long>& vec){
+    int N = vec.size();
+    for (int i=0; i< N; ++i){
+        std::cout<<vec[i]<<" ";
+    }
+    std::cout<<endl;
+
 }
 
 
