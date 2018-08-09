@@ -488,23 +488,19 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride){
     Tensor tensor (span);
     int N = span.size();
-    cout<<"span: "<<endl;
-    printVector(span);
     vector<long> halfSpan = span/2; //also the central voxel in the tensor(span)
-    cout<<"hafspan"<<endl;
-    printVector(halfSpan);
 
     if (2 == N){
-        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
-            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
+        for (int i=-halfSpan[0]; i<halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<halfSpan[1];++j){
                 tensor(halfSpan[0]+i, halfSpan[1]+j) = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride);
             }
         }
     }
     else if (3 == N){
-        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
-            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
-                for (int k=-halfSpan[2];k<=halfSpan[2];++k){
+        for (int i=-halfSpan[0]; i<halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<halfSpan[1];++j){
+                for (int k=-halfSpan[2];k<halfSpan[2];++k){
                     tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k)
                        = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride);
                 }
@@ -512,10 +508,10 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
         }
     }
     else if (4 ==N){
-        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
-            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
-                for (int k=-halfSpan[2];k<=halfSpan[2];++k){
-                    for (int l=-halfSpan[3];l<=halfSpan[3];++l){
+        for (int i=-halfSpan[0]; i<halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<halfSpan[1];++j){
+                for (int k=-halfSpan[2];k<halfSpan[2];++k){
+                    for (int l=-halfSpan[3];l<halfSpan[3];++l){
                         tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l)
                                 = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride, centralIndex[3]+l*stride);
                     }
@@ -524,11 +520,11 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
         }
     }
     else if (5 == N){
-        for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
-            for (int j=-halfSpan[1];j<=halfSpan[1];++j){
-                for (int k=-halfSpan[2];k<=halfSpan[2];++k){
-                    for (int l=-halfSpan[3];l<=halfSpan[3];++l){
-                        for (int m=-halfSpan[4];m<=halfSpan[4]; ++m){
+        for (int i=-halfSpan[0]; i<halfSpan[0]; ++i){
+            for (int j=-halfSpan[1];j<halfSpan[1];++j){
+                for (int k=-halfSpan[2];k<halfSpan[2];++k){
+                    for (int l=-halfSpan[3];l<halfSpan[3];++l){
+                        for (int m=-halfSpan[4];m<halfSpan[4]; ++m){
                             tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l,halfSpan[4]+m )
                                = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride,
                                        centralIndex[3]+l*stride,centralIndex[4]+m*stride);

@@ -7,8 +7,7 @@
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, const vector<long> &filterSize,
                                    Layer *prevLayer, const int numFilters, const int stride)
-        : Layer(id, name, {})
-{
+        : Layer(id, name, {}) {
     if (checkFilterSize(filterSize, prevLayer)) {
         m_type = "Convolution";
         m_stride = stride;
@@ -37,6 +36,8 @@ ConvolutionLayer::~ConvolutionLayer() {
             m_pdW[i] = nullptr;
         }
     }
+    delete[] m_pW;
+    delete[] m_pdW;
 
     if (nullptr != m_expandDy) {
         delete m_expandDy;
@@ -61,27 +62,30 @@ bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *pr
     }
 }
 
-void ConvolutionLayer::computeOneFiterN(){
+void ConvolutionLayer::computeOneFiterN() {
     int N = m_filterSize.size();
     m_OneFilterN = 1;
     for (int i = 0; i < N; ++i) {
         m_OneFilterN *= m_filterSize[i];
     }
 }
-void ConvolutionLayer::updateTensorSize(){
+
+void ConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
-    if (1 != m_numFilters){
+    if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
     }
     deleteOnes(m_tensorSize);
 }
 
 void ConvolutionLayer::constructFiltersAndY() {
+    m_pW = (Tensor<float>**) new void* [m_numFilters];
+    m_pdW = (Tensor<float>**) new void* [m_numFilters];
     for (int i = 0; i < m_numFilters; ++i) {
         m_pW[i] = new Tensor<float>(m_filterSize);
         m_pdW[i] = new Tensor<float>(m_filterSize);
@@ -113,7 +117,7 @@ void ConvolutionLayer::zeroParaGradient() {
 void ConvolutionLayer::forward() {
     const int N = m_filterSize.size();
     vector<long> Xs = m_filterSize / 2; //X central for each subTensorFromCenter at first point
-    vector<long> Xc = m_filterSize*0;
+    vector<long> Xc = m_filterSize * 0;
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
     if (2 == N) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
@@ -121,12 +125,11 @@ void ConvolutionLayer::forward() {
             for (long j = 0; j < m_tensorSize[1]; ++j) {
                 Xc[1] = Xs[1] + j * m_stride;
                 Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
-                if (1 != m_numFilters){
+                if (1 != m_numFilters) {
                     for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
                         m_pYTensor->e(idxF, i, j) = subX.conv(*m_pW[idxF]);
                     }
-                }
-                else{
+                } else {
                     m_pYTensor->e(i, j) = subX.conv(*m_pW[0]);
                 }
 
@@ -140,12 +143,11 @@ void ConvolutionLayer::forward() {
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
                     Xc[2] = Xs[2] + k * m_stride;
                     Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
-                    if (1 != m_numFilters){
+                    if (1 != m_numFilters) {
                         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                            m_pYTensor->e(idxF,i, j, k) = subX.conv(*m_pW[idxF]);
+                            m_pYTensor->e(idxF, i, j, k) = subX.conv(*m_pW[idxF]);
                         }
-                    }
-                    else{
+                    } else {
                         m_pYTensor->e(i, j, k) = subX.conv(*m_pW[0]);
                     }
 
@@ -158,16 +160,15 @@ void ConvolutionLayer::forward() {
             for (long j = 0; j < m_tensorSize[1]; ++j) {
                 Xc[1] = Xs[1] + j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = Xs[2] + k* m_stride;
+                    Xc[2] = Xs[2] + k * m_stride;
                     for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3]  = Xs[3] + l * m_stride;
+                        Xc[3] = Xs[3] + l * m_stride;
                         Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
-                        if (1 != m_numFilters){
+                        if (1 != m_numFilters) {
                             for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                                m_pYTensor->e( idxF,i, j, k, l) = subX.conv(*m_pW[idxF]);
+                                m_pYTensor->e(idxF, i, j, k, l) = subX.conv(*m_pW[idxF]);
                             }
-                        }
-                        else{
+                        } else {
                             m_pYTensor->e(i, j, k, l) = subX.conv(*m_pW[0]);
                         }
 
@@ -186,14 +187,13 @@ void ConvolutionLayer::forward() {
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward() {
     // dX needs to consider the accumulation of different filters
-    if (1  != m_numFilters ){
+    if (1 != m_numFilters) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //index of Filter
             Tensor<float> dY = m_pdYTensor->extractLowerDTensor(idxF);
             computeDW(&dY, m_pdW[idxF]);
             computeDX(&dY, m_pW[idxF]);//Note: dx need to accumulate along filters
         }
-    }
-    else{
+    } else {
         computeDW(m_pdYTensor, m_pdW[0]);
         computeDX(m_pdYTensor, m_pW[0]);
     }
@@ -214,47 +214,47 @@ void ConvolutionLayer::freeExpandDy() {
     }
 }
 
-void ConvolutionLayer::expandDyTensor(Tensor<float> *pdY) {
+void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
     freeExpandDy();
     const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
     vector<long> expandDyDims = Xdims + m_filterSize;
     m_expandDy = new Tensor<float>(expandDyDims);
     m_expandDy->zeroInitialize();
 
-    Tensor<float> &dY = *pdY;
+    const Tensor<float> &dY = *pdY;
 
     //copy DyTensor to expandDy, according to  m_stride
     int N = m_tensorSize.size();  //dyTensor's size
     vector<long> Xs = m_filterSize - 1; //X starting coordinate for copying dy
-    vector<long> Xc = m_filterSize*0;
+    vector<long> Xc = m_filterSize * 0;
     if (2 == N) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] =Xs[0]+ i * m_stride;
+            Xc[0] = Xs[0] + i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] =Xs[1]+ j * m_stride;
+                Xc[1] = Xs[1] + j * m_stride;
                 m_expandDy->e(Xc) = dY(i, j);
             }
         }
     } else if (3 == N) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] =Xs[0] + i * m_stride;
+            Xc[0] = Xs[0] + i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] =Xs[1] + j * m_stride;
+                Xc[1] = Xs[1] + j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] =Xs[2] + k * m_stride;
+                    Xc[2] = Xs[2] + k * m_stride;
                     m_expandDy->e(Xc) = dY(i, j, k);
                 }
             }
         }
     } else if (4 == N) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] =Xs[0] + i * m_stride;
+            Xc[0] = Xs[0] + i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1]+ j * m_stride;
+                Xc[1] = Xs[1] + j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] =Xs[2] + k * m_stride;
+                    Xc[2] = Xs[2] + k * m_stride;
                     for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] =Xs[3] + l * m_stride;
+                        Xc[3] = Xs[3] + l * m_stride;
                         m_expandDy->e(Xc) = dY(i, j, k, l);
                     }
                 }
@@ -265,7 +265,7 @@ void ConvolutionLayer::expandDyTensor(Tensor<float> *pdY) {
     }
 }
 
-void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
+void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dWDims = pdW->getDims();
     const int N = dWDims.size();
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
@@ -306,7 +306,7 @@ void ConvolutionLayer::computeDW(Tensor<float> *pdY, Tensor<float> *pdW) {
 }
 
 //Note: dx need to accumulate along filters
-void ConvolutionLayer::computeDX(Tensor<float> *pdY, Tensor<float> *pW) {
+void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *pW) {
     expandDyTensor(pdY);
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
     const vector<long> dXdims = dX.getDims();

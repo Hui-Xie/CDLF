@@ -66,7 +66,6 @@ int  Net::getBatchSize(){
 
 void Net::forwardPropagate(){
    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-       cout<<"Start to run: "<<iter->second->m_name<<"==";
        iter->second->forward();
    }
 }
@@ -78,7 +77,8 @@ void Net::backwardPropagate(){
        iter->second->zeroDYTensor();
    }
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
-      rit->second->backward();
+       //cout<<"backward Propagate: "<<rit->second->m_name<<endl;
+       rit->second->backward();
    }
 }
 

@@ -28,8 +28,8 @@ public:
                      const int numFilters=1, const int stride=1);
     ~ConvolutionLayer();
 
-    Tensor<float>*  m_pW[];
-    Tensor<float>*  m_pdW[];
+    Tensor<float>**  m_pW;
+    Tensor<float>**  m_pdW;
     Tensor<float>*  m_expandDy;
 
     void constructFiltersAndY();
@@ -48,10 +48,10 @@ private:
     int m_numFilters;
 
     bool checkFilterSize(const vector<long>& filterSize, Layer* prevLayer);
-    void expandDyTensor(Tensor<float>* pdY);
+    void expandDyTensor(const Tensor<float>* pdY);
     void freeExpandDy();
-    void computeDW(Tensor<float>* pdY, Tensor<float>* pdW);
-    void computeDX(Tensor<float>* pdY, Tensor<float>* pW);//Note: dx need to accumulate along filters
+    void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
+    void computeDX(const Tensor<float>* pdY, const Tensor<float>* pW);//Note: dx need to accumulate along filters
     void updateTensorSize();
     void computeOneFiterN();
 

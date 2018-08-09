@@ -146,7 +146,7 @@ void MNIST::setNetParameters(){
     m_net.setLearningRate(0.01);
     m_net.setLossTolerance(0.02);
     m_net.setMaxIteration(60000);
-    m_net.setBatchSize(200);
+    m_net.setBatchSize(20);
     m_net.initialize();
 }
 
@@ -188,6 +188,7 @@ void MNIST::trainNet(){
             ++nIter;
         }
         m_net.sgd(learningRate,i);
+        cout<<"Progress: "<<nBatch<<endl;
 
 
         m_net.printIteration(lossLayer, nIter);
