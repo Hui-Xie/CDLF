@@ -19,6 +19,7 @@ int main (int argc, char *argv[])
 
     mnist.buildNet();
     mnist.setNetParameters();
+    mnist.m_net.printArchitecture();
     mnist.trainNet();
 
     cout<<"==========End of Mnist Test==========="<<endl;

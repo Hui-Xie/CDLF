@@ -189,6 +189,10 @@ void Net::train()
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "  <<"Output Result: "<<endl;
     lossLayer->m_prevLayer->m_pYTensor->transpose().printElements();
+    if (nullptr != lossLayer->m_pGroundTruth){
+        cout<<"GrounTruth: "<<endl;
+        lossLayer->m_pGroundTruth->transpose().printElements();
+    }
     cout<<"Loss: "<< lossLayer->lossCompute()<< endl;
     cout<<endl;
 }
@@ -212,4 +216,13 @@ void Net::printLayersWdW(){
             ((FCLayer*)(iter->second))->printdWanddBVector();
         }
      }
+}
+
+void Net::printArchitecture(){
+    cout<<"Network Architecture: "<<endl;
+    int i=1;
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        cout<<i++<<": "<<iter->second->m_name<<": "<<"size = "<<vector2Str(iter->second->m_tensorSize)<<endl;
+    }
+    cout<<"=======end of network architecture =============="<<endl;
 }

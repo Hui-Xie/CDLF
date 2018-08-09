@@ -29,5 +29,7 @@ void deleteOnes(vector<long>& vec);
 
 void printVector(const vector<long>& vec);
 
+string vector2Str(const vector<long>& vec);
+
 
 #endif //RL_NONCONVEX_TOOLS_H

@@ -121,36 +121,51 @@ void MNIST::displayImage(Tensor<unsigned char>* pImages, const long index){
     slice.printElements(true);
 }
 
-void MNIST::buildNet(){
-  int layerID = 1;
-  InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer", {28,28}); //output size: 28*28
-  m_net.addLayer(inputLayer);
+void MNIST::buildNet() {
+    int layerID = 1;
+    InputLayer *inputLayer = new InputLayer(layerID++, "Input Layer", {28, 28}); //output size: 28*28
+    m_net.addLayer(inputLayer);
 
-  ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1",{3,3},inputLayer, 1, 1); //output size: 26*26
-  m_net.addLayer(conv1);
-  ReLU* reLU1 = new ReLU(layerID++, "ReLU1", conv1);
-  m_net.addLayer(reLU1);
-  NormalizationLayer* norm1 = new NormalizationLayer(layerID++, "norm1", reLU1);
-  m_net.addLayer(norm1);
+    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3}, inputLayer, 1, 1); //output size: 26*26
+    m_net.addLayer(conv1);
+    ReLU *reLU1 = new ReLU(layerID++, "ReLU1", conv1);
+    m_net.addLayer(reLU1);
+    NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "norm1", reLU1);
+    m_net.addLayer(norm1);
 
-  ConvolutionLayer* conv2 = new ConvolutionLayer(layerID++, "Conv2",{5,5},norm1, 1, 1);//output size: 22*22
-  m_net.addLayer(conv2);
-  ReLU* reLU2 = new ReLU(layerID++, "ReLU2", conv2);
-  m_net.addLayer(reLU2);
-  NormalizationLayer* norm2 = new NormalizationLayer(layerID++, "norm2", reLU2);
-  m_net.addLayer(norm2);
+    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {3, 3}, norm1, 1, 1);//output size: 24*24
+    m_net.addLayer(conv2);
+    ReLU *reLU2 = new ReLU(layerID++, "ReLU2", conv2);
+    m_net.addLayer(reLU2);
+    NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "norm2", reLU2);
+    m_net.addLayer(norm2);
 
-  VectorizationLayer* vecLayer1 = new VectorizationLayer(layerID++, "Vec1", norm2); //output size: 484*1
-  m_net.addLayer(vecLayer1);
-  FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {10,1}, vecLayer1); //output size: 10*1
-  m_net.addLayer(fcLayer1);
-  ReLU* reLU3 = new ReLU(layerID++, "ReLU3", fcLayer1);
-  m_net.addLayer(reLU3);
+    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3, 3}, norm2, 1, 1);//output size: 22*22
+    m_net.addLayer(conv3);
+    ReLU *reLU3 = new ReLU(layerID++, "ReLU3", conv3);
+    m_net.addLayer(reLU3);
+    NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "norm3", reLU3);
+    m_net.addLayer(norm3);
 
-  SoftMaxLayer * softmaxLayer = new SoftMaxLayer(layerID++, "softmaxLayer",reLU3); //output size: 10*1
-  m_net.addLayer(softmaxLayer);
-  CrossEntropyLoss* crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy", softmaxLayer); // output size: 1
-  m_net.addLayer(crossEntropyLoss);
+    ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {3, 3}, norm3, 1, 1);//output size: 20*20
+    m_net.addLayer(conv4);
+    ReLU *reLU4 = new ReLU(layerID++, "ReLU4", conv4);
+    m_net.addLayer(reLU4);
+    NormalizationLayer *norm4 = new NormalizationLayer(layerID++, "norm4", reLU4);
+    m_net.addLayer(norm4);
+
+    VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vec1", norm4); //output size: 400*1
+    m_net.addLayer(vecLayer1);
+    FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {10, 1}, vecLayer1); //output size: 10*1
+    m_net.addLayer(fcLayer1);
+    ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1);
+    m_net.addLayer(reLU5);
+
+    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "softmax", reLU5); //output size: 10*1
+    m_net.addLayer(softmaxLayer);
+    CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
+                                                              softmaxLayer); // output size: 1
+    m_net.addLayer(crossEntropyLoss);
 
 }
 
@@ -160,7 +175,7 @@ void MNIST::setNetParameters(){
     m_net.setLearningRate(0.01);
     m_net.setLossTolerance(0.02);
     m_net.setMaxIteration(60000);
-    m_net.setBatchSize(20);
+    m_net.setBatchSize(50);
     m_net.initialize();
 }
 

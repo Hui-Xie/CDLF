@@ -104,6 +104,20 @@ void printVector(const vector<long>& vec){
 
 }
 
+string vector2Str(const vector<long>& vec){
+    int N= vec.size();
+    string result ="";
+    for (int i=0;i< N; ++i){
+        if (i != N-1){
+            result += to_string(vec[i]) + "*";
+        }
+        else{
+            result += to_string(vec[i]);
+        }
+     }
+    return result;
+}
+
 
 
 

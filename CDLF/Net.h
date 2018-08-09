@@ -46,6 +46,7 @@ public:
     void printLayersY();
     void printLayersDY();
     void printLayersWdW();
+    void printArchitecture();
 
 
 private:
