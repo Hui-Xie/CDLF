@@ -66,9 +66,7 @@ int  Net::getBatchSize(){
 
 void Net::forwardPropagate(){
    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-       cout<<iter->second->m_name<< " start to run."<<endl;
        iter->second->forward();
-
    }
 }
 void Net::backwardPropagate(){
@@ -112,13 +110,13 @@ Layer* Net::getInputLayer(){
     return m_layers.begin()->second;
 }
 
-Layer* Net::getLossLayer(){
+Layer* Net::getFinalLayer(){
     return m_layers.rbegin()->second;
 }
 
 //Notes: this layerWidthVector does not include LossLayer,  and ReLU and NormalizationLayer do not count as a single layer
 // Normalization layer generally put after ReLU
-void Net::buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer){
+void Net::buildFullConnectedNet(const vector<long> layerWidthVector){
    int nLayers = layerWidthVector.size();
    if (0 == nLayers) {
       cout<<"Net has at least one layer."<<endl;
@@ -137,8 +135,6 @@ void Net::buildFullConnectedNet(const vector<long> layerWidthVector, Layer* loss
          addLayer(normalLayer);
       }
    }
-   lossLayer->addPreviousLayer(m_layers.rbegin()->second);
-   addLayer(lossLayer);
 }
 
 void Net::initialize(){
@@ -150,7 +146,7 @@ void Net::train()
 {
    long nIter = 0;
    InputLayer* inputLayer = (InputLayer*)getInputLayer();
-   LossLayer* lossLayer = (LossLayer* )getLossLayer();
+   LossLayer* lossLayer = (LossLayer* ) getFinalLayer();
    long numBatch =  m_maxIteration / m_batchSize;
    if (0 !=  m_maxIteration % m_batchSize){
        numBatch += 1;

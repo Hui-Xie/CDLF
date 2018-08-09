@@ -11,7 +11,7 @@
 
 class LossConvexExample2: public LossLayer {
 public:
-    LossConvexExample2(const int id, const string& name);
+    LossConvexExample2(const int id, const string& name,Layer *prevLayer);
     ~LossConvexExample2();
 
 private:

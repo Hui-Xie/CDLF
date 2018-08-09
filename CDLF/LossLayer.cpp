@@ -7,10 +7,11 @@
 #include <iostream>
 using namespace std;
 
-LossLayer::LossLayer(const int id, const string& name) : Layer(id,name,{}){
+LossLayer::LossLayer(const int id, const string& name, Layer *prevLayer) : Layer(id,name,{}){
     m_type = "LossLayer";
     m_loss = 1e+10;
     m_pGroundTruth = nullptr;
+    addPreviousLayer(prevLayer);
 }
 
 LossLayer::~LossLayer(){

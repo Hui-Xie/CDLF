@@ -13,7 +13,7 @@
 
 class LossLayer : public Layer {
 public:
-    LossLayer(const int id, const string& name);
+    LossLayer(const int id, const string& name, Layer *prevLayer);
     ~LossLayer();
 
     float getLoss();

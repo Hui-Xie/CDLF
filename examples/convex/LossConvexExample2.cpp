@@ -9,7 +9,7 @@ using namespace std;
 
 // L(x) = \sum exp(x_i -i)
 
-LossConvexExample2::LossConvexExample2(const int id, const string& name): LossLayer(id,name){
+LossConvexExample2::LossConvexExample2(const int id, const string& name,  Layer *prevLayer): LossLayer(id,name, prevLayer){
 
 }
 LossConvexExample2::~LossConvexExample2(){

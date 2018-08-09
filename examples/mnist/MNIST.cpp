@@ -153,7 +153,7 @@ void MNIST::setNetParameters(){
 void MNIST::trainNet(){
     long nIter = 0;
     InputLayer* inputLayer = (InputLayer*)m_net.getInputLayer();
-    CrossEntropyLoss* lossLayer = (CrossEntropyLoss* )m_net.getLossLayer();
+    CrossEntropyLoss* lossLayer = (CrossEntropyLoss* ) m_net.getFinalLayer();
     long maxIteration = m_net.getMaxIteration();
     int batchSize = m_net.getBatchSize();
     float learningRate = m_net.getLearningRate();

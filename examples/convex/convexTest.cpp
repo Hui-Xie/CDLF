@@ -54,13 +54,16 @@ int main (int argc, char *argv[])
     }
     Net net;
 
+    net.buildFullConnectedNet(layerWidthVector);
+
     //convex example 1: f= \sum (x_i-i)^2
-    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer");
+    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer", net.getFinalLayer());
+
 
     //convex example 2: f= = \sum exp(x_i -i)
-    //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer");
+    //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer",  net.getFinalLayer());
 
-    net.buildFullConnectedNet(layerWidthVector, lossLayer);
+    net.addLayer(lossLayer);
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setMaxIteration(1000);

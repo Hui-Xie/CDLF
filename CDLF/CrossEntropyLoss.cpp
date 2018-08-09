@@ -4,7 +4,7 @@
 
 #include "CrossEntropyLoss.h"
 
-CrossEntropyLoss::CrossEntropyLoss(const int id, const string& name): LossLayer(id,name){
+CrossEntropyLoss::CrossEntropyLoss(const int id, const string& name, Layer *prevLayer ): LossLayer(id,name,prevLayer){
     m_type = "CrossEntropyLoss";
 }
 CrossEntropyLoss::~CrossEntropyLoss(){

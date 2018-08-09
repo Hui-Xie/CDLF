@@ -16,7 +16,7 @@
 
 class CrossEntropyLoss: public LossLayer {
 public:
-    CrossEntropyLoss(const int id, const string& name);
+    CrossEntropyLoss(const int id, const string& name,Layer *prevLayer );
     ~CrossEntropyLoss();
 
     virtual void  printGroundTruth();

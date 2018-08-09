@@ -36,10 +36,10 @@ public:
     void sgd(const float lr, const int batchSize);
 
     Layer* getInputLayer();
-    Layer* getLossLayer();
+    Layer* getFinalLayer();
 
     //Notes: this layerWidthVector does not include LossLayer
-    void buildFullConnectedNet(const vector<long> layerWidthVector, Layer* lossLayer);
+    void buildFullConnectedNet(const vector<long> layerWidthVector);
     void initialize();
     void train();
     void printIteration(LossLayer* lossLayer,const int nIter);
