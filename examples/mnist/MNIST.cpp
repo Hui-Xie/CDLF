@@ -177,7 +177,7 @@ void MNIST::setNetParameters() {
     m_net.setLearningRate(0.001);
     m_net.setLossTolerance(0.02);
     m_net.setMaxIteration(60000);
-    m_net.setBatchSize(20);
+    m_net.setBatchSize(200);
     m_net.initialize();
 
 }
@@ -196,7 +196,6 @@ void MNIST::trainNet() {
 
     long NTrain = 60000;
     long maxIteration = m_net.getMaxIteration();
-    maxIteration = 1000;
 
     int batchSize = m_net.getBatchSize();
     float learningRate = m_net.getLearningRate();
@@ -205,10 +204,10 @@ void MNIST::trainNet() {
         numBatch += 1;
     }
 
-
     long nIter = 0;
     long nBatch = 0;
     vector<long> randSeq = generateRandomSequence(NTrain);
+    cout << "  Progress batch: ";
     while (nBatch < numBatch) {
         if (m_net.getJudgeLoss() && lossLayer->getLoss() < m_net.getLossTolerance()) {
             break;
@@ -225,19 +224,19 @@ void MNIST::trainNet() {
             ++nIter;
         }
         m_net.sgd(learningRate, i);
-        cout << "  Progress batch: " << nBatch << endl;
-        m_net.printIteration(lossLayer, nIter);
+        cout <<  nBatch <<" ";
+        //m_net.printIteration(lossLayer, nIter);
         ++nBatch;
     }
-
-}
+    cout<<endl;
+ }
 
 void MNIST::testNet() {
     InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
     long n = 0;
     long nSuccess = 0;
-    const long Ntest = 100;
+    const long Ntest = 10000;
     while (n++ < Ntest) {
         inputLayer->setInputTensor(m_pTestImages->slice(n));
         lossLayer->setGroundTruth(constructGroundTruth(m_pTestLabels, n));
@@ -245,7 +244,7 @@ void MNIST::testNet() {
         if (lossLayer->predictSuccess()) ++nSuccess;
     }
     m_accuracy = nSuccess * 1.0 / Ntest;
-    cout << "**********************************" << endl;
-    cout << "Test Accuracy =  " << m_accuracy<<endl;
-    cout << "**********************************" << endl;
+    cout << "********************************************************" << endl;
+    cout << "*********** Test Accuracy =  " << m_accuracy<<" *****************"<<endl;
+    cout << "********************************************************" << endl;
 }
