@@ -19,7 +19,16 @@ public:
     Tensor<unsigned char> * m_pTestImages;
     Tensor<unsigned char> * m_pTestLabels;
 
+    //as original MNIST dataset is too big, we tailor a part.
+    Tensor<unsigned char> * m_pTrainImagesPart;
+    Tensor<unsigned char> * m_pTrainLabelsPart;
+    Tensor<unsigned char> * m_pTestImagesPart;
+    Tensor<unsigned char> * m_pTestLabelsPart;
+
+    vector<unsigned char> m_partDigits;
+
     void loadData();
+    void tailorData();
     void displayImage(Tensor<unsigned char>* pImages, const long index);
     void buildNet();
     void setNetParameters();
@@ -41,9 +50,9 @@ private:
 
     int readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor);
     long hexChar4ToLong(char *buff);
-
-
-
+    bool isDigitInVector(const unsigned char digit);
+    void extractPart(const Tensor<unsigned char> * pWholeImages,  const Tensor<unsigned char> * pWholeLabels,
+                             Tensor<unsigned char> * pPartImages,  Tensor<unsigned char> *  pPartLabels);
 };
 
 

@@ -18,6 +18,11 @@ int main (int argc, char *argv[])
     mnist.displayImage(mnist.m_pTestImages, index);
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
+    //tailor data
+    mnist.tailorData();
+
+    return 1;
+
     mnist.buildNet();
     mnist.setNetParameters();
     mnist.m_net.printArchitecture();

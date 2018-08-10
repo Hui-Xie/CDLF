@@ -17,6 +17,13 @@ MNIST::MNIST(const string &mnistDir) {
     m_pTrainLabels = nullptr;
     m_pTestImages = nullptr;
     m_pTestLabels = nullptr;
+
+    m_partDigits = {0,1}; //user can change number of elements to many, at least 2.
+
+    m_pTrainImagesPart = nullptr;
+    m_pTrainLabelsPart = nullptr;
+    m_pTestImagesPart = nullptr;
+    m_pTestLabelsPart = nullptr;
 }
 
 MNIST::~MNIST() {
@@ -39,6 +46,26 @@ MNIST::~MNIST() {
         delete m_pTestLabels;
         m_pTestLabels = nullptr;
     }
+
+    if (nullptr != m_pTrainImagesPart) {
+        delete m_pTrainImagesPart;
+        m_pTrainImagesPart = nullptr;
+    }
+
+    if (nullptr != m_pTrainLabelsPart) {
+        delete m_pTrainLabelsPart;
+        m_pTrainLabelsPart = nullptr;
+    }
+
+    if (nullptr != m_pTestImagesPart) {
+        delete m_pTestImagesPart;
+        m_pTestImagesPart = nullptr;
+    }
+
+    if (nullptr != m_pTestLabelsPart) {
+        delete m_pTestLabelsPart;
+        m_pTestLabelsPart = nullptr;
+    }
 }
 
 long MNIST::hexChar4ToLong(char *buff) {
@@ -47,6 +74,20 @@ long MNIST::hexChar4ToLong(char *buff) {
         temp += ((unsigned char) buff[i]) * pow(16, (3 - i) * 2);
     }
     return temp;
+}
+
+bool MNIST::isDigitInVector(const unsigned char digit){
+    const int N = m_partDigits.size();
+    for (int i=0; i<N; ++i){
+        if (digit == m_partDigits[i]) return true;
+    }
+    return false;
+}
+
+void MNIST::extractPart(const Tensor<unsigned char> * pWholeImages,  const Tensor<unsigned char> * pWholeLabels,
+                 Tensor<unsigned char> * pPartImages,  Tensor<unsigned char> *  pPartLabels){
+
+
 }
 
 int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *&pTensor) {
@@ -112,6 +153,28 @@ void MNIST::loadData() {
     readIdxFile(m_trainLabelFile, m_pTrainLabels);
     readIdxFile(m_testImageFile, m_pTestImages);
     readIdxFile(m_testLabelFile, m_pTestLabels);
+}
+
+void MNIST::tailorData(){
+    //get the total number of part dataset
+    long N = m_pTrainLabels->getLength();
+    long NTrainPart = 0;
+    for (long i=0;i<N;++i){
+        if (isDigitInVector(m_pTrainLabels->e(i))){
+            ++NTrainPart;
+        }
+    }
+    cout<<"Info: MNIST tain part dataset has total "<<NTrainPart<<" elements."<<endl;
+    m_pTrainImagesPart = new  Tensor<unsigned char> ({NTrainPart,28,28});
+    m_pTrainLabelsPart = new  Tensor<unsigned char> ({NTrainPart,1});
+
+
+
+
+
+
+
+
 }
 
 void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
