@@ -19,6 +19,8 @@ vector<long> operator+ (const vector<long>& left, const int offset);
 
 vector<long> operator+ (const vector<long>& left, const vector<long>& right);
 
+vector<long> operator- (const vector<long>& left, const vector<long>& right);
+
 vector<long> operator- (const vector<long>& minuend, const int subtrahend);
 
 vector<long> operator* (const vector<long>& left, const int factor);
@@ -26,6 +28,8 @@ vector<long> operator* (const vector<long>& left, const int factor);
 vector<long> operator/ (const vector<long>& left, const int divisor);
 
 void deleteOnes(vector<long>& vec);
+
+vector<long> nonZeroIndex(const vector<long>& vec);
 
 void printVector(const vector<long>& vec);
 

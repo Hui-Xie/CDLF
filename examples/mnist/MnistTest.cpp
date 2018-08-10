@@ -21,7 +21,7 @@ int main (int argc, char *argv[])
     mnist.buildNet();
     mnist.setNetParameters();
     mnist.m_net.printArchitecture();
-    long epoch= 1000;
+    long epoch= 10;//1000;
     for (long i=0; i<epoch; ++i){
         cout<<"%%%%%%%%%%%%%%%%%%   Start Epoch: "<<i<<"   %%%%%%%%%%%%%%%%%%"<<endl;
         mnist.trainNet();

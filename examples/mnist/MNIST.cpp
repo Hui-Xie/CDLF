@@ -120,32 +120,33 @@ void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
 }
 
 void MNIST::buildNet() {
+    // it is a good design if all numFilter is odd;
     int layerID = 1;
     InputLayer *inputLayer = new InputLayer(layerID++, "Input Layer", {28, 28}); //output size: 28*28
     m_net.addLayer(inputLayer);
 
-    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3}, inputLayer, 1, 1); //output size: 26*26
+    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3}, inputLayer, 5, 1); //output size: 5*26*26
     m_net.addLayer(conv1);
     ReLU *reLU1 = new ReLU(layerID++, "ReLU1", conv1);
     m_net.addLayer(reLU1);
     NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "norm1", reLU1);
     m_net.addLayer(norm1);
 
-    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {3, 3}, norm1, 1, 1);//output size: 24*24
+    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {5,3,3}, norm1, 5, 1);//output size: 5*24*24
     m_net.addLayer(conv2);
     ReLU *reLU2 = new ReLU(layerID++, "ReLU2", conv2);
     m_net.addLayer(reLU2);
     NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "norm2", reLU2);
     m_net.addLayer(norm2);
 
-    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3, 3}, norm2, 1, 1);//output size: 22*22
+    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3,3, 3}, norm2, 7, 1);//output size: 7*3*22*22
     m_net.addLayer(conv3);
     ReLU *reLU3 = new ReLU(layerID++, "ReLU3", conv3);
     m_net.addLayer(reLU3);
     NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "norm3", reLU3);
     m_net.addLayer(norm3);
 
-    ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {3, 3}, norm3, 1, 1);//output size: 20*20
+    ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {7,3,3,3}, norm3, 1, 1);//output size: 20*20
     m_net.addLayer(conv4);
     ReLU *reLU4 = new ReLU(layerID++, "ReLU4", conv4);
     m_net.addLayer(reLU4);
@@ -156,7 +157,7 @@ void MNIST::buildNet() {
     m_net.addLayer(vecLayer1);
     FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {100, 1}, vecLayer1); //output size: 100*1
     m_net.addLayer(fcLayer1);
-    ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1);
+    ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1); //output size: 100*1
     m_net.addLayer(reLU5);
 
     FCLayer *fcLayer2 = new FCLayer(layerID++, "fc2", {10, 1}, reLU5); //output size: 10*1
@@ -176,8 +177,8 @@ void MNIST::buildNet() {
 void MNIST::setNetParameters() {
     m_net.setLearningRate(0.001);
     m_net.setLossTolerance(0.02);
-    m_net.setMaxIteration(60000);
-    m_net.setBatchSize(200);
+    m_net.setMaxIteration(100);//60000);
+    m_net.setBatchSize(20);//200);
     m_net.initialize();
 
 }
@@ -194,7 +195,7 @@ void MNIST::trainNet() {
     InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
 
-    long NTrain = 60000;
+    long NTrain = 100;//60000;
     long maxIteration = m_net.getMaxIteration();
 
     int batchSize = m_net.getBatchSize();
@@ -236,7 +237,7 @@ void MNIST::testNet() {
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
     long n = 0;
     long nSuccess = 0;
-    const long Ntest = 10000;
+    const long Ntest = 20;//10000;
     while (n++ < Ntest) {
         inputLayer->setInputTensor(m_pTestImages->slice(n));
         lossLayer->setGroundTruth(constructGroundTruth(m_pTestLabels, n));
@@ -245,6 +246,6 @@ void MNIST::testNet() {
     }
     m_accuracy = nSuccess * 1.0 / Ntest;
     cout << "********************************************************" << endl;
-    cout << "************* Test Accuracy =  " << m_accuracy<<" *****************"<<endl;
+    cout << "  ************* Test Accuracy =  " << m_accuracy<<" ***************"<<endl;
     cout << "********************************************************" << endl;
 }

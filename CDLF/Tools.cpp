@@ -58,6 +58,16 @@ vector<long> operator+ (const vector<long>& left, const vector<long>& right){
     return result;
 }
 
+vector<long> operator- (const vector<long>& left, const vector<long>& right){
+    assert(left.size() == right.size());
+    const int N = left.size();
+    vector<long> result(left);
+    for (int i=0; i<N;++i){
+        result[i] -= right[i];
+    }
+    return result;
+}
+
 vector<long> operator- (const vector<long> &minuend, const int subtrahend) {
     const int N = minuend.size();
     vector<long> result(minuend);
@@ -94,6 +104,15 @@ void deleteOnes(vector<long>& vec){
             --it;
         }
     }
+}
+
+vector<long> nonZeroIndex(const vector<long>& vec){
+    vector<long> result;
+    const int N = vec.size();
+    for (int i=0; i<N; ++i){
+        if (0 != vec[i]) result.push_back(i);
+    }
+    return result;
 }
 
 void printVector(const vector<long>& vec){

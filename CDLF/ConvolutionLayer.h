@@ -17,7 +17,7 @@
  * Notes:
  * 1  in convolution layer, we do not consider bias, as there is a separate BiasLayer for use;
  * 2  Size changes: |Y| = |X|-|W|+1, in their different dimension;
- *
+ * 3  it is a good design if all numFilter is odd;
  *
  * */
 

@@ -51,13 +51,13 @@ bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *pr
     if (dimFilter == dimX) {
         for (int i = 0; i < dimX; ++i) {
             if (0 == filterSize[i] % 2) {
-                cout << "Error: filter Size should be odd." << endl;
+                cout << "Error: filter Size should be odd." << endl;  // this is a better design
                 return false;
             }
         }
         return true;
     } else {
-        cout << "Error: dimension of filter should be consistent with the previous Layer." << endl;
+        cout << "Error: dimension of filter should be consistent with the output of the previous Layer." << endl;
         return false;
     }
 }
@@ -115,15 +115,20 @@ void ConvolutionLayer::zeroParaGradient() {
 
 // Y = W*X
 void ConvolutionLayer::forward() {
-    const int N = m_filterSize.size();
+    const int Nt = m_tensorSize.size();
+    const int Nf = m_filterSize.size();
+    const int Df = ( 1== m_numFilters)? 0:1; //Feature dimension
+
+    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
+
     vector<long> Xs = m_filterSize / 2; //X central for each subTensorFromCenter at first point
-    vector<long> Xc = m_filterSize * 0;
+    vector<long> Xc = Xs;
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
-    if (2 == N) {
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = Xs[0] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1] + j * m_stride;
+    if (2 == Nt -Df) {
+        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
                 Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
                 if (1 != m_numFilters) {
                     for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
@@ -135,13 +140,13 @@ void ConvolutionLayer::forward() {
 
             }
         }
-    } else if (3 == N) {
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = Xs[0] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1] + j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = Xs[2] + k * m_stride;
+    } else if (3 == Nt-Df) {
+        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
+                for (long k = 0; k < m_tensorSize[Df+2]; ++k) {
+                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
                     Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
                     if (1 != m_numFilters) {
                         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
@@ -154,15 +159,15 @@ void ConvolutionLayer::forward() {
                 }
             }
         }
-    } else if (4 == N) {
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = Xs[0] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1] + j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = Xs[2] + k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = Xs[3] + l * m_stride;
+    } else if (4 == Nt-Df) {
+        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
+                for (long k = 0; k < m_tensorSize[Df+2]; ++k) {
+                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
+                    for (long l = 0; l < m_tensorSize[Df+3]; ++l) {
+                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
                         Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
                         if (1 != m_numFilters) {
                             for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
