@@ -25,6 +25,7 @@ public:
 
     void copyDataFrom(void* buff, const long numBytes);
 
+
     vector<long> getDims() const;
     ValueType* getData() const;
     long getLength() const;
@@ -92,6 +93,7 @@ public:
     ValueType conv(const Tensor& other) const; //convolution or cross-correlation
     Tensor& flip();
 
+
 private:
     vector<long> m_dims;
     vector<long> m_dimsSpan; //express change of index leads how many data storage span.
@@ -102,6 +104,7 @@ private:
     void generateDimsSpan();
     inline long index2Offset(const vector<long>& index) const;
     void copyDataTo(Tensor* pTensor, const long offset, const long length);
+
 };
 
 #include "Tensor.hpp"

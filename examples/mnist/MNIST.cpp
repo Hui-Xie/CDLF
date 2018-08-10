@@ -86,8 +86,16 @@ bool MNIST::isDigitInVector(const unsigned char digit){
 
 void MNIST::extractPart(const Tensor<unsigned char> * pWholeImages,  const Tensor<unsigned char> * pWholeLabels,
                  Tensor<unsigned char> * pPartImages,  Tensor<unsigned char> *  pPartLabels){
-
-
+    long N = pWholeLabels->getLength();
+    long NPart = 0;
+    long imageSize = 28*28*sizeof(unsigned char);
+    for(long i=0; i<N; ++i){
+        if (isDigitInVector(pWholeLabels->e(i))) {
+            pPartLabels->e(NPart) = pWholeLabels->e(i);
+            memcpy(pPartImages->getData()+NPart*imageSize, pWholeImages->getData()+i*imageSize, imageSize );
+            ++NPart;
+        }
+    }
 }
 
 int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *&pTensor) {
@@ -156,7 +164,7 @@ void MNIST::loadData() {
 }
 
 void MNIST::tailorData(){
-    //get the total number of part dataset
+    //get the total number of part train dataset
     long N = m_pTrainLabels->getLength();
     long NTrainPart = 0;
     for (long i=0;i<N;++i){
@@ -167,14 +175,20 @@ void MNIST::tailorData(){
     cout<<"Info: MNIST tain part dataset has total "<<NTrainPart<<" elements."<<endl;
     m_pTrainImagesPart = new  Tensor<unsigned char> ({NTrainPart,28,28});
     m_pTrainLabelsPart = new  Tensor<unsigned char> ({NTrainPart,1});
+    extractPart(m_pTrainImages,m_pTrainLabels,m_pTrainImagesPart, m_pTrainLabelsPart);
 
-
-
-
-
-
-
-
+    //get the total number of part test dataset
+    N = m_pTestLabels->getLength();
+    long NTestPart = 0;
+    for (long i=0;i<N;++i){
+        if (isDigitInVector(m_pTestLabels->e(i))){
+            ++NTestPart;
+        }
+    }
+    cout<<"Info: MNIST test part dataset has total "<<NTestPart<<" elements."<<endl;
+    m_pTestImagesPart = new  Tensor<unsigned char> ({NTestPart,28,28});
+    m_pTestLabelsPart = new  Tensor<unsigned char> ({NTestPart,1});
+    extractPart(m_pTestImages,m_pTestLabels,m_pTestImagesPart, m_pTestLabelsPart);
 }
 
 void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
@@ -222,13 +236,21 @@ void MNIST::buildNet() {
     m_net.addLayer(fcLayer1);
     ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1); //output size: 100*1
     m_net.addLayer(reLU5);
+    NormalizationLayer *norm5 = new NormalizationLayer(layerID++, "Norm5", reLU5);
+    m_net.addLayer(norm5);
 
-    FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", {10, 1}, reLU5); //output size: 10*1
+    FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", {10, 1}, norm5); //output size: 10*1
     m_net.addLayer(fcLayer2);
     ReLU *reLU6 = new ReLU(layerID++, "ReLU6", fcLayer2);
     m_net.addLayer(reLU6);
+    NormalizationLayer *norm6 = new NormalizationLayer(layerID++, "Norm6", reLU6);
+    m_net.addLayer(norm6);
 
-    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1", reLU6); //output size: 10*1
+    //For 2 category case
+    FCLayer *fcLayer3 = new FCLayer(layerID++, "FC2", {2, 1}, norm6); //output size: 2*1
+    m_net.addLayer(fcLayer3);
+
+    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1", fcLayer3); //output size: 2*1
     m_net.addLayer(softmaxLayer);
     CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
                                                               softmaxLayer); // output size: 1
@@ -248,9 +270,9 @@ void MNIST::setNetParameters() {
 
 //construct a 10*1 one-hot vector
 Tensor<float> MNIST::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
-    Tensor<float> tensor({10, 1});
+    Tensor<float> tensor({2, 1});// for 2 categories case
     tensor.zeroInitialize();
-    tensor.e(pLabels->e(index)) = 1;
+    tensor.e(pLabels->e(index)) = 1; //for {0,1} case
     return tensor;
 }
 
@@ -281,8 +303,8 @@ void MNIST::trainNet() {
         m_net.zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
-            inputLayer->setInputTensor(m_pTrainImages->slice(randSeq[nIter]));
-            lossLayer->setGroundTruth(constructGroundTruth(m_pTrainLabels, randSeq[nIter]));
+            inputLayer->setInputTensor(m_pTrainImagesPart->slice(randSeq[nIter]));
+            lossLayer->setGroundTruth(constructGroundTruth(m_pTrainLabelsPart, randSeq[nIter]));
             m_net.forwardPropagate();
             m_net.backwardPropagate();
             ++nIter;
@@ -295,20 +317,18 @@ void MNIST::trainNet() {
     cout<<endl;
  }
 
-void MNIST::testNet() {
+float MNIST::testNet() {
     InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
     long n = 0;
     long nSuccess = 0;
     const long Ntest = 20;//10000;
     while (n++ < Ntest) {
-        inputLayer->setInputTensor(m_pTestImages->slice(n));
-        lossLayer->setGroundTruth(constructGroundTruth(m_pTestLabels, n));
+        inputLayer->setInputTensor(m_pTestImagesPart->slice(n));
+        lossLayer->setGroundTruth(constructGroundTruth(m_pTestLabelsPart, n));
         m_net.forwardPropagate();
         if (lossLayer->predictSuccess()) ++nSuccess;
     }
     m_accuracy = nSuccess * 1.0 / Ntest;
-    cout << "********************************************************" << endl;
-    cout << "  ************* Test Accuracy =  " << m_accuracy<<" ***************"<<endl;
-    cout << "********************************************************" << endl;
+    return m_accuracy;
 }

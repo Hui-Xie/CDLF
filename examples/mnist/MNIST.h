@@ -34,7 +34,7 @@ public:
     void setNetParameters();
     void trainNet();
     Tensor<float> constructGroundTruth(Tensor<unsigned char> * m_pLabels, const long index);
-    void testNet();
+    float testNet();
 
     Net m_net;
 
