@@ -8,11 +8,12 @@
 #include <vector>
 using namespace std;
 
-// Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect express.;
+// Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect expression;
 // Row Vector is a Tensor({1,n}); Namely, there is no 1D tensor.
 // For 3D Tensor, the dimensional order is nSlice*Height*Width;
 // For 4D Tensor, the dimensional order is nVolume*nSlice*Height*Width;
 // For 5D Tensor, the dimensional order is n4D*nVolume*nSlice*Height*Width;
+// This Tensor supports 6D tensor.
 
 template<class ValueType>
 class Tensor {
@@ -34,12 +35,14 @@ public:
     inline ValueType& e(long i, long j, long k) const;
     inline ValueType& e(long i, long j, long k, long l)const;
     inline ValueType& e(long i, long j, long k, long l, long m)const;
+    inline ValueType& e(long i, long j, long k, long l, long m, long o)const;
     inline ValueType& operator[] (long index) const;
     inline ValueType& operator() (long index) const;
     inline ValueType& operator() (long i, long j) const;
     inline ValueType& operator() (long i, long j, long k) const;
     inline ValueType& operator() (long i, long j, long k, long l) const;
     inline ValueType& operator() (long i, long j, long k, long l, long m) const;
+    inline ValueType& operator() (long i, long j, long k, long l, long m, long o) const;
     Tensor transpose();
 
 
