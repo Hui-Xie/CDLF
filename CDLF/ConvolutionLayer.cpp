@@ -225,41 +225,43 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
     vector<long> expandDyDims = Xdims + m_filterSize;
     m_expandDy = new Tensor<float>(expandDyDims);
     m_expandDy->zeroInitialize();
-
     const Tensor<float> &dY = *pdY;
 
     //copy DyTensor to expandDy, according to  m_stride
-    int N = m_tensorSize.size();  //dyTensor's size
+    int Nt = pdY->getDims().size();  //dyTensor's size, it excludes feature dimension.
     vector<long> Xs = m_filterSize - 1; //X starting coordinate for copying dy
-    vector<long> Xc = m_filterSize * 0;
-    if (2 == N) {
+    vector<long> Xc = Xs;
+
+    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
+
+    if (2 == Nt) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = Xs[0] + i * m_stride;
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1] + j * m_stride;
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
                 m_expandDy->e(Xc) = dY(i, j);
             }
         }
-    } else if (3 == N) {
+    } else if (3 == Nt) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = Xs[0] + i * m_stride;
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1] + j * m_stride;
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = Xs[2] + k * m_stride;
+                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
                     m_expandDy->e(Xc) = dY(i, j, k);
                 }
             }
         }
-    } else if (4 == N) {
+    } else if (4 == Nt) {
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = Xs[0] + i * m_stride;
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = Xs[1] + j * m_stride;
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = Xs[2] + k * m_stride;
+                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
                     for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = Xs[3] + l * m_stride;
+                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
                         m_expandDy->e(Xc) = dY(i, j, k, l);
                     }
                 }
