@@ -122,50 +122,50 @@ void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
 void MNIST::buildNet() {
     // it is a good design if all numFilter is odd;
     int layerID = 1;
-    InputLayer *inputLayer = new InputLayer(layerID++, "Input Layer", {28, 28}); //output size: 28*28
+    InputLayer *inputLayer = new InputLayer(layerID++, "InputLayer", {28, 28}); //output size: 28*28
     m_net.addLayer(inputLayer);
 
     ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3}, inputLayer, 5, 1); //output size: 5*26*26
     m_net.addLayer(conv1);
     ReLU *reLU1 = new ReLU(layerID++, "ReLU1", conv1);
     m_net.addLayer(reLU1);
-    NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "norm1", reLU1);
+    NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "Norm1", reLU1);
     m_net.addLayer(norm1);
 
     ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {5,3,3}, norm1, 5, 1);//output size: 5*24*24
     m_net.addLayer(conv2);
     ReLU *reLU2 = new ReLU(layerID++, "ReLU2", conv2);
     m_net.addLayer(reLU2);
-    NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "norm2", reLU2);
+    NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "Norm2", reLU2);
     m_net.addLayer(norm2);
 
     ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3,3, 3}, norm2, 7, 1);//output size: 7*3*22*22
     m_net.addLayer(conv3);
     ReLU *reLU3 = new ReLU(layerID++, "ReLU3", conv3);
     m_net.addLayer(reLU3);
-    NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "norm3", reLU3);
+    NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "Norm3", reLU3);
     m_net.addLayer(norm3);
 
     ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {7,3,3,3}, norm3, 1, 1);//output size: 20*20
     m_net.addLayer(conv4);
     ReLU *reLU4 = new ReLU(layerID++, "ReLU4", conv4);
     m_net.addLayer(reLU4);
-    NormalizationLayer *norm4 = new NormalizationLayer(layerID++, "norm4", reLU4);
+    NormalizationLayer *norm4 = new NormalizationLayer(layerID++, "Norm4", reLU4);
     m_net.addLayer(norm4);
 
-    VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vec1", norm4); //output size: 400*1
+    VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vector1", norm4); //output size: 400*1
     m_net.addLayer(vecLayer1);
-    FCLayer *fcLayer1 = new FCLayer(layerID++, "fc1", {100, 1}, vecLayer1); //output size: 100*1
+    FCLayer *fcLayer1 = new FCLayer(layerID++, "FC1", {100, 1}, vecLayer1); //output size: 100*1
     m_net.addLayer(fcLayer1);
     ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1); //output size: 100*1
     m_net.addLayer(reLU5);
 
-    FCLayer *fcLayer2 = new FCLayer(layerID++, "fc2", {10, 1}, reLU5); //output size: 10*1
+    FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", {10, 1}, reLU5); //output size: 10*1
     m_net.addLayer(fcLayer2);
     ReLU *reLU6 = new ReLU(layerID++, "ReLU6", fcLayer2);
     m_net.addLayer(reLU6);
 
-    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "softmax", reLU6); //output size: 10*1
+    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1", reLU6); //output size: 10*1
     m_net.addLayer(softmaxLayer);
     CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
                                                               softmaxLayer); // output size: 1

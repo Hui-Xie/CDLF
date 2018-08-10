@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cmath> //for isinf()
 #include "statisTool.h"
+#include "ConvolutionLayer.h"
 
 Net::Net(){
    m_layers.clear();
@@ -227,10 +228,14 @@ void Net::printLayersWdW(){
 }
 
 void Net::printArchitecture(){
-    cout<<"Network Architecture: "<<endl;
+    cout<<endl<<"Network Architecture: "<<endl;
     int i=1;
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        cout<<i++<<": "<<iter->second->m_name<<": "<<"output size = "<<vector2Str(iter->second->m_tensorSize)<<endl;
+        cout<<"Layer_"<<i++<<": "<<iter->second->m_name<<": "<<"OutputSize = "<<vector2Str(iter->second->m_tensorSize)<<"; ";
+        if ( "Convolution"==iter->second->m_type){
+            cout<<"FilterSize = "<<vector2Str(((ConvolutionLayer*)iter->second)->m_filterSize)<<"; "<<"NumOfFilter = "<<((ConvolutionLayer*)iter->second)->m_numFilters<<"; ";
+        }
+        cout<<endl;
     }
-    cout<<"=======end of network architecture =============="<<endl;
+    cout<<"=========== End of Network Architecture =============="<<endl;
 }

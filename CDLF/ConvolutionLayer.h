@@ -31,6 +31,8 @@ public:
     Tensor<float>**  m_pW;
     Tensor<float>**  m_pdW;
     Tensor<float>*  m_expandDy;
+    int m_numFilters;
+    vector<long> m_filterSize;
 
     void constructFiltersAndY();
 
@@ -44,8 +46,6 @@ public:
 private:
     int m_stride;
     int m_OneFilterN;
-    vector<long> m_filterSize;
-    int m_numFilters;
 
     bool checkFilterSize(const vector<long>& filterSize, Layer* prevLayer);
     void expandDyTensor(const Tensor<float>* pdY);
