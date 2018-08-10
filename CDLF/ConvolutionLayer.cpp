@@ -337,7 +337,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
             for (long j = 0; j < dXdims[1]; ++j) {
                 for (long k = 0; k < dXdims[2]; ++k) {
                     Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k}, m_filterSize, 1);
-                    dX(i, j) += subExpandDy.flip().conv(*pW);
+                    dX(i, j, k) += subExpandDy.flip().conv(*pW);
                 }
             }
         }
@@ -347,7 +347,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                 for (long k = 0; k < dXdims[2]; ++k) {
                     for (long l = 0; l < dXdims[3]; ++l) {
                         Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l}, m_filterSize, 1);
-                        dX(i, j) += subExpandDy.flip().conv(*pW);
+                        dX(i, j, k, l) += subExpandDy.flip().conv(*pW);
                     }
                 }
             }
