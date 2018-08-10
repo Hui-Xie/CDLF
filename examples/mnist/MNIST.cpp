@@ -207,7 +207,7 @@ void MNIST::trainNet() {
     long nIter = 0;
     long nBatch = 0;
     vector<long> randSeq = generateRandomSequence(NTrain);
-    cout << "  Progress batch: ";
+    cout << "Batch Progress:";
     while (nBatch < numBatch) {
         if (m_net.getJudgeLoss() && lossLayer->getLoss() < m_net.getLossTolerance()) {
             break;
@@ -224,7 +224,7 @@ void MNIST::trainNet() {
             ++nIter;
         }
         m_net.sgd(learningRate, i);
-        cout <<  nBatch <<" ";
+        cout <<nBatch <<" ";
         //m_net.printIteration(lossLayer, nIter);
         ++nBatch;
     }
@@ -245,6 +245,6 @@ void MNIST::testNet() {
     }
     m_accuracy = nSuccess * 1.0 / Ntest;
     cout << "********************************************************" << endl;
-    cout << "*********** Test Accuracy =  " << m_accuracy<<" *****************"<<endl;
+    cout << "************* Test Accuracy =  " << m_accuracy<<" *****************"<<endl;
     cout << "********************************************************" << endl;
 }

@@ -23,10 +23,11 @@ int main (int argc, char *argv[])
     mnist.m_net.printArchitecture();
     long epoch= 1000;
     for (long i=0; i<epoch; ++i){
-        cout<<" %%%%%%%%%%%%%%%%%%%%%%%% Start Epoch: "<<i<<endl;
+        cout<<"%%%%%%%%%%%%%%%%%%   Start Epoch: "<<i<<"   %%%%%%%%%%%%%%%%%%"<<endl;
         mnist.trainNet();
         mnist.testNet();
-        cout<<" %%%%%%%%%%%%%%%%%%%%%%%% Enf of Epoch: "<<i<<endl;
+        cout<<"%%%%%%%%%%%%%%%%%%   End of Epoch: "<<i<<"   %%%%%%%%%%%%%%%%%%"<<endl;
+        cout<<endl;
     }
     cout<<"==========End of Mnist Test==========="<<endl;
     return 0;
