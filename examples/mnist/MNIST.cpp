@@ -247,7 +247,7 @@ void MNIST::buildNet() {
     m_net.addLayer(norm6);
 
     //For 2 category case
-    FCLayer *fcLayer3 = new FCLayer(layerID++, "FC2", {2, 1}, norm6); //output size: 2*1
+    FCLayer *fcLayer3 = new FCLayer(layerID++, "FC3", {2, 1}, norm6); //output size: 2*1
     m_net.addLayer(fcLayer3);
 
     SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1", fcLayer3); //output size: 2*1
@@ -262,8 +262,8 @@ void MNIST::buildNet() {
 void MNIST::setNetParameters() {
     m_net.setLearningRate(0.001);
     m_net.setLossTolerance(0.02);
-    m_net.setMaxIteration(100);//60000);
-    m_net.setBatchSize(20);//200);
+    m_net.setMaxIteration(m_pTrainLabelsPart->getLength());
+    m_net.setBatchSize(100);
     m_net.initialize();
 
 }
@@ -280,8 +280,8 @@ void MNIST::trainNet() {
     InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
 
-    long NTrain = 100;//60000;
     long maxIteration = m_net.getMaxIteration();
+    long NTrain = maxIteration;
 
     int batchSize = m_net.getBatchSize();
     float learningRate = m_net.getLearningRate();
@@ -293,7 +293,6 @@ void MNIST::trainNet() {
     long nIter = 0;
     long nBatch = 0;
     vector<long> randSeq = generateRandomSequence(NTrain);
-    cout << "Batch Progress:";
     while (nBatch < numBatch) {
         if (m_net.getJudgeLoss() && lossLayer->getLoss() < m_net.getLossTolerance()) {
             break;
@@ -310,12 +309,10 @@ void MNIST::trainNet() {
             ++nIter;
         }
         m_net.sgd(learningRate, i);
-        cout <<nBatch <<" ";
         //m_net.printIteration(lossLayer, nIter);
         ++nBatch;
     }
-    cout<<endl;
- }
+  }
 
 float MNIST::testNet() {
     InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
