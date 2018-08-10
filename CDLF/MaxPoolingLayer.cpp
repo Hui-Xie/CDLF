@@ -57,22 +57,22 @@ void MaxPoolingLayer::forward() {
     const int N = m_filterSize.size();
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
     if (2 == N) {
-        vector<long> Xc = {0, 0};
+        vector<long> Xc = {0, 0}; // start point
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] += i * m_stride;
+            Xc[0] = i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] += j * m_stride;
+                Xc[1] = j * m_stride;
                 m_pYTensor->e(i, j) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
             }
         }
     } else if (3 == N) {
         vector<long> Xc = {0, 0, 0};
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] += i * m_stride;
+            Xc[0] = i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] += j * m_stride;
+                Xc[1] =  j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] += k * m_stride;
+                    Xc[2] =  k * m_stride;
                     m_pYTensor->e(i, j, k) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
                 }
             }
@@ -80,20 +80,60 @@ void MaxPoolingLayer::forward() {
     } else if (4 == N) {
         vector<long> Xc = {0, 0, 0, 0};
         for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] += i * m_stride;
+            Xc[0] = i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] += j * m_stride;
+                Xc[1]  = j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] += k * m_stride;
+                    Xc[2]  = k * m_stride;
                     for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] += l * m_stride;
+                        Xc[3] = l * m_stride;
                         m_pYTensor->e(i, j, k, l) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
                     }
                 }
             }
         }
-    } else {
-        cout << "Error: dimension>=4  does not support in MaxPooling Layer forward." << endl;
+    } else if (5 == N) {
+        vector<long> Xc = {0, 0, 0, 0, 0};
+        for (long i = 0; i < m_tensorSize[0]; ++i) {
+            Xc[0] =  i * m_stride;
+            for (long j = 0; j < m_tensorSize[1]; ++j) {
+                Xc[1]  = j * m_stride;
+                for (long k = 0; k < m_tensorSize[2]; ++k) {
+                    Xc[2] = k * m_stride;
+                    for (long l = 0; l < m_tensorSize[3]; ++l) {
+                        Xc[3] = l * m_stride;
+                        for (long m = 0; m < m_tensorSize[4]; ++m) {
+                            Xc[4] = m * m_stride;
+                            m_pYTensor->e(i, j, k, l, m) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                        }
+                    }
+                }
+            }
+        }
+    }else if (6 == N) {
+        vector<long> Xc = {0, 0, 0, 0, 0, 0};
+        for (long i = 0; i < m_tensorSize[0]; ++i) {
+            Xc[0] =  i * m_stride;
+            for (long j = 0; j < m_tensorSize[1]; ++j) {
+                Xc[1]  = j * m_stride;
+                for (long k = 0; k < m_tensorSize[2]; ++k) {
+                    Xc[2] = k * m_stride;
+                    for (long l = 0; l < m_tensorSize[3]; ++l) {
+                        Xc[3] = l * m_stride;
+                        for (long m = 0; m < m_tensorSize[4]; ++m) {
+                            Xc[4] = m * m_stride;
+                            for (long o = 0; o < m_tensorSize[4]; ++o) {
+                                Xc[5] = o * m_stride;
+                                m_pYTensor->e(i, j, k, l, m, o) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        cout << "Error: dimension>6  does not support in MaxPooling Layer forward." << endl;
     }
 }
 
