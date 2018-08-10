@@ -272,34 +272,40 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dWDims = pdW->getDims();
-    const int N = dWDims.size();
+    const int Nf = dWDims.size();
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
     const vector<long> dYDims = pdY->getDims();
 
-    if (2 == N) {
+    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
+    vector<long> dYDimsEx(Nf,1); //Nf longs with value of 1
+    for (int i=0; i< dYDims.size(); ++i){
+        dYDimsEx[f[i]] = dYDims[i];
+    }
+
+    if (2 == Nf) {
         for (int i = 0; i < dWDims[0]; ++i) {
             for (int j = 0; j < dWDims[1]; ++j) {
-                Tensor<float> Xsub = X.subTensorFromTopLeft({i * m_stride, j * m_stride}, dYDims, m_stride);
-                pdW->e(i, j) += Xsub.conv(*pdY);
+                Tensor<float> Xsub = X.subTensorFromTopLeft({i * m_stride, j * m_stride}, dYDimsEx, m_stride);
+                pdW->e(i, j) += Xsub.conv(*pdY); // + is for batch processing
             }
         }
-    } else if (3 == N) {
+    } else if (3 == Nf) {
         for (int i = 0; i < dWDims[0]; ++i) {
             for (int j = 0; j < dWDims[1]; ++j) {
                 for (int k = 0; k < dWDims[2]; ++k) {
-                    Tensor<float> Xsub = X.subTensorFromTopLeft({i * m_stride, j * m_stride, k * m_stride}, dYDims,
+                    Tensor<float> Xsub = X.subTensorFromTopLeft({i * m_stride, j * m_stride, k * m_stride}, dYDimsEx,
                                                                 m_stride);
                     pdW->e(i, j, k) += Xsub.conv(*pdY);
                 }
             }
         }
-    } else if (4 == N) {
+    } else if (4 == Nf) {
         for (int i = 0; i < dWDims[0]; ++i) {
             for (int j = 0; j < dWDims[1]; ++j) {
                 for (int k = 0; k < dWDims[2]; ++k) {
                     for (int l = 0; l < dWDims[3]; ++l) {
                         Tensor<float> Xsub = X.subTensorFromTopLeft(
-                                {i * m_stride, j * m_stride, k * m_stride, l * m_stride}, dYDims, m_stride);
+                                {i * m_stride, j * m_stride, k * m_stride, l * m_stride}, dYDimsEx, m_stride);
                         pdW->e(i, j, k, l) += Xsub.conv(*pdY);
                     }
                 }

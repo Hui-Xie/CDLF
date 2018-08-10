@@ -11,6 +11,10 @@ using namespace std;
 
 bool sameVector(const vector<long>& vec1, const vector<long>& vec2);
 
+long length(const vector<long>& vec);
+
+bool sameLength(const vector<long>& vec1, const vector<long>& vec2);
+
 vector<long> reverseVector(const vector<long>& src);
 
 string vector2String(const vector<long>& src);

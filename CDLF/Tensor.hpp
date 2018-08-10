@@ -78,12 +78,7 @@ ValueType* Tensor<ValueType>::getData() const{
 
 template<class ValueType>
 long Tensor<ValueType>::getLength() const{
-    unsigned long length=1;
-    int dim = m_dims.size();
-    for(int i =0; i< dim; ++i){
-        length *= m_dims[i];
-    }
-    return length;
+    return length(m_dims);
 }
 
 template<class ValueType>
@@ -640,7 +635,7 @@ Tensor<ValueType> Tensor<ValueType>::extractLowerDTensor(const int index){
 //convolution or cross-correlation
 template<class ValueType>
 ValueType Tensor<ValueType>::conv(const Tensor &other) const{
-    assert(sameVector(m_dims, other.getDims()));
+    assert(sameLength(m_dims, other.getDims()));
     long N = getLength();
     ValueType sum = 0;
     for (long i = 0; i < N; ++i) {

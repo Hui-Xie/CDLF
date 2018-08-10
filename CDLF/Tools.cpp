@@ -20,6 +20,19 @@ bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
     }
 }
 
+long length(const vector<long>& vec){
+    long length=1;
+    int dim = vec.size();
+    for(int i =0; i< dim; ++i){
+        length *= vec[i];
+    }
+    return length;
+}
+
+bool sameLength(const vector<long>& vec1, const vector<long>& vec2){
+    return (length(vec1) == length(vec2));
+}
+
 vector<long> reverseVector(const vector<long>& src){
     int size = src.size();
     vector<long> target;
