@@ -31,19 +31,23 @@ int main (int argc, char *argv[])
     net.addLayer(loss);
 
     // config network parameters;
-    net.setLearningRate(0.001);
+    net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setMaxIteration(100);
     net.setBatchSize(1);
+
+    net.printArchitecture();
 
     //  run network
     net.initialize();
 
     Tensor<float> inputTensor({5,5});
-    inputTensor.uniformIntialize(1);
+    //inputTensor.uniformIntialize(1);
     inputLayer->setInputTensor(inputTensor);
     long i=0;
     while (i< 100){
+        generateGaussian(&inputTensor,0,1);
+        inputLayer->setInputTensor(inputTensor);
         net.zeroParaGradient();
         net.forwardPropagate();
         net.backwardPropagate();
@@ -51,8 +55,7 @@ int main (int argc, char *argv[])
         net.sgd(net.getLearningRate(), 1);
         ++i;
     }
-
-
+    loss->printGroundTruth();
 
     cout<< "End of Convolution Test."<<endl;
     return 0;

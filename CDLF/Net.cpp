@@ -88,6 +88,11 @@ void Net::backwardPropagate(){
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
        //cout<<"backward Propagate: "<<rit->second->m_name<<endl;
        rit->second->backward();
+       if (nullptr != rit->second->m_pdYTensor){
+           cout<<"Backward"<<rit->second->m_type<<":"<<"dy"<<endl;
+           rit->second->m_pdYTensor->printElements();
+       }
+
    }
 }
 
@@ -231,7 +236,7 @@ void Net::printArchitecture(){
     cout<<endl<<"Network Architecture: "<<endl;
     int i=1;
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        cout<<"Layer_"<<i++<<": "<<iter->second->m_name<<": "<<"OutputSize = "<<vector2Str(iter->second->m_tensorSize)<<"; ";
+        cout<<"Layer_"<<i++<<" ("<<iter->second->m_type<<") "<<": "<<iter->second->m_name<<": "<<"OutputSize = "<<vector2Str(iter->second->m_tensorSize)<<"; ";
         if ( "Convolution"==iter->second->m_type){
             cout<<"FilterSize = "<<vector2Str(((ConvolutionLayer*)iter->second)->m_filterSize)<<"; "<<"NumOfFilter = "<<((ConvolutionLayer*)iter->second)->m_numFilters<<"; ";
         }

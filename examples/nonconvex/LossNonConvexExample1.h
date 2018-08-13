@@ -10,11 +10,12 @@ class LossNonConvexExample1: public LossLayer {
 public:
     LossNonConvexExample1(const int id, const string& name,  Layer *prevLaye);
     ~LossNonConvexExample1();
+    virtual void  printGroundTruth();
 
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();
-    virtual void  printGroundTruth();
+
 
 };
 

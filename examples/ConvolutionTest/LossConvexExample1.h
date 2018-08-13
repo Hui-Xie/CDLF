@@ -10,11 +10,12 @@ class LossConvexExample1 : public LossLayer {
 public:
     LossConvexExample1(const int id, const string& name,  Layer *prevLayer);
     ~LossConvexExample1();
+    virtual void  printGroundTruth();
 
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();
-    virtual void  printGroundTruth();
+
 
 };
 
