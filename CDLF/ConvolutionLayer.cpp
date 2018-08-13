@@ -9,7 +9,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, const vecto
                                    Layer *prevLayer, const int numFilters, const int stride)
         : Layer(id, name, {}) {
     if (checkFilterSize(filterSize, prevLayer)) {
-        m_type = "Convolution";
+        m_type = "ConvolutionLayer";
         m_stride = stride;
         m_expandDy = nullptr;
         m_filterSize = filterSize;

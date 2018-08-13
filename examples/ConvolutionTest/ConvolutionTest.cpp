@@ -40,7 +40,6 @@ int main (int argc, char *argv[])
 
     //  run network
     net.initialize();
-
     Tensor<float> inputTensor({5,5});
     //inputTensor.uniformIntialize(1);
     inputLayer->setInputTensor(inputTensor);
@@ -50,8 +49,8 @@ int main (int argc, char *argv[])
         inputLayer->setInputTensor(inputTensor);
         net.zeroParaGradient();
         net.forwardPropagate();
-        net.backwardPropagate();
         net.printIteration(loss, i);
+        net.backwardPropagate();
         net.sgd(net.getLearningRate(), 1);
         ++i;
     }
