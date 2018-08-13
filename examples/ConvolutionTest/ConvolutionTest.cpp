@@ -41,12 +41,14 @@ int main (int argc, char *argv[])
 
     Tensor<float> inputTensor({5,5});
     inputTensor.uniformIntialize(1);
+    inputLayer->setInputTensor(inputTensor);
     long i=0;
     while (i< 100){
-        inputLayer->setInputTensor(inputTensor);
+        net.zeroParaGradient();
         net.forwardPropagate();
         net.backwardPropagate();
         net.printIteration(loss, i);
+        net.sgd(net.getLearningRate(), 1);
         ++i;
     }
 
