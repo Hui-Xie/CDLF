@@ -29,8 +29,26 @@ int main (int argc, char *argv[])
 
     LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", net.getFinalLayer());
     net.addLayer(loss);
-    // run network
 
+    // config network parameters;
+    net.setLearningRate(0.001);
+    net.setLossTolerance(0.02);
+    net.setMaxIteration(100);
+    net.setBatchSize(1);
+
+    //  run network
+    net.initialize();
+
+    Tensor<float> inputTensor({5,5});
+    inputTensor.uniformIntialize(1);
+    long i=0;
+    while (i< 100){
+        inputLayer->setInputTensor(inputTensor);
+        net.forwardPropagate();
+        net.backwardPropagate();
+        net.printIteration(loss, i);
+        ++i;
+    }
 
 
 
