@@ -392,7 +392,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator/= (const float divisor){
 
 template<class ValueType>
 void Tensor<ValueType>::printElements(bool fixWidth){
-    assert(2 == m_dims.size());
+    if (2 != m_dims.size()) return;
     for (int i=0; i< m_dims[0];++i){
         for(int j=0; j<m_dims[1];++j) {
             if (fixWidth) {
