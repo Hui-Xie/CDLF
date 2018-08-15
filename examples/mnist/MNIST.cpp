@@ -262,7 +262,6 @@ void MNIST::buildNet() {
 void MNIST::setNetParameters() {
     m_net.setLearningRate(0.001);
     m_net.setLossTolerance(0.02);
-    m_net.setMaxIteration(m_pTrainLabelsPart->getLength());
     m_net.setBatchSize(100);
     m_net.initialize();
 
@@ -280,9 +279,8 @@ void MNIST::trainNet() {
     InputLayer *inputLayer = (InputLayer *) m_net.getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
 
-    long maxIteration = m_net.getMaxIteration();
+    long maxIteration =m_pTrainLabelsPart->getLength();
     long NTrain = maxIteration;
-
     int batchSize = m_net.getBatchSize();
     float learningRate = m_net.getLearningRate();
     long numBatch = maxIteration / batchSize;

@@ -70,7 +70,6 @@ int main (int argc, char *argv[])
     net.addLayer(lossLayer);
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
-    net.setMaxIteration(1000);
     net.setBatchSize(20);
     net.initialize();
 

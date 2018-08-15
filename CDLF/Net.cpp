@@ -17,7 +17,6 @@ Net::Net(){
    m_layers.clear();
    m_learningRate = 0.01;
    m_lossTolerance = 0.02;
-   m_maxIteration = 1000;
    m_judgeLoss = true;
    m_batchSize = 1;
 }
@@ -35,10 +34,6 @@ void Net::setLearningRate(const float learningRate){
 
 void Net::setLossTolerance(const float tolerance){
    m_lossTolerance = tolerance;
-}
-
-void Net::setMaxIteration(const long maxIteration){
-    m_maxIteration = maxIteration;
 }
 
 void Net::setJudgeLoss(const bool judgeLoss){
@@ -59,9 +54,7 @@ float Net::getLearningRate(){
 float Net::getLossTolerance(){
    return m_lossTolerance;
 }
-long Net::getMaxIteration(){
-  return m_maxIteration;
-}
+
 bool Net::getJudgeLoss(){
   return m_judgeLoss;
 }
@@ -160,8 +153,9 @@ void Net::train()
    long nIter = 0;
    InputLayer* inputLayer = (InputLayer*)getInputLayer();
    LossLayer* lossLayer = (LossLayer* ) getFinalLayer();
-   long numBatch =  m_maxIteration / m_batchSize;
-   if (0 !=  m_maxIteration % m_batchSize){
+   long maxIteration = 1000;
+   long numBatch =  maxIteration / m_batchSize;
+   if (0 !=  maxIteration % m_batchSize){
        numBatch += 1;
    }
 
@@ -175,7 +169,7 @@ void Net::train()
 
       zeroParaGradient();
       int i=0;
-      for(i=0; i< m_batchSize && nIter < m_maxIteration; ++i){
+      for(i=0; i< m_batchSize && nIter < maxIteration; ++i){
           Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
           generateGaussian(&inputTensor, 0,1);
           inputLayer->setInputTensor(inputTensor);
