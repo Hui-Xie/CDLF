@@ -35,7 +35,7 @@ void Tensor<ValueType>::zeroInitialize(){
 }
 
 template<class ValueType>
-void Tensor<ValueType>::uniformIntialize(const ValueType x){
+void Tensor<ValueType>::uniformInitialize(const ValueType x){
     long N= getLength();
     for(long i=0; i<N;++i){
         e(i) = x;

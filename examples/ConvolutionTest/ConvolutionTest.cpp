@@ -44,11 +44,32 @@ int main (int argc, char *argv[])
     map<int,Layer*> netLayers = net.getLayersMap();
 
     Tensor<float> inputTensor({5,5});
-    //inputTensor.uniformIntialize(1);
+    //inputTensor.uniformInitialize(1);
+    long N = inputTensor.getLength();
+    for(long i=0; i<N; ++i){
+        inputTensor(i) = i;
+    }
     inputLayer->setInputTensor(inputTensor);
+    cout<<"InputLayer Y:" <<endl;
+    inputLayer->m_pYTensor->printElements();
+
+    //initialize Conv's W
+    N = conv1->m_pW[0]->getLength();
+    conv1->m_pW[0]->zeroInitialize();
+    for(long i=0; i<4; ++i){
+        conv1->m_pW[0]->e(i) = (i+1)*0.1;
+    }
+    for(long i=5; i<N; ++i){
+        conv1->m_pW[0]->e(i) = i*0.1;
+    }
+    cout<<"Convolution Initial W:"<<endl;
+    conv1->m_pW[0]->printElements();
+
+
+
     long i=0;
     while (i< 100){
-        generateGaussian(&inputTensor,0,1);
+        //generateGaussian(&inputTensor,0,1);
         inputLayer->setInputTensor(inputTensor);
         net.zeroParaGradient();
         net.forwardPropagate();
@@ -71,8 +92,17 @@ int main (int argc, char *argv[])
                 ((ConvolutionLayer*)rit->second)->m_pdW[0]->printElements();
              }
         }
-        
+
         net.sgd(net.getLearningRate(), 1);
+
+        // for test
+        for (map<int, Layer*>::reverse_iterator rit=netLayers.rbegin(); rit!=netLayers.rend(); ++rit){
+            if ("ConvolutionLayer" == rit->second->m_type){
+                cout<<"after SGD, W "<<endl;
+                ((ConvolutionLayer*)rit->second)->m_pW[0]->printElements();
+             }
+        }
+
         ++i;
     }
     loss->printGroundTruth();

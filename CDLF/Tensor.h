@@ -66,7 +66,7 @@ public:
 
     void printElements(bool fixWidth = false);
     void zeroInitialize();
-    void uniformIntialize(const ValueType x);
+    void uniformInitialize(const ValueType x);
 
     ValueType sum();
     ValueType average();
