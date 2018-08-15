@@ -576,8 +576,55 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
 
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, const int stride){
-    vector<long> centralIndex  = tfIndex + span/2*stride;
-    return subTensorFromCenter(centralIndex,span, stride);
+   int Ns = span.size();
+   Tensor tensor(span);
+
+   if (2 == Ns){
+       for (int i=0; i<span[0]; ++i){
+           for (int j=0;j<span[1];++j){
+               tensor(i, j) = e(tfIndex[0]+i*stride, tfIndex[1]+j*stride);
+           }
+       }
+   }
+   else if (3 == Ns){
+       for (int i=0; i<span[0]; ++i){
+           for (int j=0;j<span[1];++j){
+               for (int k=0; k<span[2];++k){
+                   tensor(i, j, k) = e(tfIndex[0]+i*stride, tfIndex[1]+j*stride, tfIndex[2]+k*stride);
+               }
+           }
+       }
+   }
+   else if (4 == Ns){
+       for (int i=0; i<span[0]; ++i){
+           for (int j=0;j<span[1];++j){
+               for (int k=0; k<span[2];++k){
+                   for (int l=0; l<span[3];++l) {
+                       tensor(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride, tfIndex[2] + k * stride, tfIndex[3] + l * stride);
+                   }
+               }
+           }
+       }
+   }
+   else if (5 == Ns){
+       for (int i=0; i<span[0]; ++i){
+           for (int j=0;j<span[1];++j){
+               for (int k=0; k<span[2];++k){
+                   for (int l=0; l<span[3];++l) {
+                       for (int m=0; m<span[4];++m) {
+                           tensor(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride,
+                                                  tfIndex[2] + k * stride, tfIndex[3] + l * stride, tfIndex[4] + m * stride);
+                       }
+                   }
+               }
+           }
+       }
+   }
+   else{
+       cout<<"Error: currently do not support 6 and higher dimension in tensor."<<endl;
+   }
+   return tensor;
+
 }
 
 template<class ValueType>
