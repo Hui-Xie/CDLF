@@ -6,15 +6,6 @@
 #include <list>
 #include "../../CDLF/Tools.h"
 
-void printVector(const vector<long> aVector){
-    int N = aVector.size();
-    cout<<"{";
-    for (int i=0; i< N; ++i){
-        cout<<aVector[i]<<", ";
-    }
-    cout<<"}"<<endl;
-}
-
 
 int main (int argc, char *argv[]) {
     Tensor<float> tensor1({3,4});

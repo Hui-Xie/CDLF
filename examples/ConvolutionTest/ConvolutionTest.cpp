@@ -65,6 +65,8 @@ int main (int argc, char *argv[])
     cout<<"Convolution Initial W:"<<endl;
     conv1->m_pW[0]->printElements();
 
+    cout<<endl<<"Start to Train"<<endl;
+
 
 
     long i=0;
@@ -79,6 +81,10 @@ int main (int argc, char *argv[])
             if (nullptr != iter->second->m_pYTensor){
                 cout<<iter->second->m_name<<": Y"<<endl;
                 iter->second->m_pYTensor->printElements();
+            }
+            if ("ConvolutionLayer" == iter->second->m_type){
+                cout<<"conv1 W: "<<endl;
+                ((ConvolutionLayer*)iter->second)->m_pW[0]->printElements();
             }
         }
 
