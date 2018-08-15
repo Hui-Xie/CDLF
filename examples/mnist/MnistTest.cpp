@@ -18,8 +18,9 @@ int main (int argc, char *argv[])
     mnist.displayImage(mnist.m_pTestImages, index);
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
-    //tailor data
+    //tailor data and delete wholeDataSet, and keep PartDataSet
     mnist.tailorData();
+    mnist.deleteWholeDataSet();
 
     cout<<"test the matching between image and label in part dataset"<<endl;
     index = rand() % 10000;
@@ -29,7 +30,7 @@ int main (int argc, char *argv[])
     mnist.buildNet();
     mnist.setNetParameters();
     mnist.m_net.printArchitecture();
-    long epoch= 10;//1000;
+    long epoch= 10;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
         mnist.trainNet();

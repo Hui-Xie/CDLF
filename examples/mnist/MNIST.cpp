@@ -27,6 +27,11 @@ MNIST::MNIST(const string &mnistDir) {
 }
 
 MNIST::~MNIST() {
+    deleteWholeDataSet();
+    deletePartDataSet();
+}
+
+void MNIST::deleteWholeDataSet(){
     if (nullptr != m_pTrainImages) {
         delete m_pTrainImages;
         m_pTrainImages = nullptr;
@@ -46,7 +51,9 @@ MNIST::~MNIST() {
         delete m_pTestLabels;
         m_pTestLabels = nullptr;
     }
+}
 
+void MNIST::deletePartDataSet(){
     if (nullptr != m_pTrainImagesPart) {
         delete m_pTrainImagesPart;
         m_pTrainImagesPart = nullptr;
@@ -292,11 +299,6 @@ void MNIST::trainNet() {
     long nBatch = 0;
     vector<long> randSeq = generateRandomSequence(NTrain);
     while (nBatch < numBatch) {
-        if (m_net.getJudgeLoss() && lossLayer->getLoss() < m_net.getLossTolerance()) {
-            break;
-        }
-        if (isinf(lossLayer->getLoss())) break;
-
         m_net.zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
@@ -307,7 +309,6 @@ void MNIST::trainNet() {
             ++nIter;
         }
         m_net.sgd(learningRate, i);
-        m_net.printIteration(lossLayer, nIter);
         ++nBatch;
     }
   }
@@ -317,12 +318,13 @@ float MNIST::testNet() {
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_net.getFinalLayer();
     long n = 0;
     long nSuccess = 0;
-    const long Ntest = 20;//10000;
-    while (n++ < Ntest) {
+    const long Ntest = m_pTestLabelsPart->getLength();
+    while (n < Ntest) {
         inputLayer->setInputTensor(m_pTestImagesPart->slice(n));
         lossLayer->setGroundTruth(constructGroundTruth(m_pTestLabelsPart, n));
         m_net.forwardPropagate();
         if (lossLayer->predictSuccess()) ++nSuccess;
+        ++n;
     }
     m_accuracy = nSuccess * 1.0 / Ntest;
     return m_accuracy;

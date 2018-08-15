@@ -19,6 +19,8 @@ public:
     Tensor<unsigned char> * m_pTestImages;
     Tensor<unsigned char> * m_pTestLabels;
 
+
+
     //as original MNIST dataset is too big, we tailor a part.
     Tensor<unsigned char> * m_pTrainImagesPart;
     Tensor<unsigned char> * m_pTrainLabelsPart;
@@ -26,6 +28,9 @@ public:
     Tensor<unsigned char> * m_pTestLabelsPart;
 
     vector<unsigned char> m_partDigits;
+
+    void deleteWholeDataSet();
+    void deletePartDataSet();
 
     void loadData();
     void tailorData();
