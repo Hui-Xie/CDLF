@@ -19,7 +19,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, const vecto
         updateTensorSize();
         constructFiltersAndY();
     } else {
-        cout << "Error: can not construct Convolution Layer as incorrect Filter Size." << name << endl;
+        cout << "Error: can not construct Convolutional Layer as incorrect Filter Size." << name << endl;
     }
 
 }
@@ -247,7 +247,7 @@ void ConvolutionLayer::freeExpandDy() {
 void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
     freeExpandDy();
     const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-    vector<long> expandDyDims = Xdims + m_filterSize;
+    vector<long> expandDyDims = Xdims + m_filterSize -1;
     m_expandDy = new Tensor<float>(expandDyDims);
     m_expandDy->zeroInitialize();
     const Tensor<float> &dY = *pdY;
@@ -324,7 +324,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dYDims = pdY->getDims();
 
     vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
-    vector<long> dYDimsEx(Nf,1); //Nf longs with value of 1
+    vector<long> dYDimsEx(Nf,1); //Nf long integers with each value equal 1
     for (int i=0; i< dYDims.size(); ++i){
         dYDimsEx[f[i]] = dYDims[i];
     }

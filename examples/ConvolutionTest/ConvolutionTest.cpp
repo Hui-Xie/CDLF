@@ -56,6 +56,6 @@ int main (int argc, char *argv[])
     }
     loss->printGroundTruth();
 
-    cout<< "End of Convolution Test."<<endl;
+    cout<< "End of ConvolutionLayer Test."<<endl;
     return 0;
 }
