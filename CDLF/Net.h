@@ -29,6 +29,7 @@ public:
     bool getJudgeLoss();
     int  getBatchSize();
     long getEpoch();
+    map<int, Layer*> getLayersMap();
 
 
     void forwardPropagate();

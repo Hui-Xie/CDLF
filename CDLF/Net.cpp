@@ -73,6 +73,10 @@ long  Net::getEpoch(){
   return m_epoch;
 }
 
+map<int, Layer*> Net::getLayersMap(){
+    return m_layers;
+}
+
 void Net::forwardPropagate(){
    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();
