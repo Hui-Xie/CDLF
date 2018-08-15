@@ -76,8 +76,10 @@ int main (int argc, char *argv[])
 
         //for test
         for(map<int, Layer*>::iterator iter = netLayers.begin(); iter != netLayers.end(); ++iter){
-            cout<<iter->second->m_name<<": Y"<<endl;
-            iter->second->m_pYTensor->printElements();
+            if (nullptr != iter->second->m_pYTensor){
+                cout<<iter->second->m_name<<": Y"<<endl;
+                iter->second->m_pYTensor->printElements();
+            }
         }
 
         net.printIteration(loss, i);
