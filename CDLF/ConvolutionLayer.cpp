@@ -130,8 +130,6 @@ void ConvolutionLayer::forward() {
             for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
                 Xc[f[1]] = Xs[f[1]] + j * m_stride;
                 Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
-                cout<<"Subx at: Xc=["<<Xc[0]<<", "<<Xc[1]<<"]"<<endl;
-                subX.printElements();
                 if (1 != m_numFilters) {
                     for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
                         m_pYTensor->e(idxF, i, j) = subX.conv(*m_pW[idxF]);
