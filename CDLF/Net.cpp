@@ -90,15 +90,7 @@ void Net::backwardPropagate(){
        iter->second->zeroDYTensor();
    }
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
-       //cout<<"backward Propagate: "<<rit->second->m_name<<endl;
-       rit->second->backward();
-       if ("ConvolutionLayer" == rit->second->m_type){
-           cout<<"dy: "<<endl;
-           rit->second->m_pdYTensor->printElements();
-           cout<<"dw:"<<endl;
-           ((ConvolutionLayer*)rit->second)->m_pdW[0]->printElements();
-       }
-
+         rit->second->backward();
    }
 }
 

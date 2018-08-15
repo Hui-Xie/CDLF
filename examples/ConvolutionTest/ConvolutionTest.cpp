@@ -14,8 +14,10 @@
 
 int main (int argc, char *argv[])
 {
-    Net net;
+    cout<<"Notes:"<<endl;
+    cout<<"This program test that a simple convolutional layer can approximate a convex function, and converge."<<endl;
 
+    Net net;
     // build network
     int id =1;
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {5,5});
@@ -33,7 +35,7 @@ int main (int argc, char *argv[])
     // config network parameters;
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
-    net.setMaxIteration(100);
+    net.setMaxIteration(300);
     net.setBatchSize(1);
 
     net.printArchitecture();
@@ -41,76 +43,20 @@ int main (int argc, char *argv[])
     //  run network
     net.initialize();
 
-    map<int,Layer*> netLayers = net.getLayersMap();
-
     Tensor<float> inputTensor({5,5});
-    //inputTensor.uniformInitialize(1);
-    long N = inputTensor.getLength();
-    for(long i=0; i<N; ++i){
-        inputTensor(i) = i;
-    }
-    inputLayer->setInputTensor(inputTensor);
-    cout<<"InputLayer Y:" <<endl;
-    inputLayer->m_pYTensor->printElements();
-
-    //initialize Conv's W
-    N = conv1->m_pW[0]->getLength();
-    conv1->m_pW[0]->zeroInitialize();
-    for(long i=0; i<4; ++i){
-        conv1->m_pW[0]->e(i) = (i+1)*0.1;
-    }
-    for(long i=5; i<N; ++i){
-        conv1->m_pW[0]->e(i) = i*0.1;
-    }
-    cout<<"Convolution Initial W:"<<endl;
-    conv1->m_pW[0]->printElements();
+    generateGaussian(&inputTensor,0,1);
 
     cout<<endl<<"Start to Train"<<endl;
-
-
-
     long i=0;
-    while (i< 100){
-        //generateGaussian(&inputTensor,0,1);
+    while (i< 500){
+
         inputLayer->setInputTensor(inputTensor);
         net.zeroParaGradient();
         net.forwardPropagate();
 
-        //for test
-        for(map<int, Layer*>::iterator iter = netLayers.begin(); iter != netLayers.end(); ++iter){
-            if (nullptr != iter->second->m_pYTensor){
-                cout<<iter->second->m_name<<": Y"<<endl;
-                iter->second->m_pYTensor->printElements();
-            }
-            if ("ConvolutionLayer" == iter->second->m_type){
-                cout<<"conv1 W: "<<endl;
-                ((ConvolutionLayer*)iter->second)->m_pW[0]->printElements();
-            }
-        }
-
         net.printIteration(loss, i);
         net.backwardPropagate();
-
-        //for test
-        for (map<int, Layer*>::reverse_iterator rit=netLayers.rbegin(); rit!=netLayers.rend(); ++rit){
-             if ("ConvolutionLayer" == rit->second->m_type){
-                cout<<"dy: "<<endl;
-                rit->second->m_pdYTensor->printElements();
-                cout<<"dw:"<<endl;
-                ((ConvolutionLayer*)rit->second)->m_pdW[0]->printElements();
-             }
-        }
-
         net.sgd(net.getLearningRate(), 1);
-
-        // for test
-        for (map<int, Layer*>::reverse_iterator rit=netLayers.rbegin(); rit!=netLayers.rend(); ++rit){
-            if ("ConvolutionLayer" == rit->second->m_type){
-                cout<<"after SGD, W "<<endl;
-                ((ConvolutionLayer*)rit->second)->m_pW[0]->printElements();
-             }
-        }
-
         ++i;
     }
     loss->printGroundTruth();
