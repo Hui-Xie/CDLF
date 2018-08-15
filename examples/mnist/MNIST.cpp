@@ -307,7 +307,7 @@ void MNIST::trainNet() {
             ++nIter;
         }
         m_net.sgd(learningRate, i);
-        //m_net.printIteration(lossLayer, nIter);
+        m_net.printIteration(lossLayer, nIter);
         ++nBatch;
     }
   }
