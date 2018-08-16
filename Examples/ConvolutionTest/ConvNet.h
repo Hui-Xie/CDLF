@@ -6,12 +6,18 @@
 #ifndef CDLF_FRAMEWORK_CONVNET_H
 #define CDLF_FRAMEWORK_CONVNET_H
 
+#include "CDLF.h"
 
+class ConvNet : public Net {
+public:
+     ConvNet();
+    ~ConvNet();
 
-class ConvNet {
+    virtual void build();
+    virtual void train();
+    virtual float test();
 
 };
-
 
 
 #endif //CDLF_FRAMEWORK_CONVNET_H

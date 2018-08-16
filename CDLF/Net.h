@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include "LossLayer.h"
+#include "InputLayer.h"
 using namespace std;
 
 class Net {
@@ -36,7 +37,8 @@ public:
     void addLayer(Layer* layer);
     void sgd(const float lr, const int batchSize);
 
-    Layer* getInputLayer();
+    InputLayer* getInputLayer();
+    Layer* getFirstLayer();
     Layer* getFinalLayer();
 
 

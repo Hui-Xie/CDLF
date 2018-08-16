@@ -8,10 +8,10 @@
 
 #include "CDLF.h"
 
-class ConvexNet : public Net {
+class NonconvexNet : public Net {
 public:
-    ConvexNet(const vector<long>& layerWidthVector);
-    ~ConvexNet();
+    NonconvexNet(const vector<long>& layerWidthVector);
+    ~NonconvexNet();
 
     virtual void build();
     virtual void train();

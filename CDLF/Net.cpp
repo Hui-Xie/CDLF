@@ -116,10 +116,13 @@ void Net::sgd(const float lr, const int batchSize){
     }
 }
 
-Layer* Net::getInputLayer(){
-    return m_layers.begin()->second;
+InputLayer* Net::getInputLayer(){
+    return (InputLayer*) m_layers.begin()->second;
 }
 
+Layer*  Net::getFirstLayer(){
+    return  m_layers.begin()->second;
+}
 Layer* Net::getFinalLayer(){
     return m_layers.rbegin()->second;
 }

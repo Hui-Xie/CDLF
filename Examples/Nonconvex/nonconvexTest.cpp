@@ -3,11 +3,7 @@
 //
 
 #include "nonconvexTest.h"
-#include <iostream>
-#include <string>
-#include <vector>
-#include <sstream>
-#include "Net.h"
+#include "NonconvexNet.h"
 #include "LossNonConvexExample1.h"
 #include "LossNonConvexExample2.h"
 
@@ -52,9 +48,9 @@ int main (int argc, char *argv[])
         cout<<"Layer width string has error. Exit."<<endl;
         return -1;
     }
-    Net net;
+    NonconvexNet net(layerWidthVector);
 
-    net.buildFullConnectedNet(layerWidthVector);
+    net.build();
 
     //non-convex example 1: f(x,y) = 3ysin(x)+5xcos(y)+0.5xy+x^2-y^2
     //Notes: Make sure that final layer only 2 neurons.
@@ -74,6 +70,7 @@ int main (int argc, char *argv[])
     net.initialize();
 
     net.train();
+    net.test();
     std::cout<<"====================End of This Program==================="<<endl;
     return 0;
 

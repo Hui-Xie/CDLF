@@ -5,17 +5,17 @@
 
 #include "NonconvexNet.h"
 
-ConvexNet::ConvexNet(const vector<long>& layerWidthVector){
+NonconvexNet::NonconvexNet(const vector<long>& layerWidthVector){
   m_layerWidthVector = layerWidthVector;
 }
 
-ConvexNet::~ConvexNet(){
+NonconvexNet::~NonconvexNet(){
 
 }
 
 //Notes: this layerWidthVector does not include LossLayer,  and ReLU and NormalizationLayer do not count as a single layer
 // Normalization layer generally put after ReLU
-void ConvexNet::build(){
+void NonconvexNet::build(){
     int nLayers = m_layerWidthVector.size();
     if (0 == nLayers) {
         cout<<"Net has at least one layer."<<endl;
@@ -36,7 +36,7 @@ void ConvexNet::build(){
     }
 }
 
-void ConvexNet::train(){
+void NonconvexNet::train(){
     long nIter = 0;
     InputLayer* inputLayer = (InputLayer*)getInputLayer();
     LossLayer* lossLayer = (LossLayer* ) getFinalLayer();
@@ -73,6 +73,6 @@ void ConvexNet::train(){
     lossLayer->printGroundTruth();
 }
 
-float ConvexNet::test(){
+float NonconvexNet::test(){
    //null
 }
