@@ -3,11 +3,7 @@
 //
 
 #include "convexTest.h"
-#include <iostream>
-#include <string>
-#include <vector>
-#include <sstream>
-#include "Net.h"
+#include "ConvexNet.h"
 #include "LossConvexExample1.h"
 #include "LossConvexExample2.h"
 
@@ -52,13 +48,12 @@ int main (int argc, char *argv[])
         cout<<"Layer width string has error. Exit."<<endl;
         return -1;
     }
-    Net net;
+    ConvexNet net(layerWidthVector);
 
-    net.buildFullConnectedNet(layerWidthVector);
+    net.build();
 
     //convex example 1: f= \sum (x_i-i)^2
     LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer", net.getFinalLayer());
-
 
     //convex example 2: f= = \sum exp(x_i -i)
     //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer",  net.getFinalLayer());
@@ -70,6 +65,7 @@ int main (int argc, char *argv[])
     net.initialize();
 
     net.train();
+    net.test();
     std::cout<<"====================End of This Program==================="<<std::endl;
     return 0;
 

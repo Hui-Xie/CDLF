@@ -39,24 +39,28 @@ public:
     Layer* getInputLayer();
     Layer* getFinalLayer();
 
-    //Notes: this layerWidthVector does not include LossLayer
-    void buildFullConnectedNet(const vector<long> layerWidthVector);
+
     void initialize();
-    void train();
+    virtual void build() = 0;
+    virtual void train() = 0;
+    virtual float test() = 0;
+
     void printIteration(LossLayer* lossLayer,const int nIter);
     void printLayersY();
     void printLayersDY();
     void printLayersWdW();
     void printArchitecture();
 
-
-private:
-    map<int, Layer*> m_layers;
+protected:
     float m_learningRate;
     float m_lossTolerance;
     bool m_judgeLoss;
     int m_batchSize;
     long m_epoch;
+
+private:
+    map<int, Layer*> m_layers;
+
 };
 
 
