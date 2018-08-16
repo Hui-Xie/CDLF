@@ -36,6 +36,12 @@ Layer::~Layer(){
     }
 }
 
+void Layer::zeroYTensor(){
+    if ("InputLayer" != m_type && nullptr != m_pYTensor){
+        m_pYTensor->zeroInitialize();
+    }
+}
+
 void Layer::zeroDYTensor(){
     if (nullptr != m_pdYTensor){
         m_pdYTensor->zeroInitialize();

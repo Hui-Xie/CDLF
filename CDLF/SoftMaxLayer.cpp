@@ -27,7 +27,7 @@ void SoftMaxLayer::zeroParaGradient(){
 void SoftMaxLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = Y.getLength();
+    long N = X.getLength();
     m_sumExpX = 0;
     for (long i=0; i< N; ++i){
         m_sumExpX += exp(X(i));

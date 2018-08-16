@@ -71,7 +71,11 @@ map<int, Layer*> Net::getLayersMap(){
 }
 
 void Net::forwardPropagate(){
-   for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+    // Input Layer do not need zeroYTensor;
+    for(map<int, Layer*>::iterator iter = ++(m_layers.begin()); iter != m_layers.end(); ++iter){
+        iter->second->zeroYTensor();
+    }
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();
    }
 }
