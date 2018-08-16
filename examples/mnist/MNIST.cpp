@@ -327,6 +327,7 @@ float MNIST::testNet() {
         if (lossLayer->predictSuccess()) ++nSuccess;
         ++n;
     }
+    cout<<"Info: nSuccess = "<<nSuccess<<" in "<<Ntest<<" test samples."<<endl;
     m_accuracy = nSuccess * 1.0 / Ntest;
     return m_accuracy;
 }
