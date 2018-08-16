@@ -30,7 +30,7 @@ int main (int argc, char *argv[])
     mnist.buildNet();
     mnist.setNetParameters();
     mnist.m_net.printArchitecture();
-    long epoch= 10;
+    long epoch= 12;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
         mnist.trainNet();

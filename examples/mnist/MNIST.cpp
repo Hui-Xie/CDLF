@@ -297,6 +297,7 @@ void MNIST::trainNet() {
 
     long nIter = 0;
     long nBatch = 0;
+    //random reshuffle data samples
     vector<long> randSeq = generateRandomSequence(NTrain);
     while (nBatch < numBatch) {
         m_net.zeroParaGradient();
