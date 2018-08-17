@@ -57,10 +57,11 @@ void Conv4DNet::build(){
 }
 void Conv4DNet::train(){
     Tensor<float> inputTensor({17,17});
-    generateGaussian(&inputTensor,0,1);
     InputLayer* inputLayer = getInputLayer();
-    inputLayer->setInputTensor(inputTensor);
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
+
+    generateGaussian(&inputTensor,0,1);
+    inputLayer->setInputTensor(inputTensor);
 
     long i=0;
     while (i< 200){

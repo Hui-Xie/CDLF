@@ -36,14 +36,14 @@ void ConvNet::build(){
 }
 void ConvNet::train(){
     Tensor<float> inputTensor({7,7});
-    generateGaussian(&inputTensor,0,1);
     InputLayer* inputLayer = getInputLayer();
-    inputLayer->setInputTensor(inputTensor);
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     long i=0;
-    while (i< 200){
+    while (i< 500){
         zeroParaGradient();
+        generateGaussian(&inputTensor,0,1);
+        inputLayer->setInputTensor(inputTensor);
         forwardPropagate();
         printIteration(lossLayer, i);
         backwardPropagate();
