@@ -15,7 +15,7 @@ int main (int argc, char *argv[])
     // config network parameters;
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
-    net.setBatchSize(1);
+    net.setBatchSize(20);
     net.printArchitecture();
 
     //  run network

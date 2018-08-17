@@ -133,8 +133,8 @@ void Net::initialize(){
     }
 }
 
-void Net::printIteration(LossLayer* lossLayer, const int nIter){
-    cout<<"Iteration: " << nIter << "  "  <<"Output Result: "<<endl;
+void Net::printIteration(LossLayer* lossLayer, const int iBatch){
+    cout<<"iBatch: " << iBatch << "  "  <<"Output Result: "<<endl;
     lossLayer->m_prevLayer->m_pYTensor->transpose().printElements();
     if (nullptr != lossLayer->m_pGroundTruth){
         cout<<"GrounTruth: "<<endl;

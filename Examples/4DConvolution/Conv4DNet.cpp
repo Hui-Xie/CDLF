@@ -60,15 +60,20 @@ void Conv4DNet::train(){
     InputLayer* inputLayer = getInputLayer();
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
+    int batchSize = getBatchSize();
+    int iBatch = 30;
+
     long i=0;
-    while (i< 500){
+    while (i< iBatch){
         zeroParaGradient();
-        generateGaussian(&inputTensor,0,1);
-        inputLayer->setInputTensor(inputTensor);
-        forwardPropagate();
+        for(int j=0; j<batchSize; ++j){
+            generateGaussian(&inputTensor,0,1);
+            inputLayer->setInputTensor(inputTensor);
+            forwardPropagate();
+            backwardPropagate();
+        }
+        sgd(getLearningRate(), batchSize);
         printIteration(lossLayer, i);
-        backwardPropagate();
-        sgd(getLearningRate(), 1);
         ++i;
     }
     lossLayer->printGroundTruth();

@@ -7,9 +7,7 @@
 
 int main (int argc, char *argv[])
 {
-    cout<<"Notes:"<<endl;
-    cout<<"This program test that 2 simple convolutional layers can approximate a convex function, and converge."<<endl;
-    cout<<"This program support real 3D convolution."<<endl;
+    cout<<"Convolution 4D test"<<endl;
 
     Conv4DNet net;
     net.build();
@@ -17,7 +15,7 @@ int main (int argc, char *argv[])
     // config network parameters;
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
-    net.setBatchSize(1);
+    net.setBatchSize(20);
     net.printArchitecture();
 
     //  run network
