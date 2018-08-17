@@ -21,7 +21,6 @@ void ConvNet::build(){
 
     ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {3,3}, getFinalLayer(),3); //output 3*5*5
     addLayer(conv1);
-
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
 
@@ -30,6 +29,9 @@ void ConvNet::build(){
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
     addLayer(vec1);
+
+    FCLayer* fc1 = new FCLayer(id++, "FC1", 9, getFinalLayer());
+    addLayer(fc1);
 
     LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
     addLayer(loss);
@@ -40,7 +42,7 @@ void ConvNet::train(){
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     int batchSize = getBatchSize();
-    int iBatch = 30;
+    int iBatch = 100;
 
     long i=0;
     while (i< iBatch){

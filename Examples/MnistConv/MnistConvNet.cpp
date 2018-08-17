@@ -26,58 +26,58 @@ void MnistConvNet::build(){
     InputLayer *inputLayer = new InputLayer(layerID++, "InputLayer", {28, 28}); //output size: 28*28
     addLayer(inputLayer);
 
-    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3}, inputLayer, 5, 1); //output size: 5*26*26
+    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3},getFinalLayer(), 5, 1); //output size: 5*26*26
     addLayer(conv1);
-    ReLU *reLU1 = new ReLU(layerID++, "ReLU1", conv1);
+    ReLU *reLU1 = new ReLU(layerID++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
-    NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "Norm1", reLU1);
+    NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "Norm1", getFinalLayer());
     addLayer(norm1);
 
-    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {5,3,3}, norm1, 5, 1);//output size: 5*24*24
+    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {5,3,3}, getFinalLayer(), 5, 1);//output size: 5*24*24
     addLayer(conv2);
-    ReLU *reLU2 = new ReLU(layerID++, "ReLU2", conv2);
+    ReLU *reLU2 = new ReLU(layerID++, "ReLU2", getFinalLayer());
     addLayer(reLU2);
-    NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "Norm2", reLU2);
+    NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "Norm2", getFinalLayer());
     addLayer(norm2);
 
-    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3,3, 3}, norm2, 7, 1);//output size: 7*3*22*22
+    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3,3, 3}, getFinalLayer(), 7, 1);//output size: 7*3*22*22
     addLayer(conv3);
-    ReLU *reLU3 = new ReLU(layerID++, "ReLU3", conv3);
+    ReLU *reLU3 = new ReLU(layerID++, "ReLU3", getFinalLayer());
     addLayer(reLU3);
-    NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "Norm3", reLU3);
+    NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "Norm3", getFinalLayer());
     addLayer(norm3);
 
-    ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {7,3,3,3}, norm3, 1, 1);//output size: 20*20
+    ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {7,3,3,3}, getFinalLayer(), 1, 1);//output size: 20*20
     addLayer(conv4);
-    ReLU *reLU4 = new ReLU(layerID++, "ReLU4", conv4);
+    ReLU *reLU4 = new ReLU(layerID++, "ReLU4", getFinalLayer());
     addLayer(reLU4);
-    NormalizationLayer *norm4 = new NormalizationLayer(layerID++, "Norm4", reLU4);
+    NormalizationLayer *norm4 = new NormalizationLayer(layerID++, "Norm4", getFinalLayer());
     addLayer(norm4);
 
-    VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vector1", norm4); //output size: 400*1
+    VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vector1", getFinalLayer()); //output size: 400*1
     addLayer(vecLayer1);
-    FCLayer *fcLayer1 = new FCLayer(layerID++, "FC1", {100, 1}, vecLayer1); //output size: 100*1
+    FCLayer *fcLayer1 = new FCLayer(layerID++, "FC1", 100, getFinalLayer()); //output size: 100*1
     addLayer(fcLayer1);
-    ReLU *reLU5 = new ReLU(layerID++, "ReLU5", fcLayer1); //output size: 100*1
+    ReLU *reLU5 = new ReLU(layerID++, "ReLU5", getFinalLayer()); //output size: 100*1
     addLayer(reLU5);
-    NormalizationLayer *norm5 = new NormalizationLayer(layerID++, "Norm5", reLU5);
+    NormalizationLayer *norm5 = new NormalizationLayer(layerID++, "Norm5", getFinalLayer());
     addLayer(norm5);
 
-    FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", {10, 1}, norm5); //output size: 10*1
+    FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", 10, getFinalLayer()); //output size: 10*1
     addLayer(fcLayer2);
-    ReLU *reLU6 = new ReLU(layerID++, "ReLU6", fcLayer2);
+    ReLU *reLU6 = new ReLU(layerID++, "ReLU6", getFinalLayer());
     addLayer(reLU6);
-    NormalizationLayer *norm6 = new NormalizationLayer(layerID++, "Norm6", reLU6);
+    NormalizationLayer *norm6 = new NormalizationLayer(layerID++, "Norm6", getFinalLayer());
    addLayer(norm6);
 
     //For 2 category case
-    FCLayer *fcLayer3 = new FCLayer(layerID++, "FC3", {2, 1}, norm6); //output size: 2*1
+    FCLayer *fcLayer3 = new FCLayer(layerID++, "FC3", 2, getFinalLayer()); //output size: 2*1
     addLayer(fcLayer3);
 
-    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1", fcLayer3); //output size: 2*1
+    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1",getFinalLayer()); //output size: 2*1
     addLayer(softmaxLayer);
     CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
-                                                              softmaxLayer); // output size: 1
+                                                              getFinalLayer()); // output size: 1
     addLayer(crossEntropyLoss);
 }
 

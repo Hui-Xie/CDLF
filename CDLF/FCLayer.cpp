@@ -12,11 +12,11 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const int id, const string &name, const vector<long> &tensorSize, Layer *prevLayer)
-: Layer(id, name,tensorSize)
+FCLayer::FCLayer(const int id, const string &name, const long outputWidth, Layer *prevLayer)
+: Layer(id, name,{outputWidth,1})
 {
     m_type = "FullyConnected";
-    m_m = m_tensorSize[0];
+    m_m = outputWidth;
     m_n = prevLayer->m_tensorSize[0]; //input width
     m_pW = new Tensor<float>({m_m, m_n});
     m_pBTensor = new Tensor<float>({m_m, 1});
