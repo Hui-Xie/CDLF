@@ -17,7 +17,6 @@ NormalizationLayer::~NormalizationLayer(){
 
 void NormalizationLayer::initialize(const string& initialMethod){
      //null
-
 }
 
 void NormalizationLayer::zeroParaGradient(){
