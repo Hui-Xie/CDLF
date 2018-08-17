@@ -19,8 +19,6 @@ public:
     Tensor<unsigned char> * m_pTestImages;
     Tensor<unsigned char> * m_pTestLabels;
 
-
-
     //as original MNIST dataset is too big, we tailor a part.
     Tensor<unsigned char> * m_pTrainImagesPart;
     Tensor<unsigned char> * m_pTrainLabelsPart;
@@ -35,16 +33,6 @@ public:
     void loadData();
     void tailorData();
     void displayImage(Tensor<unsigned char>* pImages, const long index);
-    void buildNet();
-    void setNetParameters();
-    void trainNet();
-    Tensor<float> constructGroundTruth(Tensor<unsigned char> * m_pLabels, const long index);
-    float testNet();
-
-    Net m_net;
-
-    float m_accuracy;
-
 
 private:
     string m_mnistDir;

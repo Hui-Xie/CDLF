@@ -2,7 +2,7 @@
 // Created by Hui Xie on 8/6/2018.
 //
 
-#include "MnistTools.h"
+#include "MnistConvNet.h"
 #include "../../Interfaces3ndParty/MNIST/MNIST.h"
 
 const string mnistDir= "E:\\CProject\\mnist";
@@ -27,14 +27,15 @@ int main (int argc, char *argv[])
     mnist.displayImage(mnist.m_pTrainImagesPart, index);
     cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
-    mnist.buildNet();
-    mnist.setNetParameters();
-    mnist.m_net.printArchitecture();
+    MnistConvNet net(&mnist);
+    net.build();
+    net.setNetParameters();
+    net.printArchitecture();
     long epoch= 12;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
-        mnist.trainNet();
-        accuracy = mnist.testNet();
+        net.train();
+        accuracy = net.test();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
      }
     cout<<"==========End of Mnist Test==========="<<endl;
