@@ -14,7 +14,6 @@ InputLayer::~InputLayer(){
 
 }
 
-//this initialize method is just for random input case
 void InputLayer::initialize(const string& initialMethod){
     //null
 }

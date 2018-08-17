@@ -41,7 +41,6 @@ void ConvNet::train(){
     inputLayer->setInputTensor(inputTensor);
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
-    cout<<endl<<"Start to Train"<<endl;
     long i=0;
     while (i< 200){
         zeroParaGradient();
