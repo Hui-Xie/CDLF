@@ -19,12 +19,12 @@ void ConvNet::build(){
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {7,7});
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {3,3}, getFinalLayer(),3); //output 3*5*5
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {3,3}, getFinalLayer(),13); //output 13*5*5
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {3,3,3}, getFinalLayer()); //output 3*3
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {13,3,3}, getFinalLayer()); //output 3*3
     addLayer(conv2);
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
@@ -42,7 +42,7 @@ void ConvNet::train(){
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     int batchSize = getBatchSize();
-    int iBatch = 100;
+    int iBatch = 1000;
 
     long i=0;
     while (i< iBatch){
