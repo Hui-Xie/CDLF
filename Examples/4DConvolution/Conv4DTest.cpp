@@ -7,7 +7,7 @@
 
 int main (int argc, char *argv[])
 {
-    cout<<"Convolution 4D test"<<endl;
+    cout<<"Test 4D Convolution"<<endl;
 
     Conv4DNet net;
     net.build();
