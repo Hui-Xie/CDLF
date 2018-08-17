@@ -60,12 +60,11 @@ void Conv4DNet::train(){
     InputLayer* inputLayer = getInputLayer();
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
-    generateGaussian(&inputTensor,0,1);
-    inputLayer->setInputTensor(inputTensor);
-
     long i=0;
-    while (i< 200){
+    while (i< 500){
         zeroParaGradient();
+        generateGaussian(&inputTensor,0,1);
+        inputLayer->setInputTensor(inputTensor);
         forwardPropagate();
         printIteration(lossLayer, i);
         backwardPropagate();
