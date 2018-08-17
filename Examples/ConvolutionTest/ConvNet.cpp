@@ -29,10 +29,8 @@ void ConvNet::build(){
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
     addLayer(vec1);
-
     FCLayer* fc1 = new FCLayer(id++, "FC1", 9, getFinalLayer());
     addLayer(fc1);
-
     LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
     addLayer(loss);
 }
