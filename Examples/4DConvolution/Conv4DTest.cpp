@@ -1,7 +1,9 @@
 //
-// Created by Hui Xie on 8/13/2018.
+// Created by Hui Xie on 8/17/2018.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
 //
-#include "ConvNet.h"
+
+#include "Conv4DNet.h"
 
 int main (int argc, char *argv[])
 {
@@ -9,7 +11,7 @@ int main (int argc, char *argv[])
     cout<<"This program test that 2 simple convolutional layers can approximate a convex function, and converge."<<endl;
     cout<<"This program support real 3D convolution."<<endl;
 
-    ConvNet net;
+    Conv4DNet net;
     net.build();
 
     // config network parameters;
