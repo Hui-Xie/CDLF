@@ -35,8 +35,8 @@ void ConvNet::build(){
     addLayer(loss);
 }
 void ConvNet::train(){
-    Tensor<float> inputTensor({7,7});
     InputLayer* inputLayer = getInputLayer();
+    Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     int batchSize = getBatchSize();

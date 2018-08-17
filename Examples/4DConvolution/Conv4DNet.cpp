@@ -37,8 +37,8 @@ void Conv4DNet::build(){
     addLayer(loss);
 }
 void Conv4DNet::train(){
-    Tensor<float> inputTensor({17,17});
     InputLayer* inputLayer = getInputLayer();
+    Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     int batchSize = getBatchSize();
