@@ -9,6 +9,7 @@ const string mnistDir= "E:\\CProject\\mnist";
 
 int main (int argc, char *argv[])
 {
+    // Load MNIST Data
     MNIST mnist(mnistDir);
     mnist.loadData();
 
@@ -27,6 +28,7 @@ int main (int argc, char *argv[])
     mnist.displayImage(mnist.m_pTrainImagesPart, index);
     cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
+    // Construct Net and Train, Test
     MnistConvNet net(&mnist);
     net.build();
     net.setNetParameters();

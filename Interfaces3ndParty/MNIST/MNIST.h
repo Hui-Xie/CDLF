@@ -6,7 +6,6 @@
 #define CDLF_FRAMEWORK_MNIST_H
 
 #include "Tensor.h"
-#include "CDLF.h"
 
 
 class MNIST {
