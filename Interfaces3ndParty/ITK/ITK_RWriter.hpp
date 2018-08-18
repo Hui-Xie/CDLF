@@ -16,14 +16,17 @@ ITK_RWriter<VoxelType, Dimension>::~ITK_RWriter(){
 }
 
 template <typename VoxelType, int Dimension>
-void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename){
+void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename, Tensor<float>*& pTensor ){
+    using ImageType = itk::Image< VoxelType, Dimension >;
+    using ReaderType = itk::ImageFileReader< ImageType >;
+    typename ReaderType::Pointer reader = ReaderType::New();
+    reader->SetFileName( filename );
+    reader->Update();
+    typename ImageType::Pointer image = reader->GetOutput();
+
 
 }
 
-template <typename VoxelType, int Dimension>
-void ITK_RWriter<VoxelType, Dimension>::constructTensor(Tensor<float>*& pTensor){
-
-}
 
 template <typename VoxelType, int Dimension>
 void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, const string& filename){

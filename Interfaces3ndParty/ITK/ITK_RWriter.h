@@ -7,6 +7,8 @@
 #define CDLF_FRAMEWORK_ITK_RWRITER_H
 
 #include "Tensor.h"
+#include "itkImage.h"
+#include "itkImageFileReader.h"
 
 // Manage the reading and writing of ITK medical image
 template <typename VoxelType, int Dimension>
@@ -15,8 +17,9 @@ public:
     ITK_RWriter();
     ~ITK_RWriter();
 
-    void readFile(const string& filename);
-    void constructTensor(Tensor<float>*& pTensor);
+
+
+    void readFile(const string& filename, Tensor<float>*& pTensor);
     void writeFile(const Tensor<float>* pTensor, const string& filename);
 
 private:

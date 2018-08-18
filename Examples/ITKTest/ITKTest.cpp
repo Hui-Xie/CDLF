@@ -12,7 +12,9 @@ int main (int argc, char *argv[])
 {
    ITK_RWriter<unsigned short, 3> readWriter;
 
-   readWriter.readFile(filename);
+   Tensor<float>* pImage;
+
+   readWriter.readFile(filename, pImage);
 
    cout<<"End of ITK Read Writer"<<endl;
 }
