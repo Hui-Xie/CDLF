@@ -7,6 +7,8 @@
 #define CDLF_FRAMEWORK_ITK_RWRITER_H
 
 #include "Tensor.h"
+#include <string>
+#include <iostream>
 #include "itkImage.h"
 #include "itkImageFileReader.h"
 
@@ -17,13 +19,17 @@ public:
     ITK_RWriter();
     ~ITK_RWriter();
 
+    using ImageType = itk::Image< VoxelType, Dimension >;
 
-
-    void readFile(const string& filename, Tensor<float>*& pTensor);
-    void writeFile(const Tensor<float>* pTensor, const string& filename);
+    void readFile(const string & filename, Tensor<float>*& pTensor);
+    void writeFile(const Tensor<float>* pTensor, const string & filename);
 
 private:
-    int m_origin;
+    typename ImageType::PointType m_origin;
+    typename ImageType::SizeType m_imageSize;
+    typename ImageType::SpacingType m_spacing;
+
+
 
 
 };
