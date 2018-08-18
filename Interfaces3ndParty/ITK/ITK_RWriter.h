@@ -22,12 +22,13 @@ public:
     using ImageType = itk::Image< VoxelType, Dimension >;
 
     void readFile(const string & filename, Tensor<float>*& pTensor);
-    void writeFile(const Tensor<float>* pTensor, const vector<long>& sizeOffset, const string & filename);
+    void writeFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename);
 
 private:
     typename ImageType::PointType m_origin;
     typename ImageType::SizeType m_imageSize;
     typename ImageType::SpacingType m_spacing;
+    typename ImageType::DirectionType m_direction;
 };
 
 #include "ITK_RWriter.hpp"

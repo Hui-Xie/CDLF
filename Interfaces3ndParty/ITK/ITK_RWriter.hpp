@@ -40,6 +40,7 @@ void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename, Tensor<
     //get Image origin, spacing etc
     m_origin = image->GetOrigin();
     m_spacing = image->GetSpacing();
+    m_direction = image->GetDirection();
 
     itk::ImageRegionConstIterator<ImageType> iter(image,region);
     long i=0;
@@ -55,17 +56,24 @@ void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename, Tensor<
 
 
 template <typename VoxelType, int Dimension>
-void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float> *pTensor, const vector<long> &sizeOffset,
-                                                  const string &filename) {
+void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, const vector<long>& offset,
+                                                  const string& filename)
+{
     vector<long> tensorSize = pTensor->getDims();
-    int dim = tensorSize.size();
+    const int dim = tensorSize.size();
+    if (dim != m_imageSize.GetSizeDimension()){
+        cout<<"Error: the output tensor has different dimension with input image."<<endl;
+        return;
+    }
 
     typename ImageType::RegionType region;
     typename ImageType::IndexType start;
     typename ImageType::SizeType size;
+    typename ImageType::PointType newOrigin;
     for(int i=0; i< dim; ++i){
         start[i] = 0;
         size[i] = tensorSize[i];
+        newOrigin[i] = m_origin[i]+offset[i]*m_spacing[i];
     }
     region.SetSize(size);
     region.SetIndex(start);
@@ -74,14 +82,26 @@ void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float> *pTensor, 
     image->SetRegions(region);
     image->Allocate();
 
-    //Todo: set origin and spacing
+    //Todo: set origin, spacing, cosine matrix
+    image->SetSpacing( m_spacing );
+    image->SetOrigin(newOrigin);
+    image->SecDirection(m_direction);
 
-
-    //Todo: copy data
+    //copy image data
+    itk::ImageRegionIterator<ImageType> iter(image,region);
+    long i=0;
+    iter.GoToBegin();
+    while(!iter.IsAtEnd())
+    {
+        iter.Set(pTensor->e(i));
+        ++iter;
+        ++i;
+    }
 
     typedef itk::ImageFileWriter<ImageType> WriterType;
     typename WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(filename);
     writer->SetInput(image);
     writer->Update();
+    cout<<"Info: A output image "<<filename<<" is output"<<endl;
 }
