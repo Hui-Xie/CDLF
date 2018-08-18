@@ -10,7 +10,7 @@
 #include <string>
 #include <iostream>
 #include "itkImage.h"
-#include "itkImageFileReader.h"
+
 
 // Manage the reading and writing of ITK medical image
 template <typename VoxelType, int Dimension>
@@ -22,16 +22,12 @@ public:
     using ImageType = itk::Image< VoxelType, Dimension >;
 
     void readFile(const string & filename, Tensor<float>*& pTensor);
-    void writeFile(const Tensor<float>* pTensor, const string & filename);
+    void writeFile(const Tensor<float>* pTensor, const vector<long>& sizeOffset, const string & filename);
 
 private:
     typename ImageType::PointType m_origin;
     typename ImageType::SizeType m_imageSize;
     typename ImageType::SpacingType m_spacing;
-
-
-
-
 };
 
 #include "ITK_RWriter.hpp"

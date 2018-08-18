@@ -6,6 +6,8 @@
 #include "ITK_RWriter.h"
 #include <vector>
 #include "itkImageRegionConstIterator.h"
+#include "itkImageFileReader.h"
+#include "itkImageFileWriter.h"
 
 template <typename VoxelType, int Dimension>
 ITK_RWriter<VoxelType, Dimension>::ITK_RWriter(){
@@ -41,16 +43,45 @@ void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename, Tensor<
 
     itk::ImageRegionConstIterator<ImageType> iter(image,region);
     long i=0;
+    iter.GoToBegin();
     while(!iter.IsAtEnd())
     {
         pTensor->e(i)= iter.Get();
         ++iter;
         ++i;
     }
+
 }
 
 
 template <typename VoxelType, int Dimension>
-void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, const string& filename){
+void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float> *pTensor, const vector<long> &sizeOffset,
+                                                  const string &filename) {
+    vector<long> tensorSize = pTensor->getDims();
+    int dim = tensorSize.size();
 
+    typename ImageType::RegionType region;
+    typename ImageType::IndexType start;
+    typename ImageType::SizeType size;
+    for(int i=0; i< dim; ++i){
+        start[i] = 0;
+        size[i] = tensorSize[i];
+    }
+    region.SetSize(size);
+    region.SetIndex(start);
+
+    typename ImageType::Pointer image = ImageType::New();
+    image->SetRegions(region);
+    image->Allocate();
+
+    //Todo: set origin and spacing
+
+
+    //Todo: copy data
+
+    typedef itk::ImageFileWriter<ImageType> WriterType;
+    typename WriterType::Pointer writer = WriterType::New();
+    writer->SetFileName(filename);
+    writer->SetInput(image);
+    writer->Update();
 }

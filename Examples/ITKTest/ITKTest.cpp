@@ -12,7 +12,7 @@ int main (int argc, char *argv[])
 {
    ITK_RWriter<unsigned short, 3> readWriter;
 
-   Tensor<float>* pImage;
+   Tensor<float>* pImage = nullptr;
 
    readWriter.readFile(filename, pImage);
 
