@@ -6,7 +6,7 @@
 #define CDLF_FRAMEWORK_MMISTTOOLS_H
 
 #include "CDLF.h"
-#include "../../Interfaces3ndParty/MNIST/MNIST.h"
+#include "MNIST.h"
 
 class MnistConvNet: public Net{
 public:

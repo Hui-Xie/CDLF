@@ -68,7 +68,7 @@ void MnistConvNet::build(){
     ReLU *reLU6 = new ReLU(layerID++, "ReLU6", getFinalLayer());
     addLayer(reLU6);
     NormalizationLayer *norm6 = new NormalizationLayer(layerID++, "Norm6", getFinalLayer());
-   addLayer(norm6);
+    addLayer(norm6);
 
     //For 2 category case
     FCLayer *fcLayer3 = new FCLayer(layerID++, "FC3", 2, getFinalLayer()); //output size: 2*1
