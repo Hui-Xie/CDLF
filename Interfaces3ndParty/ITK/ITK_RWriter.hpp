@@ -85,7 +85,7 @@ void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, 
     //Todo: set origin, spacing, cosine matrix
     image->SetSpacing( m_spacing );
     image->SetOrigin(newOrigin);
-    image->SecDirection(m_direction);
+    image->SetDirection(m_direction);
 
     //copy image data
     itk::ImageRegionIterator<ImageType> iter(image,region);
