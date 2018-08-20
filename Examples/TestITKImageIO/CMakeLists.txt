@@ -1,10 +1,10 @@
 
-set(ITK_DIR D:/ITK_build) # for windows
+#set(ITK_DIR D:/ITK_build) # for windows
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
 
-set (ITKRWriter ../../Interface3rdParty/ITK)
-include_directories(${ITKRWriter})
+set (ITKImageIODir ../../Interface3rdParty/ITK)
+include_directories(${ITKImageIODir})
 
 set(TestITKImageIOSRCS TestITKImageIO.cpp)
 add_executable(TestITKImageIO ${TestITKImageIOSRCS})
