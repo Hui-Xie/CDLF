@@ -20,7 +20,7 @@ set(CDLFLib libCDLF.dll)
 # you need to set the directory including CDLFLib into your environment variable.
 
 add_subdirectory(Examples)
-add_subdirectory(Interfaces3ndParty)
+add_subdirectory(Interface3rdParty)
 
 
 

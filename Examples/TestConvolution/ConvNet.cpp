@@ -59,4 +59,5 @@ void ConvNet::train(){
 }
 float ConvNet::test(){
    //null
+   return 0;
 }

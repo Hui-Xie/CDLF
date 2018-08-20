@@ -14,10 +14,10 @@
 
 // Manage the reading and writing of ITK medical image
 template <typename VoxelType, int Dimension>
-class ITK_RWriter {
+class ITKImageIO {
 public:
-    ITK_RWriter();
-    ~ITK_RWriter();
+    ITKImageIO();
+    ~ITKImageIO();
 
     using ImageType = itk::Image< VoxelType, Dimension >;
 
@@ -31,7 +31,7 @@ private:
     typename ImageType::DirectionType m_direction;
 };
 
-#include "ITK_RWriter.hpp"
+#include "ITKImageIO.hpp"
 
 
 #endif //CDLF_FRAMEWORK_ITK_RWRITER_H

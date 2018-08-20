@@ -61,4 +61,5 @@ void Conv4DNet::train(){
 }
 float Conv4DNet::test(){
     //null
+    return 0;
 }

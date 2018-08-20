@@ -3,17 +3,17 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 //
 
-#include "ITK_RWriter.h"
+#include "ITKImageIO.h"
 #include <string>
 
 const string filename = "/E/CProject/Images/Data/1103/3/NIFTI/1103_3.nii";
 
 int main (int argc, char *argv[])
 {
-   ITK_RWriter<unsigned short, 3> readWriter;
+   ITKImageIO<unsigned short, 3> itkImageIO;
 
    Tensor<float>* pImage = nullptr;
-   readWriter.readFile(filename, pImage);
+   itkImageIO.readFile(filename, pImage);
 
    //change value of pImage,original image 256*256*332
    for(long i=110;i<150;++i)
@@ -22,7 +22,7 @@ int main (int argc, char *argv[])
                pImage->e(i,j,k) = 0;  //dig a hole in the middle of brain.
            }
 
-   readWriter.writeFile(pImage, {0,0,0}, "itkOutput.nii");
+   itkImageIO.writeFile(pImage, {0,0,0}, "itkOutput.nii");
 
    if (nullptr != pImage){
       delete pImage;

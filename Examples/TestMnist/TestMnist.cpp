@@ -3,7 +3,7 @@
 //
 
 #include "MnistConvNet.h"
-#include "../../Interfaces3ndParty/MNIST/MNIST.h"
+#include "MNIST.h"
 
 const string mnistDir= "E:\\CProject\\mnist";
 

@@ -75,4 +75,5 @@ void ConvexNet::train(){
 
 float ConvexNet::test(){
    //null
+   return 0;
 }

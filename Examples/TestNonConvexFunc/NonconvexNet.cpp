@@ -75,4 +75,5 @@ void NonconvexNet::train(){
 
 float NonconvexNet::test(){
    //null
+   return 0;
 }

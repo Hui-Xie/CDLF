@@ -3,24 +3,24 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 //
 
-#include "ITK_RWriter.h"
+#include "ITKImageIO.h"
 #include <vector>
 #include "itkImageRegionConstIterator.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
 template <typename VoxelType, int Dimension>
-ITK_RWriter<VoxelType, Dimension>::ITK_RWriter(){
+ITKImageIO<VoxelType, Dimension>::ITKImageIO(){
 
 }
 
 template <typename VoxelType, int Dimension>
-ITK_RWriter<VoxelType, Dimension>::~ITK_RWriter(){
+ITKImageIO<VoxelType, Dimension>::~ITKImageIO(){
 
 }
 
 template <typename VoxelType, int Dimension>
-void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename, Tensor<float>*& pTensor ){
+void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<float>*& pTensor ){
     using ReaderType = itk::ImageFileReader< ImageType >;
     typename ReaderType::Pointer reader = ReaderType::New();
     reader->SetFileName( filename );
@@ -56,7 +56,7 @@ void ITK_RWriter<VoxelType, Dimension>::readFile(const string& filename, Tensor<
 
 
 template <typename VoxelType, int Dimension>
-void ITK_RWriter<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, const vector<long>& offset,
+void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, const vector<long>& offset,
                                                   const string& filename)
 {
     vector<long> tensorSize = pTensor->getDims();

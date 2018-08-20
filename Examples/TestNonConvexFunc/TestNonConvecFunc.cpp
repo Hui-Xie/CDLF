@@ -2,7 +2,7 @@
 // Created by Hui Xie on 6/5/2018.
 //
 
-#include "nonconvexTest.h"
+#include "TestNonConvecFunc.h"
 #include "NonconvexNet.h"
 #include "LossNonConvexExample1.h"
 #include "LossNonConvexExample2.h"

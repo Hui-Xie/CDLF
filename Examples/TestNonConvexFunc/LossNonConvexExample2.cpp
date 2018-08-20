@@ -19,6 +19,7 @@ LossNonConvexExample2::~LossNonConvexExample2(){
 float LossNonConvexExample2::lossCompute(){
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     m_loss = X[0]*sin(X[0]);
+    return m_loss;
 }
 
 //f(x) = x*sin(x)
