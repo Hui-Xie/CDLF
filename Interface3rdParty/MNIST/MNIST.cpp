@@ -8,10 +8,10 @@
 
 MNIST::MNIST(const string &mnistDir) {
     m_mnistDir = mnistDir;
-    m_trainImageFile = m_mnistDir + "\\train-images.idx3-ubyte";
-    m_trainLabelFile = m_mnistDir + "\\train-labels.idx1-ubyte";
-    m_testImageFile = m_mnistDir + "\\t10k-images.idx3-ubyte";
-    m_testLabelFile = m_mnistDir + "\\t10k-labels.idx1-ubyte";
+    m_trainImageFile = m_mnistDir + "/train-images.idx3-ubyte";
+    m_trainLabelFile = m_mnistDir + "/train-labels.idx1-ubyte";
+    m_testImageFile = m_mnistDir + "/t10k-images.idx3-ubyte";
+    m_testLabelFile = m_mnistDir + "/t10k-labels.idx1-ubyte";
 
     m_pTrainImages = nullptr;
     m_pTrainLabels = nullptr;
