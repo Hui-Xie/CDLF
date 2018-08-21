@@ -2,7 +2,7 @@ project (CDLF_Framework)
 
 cmake_minimum_required (VERSION 3.8)
 
-set(CMAKE_CXX_FLAGS "-std=c++14")
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 
 add_subdirectory(CDLF)
@@ -16,9 +16,9 @@ message("In Windows, after setting envionmental varialbles, you need to reboot y
 message("In HPC, in order to support C++14, you need to use: module load gcc/5.4.0")
 message("*************************************")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 
-set(CDLFLib libCDLF.dll)
+#set(CDLFLib libCDLF.dll)  # for windows dll
+set(CDLFLib libCDLF.so)    # for Linux
 # you need to set the directory including CDLFLib into your environment variable.
 
 add_subdirectory(Examples)

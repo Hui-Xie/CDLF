@@ -6,6 +6,7 @@
 #include "NonconvexNet.h"
 #include "LossNonConvexExample1.h"
 #include "LossNonConvexExample2.h"
+#include <sstream>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ int convertCommaStrToVector(const string commaStr, std::vector<long>& widthVecto
     for (int i=0; i< NChar; ++i){
         if (','==widthStr.at(i)) widthStr.at(i) = ' ';
     }
-    std::stringstream iss(widthStr);
+    std::stringstream iss(widthStr,ios_base::in);
     long number;
     while ( iss >> number ){
         widthVector.push_back( number );

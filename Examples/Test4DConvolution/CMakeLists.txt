@@ -1,4 +1,5 @@
 
+set(CMAKE_CXX_FLAGS "-std=c++11")
 
 set(Test4DConvolutionSRCS Conv4DNet.cpp Test4DConvolution.cpp LossConvexExample1.cpp)
 add_executable(Test4DConvolution ${Test4DConvolutionSRCS})
