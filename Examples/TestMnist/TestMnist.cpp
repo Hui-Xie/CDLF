@@ -5,7 +5,9 @@
 #include "MnistConvNet.h"
 #include "MNIST.h"
 
-const string mnistDir= "E:\\CProject\\mnist";
+//const string mnistDir= "E:\\CProject\\mnist";
+
+const string mnistDir= "/Users/hxie1/Projects/mnist";
 
 int main (int argc, char *argv[])
 {
