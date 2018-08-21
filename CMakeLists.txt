@@ -2,9 +2,8 @@ project (CDLF_Framework)
 
 cmake_minimum_required (VERSION 3.8)
 
-set(CMAKE_CXX_FLAGS "-std=c++11")
+set(CMAKE_CXX_FLAGS "-std=c++14")
 
-message("Message: " ${CMAKE_CXX_FLAGS})
 
 add_subdirectory(CDLF)
 set(CDLF_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF)
