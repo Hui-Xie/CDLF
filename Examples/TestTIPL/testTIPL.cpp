@@ -9,7 +9,7 @@ const string filename = "/Users/hxie1/temp/BRATS_001.nii";
 
 int main(int argc, char *argv[]){
 
-    TIPLIO<unsigned short, 3> imageIO;
+    TIPLIO<float, 3> imageIO;
 
     Tensor<float>* pImage = nullptr;
     imageIO.readNIfTIFile(filename, pImage);

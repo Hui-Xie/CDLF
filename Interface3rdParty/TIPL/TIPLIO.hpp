@@ -21,7 +21,7 @@ void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor
     tipl::io::nifti parser;
     tipl::image<VoxelType,Dimension> imageData;
     if (!parser.load_from_file(filename)){
-        cout<<"Error: read "<<filename<<endl;
+        cout<<"Error: read "<<filename<<" in tipl::io::nifti::load_from_file()"<<endl;
         return;
     };
     parser >> imageData;
@@ -47,7 +47,7 @@ void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor
         for (long i=0; i<tensorSize[0]; ++i)
             for (long j=0; j<tensorSize[1];++j)
                 for (long k=0; k<tensorSize[2];++k)
-                pTensor->e(i,j,k) = imageData.at(k,j,i);
+                pTensor->e(i,j,k) = (float)imageData.at(k,j,i);
 
     }
     else{
