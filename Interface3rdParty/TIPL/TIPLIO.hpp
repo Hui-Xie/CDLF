@@ -56,19 +56,20 @@ void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor
     }
 }
 
-template <typename VoxelType, int Dimension>
-void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename){
+template<typename VoxelType, int Dimension>
+void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor, const vector<long> &offset,
+                                                    const string &filename) {
     const vector<long> tensorSize = pTensor->getDims();
     tipl::io::nifti parser;
     const unsigned int dim = tensorSize.size();
 
-    if (dim +1  != m_imageHeader2.dim[0]){
-        cout<<"Error: output image has different dimension with input image"<<endl;
+    if (dim + 1 != m_imageHeader2.dim[0]) {
+        cout << "Error: output image has different dimension with input image" << endl;
         return;
     }
 
-    for(int i=0; i<dim; ++i){
-        m_imageHeader2.dim[dim-i] = tensorSize[i];
+    for (int i = 0; i < dim; ++i) {
+        m_imageHeader2.dim[dim - i] = tensorSize[i];
     }
 
     // modify origin,
@@ -86,24 +87,18 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float>* pTensor
     parser.nif_header = m_imageHeader1;
     parser.nif_header2 = m_imageHeader2;
 
-    if (3 == Dimension){
-        tipl::image<VoxelType,Dimension> imageData(tipl::geometry<Dimension>(tensorSize[2],tensorSize[1],tensorSize[0]));
-        for (long i=0; i<tensorSize[0]; ++i)
-            for (long j=0; j<tensorSize[1];++j)
-                for (long k=0; k<tensorSize[2];++k) {
-                    imageData.at(k, j, i) = pTensor->e(i, j, k);
-                }
 
-        parser << imageData;
-    }
-    else{
-        cout<<"Error: the output NIfTI file has incorrect dimension"<<endl;
-
-    }
+    tipl::image<VoxelType, Dimension> imageData(tipl::geometry<Dimension>(tensorSize[2], tensorSize[1], tensorSize[0]));
+    for (long i = 0; i < tensorSize[0]; ++i)
+        for (long j = 0; j < tensorSize[1]; ++j)
+            for (long k = 0; k < tensorSize[2]; ++k) {
+                imageData.at(k, j, i) = (VoxelType) pTensor->e(i, j, k);
+            }
+    parser.toLPS(imageData);
+    parser << imageData;
 
     //save file
-
     parser.save_to_file(filename.c_str());
-    cout<<"Infor:  "<<filename<<"  ouptput."<<endl;
+    cout << "Infor:  " << filename << "  ouptput." << endl;
 
 }

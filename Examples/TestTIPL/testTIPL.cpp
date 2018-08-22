@@ -4,7 +4,8 @@
 
 #include "TIPLIO.h"
 
-const string filename = "/Users/hxie1/temp/BRATS_001.nii";
+const string inputFilename = "/Users/hxie1/temp/BRATS_001.nii";
+const string outputFilename = "//Users/hxie1/temp/BRATS_001_Output.nii";
 
 
 int main(int argc, char *argv[]){
@@ -12,7 +13,7 @@ int main(int argc, char *argv[]){
     TIPLIO<float, 3> imageIO;
 
     Tensor<float>* pImage = nullptr;
-    imageIO.readNIfTIFile(filename, pImage);
+    imageIO.readNIfTIFile(inputFilename, pImage);
 
     //change value of pImage,
     vector<long> tensorSize = pImage->getDims();
@@ -23,13 +24,13 @@ int main(int argc, char *argv[]){
                 pImage->e(i,j,k) = 0;  //dig a hole in the middle of brain.
             }
 
-    imageIO.write3DNIfTIFile(pImage, {0,0,0}, "//Users/hxie1/temp/BRATS_001_Output.nii");
+    imageIO.write3DNIfTIFile(pImage, {10,20,30}, outputFilename);
 
     if (nullptr != pImage){
         delete pImage;
         pImage = nullptr;
     }
-    cout<<"End of TIPL Read Writer"<<endl;
+    cout<<"================End of TIPL Read Writer==========="<<endl;
 
 
 }

@@ -28,5 +28,5 @@ int main (int argc, char *argv[])
       delete pImage;
       pImage = nullptr;
    }
-   cout<<"End of ITK Read Writer"<<endl;
+   cout<<"=============End of ITK Read Writer============="<<endl;
 }
