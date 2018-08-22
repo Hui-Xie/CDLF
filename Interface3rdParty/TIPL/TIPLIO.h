@@ -5,7 +5,7 @@
 #ifndef CDLF_FRAMEWORK_TIPLIO_H
 #define CDLF_FRAMEWORK_TIPLIO_H
 
-#include "tipl/tipl.hpp"
+
 #include "Tensor.h"
 
 template <typename VoxelType, int Dimension>
