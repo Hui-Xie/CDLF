@@ -7,6 +7,7 @@
 
 
 #include "Tensor.h"
+#include "tipl/tipl.hpp"
 
 template <typename VoxelType, int Dimension>
 class TIPLIO {
@@ -16,6 +17,9 @@ public:
 
     void readNIfTIFile(const string & filename, Tensor<float>*& pTensor);
     void writeNIfTIFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename);
+
+private:
+    struct tipl::io::nifti_1_header m_imageHeader;
 
 };
 
