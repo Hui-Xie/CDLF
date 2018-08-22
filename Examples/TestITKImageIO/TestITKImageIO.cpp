@@ -6,27 +6,30 @@
 #include "ITKImageIO.h"
 #include <string>
 
-const string filename = "/E/CProject/Images/Data/1103/3/NIFTI/1103_3.nii";
+const string inputFilename = "/Users/hxie1/temp/BRATS_001.nii";
+const string outputFilename = "//Users/hxie1/temp/BRATS_001_Output.nii";
 
-int main (int argc, char *argv[])
-{
-   ITKImageIO<unsigned short, 3> itkImageIO;
 
-   Tensor<float>* pImage = nullptr;
-   itkImageIO.readFile(filename, pImage);
+int main(int argc, char *argv[]) {
+    ITKImageIO<float, 3> itkImageIO;
 
-   //change value of pImage,original image 256*256*332
-   for(long i=110;i<150;++i)
-       for(long j=110; j<150;++j)
-           for(long k=140;j<180;++k){
-               pImage->e(i,j,k) = 0;  //dig a hole in the middle of brain.
-           }
+    Tensor<float> *pImage = nullptr;
+    itkImageIO.readFile(inputFilename, pImage);
 
-   itkImageIO.writeFile(pImage, {0,0,0}, "itkOutput.nii");
+    //change value of pImage,
+    vector<long> tensorSize = pImage->getDims();
+    vector<long> halfTensorSize = tensorSize / 2;
+    for (long i = halfTensorSize[0] - 20; i < halfTensorSize[0] + 20; ++i)
+        for (long j = halfTensorSize[1] - 20; j < halfTensorSize[1] + 20; ++j)
+            for (long k = halfTensorSize[2] - 20; k < halfTensorSize[2] + 20; ++k) {
+                pImage->e(i, j, k) = 0;  //dig a hole in the middle of brain.
+            }
 
-   if (nullptr != pImage){
-      delete pImage;
-      pImage = nullptr;
-   }
-   cout<<"=============End of ITK Read Writer============="<<endl;
+    itkImageIO.writeFile(pImage, {0, 0, 0}, outputFilename);
+
+    if (nullptr != pImage) {
+        delete pImage;
+        pImage = nullptr;
+    }
+    cout << "=============End of ITK Read Writer=============" << endl;
 }
