@@ -10,10 +10,13 @@ set(CDLF_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF)
 include_directories(${CDLF_SRC_DIR})
 link_directories(${CMAKE_BINARY_DIR}/CDLF)
 
-message("*************************************")
 message("Notes: you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
 message("In Windows, after setting envionmental varialbles, you need to reboot your system.")
-message("In HPC, in order to support C++14, you need to use: module load gcc/5.4.0")
+message("Config Notes:")
+message("in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
+message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
+-DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
+-DTIPL_Dir=/Users/hxie1/Projects/TIPL")
 message("*************************************")
 
 

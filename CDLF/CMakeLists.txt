@@ -2,10 +2,11 @@ project (CDLF)  # C++ Deep Learning Framework
 
 cmake_minimum_required (VERSION 3.8)
 
-# https://github.com/kthohr/stats
-#set(STATS_INCLUDE_DIR  E:/CProject/stats/include/) # for windows  stats C++ statistics library
-# Or config -DSTATS_INCLUDE_DIR=TheFullPathOfStatsIncludeDir in your setting
-set(STATS_INCLUDE_DIR /Users/hxie1/Projects/stats/include)  #for HPC
+message("Config StatsLab Notes:")
+message("0  Courtesy of Keith O'Hara (https://github.com/kthohr/stats) for StatsLab")
+message("1  download code from: https://github.com/kthohr/stats into your intall directory")
+message("2  in Clion File/Setting/Build/CMake/CMakeOptions config -DSTATS_INCLUDE_DIR=The/Full/Path/Of/Stats/Include/Dir ")
+message("*************************************")
 
 include_directories(${STATS_INCLUDE_DIR})
 
