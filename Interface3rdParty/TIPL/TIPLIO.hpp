@@ -24,6 +24,8 @@ void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor
         cout<<"Error: read "<<filename<<" in tipl::io::nifti::load_from_file()"<<endl;
         return;
     };
+    parser >> imageData;
+    parser << imageData;
     const string RASFilename = getStemName(filename)+"_RAS.nii";
     parser.save_to_file(RASFilename.c_str());
     cout<<"Info: Output an RAS orientation file: "<<RASFilename<<endl;
