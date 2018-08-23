@@ -12,7 +12,8 @@
 #include "itkImage.h"
 
 
-// Manage the reading and writing of ITK medical image
+//Manage the reading and writing of ITK medical images
+
 template <typename VoxelType, int Dimension>
 class ITKImageIO {
 public:

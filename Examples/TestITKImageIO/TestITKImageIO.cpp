@@ -7,7 +7,7 @@
 #include <string>
 
 const string inputFilename = "/Users/hxie1/temp/BRATS_001.nii";
-const string outputFilename = "//Users/hxie1/temp/BRATS_001_Output.nii";
+const string outputFilename = "/Users/hxie1/temp/BRATS_001_Output.nii";
 
 
 int main(int argc, char *argv[]) {
@@ -25,11 +25,11 @@ int main(int argc, char *argv[]) {
                 pImage->e(i, j, k) = 0;  //dig a hole in the middle of brain.
             }
 
-    itkImageIO.writeFile(pImage, {0, 0, 0}, outputFilename);
+    itkImageIO.writeFile(pImage, {10, 20, 30}, outputFilename);
 
     if (nullptr != pImage) {
         delete pImage;
         pImage = nullptr;
     }
-    cout << "=============End of ITK Read Writer=============" << endl;
+    cout << "============= End of TestITKImageIO =============" << endl;
 }

@@ -47,7 +47,7 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<f
     iter.GoToBegin();
     while(!iter.IsAtEnd())
     {
-        pTensor->e(i)= iter.Get();
+        pTensor->e(i)= (float)iter.Get();
         ++iter;
         ++i;
     }
@@ -62,7 +62,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, c
     vector<long> tensorSize = pTensor->getDims();
     const int dim = tensorSize.size();
     if (dim != m_imageSize.GetSizeDimension()){
-        cout<<"Error: the output tensor has different dimension with input image."<<endl;
+        cout<<"Error: the output tensor has different dimension with the input image."<<endl;
         return;
     }
 
@@ -82,7 +82,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, c
     image->SetRegions(region);
     image->Allocate();
 
-    //Todo: set origin, spacing, cosine matrix
+    //set origin, spacing, cosine matrix
     image->SetSpacing( m_spacing );
     image->SetOrigin(newOrigin);
     image->SetDirection(m_direction);
@@ -93,7 +93,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, c
     iter.GoToBegin();
     while(!iter.IsAtEnd())
     {
-        iter.Set(pTensor->e(i));
+        iter.Set((VoxelType)pTensor->e(i));
         ++iter;
         ++i;
     }
@@ -103,5 +103,5 @@ void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, c
     writer->SetFileName(filename);
     writer->SetInput(image);
     writer->Update();
-    cout<<"Info: A output image "<<filename<<" is output"<<endl;
+    cout<<"Info: An output image "<<filename<<" output"<<endl;
 }
