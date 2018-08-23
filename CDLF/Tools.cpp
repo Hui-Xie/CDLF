@@ -170,6 +170,12 @@ vector<long> generateRandomSequence(const long range) {
     return sequence;
 }
 
+string getStemName(const string& filename){
+    int pos = filename.rfind('.');
+    return filename.substr(0, pos);
+
+}
+
 
 
 

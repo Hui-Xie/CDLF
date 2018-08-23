@@ -24,8 +24,11 @@ void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor
         cout<<"Error: read "<<filename<<" in tipl::io::nifti::load_from_file()"<<endl;
         return;
     };
-    parser >> imageData;
+    const string RASFilename = getStemName(filename)+"_RAS.nii";
+    parser.save_to_file(RASFilename.c_str());
+    cout<<"Info: Output an RAS orientation file: "<<RASFilename<<endl;
 
+    parser >> imageData;
     m_imageHeader1 = parser.nif_header;
     m_imageHeader2 = parser.nif_header2;
     const unsigned int dim = imageData.dimension;
@@ -95,12 +98,11 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor
                 imageData.at(k, j, i) = (VoxelType) pTensor->e(i, j, k);
             }
     //parser.toLPS(imageData);
-    tipl::swap_xy(imageData);//From RAS to LPS conversion
+    //tipl::swap_xy(imageData);//From RAS to LPS conversion
     parser << imageData;
 
     //save file
-
     parser.save_to_file(filename.c_str());
-    cout << "Infor:  " << filename << "  ouptput." << endl;
+    cout << "Info:  " << filename << "  ouptput." << endl;
 
 }

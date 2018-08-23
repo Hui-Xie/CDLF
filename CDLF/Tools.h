@@ -41,5 +41,7 @@ string vector2Str(const vector<long>& vec);
 
 vector<long> generateRandomSequence(const long range);
 
+string getStemName(const string& filename);
+
 
 #endif //RL_NONCONVEX_TOOLS_H
