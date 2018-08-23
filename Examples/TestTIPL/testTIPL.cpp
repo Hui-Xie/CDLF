@@ -5,7 +5,7 @@
 #include "TIPLIO.h"
 
 const string inputFilename = "/Users/hxie1/temp/BRATS_001.nii";
-const string outputFilename = "//Users/hxie1/temp/BRATS_001_Output.nii";
+const string outputFilename = "/Users/hxie1/temp/BRATS_001_Output.nii";
 
 
 int main(int argc, char *argv[]){

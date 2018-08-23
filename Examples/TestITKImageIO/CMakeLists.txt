@@ -12,7 +12,9 @@ include(${ITK_USE_FILE})
 set (ITKImageIODir ../../Interface3rdParty/ITK)
 include_directories(${ITKImageIODir})
 
-set(TestITKImageIOSRCS TestITKImageIO.cpp )
+set(TestITKImageIOSRCS TestITKImageIO.cpp)
 add_executable(TestITKImageIO ${TestITKImageIOSRCS})
-target_link_libraries(TestITKImageIO ${CDLFLib} ${ITK_LIBRARIES})
+target_link_libraries(TestITKImageIO  ${ITK_LIBRARIES} ${CDLFLib} )
+
+
 
