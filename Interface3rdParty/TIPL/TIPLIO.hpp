@@ -68,7 +68,7 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor
     tipl::io::nifti parser;
     const unsigned int dim = tensorSize.size();
 
-    if (dim + 1 != m_imageHeader2.dim[0]) {
+    if (dim != m_imageHeader2.dim[0]) {
         cout << "Error: output image has different dimension with input image" << endl;
         return;
     }
@@ -91,7 +91,6 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor
     //copy headers
     parser.nif_header = m_imageHeader1;
     parser.nif_header2 = m_imageHeader2;
-
 
     tipl::image<VoxelType, Dimension> imageData(tipl::geometry<Dimension>(tensorSize[2], tensorSize[1], tensorSize[0]));
     for (long i = 0; i < tensorSize[0]; ++i)
