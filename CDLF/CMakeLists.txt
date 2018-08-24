@@ -8,6 +8,7 @@ message("1  download code from: https://github.com/kthohr/stats into your intall
 message("2  in Clion File/Setting/Build/CMake/CMakeOptions config -DSTATS_INCLUDE_DIR=The/Full/Path/Of/Stats/Include/Dir ")
 message("*************************************")
 
+set(STATS_INCLUDE_DIR /Users/hxie1/Projects/stats/include)
 include_directories(${STATS_INCLUDE_DIR})
 
 set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp

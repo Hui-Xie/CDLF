@@ -6,6 +6,8 @@ message("1  download code from:https://github.com/frankyeh/TIPL into your intall
 message("2  in Clion File/Setting/Build/CMake/CMakeOptions config -DTIPL_Dir=The/Full/Path/Of/TIPL/Dir ")
 message("*************************************")
 
+set(TIPL_Dir /Users/hxie1/Projects/TIPL)
+
 include_directories(${TIPL_Dir})
 
 
