@@ -98,11 +98,9 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor
             for (long k = 0; k < tensorSize[2]; ++k) {
                 imageData.at(k, j, i) = (VoxelType) pTensor->e(i, j, k);
             }
-    //parser.toLPS(imageData);
-    //tipl::swap_xy(imageData);//From RAS to LPS conversion
     parser << imageData;
 
-    //save file
+    //save file; output file always in RAS orientation
     parser.save_to_file(filename.c_str());
     cout << "Info:  " << filename << "  ouptput." << endl;
 
