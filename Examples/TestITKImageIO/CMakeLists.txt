@@ -6,6 +6,7 @@ message("2  decompress and compile ITK version")
 message("3  in Clion File/Setting/Build/CMake/CMakeOptions config -DITK_DIR=the/Full/Path/Of/ITK-Build/Dir")
 message("*************************************")
 
+
 find_package(ITK REQUIRED)
 include(${ITK_USE_FILE})
 
