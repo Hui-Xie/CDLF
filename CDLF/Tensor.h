@@ -94,6 +94,8 @@ public:
     ValueType conv(const Tensor& other) const; //convolution or cross-correlation
     Tensor& flip();
 
+    inline vector<long> offset2Index(const long offset) const;
+
 
 private:
     vector<long> m_dims;
@@ -104,6 +106,7 @@ private:
     void freeMem();
     void generateDimsSpan();
     inline long index2Offset(const vector<long>& index) const;
+
     void copyDataTo(Tensor* pTensor, const long offset, const long length);
 
 };

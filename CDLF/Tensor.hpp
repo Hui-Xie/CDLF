@@ -130,6 +130,19 @@ long Tensor<ValueType>::index2Offset(const vector<long>& index)const{
 }
 
 template<class ValueType>
+vector<long> Tensor<ValueType>::offset2Index(const long offset) const{
+    int dim = getDims().size();
+    vector<long> index(dim,0);
+    long n = offset;
+    for (int i=0;i<dim; ++i){
+        index[i] = n / m_dimsSpan[i];
+        n -= index[i]* m_dimsSpan[i];
+    }
+    return index;
+
+}
+
+template<class ValueType>
 ValueType& Tensor<ValueType>::e(const vector<long>& index) const{
     assert(index.size() == m_dims.size());
     return m_data[index2Offset(index)];

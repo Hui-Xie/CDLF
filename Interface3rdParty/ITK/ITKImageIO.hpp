@@ -5,7 +5,7 @@
 
 #include "ITKImageIO.h"
 #include <vector>
-#include "itkImageRegionConstIterator.h"
+#include "itkImageRegionConstIteratorWithIndex.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 
@@ -42,12 +42,17 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<f
     m_spacing = image->GetSpacing();
     m_direction = image->GetDirection();
 
-    itk::ImageRegionConstIterator<ImageType> iter(image,region);
+    itk::ImageRegionConstIteratorWithIndex<ImageType> iter(image,region);
     long i=0;
     iter.GoToBegin();
+    vector<long> tensorIndex(dim,0);
     while(!iter.IsAtEnd())
     {
-        pTensor->e(i)= (float)iter.Get();
+        typename  itk::ImageRegionConstIteratorWithIndex<ImageType>::IndexType index = iter.GetIndex();
+        for (int i=0;i<dim;++i){
+            tensorIndex[i] = index[dim-1-i];
+        }
+        pTensor->e(tensorIndex)= (float)iter.Get();
         ++iter;
         ++i;
     }
@@ -88,13 +93,16 @@ void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, c
     image->SetDirection(m_direction);
 
     //copy image data
-    itk::ImageRegionIterator<ImageType> iter(image,region);
     long i=0;
-    iter.GoToBegin();
-    while(!iter.IsAtEnd())
+    long N = pTensor->getLength();
+    typename  itk::ImageRegionConstIteratorWithIndex<ImageType>::IndexType itkIndex;
+    while(i<N)
     {
-        iter.Set((VoxelType)pTensor->e(i));
-        ++iter;
+        vector<long> tensorIndex = pTensor->offset2Index(i);
+        for (int i=0;i<dim;++i){
+            itkIndex[dim-1-i]= tensorIndex[i];
+        }
+        image->SetPixel(itkIndex, (VoxelType)pTensor->e(i));
         ++i;
     }
 
