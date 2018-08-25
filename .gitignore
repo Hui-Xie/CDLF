@@ -34,20 +34,3 @@
 .idea/
 cmake-build-debug/
 cmake-build-release/
-CMakeFiles
-CMakeCache.txt
-
-
-# Netbeans
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
-
-# netbeans specific
-core
-nbproject/*
-!nbproject/project.properties
-!nbproject/project.xml
