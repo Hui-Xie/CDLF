@@ -35,6 +35,7 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<f
     for (int i=0; i<dim; ++i){
         tensorSize.push_back(m_imageSize[i]);
     }
+    tensorSize = reverseVector(tensorSize);
     pTensor = new Tensor<float>(tensorSize);
 
     //get Image origin, spacing etc
@@ -43,18 +44,16 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<f
     m_direction = image->GetDirection();
 
     itk::ImageRegionConstIteratorWithIndex<ImageType> iter(image,region);
-    long i=0;
     iter.GoToBegin();
     vector<long> tensorIndex(dim,0);
     while(!iter.IsAtEnd())
     {
         typename  itk::ImageRegionConstIteratorWithIndex<ImageType>::IndexType index = iter.GetIndex();
-        for (int i=0;i<dim;++i){
-            tensorIndex[i] = index[dim-1-i];
+        for (int k=0;k<dim;++k){
+            tensorIndex[k] = index[dim-1-k];
         }
         pTensor->e(tensorIndex)= (float)iter.Get();
         ++iter;
-        ++i;
     }
 
 }
@@ -64,7 +63,7 @@ template <typename VoxelType, int Dimension>
 void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, const vector<long>& offset,
                                                   const string& filename)
 {
-    vector<long> tensorSize = pTensor->getDims();
+    vector<long> tensorSize = reverseVector(pTensor->getDims());
     const int dim = tensorSize.size();
     if (dim != m_imageSize.GetSizeDimension()){
         cout<<"Error: the output tensor has different dimension with the input image."<<endl;
@@ -99,8 +98,8 @@ void ITKImageIO<VoxelType, Dimension>::writeFile(const Tensor<float>* pTensor, c
     while(i<N)
     {
         vector<long> tensorIndex = pTensor->offset2Index(i);
-        for (int i=0;i<dim;++i){
-            itkIndex[dim-1-i]= tensorIndex[i];
+        for (int k=0;k<dim;++k){
+            itkIndex[dim-1-k]= tensorIndex[k];
         }
         image->SetPixel(itkIndex, (VoxelType)pTensor->e(i));
         ++i;
