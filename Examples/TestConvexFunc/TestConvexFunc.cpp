@@ -14,7 +14,7 @@ void printUsage(){
     cout<<"A Fully-Connected Network compute loss function using statistic gradient descent."<<endl;
     cout<<"Usage: cmd layerWidthVector"<<endl
         <<"For example: cmd 5,7,8,10,5"<<endl
-        <<"Where layerWidthVector use comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl;
+        <<"Where layerWidthVector uses comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl;
 
 }
 
