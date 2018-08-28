@@ -6,11 +6,25 @@
 #include "ITKImageIO.h"
 #include <string>
 
-const string inputFilename = "/Users/hxie1/temp/BRATS_001.nii";
-const string outputFilename = "/Users/hxie1/temp/BRATS_001_Output.nii";
+void printUsage(char* argv0){
+    cout<<"Test ITK image:"<<endl;
+    cout<<"Usage: "<<endl;
+    cout<<argv0<<" fullPathInputFileNane fullPathOutputFilename"<<endl;
+}
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
+
+    if (3 != argc){
+        cout<<"Error: input parameter error."<<endl;
+        printUsage(argv[0]);
+        return -1;
+    }
+
+    const string inputFilename = argv[1];
+    const string outputFilename = argv[2];
+
+
     ITKImageIO<float, 3> itkImageIO;
 
     Tensor<float> *pImage = nullptr;
