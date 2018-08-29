@@ -147,8 +147,10 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<fl
     typename LessImageType::DirectionType newDirection;
     for (int i=0;i<dim; ++i){
         newSpacing[i] = m_spacing[i];
-        newDirection[i] = m_direction[i];
-     }
+        for (int j=0; j<dim; ++j){
+            newDirection[i][j] = m_direction[i][j];
+        }
+    }
 
     image->SetSpacing( newSpacing );
     image->SetOrigin(newOrigin);

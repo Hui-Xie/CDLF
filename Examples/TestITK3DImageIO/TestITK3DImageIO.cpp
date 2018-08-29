@@ -7,7 +7,7 @@
 #include <string>
 
 void printUsage(char* argv0){
-    cout<<"Test ITK image:"<<endl;
+    cout<<"Test ITK 3D image:"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" fullPathInputFileNane fullPathOutputFilename"<<endl;
 }
