@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
                 pImage->e(i, j, k) = 0;  //dig a hole in the middle of brain.
             }
 
-    itkImageIO.writeFile(pImage, {10, 20, 30}, outputFilename);
+    itkImageIO.writeFileWithSameInputDim(pImage, {0, 0, 0}, outputFilename);
 
     if (nullptr != pImage) {
         delete pImage;

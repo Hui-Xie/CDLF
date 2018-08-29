@@ -9,7 +9,8 @@
 
 void printUsage(char* argv0){
     cout<<"Test TIPL image:"<<endl;
-    cout<<"This interface does not support compress image file, eg. gz file"<<endl;
+    cout<<"This interface does not support compress image file eg. gz file, and 4D file."<<endl;
+    cout<<"TIPL always convert NifTI file into RAS orientation."<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" fullPathInputFileNane fullPathOutputFilename"<<endl;
 }

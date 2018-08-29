@@ -38,7 +38,7 @@ int TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor<
 
     vector<long> tensorSize(dim,0);
     for(int i=0; i<dim; ++i){
-        tensorSize[i] = m_imageHeader2.dim[dim-i];
+        tensorSize[i] = m_imageHeader2.dim[dim-i];// dim[0] is the number of dimensions;
     }
     pTensor = new Tensor<float>(tensorSize);
 
