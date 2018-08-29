@@ -18,7 +18,7 @@ if(ITK_FOUND)
     include_directories(${ITKImageIODir})
 
     set(TestITK3DImageIOSRCS TestITK3DImageIO.cpp)
-    add_executable(TestITKImageIO ${TestITK3DImageIOSRCS})
+    add_executable(TestITK3DImageIO ${TestITK3DImageIOSRCS})
     target_link_libraries(TestITK3DImageIO  ${ITK_LIBRARIES} ${CDLFLib} )
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
