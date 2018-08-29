@@ -13,7 +13,7 @@
 
 class IdentityLayer : public Layer {
 public:
-    IdentityLayer(const int id, const string& name,Layer* prevLayer, Layer* nextLayer);
+    IdentityLayer(const int id, const string& name,Layer* prevLayer);
     ~IdentityLayer();
 
     virtual  void initialize(const string& initialMethod);

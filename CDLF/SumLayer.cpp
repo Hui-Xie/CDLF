@@ -39,9 +39,21 @@ void SumLayer::updateParameters(const float lr, const string& method, const int 
   //null
 }
 
-void SumLayer::addPreviousLayer(Layer* prevLayer){
+void SumLayer::addPreviousLayer(Layer* prevLayer)
+{
     if (nullptr != prevLayer){
+        if (isLayerInList(prevLayer)){
+            cout<<"Error: repeatedly add layer to SumLayer:"<<prevLayer->m_name<<endl;
+            return;
+        }
+
         m_prevLayers.push_back(prevLayer);
-        prevLayer->m_nextLayer = this;
     }
+}
+
+bool SumLayer::isLayerInList(const Layer* layer){
+    for(list<Layer*>::const_iterator iter= m_prevLayers.begin(); iter!= m_prevLayers.end(); ++iter){
+        if (layer == *iter) return true;
+    }
+    return false;
 }

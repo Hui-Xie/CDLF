@@ -26,6 +26,9 @@ public:
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
     virtual void addPreviousLayer(Layer* prevLayer);
+
+private:
+    bool isLayerInList(const Layer* layer);
 };
 
 

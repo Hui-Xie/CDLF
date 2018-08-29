@@ -4,12 +4,9 @@
 
 #include "IdentityLayer.h"
 
-IdentityLayer::IdentityLayer(const int id, const string& name,Layer* prevLayer, Layer* nextLayer): Layer(id,name, {}){
+IdentityLayer::IdentityLayer(const int id, const string& name,Layer* prevLayer): Layer(id,name, prevLayer->m_tensorSize){
     m_type = "IdentityLayer";
     addPreviousLayer(prevLayer);
-    nextLayer->addPreviousLayer(this);
-    m_pYTensor = prevLayer->m_pYTensor;
-    m_pdYTensor = prevLayer->m_pdYTensor;
 }
 
 IdentityLayer::~IdentityLayer(){
@@ -19,10 +16,10 @@ IdentityLayer::~IdentityLayer(){
 // Y = X
 // dL/dx = dL/dy * dy/dx = dL/dy
 void IdentityLayer::forward(){
-   //null
+    *m_pYTensor = *m_prevLayer->m_pYTensor;
 }
 void IdentityLayer::backward(){
-   //null;
+   *m_prevLayer->m_pdYTensor += *m_pdYTensor;
 }
 void IdentityLayer::initialize(const string& initialMethod){
     //null

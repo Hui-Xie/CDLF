@@ -22,7 +22,6 @@ public:
     string m_name;
     string m_type;
     Layer*  m_prevLayer;
-    Layer*  m_nextLayer;
     vector<long>  m_tensorSize;
     Tensor<float>* m_pYTensor;             //the output of this layer
     Tensor<float>* m_pdYTensor;          //dL/dy,where L is Loss

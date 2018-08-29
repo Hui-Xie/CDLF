@@ -11,7 +11,6 @@ Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
     m_name = name;
     m_type = "";
     m_prevLayer = nullptr;
-    m_nextLayer = nullptr;
 
     m_tensorSize = tensorSize;
     if (0 != m_tensorSize.size()){
@@ -73,6 +72,5 @@ void Layer::printVector(Tensor<float>* vector){
 void Layer::addPreviousLayer(Layer* prevLayer){
     if (nullptr != prevLayer){
         m_prevLayer = prevLayer;
-        prevLayer->m_nextLayer= this;
     }
 }
