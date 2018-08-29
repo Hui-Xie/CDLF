@@ -46,7 +46,12 @@ void SumLayer::addPreviousLayer(Layer* prevLayer)
             cout<<"Error: repeatedly add layer to SumLayer:"<<prevLayer->m_name<<endl;
             return;
         }
-
+        if (!sameVector(m_tensorSize,prevLayer->m_tensorSize)){
+            cout<<"Error: Incoming branches to SumLayer should have same tensorSize"<<endl;
+            cout<<"SumLayer Tensor: "<< vector2Str(m_tensorSize)<<endl;
+            cout<<"New prevlayer Tensor: "<< vector2Str(prevLayer->m_tensorSize)<<"  Layer Name: "<<prevLayer->m_name<<endl;
+            return;
+        }
         m_prevLayers.push_back(prevLayer);
     }
 }

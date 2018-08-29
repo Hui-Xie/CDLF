@@ -6,7 +6,7 @@
 #include "LossConvexExample1.h"
 /*
  *
- * 
+ *
  * Input-->FC1-->Branch-->|----->FC2-------> FC3----->|-->Sum-->FC4-->Loss
  *                        |                           |
  *                        |-->Conv1-->Conv2-->Conv3-->|
@@ -75,7 +75,6 @@ void DAGNet::build(){
     addLayer(normalLayer6);
 
     //add SumLayer
-    id = id+10;
     SumLayer* sumLayer = new SumLayer(id++, "SumLayer", {12,1});
     addLayer(sumLayer);
     sumLayer->addPreviousLayer(normalLayer4);
@@ -87,7 +86,7 @@ void DAGNet::build(){
 
     //add Loss Layer
     LossConvexExample1* loss = new LossConvexExample1(id++, "LossLayer", fc4);
-    addLayer(fc4);
+    addLayer(loss);
 }
 
 void DAGNet::train(){
