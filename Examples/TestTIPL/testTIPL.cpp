@@ -9,6 +9,7 @@
 
 void printUsage(char* argv0){
     cout<<"Test TIPL image:"<<endl;
+    cout<<"This interface does not support compress image file, eg. gz file"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" fullPathInputFileNane fullPathOutputFilename"<<endl;
 }
@@ -28,7 +29,10 @@ int main(int argc, char *argv[]){
     TIPLIO<float, 3> imageIO;
 
     Tensor<float>* pImage = nullptr;
-    imageIO.readNIfTIFile(inputFilename, pImage);
+    int result = imageIO.readNIfTIFile(inputFilename, pImage);
+    if (0 != result){
+        return -1;
+    }
 
     //change value of pImage,
     vector<long> tensorSize = pImage->getDims();
@@ -39,7 +43,7 @@ int main(int argc, char *argv[]){
                 pImage->e(i,j,k) = 0;  //dig a hole in the middle of brain.
             }
 
-    imageIO.write3DNIfTIFile(pImage, {10,20,30}, outputFilename);
+    imageIO.write3DNIfTIFile(pImage, {0,0,0}, outputFilename);
 
     if (nullptr != pImage){
         delete pImage;
@@ -47,6 +51,6 @@ int main(int argc, char *argv[]){
     }
     cout<<"================End of TIPL Read Writer==========="<<endl;
 
-
+    return 0;
 }
 

@@ -15,9 +15,9 @@ public:
     TIPLIO();
     ~TIPLIO();
 
-    void readNIfTIFile(const string & filename, Tensor<float>*& pTensor);
-    void write3DNIfTIFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename);
-    void write2DNIfTIFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename);
+    int readNIfTIFile(const string & filename, Tensor<float>*& pTensor);
+    int write3DNIfTIFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename);
+    int write2DNIfTIFile(const Tensor<float>* pTensor, const vector<long>& offset, const string & filename);
 
 private:
     struct tipl::io::nifti_1_header m_imageHeader1;

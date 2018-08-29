@@ -17,12 +17,12 @@ TIPLIO<VoxelType, Dimension>::~TIPLIO(){
 }
 
 template <typename VoxelType, int Dimension>
-void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor<float>*& pTensor){
+int TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor<float>*& pTensor){
     tipl::io::nifti parser;
     tipl::image<VoxelType,Dimension> imageData;
     if (!parser.load_from_file(filename)){
         cout<<"Error: read "<<filename<<" in tipl::io::nifti::load_from_file()"<<endl;
-        return;
+        return -1;
     };
     parser >> imageData;
     parser << imageData;
@@ -45,24 +45,32 @@ void TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor
     if (2 == dim){
         for (long i=0; i<tensorSize[0]; ++i)
             for (long j=0; j<tensorSize[1];++j)
-                pTensor->e(i,j) = imageData.at(j,i);
-
+                pTensor->e(i,j) = (float) imageData.at(j,i);
     }
     else if (3 == dim){
         for (long i=0; i<tensorSize[0]; ++i)
             for (long j=0; j<tensorSize[1];++j)
                 for (long k=0; k<tensorSize[2];++k)
                 pTensor->e(i,j,k) = (float)imageData.at(k,j,i);
-
     }
+    // currently TIPL does not support 4D image data
+    /*else if (4 == dim){
+        for (long i=0; i<tensorSize[0]; ++i)
+            for (long j=0; j<tensorSize[1];++j)
+                for (long k=0; k<tensorSize[2];++k)
+                    for (long l=0; l<tensorSize[3];++l)
+                        pTensor->e(i,j,k,l) = (float)imageData.at(l,k,j,i);
+
+    }*/
     else{
         cout<<"Error: the input NIfTI file has incorrect dimension"<<endl;
-
+        return -2;
     }
+    return 0;
 }
 
 template<typename VoxelType, int Dimension>
-void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor, const vector<long> &offset,
+int TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor, const vector<long> &offset,
                                                     const string &filename) {
     const vector<long> tensorSize = pTensor->getDims();
     tipl::io::nifti parser;
@@ -70,7 +78,7 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor
 
     if (dim != m_imageHeader2.dim[0]) {
         cout << "Error: output image has different dimension with input image" << endl;
-        return;
+        return -1;
     }
 
     for (int i = 0; i < dim; ++i) {
@@ -103,5 +111,6 @@ void TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor
     //save file; output file always in RAS orientation
     parser.save_to_file(filename.c_str());
     cout << "Info:  " << filename << "  ouptput." << endl;
+    return 0;
 
 }
