@@ -247,7 +247,7 @@ void ConvolutionLayer::freeExpandDy() {
 void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
     freeExpandDy();
     const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-    vector<long> expandDyDims = Xdims + m_filterSize -1;
+    vector<long> expandDyDims = Xdims + m_filterSize - 1;
     m_expandDy = new Tensor<float>(expandDyDims);
     m_expandDy->zeroInitialize();
     const Tensor<float> &dY = *pdY;
@@ -255,12 +255,17 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
 
     //copy DyTensor to expandDy, according to  m_stride
     int Nt = pdY->getDims().size();  //dyTensor's size, it excludes feature dimension.
-    vector<long> Xs = m_filterSize - 1; //X starting coordinate for copying dy
+    vector<long> Xs = m_filterSize - 1; //X starting coordinates for copying dy
     vector<long> Xc = Xs;
 
     vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
 
-    if (2 == Nt) {
+    if (2 == Nt && 1 == f.size()) {
+        for (long i = 0; i < dYTensorSize[0]; ++i) {
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
+            m_expandDy->e(Xc) = dY(i, 0);
+        }
+    } else if (2 == Nt && 2 == f.size()) {
         for (long i = 0; i < dYTensorSize[0]; ++i) {
             Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < dYTensorSize[1]; ++j) {
@@ -268,7 +273,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                 m_expandDy->e(Xc) = dY(i, j);
             }
         }
-    } else if (3 == Nt) {
+    } else if (3 == Nt && 3 == f.size()) {
         for (long i = 0; i < dYTensorSize[0]; ++i) {
             Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < dYTensorSize[1]; ++j) {
@@ -279,7 +284,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                 }
             }
         }
-    } else if (4 == Nt) {
+    } else if (4 == Nt && 4 == f.size()) {
         for (long i = 0; i < dYTensorSize[0]; ++i) {
             Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < dYTensorSize[1]; ++j) {
@@ -293,8 +298,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                 }
             }
         }
-    }
-    else if (5 == Nt) {
+    } else if (5 == Nt && 5 == f.size()) {
         for (long i = 0; i < dYTensorSize[0]; ++i) {
             Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < dYTensorSize[1]; ++j) {
@@ -311,8 +315,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                 }
             }
         }
-    }
-    else {
+    } else {
         cout << "Error: dimension>6  does not support in convolution expandDyTensor." << endl;
     }
 }
@@ -325,7 +328,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
 
     vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
     vector<long> dYDimsEx(Nf,1); //Nf long integers with each value equal 1
-    for (int i=0; i< dYDims.size(); ++i){
+    for (int i=0; i< dYDims.size() && i< f.size(); ++i){
         dYDimsEx[f[i]] = dYDims[i];
     }
 

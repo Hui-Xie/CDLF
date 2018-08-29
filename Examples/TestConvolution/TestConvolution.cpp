@@ -11,12 +11,12 @@ int main (int argc, char *argv[])
 
     ConvNet net;
     net.build();
+    net.printArchitecture();
 
     // config network parameters;
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
     net.setBatchSize(20);
-    net.printArchitecture();
 
     //  run network
     net.initialize();
