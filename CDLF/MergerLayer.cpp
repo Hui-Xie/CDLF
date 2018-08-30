@@ -2,53 +2,53 @@
 // Created by Hui Xie on 8/4/2018.
 //
 
-#include "SumLayer.h"
+#include "MergerLayer.h"
 
-SumLayer::SumLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize)
+MergerLayer::MergerLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize)
 {
-    m_type = "SumLayer";
+    m_type = "MergerLayer";
 }
 
-SumLayer::~SumLayer()
+MergerLayer::~MergerLayer()
 {
   //null
 }
 
-void SumLayer::initialize(const string& initialMethod){
+void MergerLayer::initialize(const string& initialMethod){
   //null
 }
 
-void SumLayer::zeroParaGradient(){
+void MergerLayer::zeroParaGradient(){
   //null
 }
 
-void SumLayer::forward(){
+void MergerLayer::forward(){
   m_pYTensor->zeroInitialize();
   for(list<Layer*>::iterator it= m_prevLayers.begin(); it != m_prevLayers.end();++it){
       *m_pYTensor += *((*it)->m_pYTensor);
   }
 }
 
-void SumLayer::backward(){
+void MergerLayer::backward(){
     for(list<Layer*>::iterator it= m_prevLayers.begin(); it != m_prevLayers.end();++it){
         *((*it)->m_pdYTensor) += *m_pdYTensor;
     }
 }
 
-void SumLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void MergerLayer::updateParameters(const float lr, const string& method, const int batchSize){
   //null
 }
 
-void SumLayer::addPreviousLayer(Layer* prevLayer)
+void MergerLayer::addPreviousLayer(Layer* prevLayer)
 {
     if (nullptr != prevLayer){
         if (isLayerInList(prevLayer)){
-            cout<<"Error: repeatedly add layer to SumLayer:"<<prevLayer->m_name<<endl;
+            cout<<"Error: repeatedly add layer to MergerLayer:"<<prevLayer->m_name<<endl;
             return;
         }
         if (!sameVector(m_tensorSize,prevLayer->m_tensorSize)){
-            cout<<"Error: Incoming branches to SumLayer should have same tensorSize"<<endl;
-            cout<<"SumLayer Tensor: "<< vector2Str(m_tensorSize)<<endl;
+            cout<<"Error: Incoming branches to MergerLayer should have same tensorSize"<<endl;
+            cout<<"MergerLayer Tensor: "<< vector2Str(m_tensorSize)<<endl;
             cout<<"New prevlayer Tensor: "<< vector2Str(prevLayer->m_tensorSize)<<"  Layer Name: "<<prevLayer->m_name<<endl;
             return;
         }
@@ -56,7 +56,7 @@ void SumLayer::addPreviousLayer(Layer* prevLayer)
     }
 }
 
-bool SumLayer::isLayerInList(const Layer* layer){
+bool MergerLayer::isLayerInList(const Layer* layer){
     for(list<Layer*>::const_iterator iter= m_prevLayers.begin(); iter!= m_prevLayers.end(); ++iter){
         if (layer == *iter) return true;
     }

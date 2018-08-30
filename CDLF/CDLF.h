@@ -18,7 +18,7 @@
 #include "SoftMaxLayer.h"
 #include "MaxPoolingLayer.h"
 #include "IdentityLayer.h"
-#include "SumLayer.h"
+#include "MergerLayer.h"
 #include "BranchLayer.h"
 #include "BranchLayer.h"
 #include "SigmoidLayer.h"

@@ -74,14 +74,14 @@ void DAGNet::build(){
     NormalizationLayer* normalLayer6 = new NormalizationLayer(id++, "NormLayer6",reLU6);
     addLayer(normalLayer6);
 
-    //add SumLayer
-    SumLayer* sumLayer = new SumLayer(id++, "SumLayer", {12,1});
-    addLayer(sumLayer);
-    sumLayer->addPreviousLayer(normalLayer4);
-    sumLayer->addPreviousLayer(normalLayer6);
+    //add MergerLayer
+    MergerLayer* merger = new MergerLayer(id++, "MergerLayer", {12,1});
+    addLayer(merger);
+    merger->addPreviousLayer(normalLayer4);
+    merger->addPreviousLayer(normalLayer6);
 
     //add tail path
-    FCLayer* fc4 = new FCLayer(id++, "FC4", 10, sumLayer);
+    FCLayer* fc4 = new FCLayer(id++, "FC4", 10, merger);
     addLayer(fc4);
 
     //add Loss Layer

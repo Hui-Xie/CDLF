@@ -9,13 +9,13 @@
 
 /* Y = \sum X_i
  * dL/dx_i = dL/dY * dY/dX_i = dL/dY;
- * in the BranchLayer, the dL/dY should be accumulate from the following layers of SumLayer
+ * in the BranchLayer, the dL/dY should be accumulate from the following layers of MergerLayer
  * */
 
-class SumLayer : public Layer {
+class MergerLayer : public Layer {
 public:
-    SumLayer(const int id, const string& name, const vector<long>& tensorSize);
-    ~SumLayer();
+    MergerLayer(const int id, const string& name, const vector<long>& tensorSize);
+    ~MergerLayer();
 
     list<Layer*> m_prevLayers;
 
