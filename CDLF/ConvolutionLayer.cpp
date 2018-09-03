@@ -45,13 +45,16 @@ ConvolutionLayer::~ConvolutionLayer() {
     }
 }
 
+// the filterSize in each dimension should be odd,
+// or if it is even, it must be same size of corresponding dimension of tensorSize of input X
 bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *prevLayer) {
     int dimFilter = filterSize.size();
     int dimX = prevLayer->m_tensorSize.size();
     if (dimFilter == dimX) {
         for (int i = 0; i < dimX; ++i) {
-            if (0 == filterSize[i] % 2) {
-                cout << "Error: filter Size should be odd." << endl;  // this is a better design
+            if (0==filterSize[i]%2 && filterSize[i] != prevLayer->m_tensorSize[i]) {
+                cout << "Error: the filterSize in each dimension should be odd, "
+                        "or if it is even, it must be same size of corresponding dimension of tensorSize of input X." << endl;
                 return false;
             }
         }
