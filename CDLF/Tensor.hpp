@@ -183,9 +183,15 @@ ValueType& Tensor<ValueType>::e(long i, long j, long k, long l, long m)const{
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::e(long i, long j, long k, long l, long m, long o)const{
+ValueType& Tensor<ValueType>::e(long i, long j, long k, long l, long m, long n)const{
     assert(6 == m_dims.size());
-    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]+ o*m_dimsSpan[5]];
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]+ n*m_dimsSpan[5]];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::e(long i, long j, long k, long l, long m, long n, long o)const{
+    assert(7 == m_dims.size());
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]+ n*m_dimsSpan[5]+o*m_dimsSpan[6]];
 }
 
 template<class ValueType>
@@ -223,9 +229,15 @@ ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m
 }
 
 template<class ValueType>
-ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m, long o) const{
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m, long n) const{
     assert(6 == m_dims.size());
-    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]+o*m_dimsSpan[5]];
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]+n*m_dimsSpan[5]];
+}
+
+template<class ValueType>
+ValueType& Tensor<ValueType>::operator() (long i, long j, long k, long l, long m, long n, long o) const{
+    assert(7 == m_dims.size());
+    return m_data[i*m_dimsSpan[0]+j*m_dimsSpan[1]+k*m_dimsSpan[2]+l*m_dimsSpan[3] +m*m_dimsSpan[4]+n*m_dimsSpan[5]+ o*m_dimsSpan[6]];
 }
 
 // transpose operation only supports 2D matrix

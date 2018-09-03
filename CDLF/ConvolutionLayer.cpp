@@ -221,7 +221,37 @@ void ConvolutionLayer::forward() {
                 }
             }
         }
-    } else {
+    }
+    else if (6 == Nt - Df && 6 == f.size()) {
+        for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
+            Xc[f[0]] = i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df + 1]; ++j) {
+                Xc[f[1]] = j * m_stride;
+                for (long k = 0; k < m_tensorSize[Df + 2]; ++k) {
+                    Xc[f[2]] = k * m_stride;
+                    for (long l = 0; l < m_tensorSize[Df + 3]; ++l) {
+                        Xc[f[3]] = l * m_stride;
+                        for (long m = 0; m < m_tensorSize[Df + 4]; ++m) {
+                            Xc[f[4]] = m * m_stride;
+                            for (long n = 0; n < m_tensorSize[Df + 5]; ++n) {
+                                Xc[f[5]] = n * m_stride;
+                                Tensor<float> subX = X.subTensorFromTopLeft(Xc, m_filterSize);
+                                if (1 != m_numFilters) {
+                                    for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
+                                        m_pYTensor->e(idxF, i, j, k, l, m, n) = subX.conv(*m_pW[idxF]);
+                                    }
+                                } else {
+                                    m_pYTensor->e(i, j, k, l, m, n) = subX.conv(*m_pW[0]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    else {
         cout << "Error: dimension>6  does not support in convolution forward." << endl;
     }
 }
@@ -322,7 +352,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                     Xc[f[2]] = Xs[f[2]] + k * m_stride;
                     for (long l = 0; l < dYTensorSize[3]; ++l) {
                         Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        for (long m = 0; m < dYTensorSize[3]; ++m) {
+                        for (long m = 0; m < dYTensorSize[4]; ++m) {
                             Xc[f[4]] = Xs[f[4]] + m * m_stride;
                             m_expandDy->e(Xc) = dY(i, j, k, l, m);
                         }
@@ -330,8 +360,54 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                 }
             }
         }
-    } else {
-        cout << "Error: dimension>6  does not support in convolution expandDyTensor." << endl;
+    }else if (6 == Nt && 6 == f.size()) {
+        for (long i = 0; i < dYTensorSize[0]; ++i) {
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
+            for (long j = 0; j < dYTensorSize[1]; ++j) {
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
+                for (long k = 0; k < dYTensorSize[2]; ++k) {
+                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
+                    for (long l = 0; l < dYTensorSize[3]; ++l) {
+                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
+                        for (long m = 0; m < dYTensorSize[4]; ++m) {
+                            Xc[f[4]] = Xs[f[4]] + m * m_stride;
+                            for (long n = 0; n < dYTensorSize[5]; ++n) {
+                                Xc[f[5]] = Xs[f[5]] + n * m_stride;
+                                m_expandDy->e(Xc) = dY(i, j, k, l, m, n);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else if (7 == Nt && 7 == f.size()) {
+        for (long i = 0; i < dYTensorSize[0]; ++i) {
+            Xc[f[0]] = Xs[f[0]] + i * m_stride;
+            for (long j = 0; j < dYTensorSize[1]; ++j) {
+                Xc[f[1]] = Xs[f[1]] + j * m_stride;
+                for (long k = 0; k < dYTensorSize[2]; ++k) {
+                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
+                    for (long l = 0; l < dYTensorSize[3]; ++l) {
+                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
+                        for (long m = 0; m < dYTensorSize[4]; ++m) {
+                            Xc[f[4]] = Xs[f[4]] + m * m_stride;
+                            for (long n = 0; n < dYTensorSize[5]; ++n) {
+                                Xc[f[5]] = Xs[f[5]] + n * m_stride;
+                                for (long o = 0; o < dYTensorSize[6]; ++o) {
+                                    Xc[f[6]] = Xs[f[6]] + o * m_stride;
+                                    m_expandDy->e(Xc) = dY(i, j, k, l, m, n, o);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    else {
+        cout << "Error: dimension>7  does not support in convolution expandDyTensor." << endl;
     }
 }
 
@@ -391,8 +467,28 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                 }
             }
         }
-    } else {
-        cout << "Error: Dimension >=5 does not support in ConvolutionLayer::computeDW" << endl;
+    } else if (6 == Nf) {
+        for (int i = 0; i < dWDims[0]; ++i) {
+            for (int j = 0; j < dWDims[1]; ++j) {
+                for (int k = 0; k < dWDims[2]; ++k) {
+                    for (int l = 0; l < dWDims[3]; ++l) {
+                        for (int m = 0; m < dWDims[4]; ++m) {
+                            for (int n = 0; n < dWDims[5]; ++n) {
+                                Tensor<float> Xsub = X.subTensorFromTopLeft(
+                                        {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m * m_stride,
+                                         n * m_stride}, dYDimsEx,
+                                        m_stride);
+                                pdW->e(i, j, k, l, m, n) += Xsub.conv(*pdY);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    else {
+        cout << "Error: Dimension >6 does not support in ConvolutionLayer::computeDW" << endl;
     }
 }
 
@@ -450,18 +546,38 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                 for (long k = 0; k < dXdims[2]; ++k) {
                     for (long l = 0; l < dXdims[3]; ++l) {
                         for (long m = 0; m < dXdims[4]; ++m) {
-                            for (long o = 0; o < dXdims[5]; ++o) {
-                                Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l, m, o},
+                            for (long n = 0; n < dXdims[5]; ++n) {
+                                Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l, m, n},
                                                                                              m_filterSize, 1);
-                                dX(i, j, k, l, m, o) += subExpandDy.flip().conv(*pW);
+                                dX(i, j, k, l, m, n) += subExpandDy.flip().conv(*pW);
                             }
                         }
                     }
                 }
             }
         }
-    } else {
-        cout << "Error: Dimension >6 does not support in ConvolutionLayer::computeDX." << endl;
+    }
+    else if (7 == N) {
+        for (long i = 0; i < dXdims[0]; ++i) {
+            for (long j = 0; j < dXdims[1]; ++j) {
+                for (long k = 0; k < dXdims[2]; ++k) {
+                    for (long l = 0; l < dXdims[3]; ++l) {
+                        for (long m = 0; m < dXdims[4]; ++m) {
+                            for (long n = 0; n < dXdims[5]; ++n) {
+                                for (long o = 0; o < dXdims[6]; ++o) {
+                                    Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l, m, n, o},
+                                                                                                 m_filterSize, 1);
+                                    dX(i, j, k, l, m, n, o) += subExpandDy.flip().conv(*pW);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        cout << "Error: Dimension >7 does not support in ConvolutionLayer::computeDX." << endl;
     }
     freeExpandDy();
 }
