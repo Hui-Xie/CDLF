@@ -52,9 +52,10 @@ bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *pr
     int dimX = prevLayer->m_tensorSize.size();
     if (dimFilter == dimX) {
         for (int i = 0; i < dimX; ++i) {
-            if (0==filterSize[i]%2 && filterSize[i] != prevLayer->m_tensorSize[i]) {
+            if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i]) {
                 cout << "Error: the filterSize in each dimension should be odd, "
-                        "or if it is even, it must be same size of corresponding dimension of tensorSize of input X." << endl;
+                        "or if it is even, it must be same size of corresponding dimension of tensorSize of input X."
+                     << endl;
                 return false;
             }
         }
@@ -87,8 +88,8 @@ void ConvolutionLayer::updateTensorSize() {
 }
 
 void ConvolutionLayer::constructFiltersAndY() {
-    m_pW = (Tensor<float>**) new void* [m_numFilters];
-    m_pdW = (Tensor<float>**) new void* [m_numFilters];
+    m_pW = (Tensor<float> **) new void *[m_numFilters];
+    m_pdW = (Tensor<float> **) new void *[m_numFilters];
     for (int i = 0; i < m_numFilters; ++i) {
         m_pW[i] = new Tensor<float>(m_filterSize);
         m_pdW[i] = new Tensor<float>(m_filterSize);
@@ -120,19 +121,31 @@ void ConvolutionLayer::zeroParaGradient() {
 void ConvolutionLayer::forward() {
     const int Nt = m_tensorSize.size();
     const int Nf = m_filterSize.size();
-    const int Df = ( 1== m_numFilters)? 0:1; //Feature dimension
+    const int Df = (1 == m_numFilters) ? 0 : 1; //Feature dimension, non-one filter will add one feature dimension to output Y
 
     vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
 
-    vector<long> Xs = m_filterSize / 2; //X central for each subTensorFromCenter at first point
-    vector<long> Xc = Xs;
+    vector<long> Xs(Nf, 0); //the initial topLeft coordinate of subTensor of X
+    vector<long> Xc = Xs;  // the topLeft coordinate of subTensor of X
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
-    if (2 == Nt -Df) {
-        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
+    if (2 == Nt - Df && 1 == f.size()) {
+        for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
+            Xc[f[0]] = i * m_stride;
+            Tensor<float> subX = X.subTensorFromTopLeft(Xc, m_filterSize);
+            if (1 != m_numFilters) {
+                for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
+                    m_pYTensor->e(idxF, i) = subX.conv(*m_pW[idxF]);
+                }
+            } else {
+                m_pYTensor->e(i, 1) = subX.conv(*m_pW[0]);  // This maybe has problem.
+            }
+        }
+    } else if (2 == Nt - Df && 2 == f.size()) {
+        for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
+            Xc[f[0]] = i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df + 1]; ++j) {
+                Xc[f[1]] = j * m_stride;
+                Tensor<float> subX = X.subTensorFromTopLeft(Xc, m_filterSize);
                 if (1 != m_numFilters) {
                     for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
                         m_pYTensor->e(idxF, i, j) = subX.conv(*m_pW[idxF]);
@@ -143,14 +156,14 @@ void ConvolutionLayer::forward() {
 
             }
         }
-    } else if (3 == Nt-Df) {
-        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < m_tensorSize[Df+2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
+    } else if (3 == Nt - Df && 3 == f.size()) {
+        for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
+            Xc[f[0]] = i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df + 1]; ++j) {
+                Xc[f[1]] = j * m_stride;
+                for (long k = 0; k < m_tensorSize[Df + 2]; ++k) {
+                    Xc[f[2]] = k * m_stride;
+                    Tensor<float> subX = X.subTensorFromTopLeft(Xc, m_filterSize);
                     if (1 != m_numFilters) {
                         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
                             m_pYTensor->e(idxF, i, j, k) = subX.conv(*m_pW[idxF]);
@@ -162,16 +175,16 @@ void ConvolutionLayer::forward() {
                 }
             }
         }
-    } else if (4 == Nt-Df) {
-        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < m_tensorSize[Df+2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    for (long l = 0; l < m_tensorSize[Df+3]; ++l) {
-                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
+    } else if (4 == Nt - Df && 4 == f.size()) {
+        for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
+            Xc[f[0]] = i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df + 1]; ++j) {
+                Xc[f[1]] = j * m_stride;
+                for (long k = 0; k < m_tensorSize[Df + 2]; ++k) {
+                    Xc[f[2]] = k * m_stride;
+                    for (long l = 0; l < m_tensorSize[Df + 3]; ++l) {
+                        Xc[f[3]] = l * m_stride;
+                        Tensor<float> subX = X.subTensorFromTopLeft(Xc, m_filterSize);
                         if (1 != m_numFilters) {
                             for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
                                 m_pYTensor->e(idxF, i, j, k, l) = subX.conv(*m_pW[idxF]);
@@ -184,18 +197,18 @@ void ConvolutionLayer::forward() {
                 }
             }
         }
-    }else if (5 == Nt-Df) {
-        for (long i = 0; i < m_tensorSize[Df+0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < m_tensorSize[Df+1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < m_tensorSize[Df+2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    for (long l = 0; l < m_tensorSize[Df+3]; ++l) {
-                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        for (long m = 0; m < m_tensorSize[Df+4]; ++m) {
-                            Xc[f[4]] = Xs[f[4]] + m * m_stride;
-                            Tensor<float> subX = X.subTensorFromCenter(Xc, m_filterSize);
+    } else if (5 == Nt - Df && 5 == f.size()) {
+        for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
+            Xc[f[0]] = i * m_stride;
+            for (long j = 0; j < m_tensorSize[Df + 1]; ++j) {
+                Xc[f[1]] = j * m_stride;
+                for (long k = 0; k < m_tensorSize[Df + 2]; ++k) {
+                    Xc[f[2]] = k * m_stride;
+                    for (long l = 0; l < m_tensorSize[Df + 3]; ++l) {
+                        Xc[f[3]] = l * m_stride;
+                        for (long m = 0; m < m_tensorSize[Df + 4]; ++m) {
+                            Xc[f[4]] = m * m_stride;
+                            Tensor<float> subX = X.subTensorFromTopLeft(Xc, m_filterSize);
                             if (1 != m_numFilters) {
                                 for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
                                     m_pYTensor->e(idxF, i, j, k, l, m) = subX.conv(*m_pW[idxF]);
@@ -208,8 +221,7 @@ void ConvolutionLayer::forward() {
                 }
             }
         }
-    }
-    else {
+    } else {
         cout << "Error: dimension>6  does not support in convolution forward." << endl;
     }
 }
@@ -330,8 +342,8 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dYDims = pdY->getDims();
 
     vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
-    vector<long> dYDimsEx(Nf,1); //Nf long integers with each value equal 1
-    for (int i=0; i< dYDims.size() && i< f.size(); ++i){
+    vector<long> dYDimsEx(Nf, 1); //Nf long integers with each value equal 1
+    for (int i = 0; i < dYDims.size() && i < f.size(); ++i) {
         dYDimsEx[f[i]] = dYDims[i];
     }
 
@@ -371,15 +383,15 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                     for (int l = 0; l < dWDims[3]; ++l) {
                         for (int m = 0; m < dWDims[4]; ++m) {
                             Tensor<float> Xsub = X.subTensorFromTopLeft(
-                                    {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m*m_stride}, dYDimsEx, m_stride);
-                            pdW->e(i, j, k, l,m) += Xsub.conv(*pdY);
+                                    {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m * m_stride}, dYDimsEx,
+                                    m_stride);
+                            pdW->e(i, j, k, l, m) += Xsub.conv(*pdY);
                         }
                     }
                 }
             }
         }
-    }
-    else {
+    } else {
         cout << "Error: Dimension >=5 does not support in ConvolutionLayer::computeDW" << endl;
     }
 }
@@ -418,20 +430,21 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                 }
             }
         }
-    }else if (5 == N) {
+    } else if (5 == N) {
         for (long i = 0; i < dXdims[0]; ++i) {
             for (long j = 0; j < dXdims[1]; ++j) {
                 for (long k = 0; k < dXdims[2]; ++k) {
                     for (long l = 0; l < dXdims[3]; ++l) {
                         for (long m = 0; m < dXdims[4]; ++m) {
-                            Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l,m}, m_filterSize, 1);
+                            Tensor<float> subExpandDy = m_expandDy->subTensorFromTopLeft({i, j, k, l, m}, m_filterSize,
+                                                                                         1);
                             dX(i, j, k, l, m) += subExpandDy.flip().conv(*pW);
                         }
                     }
                 }
             }
         }
-    }else if (6 == N) {
+    } else if (6 == N) {
         for (long i = 0; i < dXdims[0]; ++i) {
             for (long j = 0; j < dXdims[1]; ++j) {
                 for (long k = 0; k < dXdims[2]; ++k) {
@@ -447,9 +460,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                 }
             }
         }
-    }
-
-    else {
+    } else {
         cout << "Error: Dimension >6 does not support in ConvolutionLayer::computeDX." << endl;
     }
     freeExpandDy();
