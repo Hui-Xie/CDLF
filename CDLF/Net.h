@@ -62,6 +62,7 @@ protected:
 
 private:
     map<int, Layer*> m_layers;
+    bool layerNameExist(const string& name);
 
 };
 
