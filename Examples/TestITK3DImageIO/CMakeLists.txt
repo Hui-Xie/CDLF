@@ -8,7 +8,7 @@ message("3  in Clion File/Setting/Build/CMake/CMakeOptions config -DITK_DIR=the/
 message("*************************************")
 
 
-set(ITK_DIR /Users/hxie1/Projects/ITK_build)
+#set(ITK_DIR /Users/hxie1/Projects/ITK_build)
 
 find_package(ITK QUIET)
 if(ITK_FOUND)

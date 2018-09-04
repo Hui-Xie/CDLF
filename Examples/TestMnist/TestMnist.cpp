@@ -5,12 +5,23 @@
 #include "MnistConvNet.h"
 #include "MNIST.h"
 
-//const string mnistDir= "E:\\CProject\\mnist";
+void printUsage(char* argv0){
+    cout<<"Test MNIST Dataset:"<<endl;
+    cout<<"Usage: "<<endl;
+    cout<<argv0<<" fullPathOfMnistDir"<<endl;
+}
 
-const string mnistDir= "/Users/hxie1/Projects/mnist";
 
-int main (int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
+
+    if (2 != argc){
+        cout<<"Error: input parameter error."<<endl;
+        printUsage(argv[0]);
+        return -1;
+    }
+
+    const string mnistDir = argv[1];
+
     // Load MNIST Data
     MNIST mnist(mnistDir);
     mnist.loadData();
