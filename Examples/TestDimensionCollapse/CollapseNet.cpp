@@ -26,8 +26,12 @@ void CollapseNet::build(){
     ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {5,5,8}, getFinalLayer(),1); //output 7*14
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {5,5,8}, getFinalLayer(),1); //output 9*14
     addLayer(conv2);
+    NormalizationLayer* norm2 = new NormalizationLayer(id++, "Norm2",getFinalLayer());
+    addLayer(norm2);
+    ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer());
+    addLayer(reLU2);
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
     addLayer(vec1);
