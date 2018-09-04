@@ -9,3 +9,5 @@ add_subdirectory(TestITK3DImageIO)
 add_subdirectory(TestITK4DImageIO)
 add_subdirectory(TestTIPL)
 add_subdirectory(TestDAGNetwork)
+add_subdirectory(TestDimensionCollapse)
+
