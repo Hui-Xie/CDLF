@@ -62,7 +62,8 @@ protected:
 
 private:
     map<int, Layer*> m_layers;
-    bool layerNameExist(const string& name);
+    // check whether layer pointer and name are duplicated
+    bool layerExist(const Layer* layer);
 
 };
 

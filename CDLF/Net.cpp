@@ -99,7 +99,7 @@ void Net::zeroParaGradient(){
 
 void Net::addLayer(Layer* layer){
      if (nullptr == layer) return;
-     if (0 == m_layers.count(layer->m_id) && !layerNameExist(layer->m_name)){
+     if (0 == m_layers.count(layer->m_id) && !layerExist(layer)){
          m_layers[layer->m_id] = layer;
      }
      else{
@@ -178,10 +178,10 @@ void Net::printArchitecture(){
     cout<<"=========== End of Network Architecture =============="<<endl;
 }
 
-bool Net::layerNameExist(const string& name){
+bool Net::layerExist(const Layer* layer){
     for(map<int, Layer*>::const_iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        if (name == iter->second->m_name){
-            cout<<"Warning: "<<name<<" has already in the added layer."<<endl;
+        if (layer->m_name == iter->second->m_name || layer == iter->second ){
+            cout<<"Error: "<<layer->m_name<<" has already been in the previous added layer."<<endl;
             return true;
         }
     }
