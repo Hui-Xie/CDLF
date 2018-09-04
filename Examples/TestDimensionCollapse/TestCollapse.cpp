@@ -7,7 +7,7 @@
 
 int main (int argc, char *argv[])
 {
-    cout<<"Test 4D Convolution"<<endl;
+    cout<<"Test Dimensional Collapse in Convolution"<<endl;
 
     CollapseNet net;
     net.build();
@@ -22,6 +22,6 @@ int main (int argc, char *argv[])
     net.initialize();
     net.train();
     net.test();
-    cout<< "=========== End of ConvolutionLayer Test ============"<<endl;
+    cout<< "=========== End of Dimensional Collapse in Convolution Test ============"<<endl;
     return 0;
 }
