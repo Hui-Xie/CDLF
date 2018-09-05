@@ -26,6 +26,7 @@ set(CDLFLib libCDLF.so)    # for Linux
 add_subdirectory(CDLF)
 add_subdirectory(Examples)
 add_subdirectory(Interface3rdParty)
+add_subdirectory(PreprocessingTools)
 
 
 
