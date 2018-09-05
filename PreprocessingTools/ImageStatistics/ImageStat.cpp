@@ -75,8 +75,14 @@ int main(int argc, char *argv[]) {
     meanOrigin.Fill(0);
     meanSpacing.Fill(0);
 
+    numFiles = 9; //debug
 
+    int computingNumFile = 0;
     for(int i= 0; i<numFiles; ++i){
+        if ("/Users/hxie1/msd/Task07_Pancreas/imagesTr/pancreas_296.nii.gz" == imageVector[i])
+        {
+            continue;
+        }
         reader->SetFileName( imageVector[i]);
         reader->Update();
         typename ImageType::Pointer image = reader->GetOutput();
@@ -87,7 +93,9 @@ int main(int argc, char *argv[]) {
         ImageType::SpacingType spacing = image->GetSpacing();
 
         gSize += size;
-        gOrigin.Get_vnl_vector() += origin.Get_vnl_vector();
+        for(int j=0 ; j<Dimension; ++j){
+            gOrigin[j] += origin[j];
+        }
         gSpacing += spacing;
         
         if (i==0){
@@ -97,7 +105,7 @@ int main(int argc, char *argv[]) {
 
             maxSize = size;
             maxOrigin = origin;
-            minSpacing = spacing;
+            maxSpacing = spacing;
         }
         else{
             for(int j=0; j<Dimension; ++j){
@@ -111,22 +119,26 @@ int main(int argc, char *argv[]) {
             }
             
         }
+
+        ++computingNumFile;
+
     }
 
     for(int j=0; j<Dimension; ++j){
-        meanSize[j] = gSize[j]/numFiles;
-        meanOrigin[j] = gOrigin[j]/numFiles;
-        meanSpacing[j] = gSpacing[j]/numFiles;
+        meanSize[j] = gSize[j]/computingNumFile;
+        meanOrigin[j] = gOrigin[j]/computingNumFile;
+        meanSpacing[j] = gSpacing[j]/computingNumFile;
     }
 
     cout<<"Statistics Information of Images:"<<endl;
     cout<<"Image Directories:"<<endl;
-    for (int i=1; i<argc; ++i){
+    for (int i=0; i<pathVector.size(); ++i){
         cout<<"    "<<pathVector[i]<<endl;
     }
-    cout<<"Total "<<numFiles <<"  image files"<<endl;
+    cout<<"Totally compute "<<computingNumFile <<"  image files"<<endl;
     cout<<"Dimension = " << Dimension <<endl;
 
+    cout<<"Dimension     X      Y    Z"<<endl;
     cout<<"MinSize: ";
     for (int j=0; j<Dimension; ++j)  cout<<"   "<<minSize[j];  cout<<endl;
     cout<<"MaxSize: ";
