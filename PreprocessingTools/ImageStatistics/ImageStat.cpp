@@ -18,6 +18,18 @@ void printUsage(char* argv0){
     cout<<argv0<<" fullPathDir1  fullPathDir2 fullPathDir3 ..."<<endl;
 }
 
+// vector<string> exceptionFiles= {"/Users/hxie1/msd/Task07_Pancreas/imagesTr/pancreas_296.nii.gz"};
+
+vector<string> exceptionFiles={};
+
+bool isExceptionFile(const string file, const vector<string> exceptionFiles){
+    long N = exceptionFiles.size();
+    for(int i =0; i< N; ++i){
+       if (file == exceptionFiles[i]) return true;
+    }
+    return false;
+}
+
 int main(int argc, char *argv[]) {
 
     if (argc < 2) {
@@ -49,8 +61,6 @@ int main(int argc, char *argv[]) {
 
     const int Dimension = 3;
     using ImageType = itk::Image< float, Dimension >;
-    using ReaderType = itk::ImageFileReader< ImageType >;
-    ReaderType::Pointer reader = ReaderType::New();
 
     ImageType::SizeType gSize;  // g means global
     ImageType::PointType gOrigin;
@@ -75,17 +85,20 @@ int main(int argc, char *argv[]) {
     meanOrigin.Fill(0);
     meanSpacing.Fill(0);
 
-    numFiles = 9; //debug
-
     int computingNumFile = 0;
     for(int i= 0; i<numFiles; ++i){
-        if ("/Users/hxie1/msd/Task07_Pancreas/imagesTr/pancreas_296.nii.gz" == imageVector[i])
+        if (isExceptionFile(imageVector[i],exceptionFiles))
         {
+            cout<<"Infor: omit file: "<<imageVector[i] <<endl;
             continue;
         }
+
+        using ReaderType = itk::ImageFileReader< ImageType >;
+        ReaderType::Pointer reader = ReaderType::New();  // a reader only can support to read 9 files, bad. therefore I put it inside loop.
+
         reader->SetFileName( imageVector[i]);
         reader->Update();
-        typename ImageType::Pointer image = reader->GetOutput();
+        ImageType::Pointer image = reader->GetOutput();
 
         // get Image information
         ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
