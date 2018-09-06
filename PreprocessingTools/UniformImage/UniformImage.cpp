@@ -4,6 +4,7 @@
 #include <iostream>
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+#include "itkRegionOfInterestImageFilter.h"
 
 
 using namespace std;
@@ -61,6 +62,7 @@ int main(int argc, char *argv[]) {
     ImageType::SizeType inputSize, outputSize, roiSize;  //roi: region of interest
     ImageType::PointType inputOrigin, outpusOrigin;
     ImageType::SpacingType inputSpacing, outputSpacing;
+    ImageType::IndexType start;
     outputSize[0] = sizeX; outputSize[1]=sizeY; outputSize[2]=sizeZ;
     outputSpacing[0] = spacingX; outputSpacing[1]=spacingY; outputSpacing[2]=spacingZ;
 
@@ -72,10 +74,27 @@ int main(int argc, char *argv[]) {
         roiSize[i] = outputSpacing[i]* outputSize[i]/inputSpacing[i];
         if (roiSize[i] > inputSize[i]){
             cout<<"Error: "<<inputFile<< " has not enough physical volume to support output Size ans spacing at dimension "<<i <<"."<<endl;
+            cout<<"Infor: maybe you need to reduce the output Size. "<<endl;
             return -2;
         }
+        else{
+            start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
+        }
     }
-    
+
+    ImageType::RegionType region;
+    region.SetIndex(start);
+    region.SetSize(roiSize);
+
+    using ROIFilterType = itk::RegionOfInterestImageFilter< ImageType, ImageType >;
+    ROIFilterType::Pointer roiFilter = ROIFilterType::New();
+    roiFilter->SetInput( image);
+    roiFilter->SetRegionOfInterest( region );
+    roiFilter->Update();
+    image = roiFilter->GetOutput();
+
+
+
 
 
 
@@ -85,7 +104,14 @@ int main(int argc, char *argv[]) {
     //set TransformType and resample Type
 
     //Convert and Write out
+    using WriterType = itk::ImageFileWriter< ImageType >;
+    WriterType::Pointer writer = WriterType::New();
+    // if output does not exist, create
 
+
+    writer->SetFileName( outputFile);
+    writer->SetInput(image);
+    writer->Update();
 
     return 0;
 }
