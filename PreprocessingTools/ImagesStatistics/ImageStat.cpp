@@ -17,6 +17,7 @@ void printUsage(char* argv0){
     cout<<"This program analyzes the statistic min, mean and max of size, origin, spacing of all images in given directories."<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" <fullPathDir1>  [fullPathDir2] [fullPathDir3] ..."<<endl;
+    cout<<endl;
 }
 
 // vector<string> exceptionFiles= {"/Users/hxie1/msd/Task07_Pancreas/imagesTr/pancreas_296.nii.gz"};

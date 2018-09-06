@@ -1,1 +1,2 @@
-add_subdirectory(ImageStatistics)
+add_subdirectory(ImagesStatistics)
+add_subdirectory(UniformImage)
