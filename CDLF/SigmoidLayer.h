@@ -7,13 +7,13 @@
 
 #include "Layer.h"
 
-/* Y = exp(x)/( 1+ exp(x)) in element-wise
- * dL/dx = dL/dY * dY/dx = dL/dY * exp(x)/(1 +exp(x))^2
+/* Y = k/( 1+ exp(-x)) in element-wise, where k is a constant integer
+ * dL/dx = dL/dY * dY/dx = dL/dY * k* exp(x)/(1 +exp(x))^2
  * */
 
 class SigmoidLayer : public Layer {
 public:
-    SigmoidLayer(const int id, const string& name,Layer* prevLayer);
+    SigmoidLayer(const int id, const string& name,Layer* prevLayer, const int k=1);
     ~SigmoidLayer();
 
     virtual  void initialize(const string& initialMethod);
@@ -21,6 +21,9 @@ public:
     virtual  void forward();
     virtual  void backward();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
+
+private:
+    int m_k;
 };
 
 

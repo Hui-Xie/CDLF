@@ -13,9 +13,10 @@ using namespace std;
 
 
 void printUsage(char* argv0){
-    cout<<"Statistics of multiple images"<<endl;
+    cout<<"============= Statistics of multiple images ==========="<<endl;
+    cout<<"This program analyzes the statistic min, mean and max of size, origin, spacing of all images in given directories."<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" fullPathDir1  fullPathDir2 fullPathDir3 ..."<<endl;
+    cout<<argv0<<" <fullPathDir1>  [fullPathDir2] [fullPathDir3] ..."<<endl;
 }
 
 // vector<string> exceptionFiles= {"/Users/hxie1/msd/Task07_Pancreas/imagesTr/pancreas_296.nii.gz"};
@@ -32,9 +33,9 @@ bool isExceptionFile(const string file, const vector<string> exceptionFiles){
 
 int main(int argc, char *argv[]) {
 
+    printUsage(argv[0]);
     if (argc < 2) {
         cout << "Error: at least has a pathDir as parameter." << endl;
-        printUsage(argv[0]);
         return -1;
     }
 
