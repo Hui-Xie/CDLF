@@ -7,7 +7,7 @@
 #include "itkRegionOfInterestImageFilter.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "itkIdentityTransform.h"
+#include "itkScaleTransform.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkResampleImageFilter.h"
 
@@ -92,6 +92,7 @@ int main(int argc, char *argv[]) {
     ImageType::SizeType inputSize, outputSize, roiSize;  //roi: region of interest
     ImageType::PointType inputOrigin, outputOrigin;
     ImageType::SpacingType inputSpacing, outputSpacing;
+    ImageType::DirectionType inputDirection;
     ImageType::IndexType start;
     outputSize[0] = sizeX; outputSize[1]=sizeY; outputSize[2]=sizeZ;
     outputSpacing[0] = spacingX; outputSpacing[1]=spacingY; outputSpacing[2]=spacingZ;
@@ -99,9 +100,10 @@ int main(int argc, char *argv[]) {
     inputSize = image->GetLargestPossibleRegion().GetSize();
     inputOrigin = image->GetOrigin();
     inputSpacing = image->GetSpacing();
+    inputDirection = image->GetDirection();
 
     for(int i =0; i<Dimension; ++i){
-        roiSize[i] = outputSpacing[i]* outputSize[i]/inputSpacing[i];
+        roiSize[i] = outputSpacing[i]* outputSize[i]*1.0/inputSpacing[i];
         if (roiSize[i] > inputSize[i]){
             cout<<"Error: "<<inputFile<< " has not enough physical volume to support output Size ans spacing at dimension "<<i <<"."<<endl;
             cout<<"Infor: maybe you need to reduce the output Size. "<<endl;
@@ -113,37 +115,20 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    ImageType::RegionType region;
-    region.SetIndex(start);
-    region.SetSize(roiSize);
-
-    
-    using ROIFilterType = itk::RegionOfInterestImageFilter< ImageType, ImageType >;
-    ROIFilterType::Pointer roiFilter = ROIFilterType::New();
-    roiFilter->SetInput( image);
-    roiFilter->SetRegionOfInterest( region );
-    roiFilter->Update();
-    image = roiFilter->GetOutput();
-    /*
-
-    //set TransformType and resample Type
-    typedef itk::IdentityTransform<double, Dimension> TransformType;
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction< ImageType>;
     LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
 
     using ResampleFilterType = itk::ResampleImageFilter< ImageType, ImageType >;
     ResampleFilterType::Pointer resampleFilter = ResampleFilterType::New();
-
     resampleFilter->SetInput( image );
-    resampleFilter->SetTransform( TransformType::New() );
     resampleFilter->SetInterpolator( interpolator );
     resampleFilter->SetSize( outputSize );
+    resampleFilter->SetOutputStartIndex(start);
     resampleFilter->SetOutputSpacing( outputSpacing);
     resampleFilter->SetOutputOrigin( outputOrigin );
+    resampleFilter->SetOutputDirection(inputDirection);
     resampleFilter->Update();
     image = resampleFilter->GetOutput();
-
-    */
 
     //Convert and Write out
     string outputDir = getDirFromFileName(outputFile);
