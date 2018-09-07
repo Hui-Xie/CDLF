@@ -5,6 +5,8 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkRegionOfInterestImageFilter.h"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 
 using namespace std;
@@ -29,6 +31,31 @@ string getUniformPathFileName(const string& inputFile){
         result = "";
     }
     return result;
+}
+
+string getDirFromFileName(const string& fullPathFileName){
+    string result = "";
+    size_t pos = fullPathFileName.rfind('/');
+    if (pos != string::npos){
+        result = fullPathFileName.substr(0, pos);
+    }
+    else{
+        result = "";
+    }
+    return result;
+}
+
+bool dirExist(const string& dirPath){
+    struct stat statBuff;
+    if (stat(dirPath.c_str(),&statBuff) == -1){
+        return false;
+    }
+    if (S_IFDIR == (statBuff.st_mode & S_IFMT)){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -93,25 +120,20 @@ int main(int argc, char *argv[]) {
     roiFilter->Update();
     image = roiFilter->GetOutput();
 
-
-
-
-
-
-    
-    
-
     //set TransformType and resample Type
 
+
     //Convert and Write out
+    string outputDir = getDirFromFileName(outputFile);
+    if (!dirExist(outputDir)){
+        mkdir(outputDir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+    }
     using WriterType = itk::ImageFileWriter< ImageType >;
     WriterType::Pointer writer = WriterType::New();
-    // if output does not exist, create
-
-
     writer->SetFileName( outputFile);
     writer->SetInput(image);
     writer->Update();
+    cout<<"Info: "<< outputFile <<" outputed. "<<endl;
 
     return 0;
 }
