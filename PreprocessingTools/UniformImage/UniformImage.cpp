@@ -7,6 +7,9 @@
 #include "itkRegionOfInterestImageFilter.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "itkIdentityTransform.h"
+#include "itkLinearInterpolateImageFunction.h"
+#include "itkResampleImageFilter.h"
 
 
 using namespace std;
@@ -87,7 +90,7 @@ int main(int argc, char *argv[]) {
 
     //get input image ROI
     ImageType::SizeType inputSize, outputSize, roiSize;  //roi: region of interest
-    ImageType::PointType inputOrigin, outpusOrigin;
+    ImageType::PointType inputOrigin, outputOrigin;
     ImageType::SpacingType inputSpacing, outputSpacing;
     ImageType::IndexType start;
     outputSize[0] = sizeX; outputSize[1]=sizeY; outputSize[2]=sizeZ;
@@ -106,6 +109,7 @@ int main(int argc, char *argv[]) {
         }
         else{
             start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
+            outputOrigin[i] = inputOrigin[i] + start[i]*inputSpacing[i];
         }
     }
 
@@ -113,15 +117,33 @@ int main(int argc, char *argv[]) {
     region.SetIndex(start);
     region.SetSize(roiSize);
 
+    
     using ROIFilterType = itk::RegionOfInterestImageFilter< ImageType, ImageType >;
     ROIFilterType::Pointer roiFilter = ROIFilterType::New();
     roiFilter->SetInput( image);
     roiFilter->SetRegionOfInterest( region );
     roiFilter->Update();
     image = roiFilter->GetOutput();
+    /*
 
     //set TransformType and resample Type
+    typedef itk::IdentityTransform<double, Dimension> TransformType;
+    using LinearInterpolatorType = itk::LinearInterpolateImageFunction< ImageType>;
+    LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
 
+    using ResampleFilterType = itk::ResampleImageFilter< ImageType, ImageType >;
+    ResampleFilterType::Pointer resampleFilter = ResampleFilterType::New();
+
+    resampleFilter->SetInput( image );
+    resampleFilter->SetTransform( TransformType::New() );
+    resampleFilter->SetInterpolator( interpolator );
+    resampleFilter->SetSize( outputSize );
+    resampleFilter->SetOutputSpacing( outputSpacing);
+    resampleFilter->SetOutputOrigin( outputOrigin );
+    resampleFilter->Update();
+    image = resampleFilter->GetOutput();
+
+    */
 
     //Convert and Write out
     string outputDir = getDirFromFileName(outputFile);
