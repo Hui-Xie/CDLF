@@ -12,7 +12,7 @@
 const string program = "./UniformLabel";
 const string inputDir = "/Users/hxie1/msd/Task07_Pancreas/labelsTr";
 const string pathSuffix = "_uniform";
-const string labelChange = "1To0";
+const string labelChange = "2To1";
 const string sizeX = "277";
 const string sizeY = "277";
 const string sizeZ = "120";
