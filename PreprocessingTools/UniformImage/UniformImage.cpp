@@ -76,16 +76,16 @@ int main(int argc, char *argv[]) {
     inputDirection = image->GetDirection();
 
     for(int i =0; i<Dimension; ++i){
-        roiSize[i] = outputSpacing[i]* outputSize[i]*1.0/inputSpacing[i];
-        if (inputSize[i] < roiSize[i]){
+        float redundancy = inputSize[i]*inputSpacing[i] - outputSize[i]*outputSpacing[i];
+        if (redundancy < 0){
             cout<<"Error: the image "<<inputFile <<" is not big enough to suppport the output spacing and size at dimension "<< i<<"."<<endl;
             return -1;
         }
         else{
-            start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
+            start[i] = redundancy/(2*outputSpacing[i]);// this index is in the measurement of after resampled image
         }
-        outputOrigin[i] = inputOrigin[i] + start[i]*inputSpacing[i];
-     }
+        outputOrigin[i] = inputOrigin[i] + start[i]*outputSpacing[i]*inputDirection[i][i];
+    }
 
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction< ImageType>;
     LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
@@ -95,7 +95,6 @@ int main(int argc, char *argv[]) {
     resampleFilter->SetInput( image );
     resampleFilter->SetInterpolator( interpolator );
     resampleFilter->SetSize( outputSize );
-    resampleFilter->SetOutputStartIndex(start);
     resampleFilter->SetOutputSpacing( outputSpacing);
     resampleFilter->SetOutputOrigin( outputOrigin );
     resampleFilter->SetOutputDirection(inputDirection);
