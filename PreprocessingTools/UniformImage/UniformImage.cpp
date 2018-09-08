@@ -10,6 +10,7 @@
 #include "itkScaleTransform.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkResampleImageFilter.h"
+#include "itkStatisticsImageFilter.h"
 
 
 using namespace std;
@@ -88,6 +89,13 @@ int main(int argc, char *argv[]) {
     reader->Update();
     ImageType::Pointer image = reader->GetOutput();
 
+    //Get Image min pixel value for resample default value
+    typedef itk::StatisticsImageFilter<ImageType> StatisticsImageFilterType;
+    StatisticsImageFilterType::Pointer statisticsImageFilter = StatisticsImageFilterType::New ();
+    statisticsImageFilter->SetInput(image);
+    statisticsImageFilter->Update();
+    ImageType::ValueType  minPixelValue = statisticsImageFilter->GetMinimum();
+
     //get input image ROI
     ImageType::SizeType inputSize, outputSize, roiSize;  //roi: region of interest
     ImageType::PointType inputOrigin, outputOrigin;
@@ -104,16 +112,10 @@ int main(int argc, char *argv[]) {
 
     for(int i =0; i<Dimension; ++i){
         roiSize[i] = outputSpacing[i]* outputSize[i]*1.0/inputSpacing[i];
-        if (roiSize[i] > inputSize[i]){
-            cout<<"Error: "<<inputFile<< " has not enough physical volume to support output Size ans spacing at dimension "<<i <<"."<<endl;
-            cout<<"Infor: maybe you need to reduce the output Size. "<<endl;
-            return -2;
-        }
-        else{
-            start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
-            outputOrigin[i] = inputOrigin[i] + start[i]*inputSpacing[i];
-        }
-    }
+        start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
+        if (start[i] < 0) start[i]= 0;
+        outputOrigin[i] = inputOrigin[i] + start[i]*inputSpacing[i];
+     }
 
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction< ImageType>;
     LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
@@ -127,6 +129,7 @@ int main(int argc, char *argv[]) {
     resampleFilter->SetOutputSpacing( outputSpacing);
     resampleFilter->SetOutputOrigin( outputOrigin );
     resampleFilter->SetOutputDirection(inputDirection);
+    resampleFilter->SetDefaultPixelValue(minPixelValue);
     resampleFilter->Update();
     image = resampleFilter->GetOutput();
 
