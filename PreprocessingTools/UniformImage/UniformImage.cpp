@@ -1,11 +1,8 @@
 //
 // Created by Hui Xie on 9/6/18.
 //
-#include <iostream>
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
-#include "itkRegionOfInterestImageFilter.h"
-#include "itkScaleTransform.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkResampleImageFilter.h"
 #include "itkStatisticsImageFilter.h"
