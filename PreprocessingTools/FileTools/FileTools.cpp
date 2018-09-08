@@ -48,3 +48,14 @@ bool dirExist(const string& dirPath){
         return false;
     }
 }
+
+void getFileVector(const string& dir, vector<string>& fileVector){
+    DIR* pDir = opendir(dir.c_str());
+    struct dirent* pEntry;
+    while ((pEntry = readdir(pDir)) != NULL) {
+        if (pEntry->d_type == DT_REG && '.' != pEntry->d_name[0]){
+            fileVector.push_back(dir+"/"+pEntry->d_name);
+        }
+    }
+    closedir(pDir);
+}

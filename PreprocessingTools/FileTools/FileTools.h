@@ -23,5 +23,7 @@ string getDirFromFileName(const string& fullPathFileName);
 
 bool dirExist(const string& dirPath);
 
+void getFileVector(const string& dir, vector<string>& fileVector);
+
 
 #endif //CDLF_FRAMEWORK_FILETOOLS_H

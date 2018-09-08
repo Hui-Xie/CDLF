@@ -39,18 +39,11 @@ int main(int argc, char *argv[]) {
 
 
     vector<string> imageVector;
-    int numFiles = 0;
+
     for (vector<string>::const_iterator it= pathVector.begin(); it != pathVector.end(); ++it){
-        DIR* pDir = opendir((*it).c_str());
-        struct dirent* pEntry;
-        while ((pEntry = readdir(pDir)) != NULL) {
-            if (pEntry->d_type == DT_REG && '.' != pEntry->d_name[0]){
-                imageVector.push_back((*it)+"/"+pEntry->d_name);
-                ++numFiles;
-            }
-        }
-        closedir(pDir);
+        getFileVector(*it, imageVector);
     }
+    int numFiles = imageVector.size();
     cout<<"Totally read "<<numFiles <<"  image files"<<endl;
 
     const int Dimension = 3;
