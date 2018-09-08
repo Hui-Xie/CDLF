@@ -1,11 +1,12 @@
 //
-// Created by Hui Xie on 9/6/18.
+// Created by hxie1 on 9/8/18.
 //
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkResampleImageFilter.h"
 #include "itkStatisticsImageFilter.h"
+#include "itkImageRegionIterator.h"
 #include "FileTools.h"
 
 
@@ -18,9 +19,10 @@ void printUsage(char* argv0){
     cout<<"This program uses the input size and spacing to get central volume of input image. "
           "And output image file will be outputed in the parallel ***_uniform directory."<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<fullPathFileName> <pathSuffix> <sizeX> <sizeY> <sizeZ> <spacingX> <spacingY> <spacingZ>"<<endl;
+    cout<<argv0<<"<fullPathFileName> <pathSuffix> <labelChange> <sizeX> <sizeY> <sizeZ> <spacingX> <spacingY> <spacingZ>"<<endl;
     cout<<"Paraemeters Notes:"<<endl
-        <<"pathSuffix: used to generate outputfile's path suffix"<<endl;
+        <<"pathSuffix: used to generate outputfile's path suffix"<<endl
+        <<"labelChange: 0: no changes; 2To1: lable 2 changes to 1; 3To0: label 3 changes to 0, etc"<<endl;
     cout<<endl;
 }
 
@@ -29,7 +31,7 @@ void printUsage(char* argv0){
 int main(int argc, char *argv[]) {
 
     printUsage(argv[0]);
-    if (argc != 9) {
+    if (argc != 10) {
         cout << "Error: the number of parameters is incorrect." << endl;
         return -1;
     }
@@ -37,17 +39,18 @@ int main(int argc, char *argv[]) {
     //get input parameter
     const string inputFile = argv[1];
     const string pathSuffix = argv[2];
-    const int sizeX = atoi(argv[3]);
-    const int sizeY = atoi(argv[4]);
-    const int sizeZ = atoi(argv[5]);
-    const float spacingX = atof(argv[6]);
-    const float spacingY = atof(argv[7]);
-    const float spacingZ = atof(argv[8]);
+    const string labelChange = argv[3];
+    const int sizeX = atoi(argv[4]);
+    const int sizeY = atoi(argv[5]);
+    const int sizeZ = atoi(argv[6]);
+    const float spacingX = atof(argv[7]);
+    const float spacingY = atof(argv[8]);
+    const float spacingZ = atof(argv[9]);
     const string outputFile = getUniformPathFileName(inputFile, pathSuffix);
 
     //read input image
     const int Dimension = 3;
-    using ImageType = itk::Image< float, Dimension >;
+    using ImageType = itk::Image< unsigned char, Dimension >;
     using ReaderType = itk::ImageFileReader< ImageType >;
     ReaderType::Pointer reader = ReaderType::New();
     reader->SetFileName( inputFile);
@@ -85,7 +88,7 @@ int main(int argc, char *argv[]) {
             start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
         }
         outputOrigin[i] = inputOrigin[i] + start[i]*inputSpacing[i];
-     }
+    }
 
     using LinearInterpolatorType = itk::LinearInterpolateImageFunction< ImageType>;
     LinearInterpolatorType::Pointer interpolator = LinearInterpolatorType::New();
@@ -102,6 +105,33 @@ int main(int argc, char *argv[]) {
     resampleFilter->SetDefaultPixelValue(minPixelValue);
     resampleFilter->Update();
     image = resampleFilter->GetOutput();
+
+    // convert label
+    if ("0" != labelChange){
+        itk::ImageRegionIterator<ImageType> iter(image,image->GetLargestPossibleRegion());
+        iter.GoToBegin();
+        while(!iter.IsAtEnd())
+        {
+            if (1 == iter.Get() && labelChange == "1To0" ){
+                iter.Set(0);
+            }
+            else if (2 == iter.Get() && labelChange == "2To1"){
+                iter.Set(1);
+            }
+            else if (3 == iter.Get() && labelChange == "3To1"){
+                iter.Set(1);
+            }
+            else if (4 == iter.Get() && labelChange == "4To1"){
+                iter.Set(1);
+            }
+
+            else{
+                cout<<"Error: input parameter labelChange string has error."<<endl;
+                return -2;
+            }
+            ++iter;
+        }
+    }
 
     //Convert and Write out
     string outputDir = getDirFromFileName(outputFile);
