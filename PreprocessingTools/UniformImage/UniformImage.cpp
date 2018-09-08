@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     const float spacingX = atof(argv[5]);
     const float spacingY = atof(argv[6]);
     const float spacingZ = atof(argv[7]);
-    const string outputFile = getUniformPathFileName(inputFile);
+    const string outputFile = getUniformPathFileName(inputFile, "_uniform");
 
     //read input image
     const int Dimension = 3;

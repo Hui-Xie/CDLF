@@ -17,7 +17,7 @@ using namespace std;
 
 bool isExceptionFile(const string file, const vector<string> exceptionFiles);
 
-string getUniformPathFileName(const string& inputFile);
+string getUniformPathFileName(const string& inputFile, const string& dirSuffix);
 
 string getDirFromFileName(const string& fullPathFileName);
 

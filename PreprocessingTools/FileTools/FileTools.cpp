@@ -12,11 +12,11 @@ bool isExceptionFile(const string file, const vector<string> exceptionFiles){
     return false;
 }
 
-string getUniformPathFileName(const string& inputFile){
+string getUniformPathFileName(const string& inputFile, const string& dirSuffix){
     string result = inputFile;
     size_t pos = result.rfind('/');
     if (pos != string::npos){
-        result.insert(pos, "_uniform");
+        result.insert(pos, dirSuffix);
     }
     else{
         result = "";

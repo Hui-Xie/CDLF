@@ -1,6 +1,4 @@
 
-
-
 find_package(ITK QUIET)
 if(ITK_FOUND)
     include(${ITK_USE_FILE})
