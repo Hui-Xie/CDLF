@@ -32,12 +32,12 @@ int main(int argc, char *argv[]) {
         string jobName = "X" + to_string(i);
         string qsubStrBasic = string(" qsub -b y -cwd ")
                  + " -N " + jobName +" "
-                 + " -q COE,COE-GPU,UI,UI-DEVELOP,UI-GPU,UI-HM,UI-MPI "
+                 + " -q COE,COE-GPU,UI-DEVELOP "
                  + " -pe smp 1 "
                  + " -e ~/temp_qsub/Error_"+jobName+".txt "
                  + " -o ~/temp_qsub/StdOutput_"+jobName+".txt ";
         string qsubStrCmd = " " +program
-                          +" " + inputDir
+                          +" " + fileVector[i]
                           +" " + pathSuffix
                           +" " + sizeX
                           +" " + sizeY
