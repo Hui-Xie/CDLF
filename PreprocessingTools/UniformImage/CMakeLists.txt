@@ -14,6 +14,8 @@ if(ITK_FOUND)
     add_executable(UniformLabel ${UniformLabelSrc})
     target_link_libraries(UniformLabel  ${ITK_LIBRARIES} )
 
+    set(qSubProgramSrc qSubProgram.cpp ${FileToolsDir}/FileTools.cpp)
+    add_executable(qSubProgram ${qSubProgramSrc})
 
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")

@@ -24,6 +24,19 @@ string getUniformPathFileName(const string& inputFile, const string& dirSuffix){
     return result;
 }
 
+string getFileName(const string& fullPathFileName){
+    string result = "";
+    size_t pos = fullPathFileName.rfind('/');
+    if (pos != string::npos){
+        result = fullPathFileName.substr(pos+1);
+    }
+    else{
+        result = "";
+    }
+    return result;
+
+}
+
 string getDirFromFileName(const string& fullPathFileName){
     string result = "";
     size_t pos = fullPathFileName.rfind('/');

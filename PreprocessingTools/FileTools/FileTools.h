@@ -19,11 +19,16 @@ bool isExceptionFile(const string file, const vector<string> exceptionFiles);
 
 string getUniformPathFileName(const string& inputFile, const string& dirSuffix);
 
+string getFileName(const string& fullPathFileName);
+
 string getDirFromFileName(const string& fullPathFileName);
 
 bool dirExist(const string& dirPath);
 
 void getFileVector(const string& dir, vector<string>& fileVector);
+
+
+
 
 
 #endif //CDLF_FRAMEWORK_FILETOOLS_H
