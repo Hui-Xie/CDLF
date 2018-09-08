@@ -9,10 +9,10 @@
 #include "FileTools.h"
 
 
-const string program = "./UniformImage";
-const string inputDir = "/Users/hxie1/msd/Task07_Pancreas/imagesTr";
+const string program = "./UniformLabel";
+const string inputDir = "/Users/hxie1/msd/Task07_Pancreas/labelsTr";
 const string pathSuffix = "_uniform";
-const string labelChange = "0";
+const string labelChange = "1To0";
 const string sizeX = "277";
 const string sizeY = "277";
 const string sizeZ = "120";
@@ -39,6 +39,7 @@ int main(int argc, char *argv[]) {
         string qsubStrCmd = " " +program
                           +" " + fileVector[i]
                           +" " + pathSuffix
+                          +" " + labelChange   //Only for UniformLabel
                           +" " + sizeX
                           +" " + sizeY
                           +" " + sizeZ

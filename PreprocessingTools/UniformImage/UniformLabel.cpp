@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     const float spacingX = atof(argv[7]);
     const float spacingY = atof(argv[8]);
     const float spacingZ = atof(argv[9]);
-    const string outputFile = getUniformPathFileName(inputFile, pathSuffix);
+    const string outputFile = getUniformPathFileName(inputFile, pathSuffix+"_"+labelChange);
 
     //read input image
     const int Dimension = 3;
@@ -114,19 +114,14 @@ int main(int argc, char *argv[]) {
             if (1 == iter.Get() && labelChange == "1To0" ){
                 iter.Set(0);
             }
-            else if (2 == iter.Get() && labelChange == "2To1"){
+            if (2 == iter.Get() && labelChange == "2To1"){
                 iter.Set(1);
             }
-            else if (3 == iter.Get() && labelChange == "3To1"){
+            if (3 == iter.Get() && labelChange == "3To1"){
                 iter.Set(1);
             }
-            else if (4 == iter.Get() && labelChange == "4To1"){
+            if (4 == iter.Get() && labelChange == "4To1"){
                 iter.Set(1);
-            }
-
-            else{
-                cout<<"Error: input parameter labelChange string has error."<<endl;
-                return -2;
             }
             ++iter;
         }
