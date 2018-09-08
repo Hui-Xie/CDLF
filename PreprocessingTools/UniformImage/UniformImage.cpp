@@ -5,12 +5,11 @@
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
 #include "itkRegionOfInterestImageFilter.h"
-#include <sys/types.h>
-#include <sys/stat.h>
 #include "itkScaleTransform.h"
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkResampleImageFilter.h"
 #include "itkStatisticsImageFilter.h"
+#include "FileTools.h"
 
 
 using namespace std;
@@ -18,6 +17,7 @@ using namespace std;
 
 void printUsage(char* argv0){
     cout<<"============= Uniform Image in Consistent Size and Spacing ==========="<<endl;
+    cout<<"The basic idea is to use same physical-size volumes as input for deep learning network."<<endl;
     cout<<"This program uses the input size and spacing to get central volume of input image. "
           "And output image file will be outputed in the parallel ***_uniform directory."<<endl;
     cout<<"Usage: "<<endl;
@@ -25,42 +25,7 @@ void printUsage(char* argv0){
     cout<<endl;
 }
 
-string getUniformPathFileName(const string& inputFile){
-    string result = inputFile;
-    size_t pos = result.rfind('/');
-    if (pos != string::npos){
-        result.insert(pos, "_uniform");
-    }
-    else{
-        result = "";
-    }
-    return result;
-}
 
-string getDirFromFileName(const string& fullPathFileName){
-    string result = "";
-    size_t pos = fullPathFileName.rfind('/');
-    if (pos != string::npos){
-        result = fullPathFileName.substr(0, pos);
-    }
-    else{
-        result = "";
-    }
-    return result;
-}
-
-bool dirExist(const string& dirPath){
-    struct stat statBuff;
-    if (stat(dirPath.c_str(),&statBuff) == -1){
-        return false;
-    }
-    if (S_IFDIR == (statBuff.st_mode & S_IFMT)){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
 
 int main(int argc, char *argv[]) {
 
@@ -112,8 +77,13 @@ int main(int argc, char *argv[]) {
 
     for(int i =0; i<Dimension; ++i){
         roiSize[i] = outputSpacing[i]* outputSize[i]*1.0/inputSpacing[i];
-        start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
-        if (start[i] < 0) start[i]= 0;
+        if (inputSize[i] < roiSize[i]){
+            cout<<"Error: the image "<<inputFile <<" is not big enough to suppport the output spacing and size at dimension "<< i<<"."<<endl;
+            return -1;
+        }
+        else{
+            start[i] = (inputSize[i] - roiSize[i])/2; // get the central volume of input Image;
+        }
         outputOrigin[i] = inputOrigin[i] + start[i]*inputSpacing[i];
      }
 

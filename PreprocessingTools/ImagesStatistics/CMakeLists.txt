@@ -1,9 +1,14 @@
 
+
+
 find_package(ITK QUIET)
 if(ITK_FOUND)
     include(${ITK_USE_FILE})
 
-    set(ImageStatSrc ImageStat.cpp)
+    set (FileToolsDir ../FileTools)
+    include_directories(${FileToolsDir})
+
+    set(ImageStatSrc ImageStat.cpp ${FileToolsDir}/FileTools.cpp)
     add_executable(ImageStat ${ImageStatSrc})
     target_link_libraries(ImageStat  ${ITK_LIBRARIES} )
 else(ITK_FOUND )

@@ -2,12 +2,9 @@
 // Created by hxie1 on 9/5/18.
 //
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <sys/types.h>
-#include <dirent.h>
+
 #include "itkImageFileReader.h"
+#include "FileTools.h"
 
 using namespace std;
 
@@ -25,13 +22,7 @@ void printUsage(char* argv0){
 
 vector<string> exceptionFiles={};
 
-bool isExceptionFile(const string file, const vector<string> exceptionFiles){
-    long N = exceptionFiles.size();
-    for(int i =0; i< N; ++i){
-       if (file == exceptionFiles[i]) return true;
-    }
-    return false;
-}
+
 
 int main(int argc, char *argv[]) {
 
@@ -150,8 +141,10 @@ int main(int argc, char *argv[]) {
         }
 
         ++computingNumFile;
+        if (computingNumFile %10 == 0)  cout <<"..."<<computingNumFile<<endl;
 
     }
+
 
     for(int j=0; j<Dimension; ++j){
         meanSize[j] = gSize[j]/computingNumFile;
