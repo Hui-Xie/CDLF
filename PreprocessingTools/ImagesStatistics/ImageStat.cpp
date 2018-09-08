@@ -14,7 +14,8 @@ using namespace std;
 
 void printUsage(char* argv0){
     cout<<"============= Statistics of multiple images ==========="<<endl;
-    cout<<"This program analyzes the statistic min, mean and max of size, origin, spacing of all images in given directories."<<endl;
+    cout<<"This program analyzes the statistic min, mean and max of size, origin, spacing, physical size of all images in given directories."<<endl;
+    cout<<"The min physicalSize will be the basis for further image uniformization."<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" <fullPathDir1>  [fullPathDir2] [fullPathDir3] ..."<<endl;
     cout<<endl;
@@ -67,21 +68,26 @@ int main(int argc, char *argv[]) {
     ImageType::SizeType gSize;  // g means global
     ImageType::PointType gOrigin;
     ImageType::SpacingType gSpacing;
+    ImageType::PointType gPhysicalSize;
     gSize.Fill(0);
     gOrigin.Fill(0);
     gSpacing.Fill(0);
+    gPhysicalSize.Fill(0);
 
     ImageType::SizeType minSize;
     ImageType::PointType minOrigin;
     ImageType::SpacingType minSpacing;
+    ImageType::PointType minPhysicalSize;
 
     ImageType::SizeType maxSize;
     ImageType::PointType maxOrigin;
     ImageType::SpacingType maxSpacing;
+    ImageType::PointType maxPhysicalSize;
 
     ImageType::SizeType meanSize;
     ImageType::PointType meanOrigin;
     ImageType::SpacingType meanSpacing;
+    ImageType::PointType meanPhysicalSize; //mm
 
     meanSize.Fill(0);
     meanOrigin.Fill(0);
@@ -106,10 +112,14 @@ int main(int argc, char *argv[]) {
         ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
         ImageType::PointType origin = image->GetOrigin();
         ImageType::SpacingType spacing = image->GetSpacing();
+        ImageType::PointType physicalSize;
+
 
         gSize += size;
         for(int j=0 ; j<Dimension; ++j){
             gOrigin[j] += origin[j];
+            physicalSize[j] = size[j]*spacing[j];
+            gPhysicalSize[j] += physicalSize[j];
         }
         gSpacing += spacing;
         
@@ -117,20 +127,24 @@ int main(int argc, char *argv[]) {
             minSize = size;
             minOrigin = origin;
             minSpacing = spacing;
+            minPhysicalSize = physicalSize;
 
             maxSize = size;
             maxOrigin = origin;
             maxSpacing = spacing;
+            maxPhysicalSize = physicalSize;
         }
         else{
             for(int j=0; j<Dimension; ++j){
                if (size[j] < minSize[j]) minSize[j] = size[j];
                if (origin[j] < minOrigin[j]) minOrigin[j] = origin[j];
                if (spacing[j] < minSpacing[j]) minSpacing[j] = spacing[j];
+               if (physicalSize[j] < minPhysicalSize[j]) minPhysicalSize[j] = physicalSize[j];
 
                if (size[j] > maxSize[j]) maxSize[j] = size[j];
                if (origin[j] > maxOrigin[j]) maxOrigin[j] = origin[j];
                if (spacing[j] > maxSpacing[j]) maxSpacing[j] = spacing[j];
+               if (physicalSize[j] > maxPhysicalSize[j]) maxPhysicalSize[j] = physicalSize[j];
             }
             
         }
@@ -143,6 +157,7 @@ int main(int argc, char *argv[]) {
         meanSize[j] = gSize[j]/computingNumFile;
         meanOrigin[j] = gOrigin[j]/computingNumFile;
         meanSpacing[j] = gSpacing[j]/computingNumFile;
+        meanPhysicalSize[j] = gPhysicalSize[j]/computingNumFile;
     }
 
     cout<<"Statistics Information of Images:"<<endl;
@@ -174,6 +189,13 @@ int main(int argc, char *argv[]) {
     for (int j=0; j<Dimension; ++j)  cout<<"   "<<maxSpacing[j];  cout<<endl;
     cout<<"MeanSpacing: ";
     for (int j=0; j<Dimension; ++j)  cout<<"   "<<meanSpacing[j];  cout<<endl;
+
+    cout<<"MinPhysicalSize: ";
+    for (int j=0; j<Dimension; ++j)  cout<<"   "<<minPhysicalSize[j];  cout<<endl;
+    cout<<"MaxPhysicalSize: ";
+    for (int j=0; j<Dimension; ++j)  cout<<"   "<<maxPhysicalSize[j];  cout<<endl;
+    cout<<"MeanPhysicalSize: ";
+    for (int j=0; j<Dimension; ++j)  cout<<"   "<<meanPhysicalSize[j];  cout<<endl;
 
     cout<<"=======End of Image Files Statistics=============="<<endl;
     return 0;
