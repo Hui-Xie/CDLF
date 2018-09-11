@@ -22,8 +22,6 @@ void SoftmaxLayer::zeroParaGradient(){
     //null
 }
 
-// Y_i = exp(X_i)/ (\sum exp(x_i))
-// dL/dX = dL/dY * dY/dX = dL/dY * exp(x_i)*(\sum exp(x_i)-exp(x_i))/(\sum exp(x_i))^2
 void SoftmaxLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
@@ -40,14 +38,22 @@ void SoftmaxLayer::forward(){
         Y(i) = exp(X(i))/m_sumExpX;
     }
 }
+
 void SoftmaxLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = dY.getLength();
     float m_sumExpX2 = m_sumExpX*m_sumExpX;
+
+    // \sum(dL/dy_j*exp(x_j)
+    float dyDotExpX = 0;
     for(long i=0; i< N; ++i){
-        dX(i) += dY(i)*exp(X(i))*(m_sumExpX-exp(X(i)))/m_sumExpX2;
+        dyDotExpX += dY(i)*exp(X(i));
+    }
+
+    for(long i=0; i< N; ++i){
+        dX(i) += exp(X(i))*(dY(i)*m_sumExpX-dyDotExpX)/m_sumExpX2;
     }
 }
 void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
