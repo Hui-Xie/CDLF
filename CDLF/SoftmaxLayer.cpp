@@ -2,29 +2,29 @@
 // Created by Hui Xie on 7/28/2018.
 //
 
-#include "SoftMaxLayer.h"
+#include "SoftmaxLayer.h"
 #include <math.h>       /* exp */
 
-SoftMaxLayer::SoftMaxLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize) {
-    m_type = "SoftMaxLayer";
+SoftmaxLayer::SoftmaxLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize) {
+    m_type = "SoftmaxLayer";
     addPreviousLayer(prevLayer);
     m_sumExpX = 0.0;
 }
-SoftMaxLayer::~SoftMaxLayer(){
+SoftmaxLayer::~SoftmaxLayer(){
 
 }
 
-void SoftMaxLayer::initialize(const string& initialMethod){
+void SoftmaxLayer::initialize(const string& initialMethod){
     //null
 }
 
-void SoftMaxLayer::zeroParaGradient(){
+void SoftmaxLayer::zeroParaGradient(){
     //null
 }
 
 // Y_i = exp(X_i)/ (\sum exp(x_i))
 // dL/dX = dL/dY * dY/dX = dL/dY * exp(x_i)*(\sum exp(x_i)-exp(x_i))/(\sum exp(x_i))^2
-void SoftMaxLayer::forward(){
+void SoftmaxLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = X.getLength();
@@ -40,7 +40,7 @@ void SoftMaxLayer::forward(){
         Y(i) = exp(X(i))/m_sumExpX;
     }
 }
-void SoftMaxLayer::backward(){
+void SoftmaxLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
@@ -50,6 +50,6 @@ void SoftMaxLayer::backward(){
         dX(i) += dY(i)*exp(X(i))*(m_sumExpX-exp(X(i)))/m_sumExpX2;
     }
 }
-void SoftMaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //Null
 }

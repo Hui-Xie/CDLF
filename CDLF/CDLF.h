@@ -15,7 +15,7 @@
 #include "Tools.h"
 #include "ConvolutionLayer.h"
 #include "BiasLayer.h"
-#include "SoftMaxLayer.h"
+#include "SoftmaxLayer.h"
 #include "MaxPoolingLayer.h"
 #include "IdentityLayer.h"
 #include "MergerLayer.h"

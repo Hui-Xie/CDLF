@@ -7,15 +7,15 @@
 
 #include "Layer.h"
 
-/* SoftMax Layer only suit for mutually exclusive output classificaiton
- * For 3D segmentation output, we need use GroupSoftMax
+/* SoftMax Layer only suit for mutually exclusive output classification in each data point
+ * This softmaxLayer support N-d tensor. It implements the softmax on the 0th dimension.
  *
  * */
 
-class SoftMaxLayer : public Layer {
+class SoftmaxLayer : public Layer {
 public:
-    SoftMaxLayer(const int id, const string& name,Layer* prevLayer);
-    ~SoftMaxLayer();
+    SoftmaxLayer(const int id, const string& name,Layer* prevLayer);
+    ~SoftmaxLayer();
 
     float m_sumExpX;
 

@@ -74,7 +74,7 @@ void MnistConvNet::build(){
     FCLayer *fcLayer3 = new FCLayer(layerID++, "FC3", 2, getFinalLayer()); //output size: 2*1
     addLayer(fcLayer3);
 
-    SoftMaxLayer *softmaxLayer = new SoftMaxLayer(layerID++, "Softmax1",getFinalLayer()); //output size: 2*1
+    SoftmaxLayer *softmaxLayer = new SoftmaxLayer(layerID++, "Softmax1",getFinalLayer()); //output size: 2*1
     addLayer(softmaxLayer);
     CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
                                                               getFinalLayer()); // output size: 1
