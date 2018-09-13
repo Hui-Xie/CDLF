@@ -158,7 +158,9 @@ void ConvolutionLayer::forward() {
                 } else {
                     m_pYTensor->e(i, j) = pSubX->conv(*m_pW[0]);
                 }
-
+                if (nullptr != pSubX){
+                    delete pSubX;
+                }
             }
         }
     } else if (3 == Nt - Df && 3 == f.size()) {
