@@ -20,10 +20,11 @@
 #include "IdentityLayer.h"
 #include "MergerLayer.h"
 #include "BranchLayer.h"
-#include "BranchLayer.h"
 #include "SigmoidLayer.h"
 #include "CrossEntropyLoss.h"
 #include "VectorizationLayer.h"
+#include "ExponentialLayer.h"
+#include "SubTensorLayer.h"
 
 
 #endif //CDLF_FRAMEWORK_CDLF_H
