@@ -25,17 +25,20 @@ void SoftmaxLayer::zeroParaGradient(){
 void SoftmaxLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = X.getLength();
-    m_sumExpX = 0;
-    for (long i=0; i< N; ++i){
-        m_sumExpX += exp(X(i));
-    }
-    if (0 == m_sumExpX){
-        cout<<"Error: SoftMax Layer m_sumExpX ==0 "<<endl;
-        m_sumExpX = 1e-8;
-    }
-    for (long i=0; i< N; ++i){
-        Y(i) = exp(X(i))/m_sumExpX;
+    const int nSoftmax = m_pYTensor->getDims()[0];// the vector dimension to execute softmax
+    long N = X.getLength()/nSoftmax;  // the number of element vector needing softmax
+    for (long j=0; j<N; ++j){
+        m_sumExpX = 0;
+        for (long i=0; i< nSoftmax; ++i){
+            m_sumExpX += exp(X(i*N+j));
+        }
+        if (0 == m_sumExpX){
+            cout<<"Error: SoftMax Layer m_sumExpX ==0 "<<endl;
+            m_sumExpX = 1e-8;
+        }
+        for (long i=0; i< nSoftmax; ++i){
+            Y(i*N+j) = exp(X(i*N+j))/m_sumExpX;
+        }
     }
 }
 
@@ -43,7 +46,11 @@ void SoftmaxLayer::backward(){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = dY.getLength();
+    const int nSoftmax = m_pdYTensor->getDims()[0];// the vector dimension to execute softmax
+    long N = X.getLength()/nSoftmax;  // the number of element vector needing softmax
+
+
+
     float m_sumExpX2 = m_sumExpX*m_sumExpX;
 
     // \sum(dL/dy_j*exp(x_j)
