@@ -12,6 +12,7 @@
  *       x_i is the output of previous layer, e.g. softmax;
  *       where log is natural logarithm
  * Cross Entropy in concept is same with  Kullback–Leibler divergence
+ * Cross entropy supports N-d tensor
  * */
 
 class CrossEntropyLoss: public LossLayer {
@@ -20,7 +21,7 @@ public:
     ~CrossEntropyLoss();
 
     virtual void  printGroundTruth();
-    bool predictSuccess();
+    bool predictSuccessInColVec();
 
 private:
     virtual float lossCompute();

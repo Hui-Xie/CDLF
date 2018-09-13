@@ -7,6 +7,7 @@
 CrossEntropyLoss::CrossEntropyLoss(const int id, const string& name, Layer *prevLayer ): LossLayer(id,name,prevLayer){
     m_type = "CrossEntropyLoss";
 }
+
 CrossEntropyLoss::~CrossEntropyLoss(){
 
 }
@@ -17,7 +18,7 @@ CrossEntropyLoss::~CrossEntropyLoss(){
  *       */
 
 float CrossEntropyLoss::lossCompute(){
-    //use m_prevLayerPointer->m_pYTensor,
+    //X.e \in [0,1]
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     m_loss = m_pGroundTruth->hadamard(X.ln()).sum()*(-1);
     return m_loss;
@@ -40,7 +41,7 @@ void  CrossEntropyLoss::printGroundTruth() {
     m_pGroundTruth->printElements(false);
 }
 
-bool CrossEntropyLoss::predictSuccess(){
+bool CrossEntropyLoss::predictSuccessInColVec(){
     Tensor<float> &X = *(m_prevLayer->m_pYTensor);
     Tensor<float> &Y = *m_pGroundTruth;
     if (X.maxPosition() == Y.maxPosition()) {

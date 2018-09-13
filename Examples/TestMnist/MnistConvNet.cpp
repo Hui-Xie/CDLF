@@ -123,7 +123,7 @@ float MnistConvNet::test(){
         inputLayer->setInputTensor(m_pMnistData->m_pTestImagesPart->slice(n));
         lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabelsPart, n));
         forwardPropagate();
-        if (lossLayer->predictSuccess()) ++nSuccess;
+        if (lossLayer->predictSuccessInColVec()) ++nSuccess;
         ++n;
     }
     cout<<"Info: nSuccess = "<<nSuccess<<" in "<<Ntest<<" test samples."<<endl;
