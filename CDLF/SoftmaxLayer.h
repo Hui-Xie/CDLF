@@ -21,8 +21,6 @@ public:
     SoftmaxLayer(const int id, const string& name,Layer* prevLayer);
     ~SoftmaxLayer();
 
-    float m_sumExpX;
-
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void forward();
