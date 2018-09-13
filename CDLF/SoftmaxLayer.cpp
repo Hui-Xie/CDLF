@@ -33,7 +33,7 @@ void SoftmaxLayer::forward(){
             sumExpX += exp(X(i*N+j));
         }
         if (0 == sumExpX){
-            cout<<"Error: SoftMax Layer m_sumExpX ==0 "<<endl;
+            cout<<"Error: SoftMax Layer sumExpX ==0 "<<endl;
             sumExpX = 1e-8;
         }
         for (int i=0; i< nSoftmax; ++i){
@@ -55,7 +55,7 @@ void SoftmaxLayer::backward(){
             sumExpX += exp(X(i*N+j));
         }
         if (0 == sumExpX){
-            cout<<"Error: SoftMax Layer m_sumExpX ==0 "<<endl;
+            cout<<"Error: SoftMax Layer sumExpX ==0 "<<endl;
             sumExpX = 1e-8;
         }
         float sumExpX2 = sumExpX*sumExpX;
