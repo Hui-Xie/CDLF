@@ -144,22 +144,34 @@ int main (int argc, char *argv[]) {
     tensor20.printElements();
 
     cout<<"tensor21 = tensor20.subTensorFromCenter({2,3}, {5,5});"<<endl;
-    Tensor<float> tensor21 = tensor20.subTensorFromCenter({2,3}, {5,5});
-    tensor21.printElements();
+    Tensor<float>* pTensor21 = nullptr;
+    tensor20.subTensorFromCenter({2,3}, {5,5}, pTensor21);
+    pTensor21->printElements();
+    if (nullptr != pTensor21){
+        delete pTensor21;
+    }
+
+
+    cout <<"tensor20:"<<endl;
+    tensor20.printElements();
+    Tensor<float>* pTensor22 = nullptr;
+    tensor20.extractLowerDTensor(3, pTensor22);
+    cout<<" tensor22: by tensor20.extractLowerDTensor(3, pTensor22):"<<endl;
+    pTensor22->printElements();
+    if (nullptr != pTensor22){
+        delete pTensor22;
+    }
 
     cout <<"tensor20:"<<endl;
     tensor20.printElements();
 
-    Tensor<float> tensor22 = tensor20.extractLowerDTensor(3);
-    cout<<" tensor22 = tensor20.extractLowerDTensor(3);"<<endl;
-    tensor22.printElements();
-
-    cout <<"tensor20:"<<endl;
-    tensor20.printElements();
-
-    Tensor<float> tensor23 = tensor20.subTensorFromTopLeft({0,0},{3,3},2);
-    cout<<"tensor23 = tensor20.subTensorFromTopLeft({0,0},{3,3},2) ="<<endl;
-    tensor23.printElements();
+    Tensor<float>* pTensor23;
+    tensor20.subTensorFromTopLeft({0,0},{3,3},pTensor23,2);
+    cout<<"tensor23: by te tensor20.subTensorFromTopLeft({0,0},{3,3},pTensor23,2):"<<endl;
+    pTensor23->printElements();
+    if (nullptr != pTensor23){
+        delete pTensor23;
+    }
 
     cout <<"tensor20:"<<endl;
     tensor20.printElements();

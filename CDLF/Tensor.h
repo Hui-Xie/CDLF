@@ -82,16 +82,16 @@ public:
     Tensor reshape(vector<long> newDims);
 
 
-    Tensor subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride =1);
-    Tensor subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, const int stride =1);
+    void subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
+    void subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);
     Tensor row(const int index);
     Tensor slice(const int index);
-    Tensor volume(const int index);
-    Tensor fourDVolume(const int index);
-    Tensor extractLowerDTensor(const int index);
+    void volume(const int index, Tensor* & pTensor);
+    void fourDVolume(const int index, Tensor* & pTensor);
+    void extractLowerDTensor(const int index, Tensor* & pTensor);
 
     ValueType conv(const Tensor& other) const; //convolution or cross-correlation
     Tensor& flip();

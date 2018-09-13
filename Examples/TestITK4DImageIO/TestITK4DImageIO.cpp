@@ -34,8 +34,12 @@ int main(int argc, char *argv[]){
     int n = pImage->getDims()[0];
     for (int i=0;i<n; ++i){
         string outputName = stemName+"_"+std::to_string(i)+".nii";
-        Tensor<float>  volumeTensor = pImage->volume(i);
-        itkImageIO.writeFileWithLessInputDim(&volumeTensor, {0, 0, 0}, outputName);
+        Tensor<float>* pVolume = nullptr;
+        pImage->volume(i,pVolume);
+        itkImageIO.writeFileWithLessInputDim(pVolume, {0, 0, 0}, outputName);
+        if(nullptr != pVolume){
+            delete pVolume;
+        }
     }
 
     if (nullptr != pImage) {

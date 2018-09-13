@@ -62,7 +62,12 @@ void MaxPoolingLayer::forward() {
             Xc[0] = i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
                 Xc[1] = j * m_stride;
-                m_pYTensor->e(i, j) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                Tensor<float>* pSubX = nullptr;
+                X.subTensorFromTopLeft(Xc, m_filterSize, pSubX);
+                m_pYTensor->e(i, j) = pSubX->max();
+                if (nullptr != pSubX){
+                    delete pSubX;
+                }
             }
         }
     } else if (3 == N) {
@@ -73,7 +78,12 @@ void MaxPoolingLayer::forward() {
                 Xc[1] = j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
                     Xc[2] = k * m_stride;
-                    m_pYTensor->e(i, j, k) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                    Tensor<float>* pSubX = nullptr;
+                    X.subTensorFromTopLeft(Xc, m_filterSize, pSubX);
+                    m_pYTensor->e(i, j, k) = pSubX->max();
+                    if (nullptr != pSubX){
+                        delete pSubX;
+                    }
                 }
             }
         }
@@ -87,7 +97,12 @@ void MaxPoolingLayer::forward() {
                     Xc[2] = k * m_stride;
                     for (long l = 0; l < m_tensorSize[3]; ++l) {
                         Xc[3] = l * m_stride;
-                        m_pYTensor->e(i, j, k, l) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                        Tensor<float>* pSubX = nullptr;
+                        X.subTensorFromTopLeft(Xc, m_filterSize, pSubX);
+                        m_pYTensor->e(i, j, k, l) = pSubX->max();
+                        if (nullptr != pSubX){
+                            delete pSubX;
+                        }
                     }
                 }
             }
@@ -104,7 +119,12 @@ void MaxPoolingLayer::forward() {
                         Xc[3] = l * m_stride;
                         for (long m = 0; m < m_tensorSize[4]; ++m) {
                             Xc[4] = m * m_stride;
-                            m_pYTensor->e(i, j, k, l, m) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                            Tensor<float>* pSubX = nullptr;
+                            X.subTensorFromTopLeft(Xc, m_filterSize, pSubX);
+                            m_pYTensor->e(i, j, k, l, m) = pSubX->max();
+                            if (nullptr != pSubX){
+                                delete pSubX;
+                            }
                         }
                     }
                 }
@@ -124,7 +144,12 @@ void MaxPoolingLayer::forward() {
                             Xc[4] = m * m_stride;
                             for (long o = 0; o < m_tensorSize[4]; ++o) {
                                 Xc[5] = o * m_stride;
-                                m_pYTensor->e(i, j, k, l, m, o) = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                                Tensor<float>* pSubX = nullptr;
+                                X.subTensorFromTopLeft(Xc, m_filterSize, pSubX);
+                                m_pYTensor->e(i, j, k, l, m, o) = pSubX->max();
+                                if (nullptr != pSubX){
+                                    delete pSubX;
+                                }
                             }
                         }
                     }
@@ -149,10 +174,16 @@ void MaxPoolingLayer::backward() {
             Xc[0] = i * m_stride;
             for (long j = 0; j < m_tensorSize[1]; ++j) {
                 Xc[1] = j * m_stride;
-                const float maxValue = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                Tensor<float>* pSubX = nullptr;
+                X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
+                const float maxValue = pSubX->max();
                 for (long ii = 0; ii < m_filterSize[0]; ++ii)
                     for (long jj = 0; jj < m_filterSize[1]; ++jj)
                         if (maxValue == X(Xc[0] + ii, Xc[1] + jj)) dX(Xc[0] + ii, Xc[1] + jj) += dLdy(i, j);
+                if (nullptr != pSubX)
+                {
+                    delete pSubX;
+                }
             }
         }
     } else if (3 == N) {
@@ -163,12 +194,18 @@ void MaxPoolingLayer::backward() {
                 Xc[1] = j * m_stride;
                 for (long k = 0; k < m_tensorSize[2]; ++k) {
                     Xc[2] = k * m_stride;
-                    const float maxValue = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                    Tensor<float>* pSubX = nullptr;
+                    X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
+                    const float maxValue = pSubX->max();
                     for (long ii = 0; ii < m_filterSize[0]; ++ii)
                         for (long jj = 0; jj < m_filterSize[1]; ++jj)
                             for (long kk = 0; kk < m_filterSize[2]; ++kk)
                                 if (maxValue == X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk))
                                     dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk) += dLdy(i, j, k);
+                    if (nullptr != pSubX)
+                    {
+                        delete pSubX;
+                    }
                 }
             }
         }
@@ -182,13 +219,19 @@ void MaxPoolingLayer::backward() {
                     Xc[2] = k * m_stride;
                     for (long l = 0; l < m_tensorSize[3]; ++l) {
                         Xc[3] = l * m_stride;
-                        const float maxValue = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                        Tensor<float>* pSubX = nullptr;
+                        X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
+                        const float maxValue = pSubX->max();
                         for (long ii = 0; ii < m_filterSize[0]; ++ii)
                             for (long jj = 0; jj < m_filterSize[1]; ++jj)
                                 for (long kk = 0; kk < m_filterSize[2]; ++kk)
                                     for (long ll = 0; ll < m_filterSize[3]; ++ll)
                                         if (maxValue == X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll))
                                             dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll) += dLdy(i, j, k, l);
+                        if (nullptr != pSubX)
+                        {
+                            delete pSubX;
+                        }
                     }
                 }
             }
@@ -205,7 +248,9 @@ void MaxPoolingLayer::backward() {
                         Xc[3] = l * m_stride;
                         for (long m = 0; m < m_tensorSize[4]; ++m) {
                             Xc[4] = m * m_stride;
-                            const float maxValue = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                            Tensor<float>* pSubX = nullptr;
+                            X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
+                            const float maxValue = pSubX->max();
                             for (long ii = 0; ii < m_filterSize[0]; ++ii)
                                 for (long jj = 0; jj < m_filterSize[1]; ++jj)
                                     for (long kk = 0; kk < m_filterSize[2]; ++kk)
@@ -215,6 +260,10 @@ void MaxPoolingLayer::backward() {
                                                     X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll, Xc[4] + mm))
                                                     dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll,
                                                        Xc[4] + mm) += dLdy(i, j, k, l, m);
+                            if (nullptr != pSubX)
+                            {
+                                delete pSubX;
+                            }
                         }
                     }
                 }
@@ -234,7 +283,9 @@ void MaxPoolingLayer::backward() {
                             Xc[4] = m * m_stride;
                             for (long o = 0; o < m_tensorSize[5]; ++o) {
                                 Xc[5] = o * m_stride;
-                                const float maxValue = X.subTensorFromTopLeft(Xc, m_filterSize).max();
+                                Tensor<float>* pSubX = nullptr;
+                                X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
+                                const float maxValue = pSubX->max();
                                 for (long ii = 0; ii < m_filterSize[0]; ++ii)
                                     for (long jj = 0; jj < m_filterSize[1]; ++jj)
                                         for (long kk = 0; kk < m_filterSize[2]; ++kk)
@@ -245,6 +296,10 @@ void MaxPoolingLayer::backward() {
                                                         X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll, Xc[4] + mm, Xc[5]+oo))
                                                         dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll,
                                                            Xc[4] + mm, Xc[5]+oo ) += dLdy(i, j, k, l, m, o);
+                                if (nullptr != pSubX)
+                                {
+                                    delete pSubX;
+                                }
                             }
                         }
                     }

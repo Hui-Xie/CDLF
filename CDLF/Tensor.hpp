@@ -542,15 +542,15 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims){
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, const int stride){
-    Tensor tensor (span);
+void Tensor<ValueType>::subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, Tensor* & pTensor, const int stride){
+    pTensor = new Tensor<ValueType> (span);
     int N = span.size();
     vector<long> halfSpan = span/2; //also the central voxel in the tensor(span), span must be odd in each element.
 
     if (2 == N){
         for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
             for (int j=-halfSpan[1];j<=halfSpan[1];++j){
-                tensor(halfSpan[0]+i, halfSpan[1]+j) = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride);
+                pTensor->e(halfSpan[0]+i, halfSpan[1]+j) = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride);
             }
         }
     }
@@ -558,7 +558,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
         for (int i=-halfSpan[0]; i<=halfSpan[0]; ++i){
             for (int j=-halfSpan[1];j<=halfSpan[1];++j){
                 for (int k=-halfSpan[2];k<=halfSpan[2];++k){
-                    tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k)
+                    pTensor->e(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k)
                        = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride);
                 }
              }
@@ -569,7 +569,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
             for (int j=-halfSpan[1];j<=halfSpan[1];++j){
                 for (int k=-halfSpan[2];k<=halfSpan[2];++k){
                     for (int l=-halfSpan[3];l<=halfSpan[3];++l){
-                        tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l)
+                        pTensor->e(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l)
                                 = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride, centralIndex[3]+l*stride);
                     }
                 }
@@ -582,7 +582,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
                 for (int k=-halfSpan[2];k<=halfSpan[2];++k){
                     for (int l=-halfSpan[3];l<=halfSpan[3];++l){
                         for (int m=-halfSpan[4];m<=halfSpan[4]; ++m){
-                            tensor(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l,halfSpan[4]+m )
+                            pTensor->e(halfSpan[0]+i, halfSpan[1]+j, halfSpan[2]+k,halfSpan[3]+l,halfSpan[4]+m )
                                = e(centralIndex[0]+i*stride, centralIndex[1]+j*stride, centralIndex[2]+k*stride,
                                        centralIndex[3]+l*stride,centralIndex[4]+m*stride);
                         }
@@ -594,20 +594,19 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromCenter(const vector<long>& cen
     else{
         cout<<"Error: currently do not support 6 and higher dimension in tensor."<<endl;
     }
-    return tensor;
 
 }
 
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, const int stride){
+void Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, Tensor* & pTensor, const int stride){
    int Ns = span.size();
-   Tensor tensor(span);
+   pTensor = new Tensor<ValueType> (span);
 
    if (2 == Ns){
        for (int i=0; i<span[0]; ++i){
            for (int j=0;j<span[1];++j){
-               tensor(i, j) = e(tfIndex[0]+i*stride, tfIndex[1]+j*stride);
+               pTensor->e(i, j) = e(tfIndex[0]+i*stride, tfIndex[1]+j*stride);
            }
        }
    }
@@ -615,7 +614,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tf
        for (int i=0; i<span[0]; ++i){
            for (int j=0;j<span[1];++j){
                for (int k=0; k<span[2];++k){
-                   tensor(i, j, k) = e(tfIndex[0]+i*stride, tfIndex[1]+j*stride, tfIndex[2]+k*stride);
+                   pTensor->e(i, j, k) = e(tfIndex[0]+i*stride, tfIndex[1]+j*stride, tfIndex[2]+k*stride);
                }
            }
        }
@@ -625,7 +624,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tf
            for (int j=0;j<span[1];++j){
                for (int k=0; k<span[2];++k){
                    for (int l=0; l<span[3];++l) {
-                       tensor(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride, tfIndex[2] + k * stride, tfIndex[3] + l * stride);
+                       pTensor->e(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride, tfIndex[2] + k * stride, tfIndex[3] + l * stride);
                    }
                }
            }
@@ -637,7 +636,7 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tf
                for (int k=0; k<span[2];++k){
                    for (int l=0; l<span[3];++l) {
                        for (int m=0; m<span[4];++m) {
-                           tensor(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride,
+                           pTensor->e(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride,
                                                   tfIndex[2] + k * stride, tfIndex[3] + l * stride, tfIndex[4] + m * stride);
                        }
                    }
@@ -648,7 +647,6 @@ Tensor<ValueType> Tensor<ValueType>::subTensorFromTopLeft(const vector<long>& tf
    else{
        cout<<"Error: currently do not support 6 and higher dimension in tensor."<<endl;
    }
-   return tensor;
 
 }
 
@@ -658,7 +656,7 @@ Tensor<ValueType> Tensor<ValueType>::column(const int index){
     vector<long> newDims;
     newDims.push_back(m_dims[0]);
     newDims.push_back(1);
-    Tensor tensor(newDims);
+    Tensor<ValueType>  tensor(newDims);
     for (int i=0; i<m_dims[0]; ++i){
         tensor.e(i) = e(i,index);
     }
@@ -671,59 +669,57 @@ Tensor<ValueType> Tensor<ValueType>::row(const int index){
     vector<long> newDims;
     newDims.push_back(1);
     newDims.push_back(m_dims[1]);
-    Tensor tensor(newDims);
+    Tensor<ValueType> tensor(newDims);
     copyDataTo(&tensor, index*m_dims[1], m_dims[1]);
     return tensor;
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::slice(const int index){
+Tensor<ValueType>  Tensor<ValueType>::slice(const int index){
     assert(3 == m_dims.size());
     vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
-    Tensor tensor(newDims);
+    Tensor<ValueType> tensor(newDims);
     long N = tensor.getLength();
     copyDataTo(&tensor, index*N , N );
     return tensor;
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::volume(const int index){
+ void Tensor<ValueType>::volume(const int index,  Tensor* & pTensor){
     assert(4 == m_dims.size());
     vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
-    Tensor tensor(newDims);
-    long N = tensor.getLength();
-    copyDataTo(&tensor, index*N , N );
-    return tensor;
+    pTensor =  new Tensor<ValueType>(newDims);
+    long N = pTensor->getLength();
+    copyDataTo(pTensor, index*N , N );
+
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::fourDVolume(const int index){
+void Tensor<ValueType>::fourDVolume(const int index, Tensor* & pTensor){
     assert(5 == m_dims.size());
     vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
-    Tensor tensor(newDims);
-    long N = tensor.getLength();
-    copyDataTo(&tensor, index*N , N );
-    return tensor;
+    pTensor = new Tensor<ValueType> (newDims);
+    long N = pTensor->getLength();
+    copyDataTo(pTensor, index*N , N );
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::extractLowerDTensor(const int index){
+void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor* & pTensor){
     vector<long> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     if (1 == newDims.size()){
         newDims.insert(newDims.begin(),1);
     }
-    Tensor tensor(newDims);
-    long N = tensor.getLength();
-    copyDataTo(&tensor, index*N , N );
-    return tensor;
+    pTensor = new Tensor<ValueType>(newDims);
+    long N = pTensor->getLength();
+    copyDataTo(pTensor, index*N , N );
 }
 
 
