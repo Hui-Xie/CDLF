@@ -4,6 +4,7 @@
 
 #include "TestSegmentation3D.h"
 #include <iostream>
+#include "Segmentation3DNet.h"
 using namespace std;
 
 void printUsage(char* argv0){
@@ -19,6 +20,25 @@ int main(int argc, char *argv[]) {
         printUsage(argv[0]);
         return -1;
     }
+    Segmentation3DNet net;
+
+    net.build();
+    net.setLearningRate(0.001);
+    net.setLossTolerance(0.02);
+    net.setBatchSize(100);
+    net.initialize();
+
+    net.printArchitecture();
+
+    long epoch= 100;
+    float accuracy = 0;
+    for (long i=0; i<epoch; ++i){
+        net.train();
+        accuracy = net.test();
+        cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
+    }
+    cout<<"==========End of Mnist Test==========="<<endl;
+    return 0;
 
 
 }

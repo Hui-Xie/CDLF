@@ -16,62 +16,95 @@ Segmentation3DNet::~Segmentation3DNet(){
 
 void Segmentation3DNet::build(){
     // it is a good design if all numFilter is odd;
-    int layerID = 1;
-    InputLayer *inputLayer = new InputLayer(layerID++, "InputLayer", {28, 28}); //output size: 28*28
+    InputLayer* inputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
     addLayer(inputLayer);
+    NormalizationLayer* normAfterInput = new NormalizationLayer(2, "NormAfterInput", inputLayer);
+    addLayer(normAfterInput);
 
-    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", {3, 3},getFinalLayer(), 5, 1); //output size: 5*26*26
+    BranchLayer* branch1 = new BranchLayer(20, "Branch1", normAfterInput);
+    addLayer(branch1);
+
+    ConvolutionLayer* conv1 = new ConvolutionLayer(30, "Conv1", {3,3, 3},branch1, 5); //output size: 5*275*275*118
     addLayer(conv1);
-    ReLU *reLU1 = new ReLU(layerID++, "ReLU1", getFinalLayer());
+    ReLU* reLU1 = new ReLU(32, "ReLU1", conv1);
     addLayer(reLU1);
-    NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "Norm1", getFinalLayer());
+    NormalizationLayer* norm1 = new NormalizationLayer(34, "Norm1", reLU1);
     addLayer(norm1);
 
-    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", {5,3,3}, getFinalLayer(), 5, 1);//output size: 5*24*24
-    addLayer(conv2);
-    ReLU *reLU2 = new ReLU(layerID++, "ReLU2", getFinalLayer());
+    BiasLayer* bias1 = new BiasLayer(40, "Bias1", norm1); //output size: 5*275*275*118
+    addLayer(bias1);
+
+    BranchLayer* branch2 = new BranchLayer(50, "Branch2", bias1); //output size: 5*275*275*118
+    addLayer(branch2);
+    ReLU* reLU2 = new ReLU(52, "ReLU2", branch2);
     addLayer(reLU2);
-    NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "Norm2", getFinalLayer());
+    NormalizationLayer* norm2 = new NormalizationLayer(54, "Norm2", reLU2);
     addLayer(norm2);
 
-    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", {3,3, 3}, getFinalLayer(), 7, 1);//output size: 7*3*22*22
+    ConvolutionLayer* conv3 = new ConvolutionLayer(60, "Conv3", {5,5, 5,5},norm2, 21); //output size: 21*271*271*114
     addLayer(conv3);
-    ReLU *reLU3 = new ReLU(layerID++, "ReLU3", getFinalLayer());
+    ReLU* reLU3 = new ReLU(62, "ReLU3", conv3);
     addLayer(reLU3);
-    NormalizationLayer *norm3 = new NormalizationLayer(layerID++, "Norm3", getFinalLayer());
+    NormalizationLayer* norm3 = new NormalizationLayer(64, "Norm3", reLU3);
     addLayer(norm3);
 
-    ConvolutionLayer *conv4 = new ConvolutionLayer(layerID++, "Conv4", {7,3,3,3}, getFinalLayer(), 1, 1);//output size: 20*20
+    ConvolutionLayer* conv4 = new ConvolutionLayer(70, "Conv4", {21,7,7,7},norm3, 19); //output size: 19*265*265*108
     addLayer(conv4);
-    ReLU *reLU4 = new ReLU(layerID++, "ReLU4", getFinalLayer());
+    ReLU* reLU4 = new ReLU(72, "ReLU4", conv4);
     addLayer(reLU4);
-    NormalizationLayer *norm4 = new NormalizationLayer(layerID++, "Norm4", getFinalLayer());
+    NormalizationLayer* norm4 = new NormalizationLayer(74, "Norm4", reLU4);
     addLayer(norm4);
 
-    VectorizationLayer *vecLayer1 = new VectorizationLayer(layerID++, "Vector1", getFinalLayer()); //output size: 400*1
-    addLayer(vecLayer1);
-    FCLayer *fcLayer1 = new FCLayer(layerID++, "FC1", 100, getFinalLayer()); //output size: 100*1
-    addLayer(fcLayer1);
-    ReLU *reLU5 = new ReLU(layerID++, "ReLU5", getFinalLayer()); //output size: 100*1
+
+    ConvolutionLayer* conv5 = new ConvolutionLayer(80, "Conv5", {19,5,5,5},norm4, 17); //output size: 17*261*261*104
+    addLayer(conv5);
+    ReLU* reLU5 = new ReLU(82, "ReLU5", conv5);
     addLayer(reLU5);
-    NormalizationLayer *norm5 = new NormalizationLayer(layerID++, "Norm5", getFinalLayer());
+    NormalizationLayer* norm5 = new NormalizationLayer(84, "Norm5", reLU5);
     addLayer(norm5);
 
-    FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", 10, getFinalLayer()); //output size: 10*1
-    addLayer(fcLayer2);
 
-    SoftmaxLayer *softmaxLayer = new SoftmaxLayer(layerID++, "Softmax1",getFinalLayer()); //output size: 10*1
-    addLayer(softmaxLayer);
-    CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
-                                                              getFinalLayer()); // output size: 1
-    addLayer(crossEntropyLoss);
+    ConvolutionLayer* conv6 = new ConvolutionLayer(90, "Conv6", {17,3,3,3},norm5, 11); //output size: 11*259*259*102
+    addLayer(conv6);
+    ReLU* reLU6 = new ReLU(92, "ReLU6", conv6);
+    addLayer(reLU6);
+    NormalizationLayer* norm6 = new NormalizationLayer(94, "Norm6", reLU6);
+    addLayer(norm6);
+
+
+    ConvolutionLayer* conv7 = new ConvolutionLayer(100, "Conv7", {11,3,3,3},norm6, 3); //output size: 3*257*257*100
+    addLayer(conv7);
+    ReLU* reLU7 = new ReLU(102, "ReLU7", conv7);
+    addLayer(reLU7);
+    NormalizationLayer* norm7 = new NormalizationLayer(104, "Norm7", reLU7);
+    addLayer(norm7);
+
+
+    SubTensorLayer* subTensor1 = new SubTensorLayer(110, "SubTensor1", branch2, {1,4,4,9},{3,257,257,100}); //output size: 3*257*257*100
+    addLayer(subTensor1);
+    ReLU* reLU8 = new ReLU(112, "ReLU8", subTensor1);
+    addLayer(reLU8);
+    NormalizationLayer* norm8 = new NormalizationLayer(114, "Norm8", reLU8);
+    addLayer(norm8);
+
+    MergerLayer* merger1 = new MergerLayer(120, "Merger1", {3,257,257,100}); //output size: 3*257*257*100
+    addLayer(merger1);
+    merger1->addPreviousLayer(norm7);
+    merger1->addPreviousLayer(norm8);
+
+    BiasLayer* bias2 = new BiasLayer(130, "Bias2", merger1); // output size: 3*257*257*100
+    addLayer(bias2);
+
+    SoftmaxLayer *softmax1 = new SoftmaxLayer(140, "Softmax1",bias2); //output size: 3*257*257*100
+    addLayer(softmax1);
+
 }
 
 void Segmentation3DNet::train(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
 
-    long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
+    long maxIteration =420;
     long NTrain = maxIteration;
     int batchSize = getBatchSize();
     float learningRate = getLearningRate();
@@ -88,8 +121,8 @@ void Segmentation3DNet::train(){
         zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
-            inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
-            lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
+            //inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
+            //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
             forwardPropagate();
             backwardPropagate();
             ++nIter;
@@ -104,10 +137,10 @@ float Segmentation3DNet::test(){
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
     long n = 0;
     long nSuccess = 0;
-    const long Ntest = m_pMnistData->m_pTestLabels->getLength();
+    const long Ntest= 10000; //= m_pMnistData->m_pTestLabels->getLength();
     while (n < Ntest) {
-        inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
-        lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
+        //inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
+        //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
         forwardPropagate();
         if (lossLayer->predictSuccessInColVec()) ++nSuccess;
         ++n;
