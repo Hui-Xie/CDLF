@@ -1,0 +1,14 @@
+//
+// Created by hxie1 on 9/14/18.
+//
+
+#ifndef CDLF_FRAMEWORK_THREEDSEGMENTATIONNET_H
+#define CDLF_FRAMEWORK_THREEDSEGMENTATIONNET_H
+
+
+class ThreeDSegmentationNet {
+
+};
+
+
+#endif //CDLF_FRAMEWORK_THREEDSEGMENTATIONNET_H
