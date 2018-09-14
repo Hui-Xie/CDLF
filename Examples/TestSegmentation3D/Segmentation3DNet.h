@@ -19,6 +19,10 @@ public:
     virtual void train();
     virtual float test();
 
+private:
+    void buildG(); //Generative network
+    void buildD(); //Discriminative network
+
 };
 
 

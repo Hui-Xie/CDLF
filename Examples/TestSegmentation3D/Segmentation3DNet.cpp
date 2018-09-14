@@ -14,7 +14,14 @@ Segmentation3DNet::~Segmentation3DNet(){
 
 }
 
+
 void Segmentation3DNet::build(){
+    buildG();
+    buildD();
+}
+
+
+void Segmentation3DNet::buildG(){
     // it is a good design if all numFilter is odd;
     InputLayer* inputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
     addLayer(inputLayer);
@@ -97,6 +104,10 @@ void Segmentation3DNet::build(){
 
     SoftmaxLayer *softmax1 = new SoftmaxLayer(140, "Softmax1",bias2); //output size: 3*257*257*100
     addLayer(softmax1);
+
+}
+
+void Segmentation3DNet::buildD(){
 
 }
 
