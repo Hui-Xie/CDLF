@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 6/6/2018.
-// Copyrigh (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #ifndef RL_NONCONVEX_LOSSLAYER_H
 #define RL_NONCONVEX_LOSSLAYER_H

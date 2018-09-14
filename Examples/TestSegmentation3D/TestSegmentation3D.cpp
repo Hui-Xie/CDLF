@@ -1,8 +1,8 @@
 //
 // Created by Hui Xie on 9/14/18.
-// Copyrigh (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
 
-#include "Test3DSegmentation.h"
+#include "TestSegmentation3D.h"
 #include <iostream>
 using namespace std;
 

@@ -1,20 +1,20 @@
 //
 // Created by Hui Xie on 9/14/18.
-// Copyrigh (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
 
-#include "ThreeDSegmentationNet.h"
+#include "Segmentation3DNet.h"
 
 
 
-ThreeDSegmentationNet::ThreeDSegmentationNet(){
-
-}
-
-ThreeDSegmentationNet::~ThreeDSegmentationNet(){
+Segmentation3DNet::Segmentation3DNet(){
 
 }
 
-void ThreeDSegmentationNet::build(){
+Segmentation3DNet::~Segmentation3DNet(){
+
+}
+
+void Segmentation3DNet::build(){
     // it is a good design if all numFilter is odd;
     int layerID = 1;
     InputLayer *inputLayer = new InputLayer(layerID++, "InputLayer", {28, 28}); //output size: 28*28
@@ -67,7 +67,7 @@ void ThreeDSegmentationNet::build(){
     addLayer(crossEntropyLoss);
 }
 
-void ThreeDSegmentationNet::train(){
+void Segmentation3DNet::train(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
 
@@ -99,7 +99,7 @@ void ThreeDSegmentationNet::train(){
     }
 }
 
-float ThreeDSegmentationNet::test(){
+float Segmentation3DNet::test(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
     long n = 0;
@@ -117,7 +117,7 @@ float ThreeDSegmentationNet::test(){
 }
 
 //construct a 2*1 one-hot vector
-Tensor<float> ThreeDSegmentationNet::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
+Tensor<float> Segmentation3DNet::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
     Tensor<float> tensor({10, 1});
     tensor.zeroInitialize();
     tensor.e(pLabels->e(index)) = 1;

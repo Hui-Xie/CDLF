@@ -11,5 +11,5 @@ add_subdirectory(TestTIPL)
 add_subdirectory(TestDAGNetwork)
 add_subdirectory(TestDimensionCollapse)
 add_subdirectory(TestUnitFilter)
-add_subdirectory(Test3DSegmentation)
+add_subdirectory(TestSegmentation3D)
 

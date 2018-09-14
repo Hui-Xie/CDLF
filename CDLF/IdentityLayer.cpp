@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 8/3/2018.
-// Copyrigh (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #include "IdentityLayer.h"
 
