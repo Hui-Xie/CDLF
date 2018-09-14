@@ -40,8 +40,13 @@ public:
     void printY();
     void printDY();
 
+protected:
+    void allocateYdYTensor();
+    void freeYdYTensor();
+    
 private:
     //void printVector(Tensor<float>* vector);
+    
 
 
 };

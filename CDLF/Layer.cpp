@@ -13,6 +13,15 @@ Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
     m_prevLayer = nullptr;
 
     m_tensorSize = tensorSize;
+    allocateYdYTensor();
+}
+
+
+Layer::~Layer(){
+    freeYdYTensor();
+}
+
+void Layer::allocateYdYTensor(){
     if (0 != m_tensorSize.size()){
         m_pYTensor = new Tensor<float>(m_tensorSize);
         m_pdYTensor = new Tensor<float>(m_tensorSize);
@@ -23,8 +32,7 @@ Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
     }
 }
 
-
-Layer::~Layer(){
+void Layer::freeYdYTensor(){
     if (nullptr != m_pYTensor){
         delete m_pYTensor;
         m_pYTensor = nullptr;

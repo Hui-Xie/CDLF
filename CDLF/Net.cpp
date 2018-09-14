@@ -135,10 +135,11 @@ void Net::initialize(){
 
 void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "  <<"Output Result: "<<endl;
-    lossLayer->m_prevLayer->m_pYTensor->transpose().printElements();
+    long N = lossLayer->m_prevLayer->m_pYTensor->getLength();
+    lossLayer->m_prevLayer->m_pYTensor->reshape({1,N}).printElements();
     if (nullptr != lossLayer->m_pGroundTruth){
         cout<<"GrounTruth: "<<endl;
-        lossLayer->m_pGroundTruth->transpose().printElements();
+        lossLayer->m_pGroundTruth->reshape({1,N}).printElements();
     }
     cout<<"Loss: "<< lossLayer->lossCompute()<< endl;
     cout<<endl;

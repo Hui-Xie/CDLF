@@ -17,6 +17,7 @@ int main (int argc, char *argv[])
     UnitFilterNet net;
 
     net.build();
+    net.printArchitecture();
 
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
