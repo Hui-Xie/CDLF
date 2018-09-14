@@ -13,7 +13,6 @@ public:
     MnistConvNet(MNIST* pMnistData);
     ~MnistConvNet();
 
-    void setNetParameters();
     Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
 
     virtual void build();

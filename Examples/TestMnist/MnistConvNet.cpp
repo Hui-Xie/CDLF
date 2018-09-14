@@ -12,14 +12,6 @@ MnistConvNet::~MnistConvNet(){
 
 }
 
-void MnistConvNet::setNetParameters() {
-    setLearningRate(0.001);
-    setLossTolerance(0.02);
-    setBatchSize(100);
-    initialize();
-
-}
-
 void MnistConvNet::build(){
     // it is a good design if all numFilter is odd;
     int layerID = 1;
@@ -65,16 +57,8 @@ void MnistConvNet::build(){
 
     FCLayer *fcLayer2 = new FCLayer(layerID++, "FC2", 10, getFinalLayer()); //output size: 10*1
     addLayer(fcLayer2);
-    ReLU *reLU6 = new ReLU(layerID++, "ReLU6", getFinalLayer());
-    addLayer(reLU6);
-    NormalizationLayer *norm6 = new NormalizationLayer(layerID++, "Norm6", getFinalLayer());
-    addLayer(norm6);
 
-    //For 2 category case
-    FCLayer *fcLayer3 = new FCLayer(layerID++, "FC3", 2, getFinalLayer()); //output size: 2*1
-    addLayer(fcLayer3);
-
-    SoftmaxLayer *softmaxLayer = new SoftmaxLayer(layerID++, "Softmax1",getFinalLayer()); //output size: 2*1
+    SoftmaxLayer *softmaxLayer = new SoftmaxLayer(layerID++, "Softmax1",getFinalLayer()); //output size: 10*1
     addLayer(softmaxLayer);
     CrossEntropyLoss *crossEntropyLoss = new CrossEntropyLoss(layerID++, "CrossEntropy",
                                                               getFinalLayer()); // output size: 1
@@ -85,7 +69,7 @@ void MnistConvNet::train(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
 
-    long maxIteration =m_pMnistData->m_pTrainLabelsPart->getLength();
+    long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
     long NTrain = maxIteration;
     int batchSize = getBatchSize();
     float learningRate = getLearningRate();
@@ -102,8 +86,8 @@ void MnistConvNet::train(){
         zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
-            inputLayer->setInputTensor(m_pMnistData->m_pTrainImagesPart->slice(randSeq[nIter]));
-            lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabelsPart, randSeq[nIter]));
+            inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
+            lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
             forwardPropagate();
             backwardPropagate();
             ++nIter;
@@ -118,10 +102,10 @@ float MnistConvNet::test(){
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
     long n = 0;
     long nSuccess = 0;
-    const long Ntest = m_pMnistData->m_pTestLabelsPart->getLength();
+    const long Ntest = m_pMnistData->m_pTestLabels->getLength();
     while (n < Ntest) {
-        inputLayer->setInputTensor(m_pMnistData->m_pTestImagesPart->slice(n));
-        lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabelsPart, n));
+        inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
+        lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
         forwardPropagate();
         if (lossLayer->predictSuccessInColVec()) ++nSuccess;
         ++n;
@@ -132,9 +116,9 @@ float MnistConvNet::test(){
 
 //construct a 2*1 one-hot vector
 Tensor<float> MnistConvNet::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
-    Tensor<float> tensor({2, 1});// for 2 categories case
+    Tensor<float> tensor({10, 1});
     tensor.zeroInitialize();
-    tensor.e(pLabels->e(index)) = 1; //for {0,1} case
+    tensor.e(pLabels->e(index)) = 1;
     return tensor;
 }
 

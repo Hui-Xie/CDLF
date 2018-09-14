@@ -8,7 +8,7 @@
 void printUsage(char* argv0){
     cout<<"Test MNIST Dataset:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" fullPathOfMnistDir"<<endl;
+    cout<<argv0<<" fullPathOfMnistDataDir"<<endl;
 }
 
 
@@ -33,20 +33,24 @@ int main(int argc, char *argv[]){
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
     //tailor data and delete wholeDataSet, and keep PartDataSet
-    mnist.tailorData();
-    mnist.deleteWholeDataSet();
+    //mnist.tailorData();
+    //mnist.deleteWholeDataSet();
 
-    cout<<"test the matching between image and label in part dataset"<<endl;
-    index = rand() % 10000;
-    mnist.displayImage(mnist.m_pTrainImagesPart, index);
-    cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
+    //cout<<"test the matching between image and label in part dataset"<<endl;
+    //index = rand() % 10000;
+    //mnist.displayImage(mnist.m_pTrainImagesPart, index);
+    //cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
     // Construct Net and Train, Test
     MnistConvNet net(&mnist);
     net.build();
-    net.setNetParameters();
+    net.setLearningRate(0.001);
+    net.setLossTolerance(0.02);
+    net.setBatchSize(100);
+    net.initialize();
+
     net.printArchitecture();
-    long epoch= 12;
+    long epoch= 100;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
         net.train();
