@@ -21,7 +21,7 @@ void UnitFilterNet::build(){
     addLayer(inputLayer);
     ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1", {1,1,1},getFinalLayer(), 1);
     addLayer(conv1);
-    SubTensorLayer * subTensor = new SubTensorLayer(layerID++, "SubTensor1", getFinalLayer(),{0,0,0}, {3,1,1});
+    SubTensorLayer * subTensor = new SubTensorLayer(layerID++, "SubTensor1", getFinalLayer(),{0,0,0}, {3,4,5});
     addLayer(subTensor);
     LossConvexExample1* loss = new LossConvexExample1(layerID++, "Loss", getFinalLayer());
     addLayer(loss);
