@@ -35,6 +35,7 @@ public:
     void backwardPropagate();
     void zeroParaGradient();
     void addLayer(Layer* layer);
+    Layer* getLayer(const int ID);
     void sgd(const float lr, const int batchSize);
 
     InputLayer* getInputLayer();

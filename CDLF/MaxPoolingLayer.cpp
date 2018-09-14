@@ -5,8 +5,8 @@
 #include "MaxPoolingLayer.h"
 
 
-MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, const vector<long> &filterSize,
-                                 Layer *prevLayer, const int stride)
+MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
+                                  const int stride)
         : Layer(id, name, {}) {
 
     m_type = "MaxPoolingLayer";

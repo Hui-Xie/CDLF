@@ -19,19 +19,19 @@ void Conv4DNet::build(){
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {7,7,7,7});  //output 7*7*7*7
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {7,3,3,3}, getFinalLayer(),1); //output 5*5*5
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {7,3,3,3}, 1); //output 5*5*5
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
     ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {5,3,3}, getFinalLayer(),1); //output 3*3
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2",getFinalLayer(), {5,3,3}, 1); //output 3*3
     addLayer(conv2);
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
     addLayer(vec1);
-    FCLayer* fc1 = new FCLayer(id++,"fc1", 9, getFinalLayer());
+    FCLayer* fc1 = new FCLayer(id++,"fc1", getFinalLayer(), 9);
     addLayer(fc1);
     LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
     addLayer(loss);

@@ -19,14 +19,14 @@ void ConvNet::build(){
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {8,7});  //output: 8*7
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {3,3}, getFinalLayer(),13); //output 13*6*5
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(),{3,3}, 13); //output 13*6*5
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
     ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {13,3,3}, getFinalLayer(), 10); //output 10*4*3
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2",getFinalLayer(),  {13,3,3}, 10); //output 10*4*3
     addLayer(conv2);
     NormalizationLayer* norm2 = new NormalizationLayer(id++, "Norm2",getFinalLayer());
     addLayer(norm2);
@@ -34,7 +34,7 @@ void ConvNet::build(){
     addLayer(reLU2);
 
 
-    ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", {3,4,3}, getFinalLayer()); //output 8*1
+    ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", getFinalLayer(),{3,4,3}); //output 8*1
     addLayer(conv3);
     NormalizationLayer* norm3 = new NormalizationLayer(id++, "Norm3",getFinalLayer());
     addLayer(norm3);
@@ -44,7 +44,7 @@ void ConvNet::build(){
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer()); // output 8*1
     addLayer(vec1);
-    FCLayer* fc1 = new FCLayer(id++, "FC1", 7, getFinalLayer());
+    FCLayer* fc1 = new FCLayer(id++, "FC1", getFinalLayer(), 7);
     addLayer(fc1);
     LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
     addLayer(loss);

@@ -15,7 +15,7 @@
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-     FCLayer(const int id, const string& name, const long outputWidth, Layer* prevLayer);
+     FCLayer(const int id, const string& name, Layer* prevLayer, const long outputWidth);
     ~FCLayer();
 
     long m_m; //output width

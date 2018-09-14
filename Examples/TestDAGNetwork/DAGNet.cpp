@@ -27,7 +27,7 @@ void DAGNet::build(){
     int id=1;
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {10,1});
     addLayer(inputLayer);
-    FCLayer* fc1 = new FCLayer(id++, "FC1", 20, getFinalLayer());
+    FCLayer* fc1 = new FCLayer(id++, "FC1", getFinalLayer(), 20);
     addLayer(fc1);
     ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
@@ -38,21 +38,21 @@ void DAGNet::build(){
     addLayer(branch);
 
     //add parallel convolution path
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {5,1}, branch); //output: {16,1}
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", branch, {5,1} ); //output: {16,1}
     addLayer(conv1);
     ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer());
     addLayer(reLU2);
     NormalizationLayer* normalLayer2 = new NormalizationLayer(id++, "NormLayer2",getFinalLayer());
     addLayer(normalLayer2);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {3,1}, getFinalLayer()); //output: {14,1}
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", getFinalLayer(),{3,1}); //output: {14,1}
     addLayer(conv2);
     ReLU* reLU3 = new ReLU(id++, "ReLU3", getFinalLayer());
     addLayer(reLU3);
     NormalizationLayer* normalLayer3 = new NormalizationLayer(id++, "NormLayer3",getFinalLayer());
     addLayer(normalLayer3);
 
-    ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", {3,1}, getFinalLayer()); //output: {12,1}
+    ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", getFinalLayer(), {3,1}); //output: {12,1}
     addLayer(conv3);
     ReLU* reLU4 = new ReLU(id++, "ReLU4", getFinalLayer());
     addLayer(reLU4);
@@ -60,14 +60,14 @@ void DAGNet::build(){
     addLayer(normalLayer4);
 
     //add parallel FC path
-    FCLayer* fc2 = new FCLayer(id++, "FC2", 15, branch); //output {15,1}
+    FCLayer* fc2 = new FCLayer(id++, "FC2", branch, 15); //output {15,1}
     addLayer(fc2);
     ReLU* reLU5 = new ReLU(id++, "ReLU5", fc2);
     addLayer(reLU5);
     NormalizationLayer* normalLayer5 = new NormalizationLayer(id++, "NormLayer5",reLU5);
     addLayer(normalLayer5);
 
-    FCLayer* fc3 = new FCLayer(id++, "FC3", 12, normalLayer5); //output {12,1}
+    FCLayer* fc3 = new FCLayer(id++, "FC3", normalLayer5, 12); //output {12,1}
     addLayer(fc3);
     ReLU* reLU6 = new ReLU(id++, "ReLU6", fc3);
     addLayer(reLU6);
@@ -81,7 +81,7 @@ void DAGNet::build(){
     merger->addPreviousLayer(normalLayer6);
 
     //add tail path
-    FCLayer* fc4 = new FCLayer(id++, "FC4", 10, merger);
+    FCLayer* fc4 = new FCLayer(id++, "FC4", merger, 10);
     addLayer(fc4);
 
     //add Loss Layer

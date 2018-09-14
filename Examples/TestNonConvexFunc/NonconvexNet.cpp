@@ -25,7 +25,7 @@ void NonconvexNet::build(){
     InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",{m_layerWidthVector.at(0),1});
     addLayer(inputLayer);
     for(int i =1; i< nLayers; ++i){
-        FCLayer* fcLayer = new FCLayer(layerID++, "FCLayer"+to_string(i), m_layerWidthVector.at(i), getFinalLayer());
+        FCLayer* fcLayer = new FCLayer(layerID++, "FCLayer"+to_string(i), getFinalLayer(), m_layerWidthVector.at(i));
         addLayer(fcLayer);
         if (i != nLayers -1){
             ReLU* reLU = new ReLU(layerID++, "ReLU"+to_string(i), getFinalLayer());

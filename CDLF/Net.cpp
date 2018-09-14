@@ -110,6 +110,10 @@ void Net::addLayer(Layer* layer){
      }
 }
 
+Layer* Net::getLayer(const int ID){
+    return m_layers.at(ID);
+}
+
 void Net::sgd(const float lr, const int batchSize){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         iter->second->updateParameters(lr, "sgd", batchSize);

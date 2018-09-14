@@ -25,7 +25,7 @@
 
 class ConvolutionLayer :  public Layer {
 public:
-    ConvolutionLayer(const int id, const string& name, const vector<long>& filterSize, Layer* prevLayer,
+    ConvolutionLayer(const int id, const string& name, Layer* prevLayer, const vector<long>& filterSize,
                      const int numFilters=1, const int stride=1);
     ~ConvolutionLayer();
 

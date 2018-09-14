@@ -19,14 +19,14 @@ void CollapseNet::build(){
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {3,20,4,12});  //output 3,20,4,12
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", {3,3,4,5}, getFinalLayer(),13); //output 13*18*8
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(),{3,3,4,5}, 13); //output 13*18*8
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
     ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", {5,5,8}, getFinalLayer(),1); //output 9*14
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", getFinalLayer(),{5,5,8}, 1); //output 9*14
     addLayer(conv2);
     NormalizationLayer* norm2 = new NormalizationLayer(id++, "Norm2",getFinalLayer());
     addLayer(norm2);
@@ -35,7 +35,7 @@ void CollapseNet::build(){
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
     addLayer(vec1);
-    FCLayer* fc1 = new FCLayer(id++,"fc1", 25, getFinalLayer());
+    FCLayer* fc1 = new FCLayer(id++,"fc1", getFinalLayer(), 25);
     addLayer(fc1);
     LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
     addLayer(loss);

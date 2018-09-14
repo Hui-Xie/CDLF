@@ -5,8 +5,8 @@
 #include "ConvolutionLayer.h"
 #include "statisTool.h"
 
-ConvolutionLayer::ConvolutionLayer(const int id, const string &name, const vector<long> &filterSize,
-                                   Layer *prevLayer, const int numFilters, const int stride)
+ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
+                                    const int numFilters, const int stride)
         : Layer(id, name, {}) {
     if (checkFilterSize(filterSize, prevLayer)) {
         m_type = "ConvolutionLayer";
