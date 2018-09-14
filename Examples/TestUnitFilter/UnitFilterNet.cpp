@@ -17,11 +17,11 @@ UnitFilterNet::~UnitFilterNet(){
 
 void UnitFilterNet::build(){
     int layerID = 1;
-    InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",{3,4,5});
+    InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",{3,2,2});
     addLayer(inputLayer);
-    ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1", {1,1,1},getFinalLayer(), 1);
+    ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1", {1,1,1},getFinalLayer(), 3);
     addLayer(conv1);
-    SubTensorLayer * subTensor = new SubTensorLayer(layerID++, "SubTensor1", getFinalLayer(),{0,0,0}, {3,4,5});
+    SubTensorLayer * subTensor = new SubTensorLayer(layerID++, "SubTensor1", getFinalLayer(),{0,0,0,0}, {3,3,2,2});
     addLayer(subTensor);
     LossConvexExample1* loss = new LossConvexExample1(layerID++, "Loss", getFinalLayer());
     addLayer(loss);

@@ -10,12 +10,12 @@ SubTensorLayer::SubTensorLayer(const int id, const string &name, Layer *prevLaye
 {
     m_type = "SubTensorLayer";
     addPreviousLayer(prevLayer);
-    if (start.size() != span.size() || prevLayer->m_tensorSize.size() != start.size()){
-        cout<<"Error: previous Layer's tensorsize, start and span should have same size."<<endl;
-    }
-    else{
+    if (start.size() == span.size() && prevLayer->m_tensorSize.size() == start.size() && span <= prevLayer->m_tensorSize){
         m_start = start;
         m_span  = span;
+    }
+    else{
+        cout<<"Error: previous Layer's tensorsize, start and span should have same size, and span <= preLayer's tensorSize."<<endl;
     }
 
 }

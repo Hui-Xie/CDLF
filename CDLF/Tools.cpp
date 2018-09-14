@@ -109,6 +109,15 @@ vector<long> operator/ (const vector<long>& left, const int divisor){
     return result;
 }
 
+bool operator<= (const vector<long>& left, const vector<long>& right){
+    assert(left.size() == right.size());
+    const int N = left.size();
+    for (int i=0; i<N;++i){
+        if(left[i] > right[i]) return false;
+    }
+    return true;
+}
+
 // delete 1 in the tensorSize when dim >2
 void deleteOnes(vector<long>& vec){
     for (vector<long>::iterator it = vec.begin(); it!=vec.end();++it){
