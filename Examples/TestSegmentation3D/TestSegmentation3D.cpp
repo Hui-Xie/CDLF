@@ -8,13 +8,14 @@
 using namespace std;
 
 void printUsage(char* argv0){
-    cout<<"Test 3D Medical Image Segmentation: "<<endl;
+    cout<<"A Generative Adversarial Network for 3D Medical Image Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" fullPathOfImagesDir"<<endl;
 }
 
 int main(int argc, char *argv[])
 {
+    printUsage(argv[0]);
     Segmentation3DNet net;
     net.build();
     net.setLearningRate(0.001);
