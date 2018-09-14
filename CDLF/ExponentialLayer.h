@@ -1,6 +1,6 @@
 //
-// Created by hxie1 on 9/10/18.
-//
+// Created by Hui Xie on 9/10/18.
+// Copyrigh (c) 2018 Hui Xie. All rights reserved.
 
 #ifndef CDLF_FRAMEWORK_EXPONENTIALLAYER_H
 #define CDLF_FRAMEWORK_EXPONENTIALLAYER_H

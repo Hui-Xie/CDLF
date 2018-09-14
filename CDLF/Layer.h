@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 6/5/2018.
-//
+// Copyrigh (c) 2018 Hui Xie. All rights reserved.
 
 #ifndef RL_NONCONVEX_LAYER_H
 #define RL_NONCONVEX_LAYER_H
@@ -43,10 +43,10 @@ public:
 protected:
     void allocateYdYTensor();
     void freeYdYTensor();
-    
+
 private:
     //void printVector(Tensor<float>* vector);
-    
+
 
 
 };

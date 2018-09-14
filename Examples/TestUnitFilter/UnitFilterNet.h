@@ -1,7 +1,7 @@
 //
 // Created by Hui Xie on 8/16/2018.
 // Copyrigh (c) 2018 Hui Xie. All rights reserved.
-//
+
 
 #ifndef CDLF_FRAMEWORK_CONVEXNET_H
 #define CDLF_FRAMEWORK_CONVEXNET_H

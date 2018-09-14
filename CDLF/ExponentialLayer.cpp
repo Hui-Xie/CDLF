@@ -1,6 +1,6 @@
 //
-// Created by hxie1 on 9/10/18.
-//
+// Created by Hui Xie on 9/10/18.
+// Copyrigh (c) 2018 Hui Xie. All rights reserved.
 
 #include "ExponentialLayer.h"
 

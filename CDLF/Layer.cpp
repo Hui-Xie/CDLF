@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 6/5/2018.
-//
+// Copyrigh (c) 2018 Hui Xie. All rights reserved.
 
 #include "Layer.h"
 #include <iostream>

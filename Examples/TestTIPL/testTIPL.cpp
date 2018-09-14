@@ -1,6 +1,6 @@
 //
-// Created by hxie1 on 8/22/18.
-//
+// Created by Hui Xie on 8/22/18.
+// Copyright (c) 2018. All rights reserverd.
 
 #include "TIPLIO.h"
 

@@ -1,5 +1,5 @@
 //
-// Created by hxie1 on 9/8/18.
+// Created by Hui Xie on 9/8/18.
 //
 
 #ifndef CDLF_FRAMEWORK_FILETOOLS_H
