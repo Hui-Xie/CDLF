@@ -13,15 +13,9 @@ void printUsage(char* argv0){
     cout<<argv0<<" fullPathOfImagesDir"<<endl;
 }
 
-int main(int argc, char *argv[]) {
-
-    if (2 != argc) {
-        cout << "Error: input parameter error." << endl;
-        printUsage(argv[0]);
-        return -1;
-    }
+int main(int argc, char *argv[])
+{
     Segmentation3DNet net;
-
     net.build();
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
