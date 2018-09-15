@@ -38,3 +38,13 @@ void GANet::sgdG(){
 void GANet::sgdD(){
 
 }
+
+bool GANet::checkLayerAttribute(){
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        if (0 == iter->second->getAttribute()){
+            cout<<"Error: incorrect layer attribute: ID="<<iter->second->m_id<<"; name="<<iter->second->m_name<<endl;
+            return false;
+        }
+    }
+    return true;
+}

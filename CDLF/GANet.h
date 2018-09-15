@@ -27,6 +27,8 @@ public:
     void sgdG();
     void sgdD();
 
+    bool checkLayerAttribute();
+
 
 };
 

@@ -19,10 +19,18 @@ int main(int argc, char *argv[])
     Segmentation3DNet net;
     net.buildG();
     net.buildD();
+
+    if (! net.checkLayerAttribute()){
+        return -1;
+    }
+
+
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
     net.setBatchSize(100);
     net.initialize();
+
+
 
     net.printArchitecture();
 

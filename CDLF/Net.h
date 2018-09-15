@@ -33,6 +33,7 @@ public:
 
 
     void addLayer(Layer* layer);
+    void addLayer(Layer* layer, const char attri);
     Layer* getLayer(const int ID);
 
 

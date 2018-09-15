@@ -85,6 +85,11 @@ void Net::addLayer(Layer* layer){
     }
 }
 
+void Net::addLayer(Layer* layer, const char attri){
+    addLayer(layer);
+    layer->setAttribute(attri);
+}
+
 Layer* Net::getLayer(const int ID){
     return m_layers.at(ID);
 }

@@ -31,7 +31,7 @@ void FeedForwardNet::forwardPropagate(){
     }
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();
-   }
+    }
 }
 void FeedForwardNet::backwardPropagate(){
    // first initialize all dy into zero.
