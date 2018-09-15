@@ -10,6 +10,7 @@
 /* Y = \sum X_i
  * dL/dx_i = dL/dY * dY/dX_i = dL/dY;
  * in the BranchLayer, the dL/dY should be accumulate from the following layers of MergerLayer
+ * MergerLayer can be a switch to on/off connecting to different incoming layer.
  * */
 
 class MergerLayer : public Layer {
@@ -26,9 +27,11 @@ public:
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
     virtual void addPreviousLayer(Layer* prevLayer);
+    void delPreviousLayer(Layer* prevLayer);
 
 private:
     bool isLayerInList(const Layer* layer);
+    void delLayerFromList(const Layer* layer);
 };
 
 

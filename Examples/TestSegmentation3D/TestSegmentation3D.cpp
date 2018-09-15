@@ -10,7 +10,7 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"A Generative Adversarial Network for 3D Medical Image Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" fullPathOfImagesDir"<<endl;
+    cout<<argv0<<endl;
 }
 
 int main(int argc, char *argv[])

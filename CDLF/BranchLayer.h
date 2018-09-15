@@ -10,6 +10,7 @@
 /* Y_i = X
  * just mirror input X into a lot of replicated Y_i
  * dL/dX = \sum dL/dY
+ * BranchLayer has store data function, as a data buffer.
  * */
 
 class BranchLayer : public Layer {

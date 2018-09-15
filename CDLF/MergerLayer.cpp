@@ -56,9 +56,27 @@ void MergerLayer::addPreviousLayer(Layer* prevLayer)
     }
 }
 
+void MergerLayer::delPreviousLayer(Layer* prevLayer){
+    if (nullptr != prevLayer  &&  isLayerInList(prevLayer) ){
+        delLayerFromList(prevLayer);
+    }
+    else{
+        cout<<"Error: delete invalid previousLayer at mergerLayer:  id="<<m_id<<", name = "<<m_name<<endl;
+    }
+}
+
 bool MergerLayer::isLayerInList(const Layer* layer){
     for(list<Layer*>::const_iterator iter= m_prevLayers.begin(); iter!= m_prevLayers.end(); ++iter){
         if (layer == *iter) return true;
     }
     return false;
+}
+
+void MergerLayer::delLayerFromList(const Layer* layer){
+    for(list<Layer*>::iterator iter= m_prevLayers.begin(); iter!= m_prevLayers.end(); ++iter){
+        if (layer == *iter){
+          iter = m_prevLayers.erase(iter);
+          --iter;
+        }
+    }
 }
