@@ -20,8 +20,13 @@ public:
     virtual void trainD() = 0;
     virtual float test() = 0;
 
-    virtual void build();
-    virtual void train();
+    void forwardG();
+    void forwardD();
+    void backwardG();
+    void backwardD();
+    void sgdG();
+    void sgdD();
+
 
 };
 

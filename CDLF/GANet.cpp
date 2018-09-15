@@ -15,12 +15,26 @@ GANet::~GANet(){
 
 }
 
+void GANet::forwardG(){
 
-void GANet::build(){
-    buildG();
-    buildD();
 }
 
-void GANet::train(){
-   //null
+void GANet::forwardD(){
+
+}
+
+void GANet::backwardG(){
+
+}
+
+void GANet::backwardD(){
+
+}
+
+void GANet::sgdG(){
+
+}
+
+void GANet::sgdD(){
+
 }

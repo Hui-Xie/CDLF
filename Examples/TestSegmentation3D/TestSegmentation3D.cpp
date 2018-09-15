@@ -17,7 +17,8 @@ int main(int argc, char *argv[])
 {
     printUsage(argv[0]);
     Segmentation3DNet net;
-    net.build();
+    net.buildG();
+    net.buildD();
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
     net.setBatchSize(100);
@@ -28,7 +29,7 @@ int main(int argc, char *argv[])
     long epoch= 100;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
-        net.train();
+        net.trainG();
         accuracy = net.test();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
     }
