@@ -7,7 +7,7 @@
 
 #include "CDLF.h"
 
-class DAGNet : public Net {
+class DAGNet : public FeedForwardNet {
 public:
     DAGNet();
     ~DAGNet();

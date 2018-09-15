@@ -7,9 +7,9 @@
 #ifndef CDLF_FRAMEWORK_GANET_H
 #define CDLF_FRAMEWORK_GANET_H
 
-#include "Net.h"
+#include "FeedForwardNet.h"
 
-class GANet : public Net {
+class GANet : public FeedForwardNet {
 public:
     GANet();
     ~GANet();

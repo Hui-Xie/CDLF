@@ -8,7 +8,7 @@
 
 #include "CDLF.h"
 
-class NonconvexNet : public Net {
+class NonconvexNet : public FeedForwardNet {
 public:
     NonconvexNet(const vector<long>& layerWidthVector);
     ~NonconvexNet();

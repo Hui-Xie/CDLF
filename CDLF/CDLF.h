@@ -7,7 +7,7 @@
 
 #include "FCLayer.h"
 #include "InputLayer.h"
-#include "Net.h"
+#include "FeedForwardNet.h"
 #include "statisTool.h"
 #include "ReLU.h"
 #include "NormalizationLayer.h"

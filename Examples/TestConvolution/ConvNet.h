@@ -8,7 +8,7 @@
 
 #include "CDLF.h"
 
-class ConvNet : public Net {
+class ConvNet : public FeedForwardNet {
 public:
      ConvNet();
     ~ConvNet();

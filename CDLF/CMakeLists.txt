@@ -11,7 +11,7 @@ message("*************************************")
 #set(STATS_INCLUDE_DIR /Users/hxie1/Projects/stats/include)
 include_directories(${STATS_INCLUDE_DIR})
 
-set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp Net.cpp
+set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet.cpp
         statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp
         ConvolutionLayer.cpp BiasLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
         IdentityLayer.cpp MergerLayer.cpp BranchLayer.cpp

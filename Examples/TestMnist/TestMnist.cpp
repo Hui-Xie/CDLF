@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
     //mnist.displayImage(mnist.m_pTrainImagesPart, index);
     //cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
-    // Construct Net and Train, Test
+    // Construct FeedForwardNet and Train, Test
     MnistConvNet net(&mnist);
     net.build();
     net.setLearningRate(0.001);

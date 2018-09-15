@@ -8,7 +8,7 @@
 
 #include "CDLF.h"
 
-class CollapseNet  : public Net {
+class CollapseNet  : public FeedForwardNet {
 public:
     CollapseNet();
     ~CollapseNet();

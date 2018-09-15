@@ -2,7 +2,7 @@
 // Created by Hui Xie on 6/5/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
-#include "Net.h"
+#include "FeedForwardNet.h"
 #include "InputLayer.h"
 #include "FCLayer.h"
 #include "ReLU.h"
@@ -13,7 +13,7 @@
 #include "statisTool.h"
 #include "ConvolutionLayer.h"
 
-Net::Net(){
+FeedForwardNet::FeedForwardNet(){
    m_layers.clear();
    m_learningRate = 0.01;
    m_lossTolerance = 0.02;
@@ -21,56 +21,56 @@ Net::Net(){
    m_batchSize = 1;
 }
 
-Net::~Net() {
+FeedForwardNet::~FeedForwardNet() {
     for (map<int, Layer *>::iterator it = m_layers.begin(); it != m_layers.end(); ++it) {
         delete it->second;
         it->second = nullptr;
     }
 }
 
-void Net::setLearningRate(const float learningRate){
+void FeedForwardNet::setLearningRate(const float learningRate){
    m_learningRate = learningRate;
 }
 
-void Net::setLossTolerance(const float tolerance){
+void FeedForwardNet::setLossTolerance(const float tolerance){
    m_lossTolerance = tolerance;
 }
 
-void Net::setJudgeLoss(const bool judgeLoss){
+void FeedForwardNet::setJudgeLoss(const bool judgeLoss){
     m_judgeLoss = judgeLoss;
 }
 
-void Net::setBatchSize(const int batchSize){
+void FeedForwardNet::setBatchSize(const int batchSize){
     m_batchSize = batchSize;
 }
 
-void Net::setEpoch(const long epoch){
+void FeedForwardNet::setEpoch(const long epoch){
     m_epoch = epoch;
 }
 
-float Net::getLearningRate(){
+float FeedForwardNet::getLearningRate(){
     return m_learningRate;
 }
-float Net::getLossTolerance(){
+float FeedForwardNet::getLossTolerance(){
    return m_lossTolerance;
 }
 
-bool Net::getJudgeLoss(){
+bool FeedForwardNet::getJudgeLoss(){
   return m_judgeLoss;
 }
-int  Net::getBatchSize(){
+int  FeedForwardNet::getBatchSize(){
   return m_batchSize;
 }
 
-long  Net::getEpoch(){
+long  FeedForwardNet::getEpoch(){
   return m_epoch;
 }
 
-map<int, Layer*> Net::getLayersMap(){
+map<int, Layer*> FeedForwardNet::getLayersMap(){
     return m_layers;
 }
 
-void Net::forwardPropagate(){
+void FeedForwardNet::forwardPropagate(){
     // Input Layer do not need zeroYTensor;
     for(map<int, Layer*>::iterator iter = ++(m_layers.begin()); iter != m_layers.end(); ++iter){
         iter->second->zeroYTensor();
@@ -79,7 +79,7 @@ void Net::forwardPropagate(){
        iter->second->forward();
    }
 }
-void Net::backwardPropagate(){
+void FeedForwardNet::backwardPropagate(){
    // first initialize all dy into zero.
    // this is a necessary step. as ConvolutionalLayer, MaxPoolLayer, ReLULayer all need this.
    // the previous layer of any layer may be a branch Layer, so when we compute m_pdYTensor, always use +=
@@ -91,13 +91,13 @@ void Net::backwardPropagate(){
    }
 }
 
-void Net::zeroParaGradient(){
+void FeedForwardNet::zeroParaGradient(){
     for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
         rit->second->zeroParaGradient();
     }
 }
 
-void Net::addLayer(Layer* layer){
+void FeedForwardNet::addLayer(Layer* layer){
      if (nullptr == layer) return;
      if (0 == m_layers.count(layer->m_id) && !layerExist(layer)){
          m_layers[layer->m_id] = layer;
@@ -110,34 +110,34 @@ void Net::addLayer(Layer* layer){
      }
 }
 
-Layer* Net::getLayer(const int ID){
+Layer* FeedForwardNet::getLayer(const int ID){
     return m_layers.at(ID);
 }
 
-void Net::sgd(const float lr, const int batchSize){
+void FeedForwardNet::sgd(const float lr, const int batchSize){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         iter->second->updateParameters(lr, "sgd", batchSize);
     }
 }
 
-InputLayer* Net::getInputLayer(){
+InputLayer* FeedForwardNet::getInputLayer(){
     return (InputLayer*) m_layers.begin()->second;
 }
 
-Layer*  Net::getFirstLayer(){
+Layer*  FeedForwardNet::getFirstLayer(){
     return  m_layers.begin()->second;
 }
-Layer* Net::getFinalLayer(){
+Layer* FeedForwardNet::getFinalLayer(){
     return m_layers.rbegin()->second;
 }
 
-void Net::initialize(){
+void FeedForwardNet::initialize(){
    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->initialize("Xavier");
     }
 }
 
-void Net::printIteration(LossLayer* lossLayer, const int nIter){
+void FeedForwardNet::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<"Iteration: " << nIter << "  "  <<"Output Result: "<<endl;
     long N = lossLayer->m_prevLayer->m_pYTensor->getLength();
     lossLayer->m_prevLayer->m_pYTensor->reshape({1,N}).printElements();
@@ -149,19 +149,19 @@ void Net::printIteration(LossLayer* lossLayer, const int nIter){
     cout<<endl;
 }
 
-void Net::printLayersY(){
+void FeedForwardNet::printLayersY(){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         iter->second->printY();
     }
 }
 
-void Net::printLayersDY(){
+void FeedForwardNet::printLayersDY(){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         iter->second->printDY();
     }
 }
 
-void Net::printLayersWdW(){
+void FeedForwardNet::printLayersWdW(){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         if ("FullyConnected" == iter->second->m_type){
             ((FCLayer*)(iter->second))->printWandBVector();
@@ -170,7 +170,7 @@ void Net::printLayersWdW(){
      }
 }
 
-void Net::printArchitecture(){
+void FeedForwardNet::printArchitecture(){
     cout<<endl<<"Network Architecture: "<<endl;
     int i=1;
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
@@ -183,7 +183,7 @@ void Net::printArchitecture(){
     cout<<"=========== End of Network Architecture =============="<<endl;
 }
 
-bool Net::layerExist(const Layer* layer){
+bool FeedForwardNet::layerExist(const Layer* layer){
     for(map<int, Layer*>::const_iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         if (layer->m_name == iter->second->m_name || layer == iter->second ){
             cout<<"Error: "<<layer->m_name<<" has already been in the previous added layer."<<endl;

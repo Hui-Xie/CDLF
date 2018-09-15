@@ -18,7 +18,7 @@ ConvexNet::~ConvexNet(){
 void ConvexNet::build(){
     int nLayers = m_layerWidthVector.size();
     if (0 == nLayers) {
-        cout<<"Net has at least one layer."<<endl;
+        cout<<"FeedForwardNet has at least one layer."<<endl;
         return;
     }
     int layerID = 1;

@@ -12,10 +12,10 @@
 #include "InputLayer.h"
 using namespace std;
 
-class Net {
+class FeedForwardNet {
 public:
-    Net();
-    ~Net();
+    FeedForwardNet();
+    ~FeedForwardNet();
 
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);

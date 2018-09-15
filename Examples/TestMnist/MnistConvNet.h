@@ -8,7 +8,7 @@
 #include "CDLF.h"
 #include "MNIST.h"
 
-class MnistConvNet: public Net{
+class MnistConvNet: public FeedForwardNet{
 public:
     MnistConvNet(MNIST* pMnistData);
     ~MnistConvNet();

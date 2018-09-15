@@ -8,7 +8,7 @@
 
 #include "CDLF.h"
 
-class UnitFilterNet : public Net {
+class UnitFilterNet : public FeedForwardNet {
 public:
     UnitFilterNet();
     ~UnitFilterNet();
