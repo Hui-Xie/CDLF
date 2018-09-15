@@ -248,11 +248,11 @@ void Segmentation3DNet::trainG(){
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
             //inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
             //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
-            forwardPropagate();
-            backwardPropagate();
+            //forwardPropagate();
+            //backwardPropagate();
             ++nIter;
         }
-        sgd(learningRate, i);
+        //sgd(learningRate, i);
         ++nBatch;
     }
 }
@@ -272,7 +272,7 @@ float Segmentation3DNet::test(){
     while (n < Ntest) {
         //inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
         //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
-        forwardPropagate();
+        //forwardPropagate();
         if (lossLayer->predictSuccessInColVec()) ++nSuccess;
         ++n;
     }
