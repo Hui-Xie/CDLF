@@ -1,3 +1,4 @@
 add_subdirectory(ImagesStatistics)
 add_subdirectory(UniformImage)
 add_subdirectory(FileTools)
+add_subdirectory(qSubPrograms)
