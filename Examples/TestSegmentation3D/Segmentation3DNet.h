@@ -8,20 +8,19 @@
 #include "CDLF.h"
 
 
-class Segmentation3DNet: public Net{
+class Segmentation3DNet: public GANet{
 public:
     Segmentation3DNet();
     ~Segmentation3DNet();
 
     Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
 
-    virtual void build();
-    virtual void train();
     virtual float test();
 
-private:
-    void buildG(); //Generative network
-    void buildD(); //Discriminative network
+    virtual void buildG(); //Generative network
+    virtual void buildD(); //Discriminative network
+    virtual void trainG();
+    virtual void trainD();
 
 };
 

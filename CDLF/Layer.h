@@ -21,6 +21,17 @@ public:
     int m_id;
     string m_name;
     string m_type;
+
+    /*  m_attribute:
+     *  0: default, undefined;
+     *  1: belong to Generative Network;
+     *  2: belong to Discriminative Network;
+     *  3: belong to both G or D;
+     *
+     * */
+     char m_attribute;
+
+
     Layer*  m_prevLayer;
     vector<long>  m_tensorSize;
     Tensor<float>* m_pYTensor;             //the output of this layer
@@ -39,6 +50,9 @@ public:
 
     void printY();
     void printDY();
+
+    void setAttribute(const char attr);
+    char getAttribute();
 
 protected:
     void allocateYdYTensor();

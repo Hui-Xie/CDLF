@@ -15,11 +15,6 @@ Segmentation3DNet::~Segmentation3DNet(){
 }
 
 
-void Segmentation3DNet::build(){
-    buildG();
-    buildD();
-}
-
 
 void Segmentation3DNet::buildG(){
     // it is a good design if all numFilter is odd;
@@ -230,7 +225,7 @@ void Segmentation3DNet::buildD(){
 
 }
 
-void Segmentation3DNet::train(){
+void Segmentation3DNet::trainG(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
 
@@ -261,6 +256,12 @@ void Segmentation3DNet::train(){
         ++nBatch;
     }
 }
+
+void Segmentation3DNet::trainD(){
+
+
+}
+
 
 float Segmentation3DNet::test(){
     InputLayer *inputLayer = getInputLayer();
