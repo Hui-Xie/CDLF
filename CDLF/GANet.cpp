@@ -8,7 +8,9 @@
 
 
 GANet::GANet(){
-
+    m_pInputLayer = nullptr;
+    m_pGTLayer = nullptr;
+    m_pGxLayer = nullptr;
 }
 
 GANet::~GANet(){
@@ -17,7 +19,7 @@ GANet::~GANet(){
 
 void GANet::forwardG(){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
-        if ("InputLayer" != iter->second->m_type){ // in GAN, original X and groundtruth are both InputLayer
+        if (m_pGxLayer != iter->second && m_pGTLayer != iter->second){ // in GAN, original X and groundtruth are both InputLayer
             iter->second->zeroYTensor();
         }
      }
@@ -27,7 +29,16 @@ void GANet::forwardG(){
 }
 
 void GANet::forwardD(){
-
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        if (1 != iter->second->m_attribute && m_pGxLayer != iter->second && m_pGTLayer != iter->second){
+            iter->second->zeroYTensor();
+        }
+    }
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        if (1 != iter->second->m_attribute){
+            iter->second->forward();
+        }
+     }
 }
 
 void GANet::backwardG(){
@@ -43,6 +54,14 @@ void GANet::sgdG(){
 }
 
 void GANet::sgdD(){
+
+}
+
+void GANet::switchToGT(){
+
+}
+
+void GANet::switchToGx(){
 
 }
 

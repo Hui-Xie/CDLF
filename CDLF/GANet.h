@@ -27,8 +27,14 @@ public:
     void sgdG();
     void sgdD();
 
+    void switchToGT();
+    void switchToGx();
+
     bool checkLayerAttribute();
 
+    InputLayer* m_pInputLayer;
+    InputLayer* m_pGTLayer; // groundtruth Layer
+    Layer* m_pGxLayer; // the output of G, and also input to D.
 
 };
 

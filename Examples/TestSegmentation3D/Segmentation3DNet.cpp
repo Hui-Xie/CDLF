@@ -17,9 +17,10 @@ Segmentation3DNet::~Segmentation3DNet(){
 
 void Segmentation3DNet::buildG(){
     // it is a good design if all numFilter is odd;
-    InputLayer* inputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
-    addLayer(inputLayer, 1); // 3 indicates that layer belongs to both G and D
-    NormalizationLayer* normAfterInput = new NormalizationLayer(2, "NormAfterInput", inputLayer);
+    m_pInputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
+    addLayer(m_pInputLayer, 1); // 3 indicates that layer belongs to both G and D
+
+    NormalizationLayer* normAfterInput = new NormalizationLayer(2, "NormAfterInput", m_pInputLayer);
     addLayer(normAfterInput, 1);
 
     BranchLayer* branch1 = new BranchLayer(20, "Branch1", normAfterInput);
@@ -101,6 +102,7 @@ void Segmentation3DNet::buildG(){
 
     BranchLayer* branch3 = new BranchLayer(150,"branch3", softmax1);
     addLayer(branch3, 3);
+    m_pGxLayer = branch3;
 
     CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(160, "CrossEntropy1", branch3);
     addLayer(crossEntropy1, 1);
@@ -108,6 +110,9 @@ void Segmentation3DNet::buildG(){
 }
 
 void Segmentation3DNet::buildD(){
+
+    m_pGTLayer = new InputLayer(151, "GroundTruthLayer", {277, 277,120}); //output size: 277*277*120
+    addLayer(m_pGTLayer, 2);
 
     //extract original input for D
     Layer* branch1 = getLayer(20); //  BranchLayer* branch1 = new BranchLayer(20, "Branch1", normAfterInput);
@@ -124,8 +129,7 @@ void Segmentation3DNet::buildD(){
     MergerLayer* merger2 = new MergerLayer(600, "Merger2", {3,257,257,100});
     addLayer(merger2, 2);
     merger2->addPreviousLayer(norm21);
-    //todo: merger2 needs to addPreviousLayer of G's result or Groundtruth
-
+    //merger2->addPreviousLayer(m_pGroundTruthLayer);
 
     ConvolutionLayer* conv22 = new ConvolutionLayer(610,"Conv22", merger2,{3,31,31,31},15);//outputsize: 15*227*227*70
     addLayer(conv22, 2);
