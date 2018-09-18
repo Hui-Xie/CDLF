@@ -47,12 +47,8 @@ void FeedForwardNet::backwardPropagate(){
    }
 }
 
-
-
-
 void FeedForwardNet::sgd(const float lr, const int batchSize){
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         iter->second->updateParameters(lr, "sgd", batchSize);
     }
 }
-

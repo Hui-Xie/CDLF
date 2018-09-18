@@ -55,11 +55,12 @@ void GAN::switchToGx(){
 }
 
 void GAN::copyGxYFromGtoD(){
+    *m_pDNet->m_pGxLayer->m_pYTensor = *m_pGNet->m_pGxLayer->m_pYTensor;
 
 }
 
 void GAN::copyGxGradientFromDtoG(){
-
+    *m_pGNet->m_pGxLayer->m_pdYTensor = *m_pDNet->m_pGxLayer->m_pdYTensor;
 }
 
 
