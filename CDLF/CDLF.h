@@ -25,7 +25,7 @@
 #include "VectorizationLayer.h"
 #include "ExponentialLayer.h"
 #include "SubTensorLayer.h"
-#include "GANet.h"
+#include "GAN.h"
 
 
 #endif //CDLF_FRAMEWORK_CDLF_H

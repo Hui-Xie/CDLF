@@ -6,7 +6,7 @@ if(ITK_FOUND)
     set (ITKImageIODir ../../Interface3rdParty/ITK)
     include_directories(${ITKImageIODir})
 
-    set(TestSegmentation3DSrc TestSegmentation3D.cpp Segmentation3DNet.cpp)
+    set(TestSegmentation3DSrc TestSegmentation3D.cpp Segmentation3DNet.cpp GNet.cpp DNet.cpp)
     add_executable(TestSegmentation3D ${TestSegmentation3DSrc})
     target_link_libraries(TestSegmentation3D  ${ITK_LIBRARIES} ${CDLFLib} )
 else(ITK_FOUND )

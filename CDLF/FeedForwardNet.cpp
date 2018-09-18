@@ -13,7 +13,7 @@
 #include "statisTool.h"
 #include "ConvolutionLayer.h"
 
-FeedForwardNet::FeedForwardNet(){
+FeedForwardNet::FeedForwardNet(const string& name):Net(name){
 
 }
 
@@ -25,9 +25,11 @@ FeedForwardNet::~FeedForwardNet() {
 }
 
 void FeedForwardNet::forwardPropagate(){
-    // Input Layer do not need zeroYTensor;
-    for(map<int, Layer*>::iterator iter = ++(m_layers.begin()); iter != m_layers.end(); ++iter){
-        iter->second->zeroYTensor();
+    //Input Layer do not need zeroYTensor;
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        if ("InputLayer" != iter->second->m_type){
+            iter->second->zeroYTensor();
+        }
     }
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();

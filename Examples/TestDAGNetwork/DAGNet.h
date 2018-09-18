@@ -9,7 +9,7 @@
 
 class DAGNet : public FeedForwardNet {
 public:
-    DAGNet();
+    DAGNet(const string& name);
     ~DAGNet();
 
     virtual void build();

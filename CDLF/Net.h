@@ -15,7 +15,7 @@
 
 class Net {
 public:
-    Net();
+    Net(const string& name);
     ~Net();
 
     void setLearningRate(const float learningRate);
@@ -33,7 +33,6 @@ public:
 
 
     void addLayer(Layer* layer);
-    void addLayer(Layer* layer, const char attri);
     Layer* getLayer(const int ID);
 
 
@@ -52,6 +51,7 @@ public:
 
 
 protected:
+    string m_name;
     float m_learningRate;
     float m_lossTolerance;
     bool m_judgeLoss;

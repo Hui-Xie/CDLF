@@ -14,7 +14,7 @@ void printUsage(){
 
 int main (int argc, char *argv[])
 {
-    UnitFilterNet net;
+    UnitFilterNet net("UnitfilterNet");
 
     net.build();
     net.printArchitecture();

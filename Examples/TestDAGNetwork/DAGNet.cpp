@@ -14,7 +14,7 @@
  * */
 
 
-DAGNet::DAGNet(){
+DAGNet::DAGNet(const string& name): FeedForwardNet(name){
 
 }
 

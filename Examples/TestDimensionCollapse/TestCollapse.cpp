@@ -9,7 +9,7 @@ int main (int argc, char *argv[])
 {
     cout<<"Test Dimensional Collapse in Convolution"<<endl;
 
-    CollapseNet net;
+    CollapseNet net("CollapseNet");
     net.build();
 
     // config network parameters;

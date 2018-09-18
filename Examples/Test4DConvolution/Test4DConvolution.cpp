@@ -9,7 +9,7 @@ int main (int argc, char *argv[])
 {
     cout<<"Test 4D Convolution"<<endl;
 
-    Conv4DNet net;
+    Conv4DNet net("Conv4DNet");
     net.build();
 
     // config network parameters;

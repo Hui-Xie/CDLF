@@ -4,7 +4,7 @@
 
 #include "MnistConvNet.h"
 
-MnistConvNet::MnistConvNet(MNIST* pMnistData){
+MnistConvNet::MnistConvNet(const string& name, MNIST* pMnistData): FeedForwardNet(name){
   m_pMnistData = pMnistData;
 }
 

@@ -22,15 +22,7 @@ public:
     string m_name;
     string m_type;
 
-    /*  m_attribute:
-     *  0: default, undefined;
-     *  1: belong to Generative Network;
-     *  2: belong to Discriminative Network;
-     *  3: belong to both G or D;
-     *
-     * */
-     char m_attribute;
-
+    string m_attribute; //Some supplement information for layer type
 
     Layer*  m_prevLayer;
     vector<long>  m_tensorSize;
@@ -51,8 +43,8 @@ public:
     void printY();
     void printDY();
 
-    void setAttribute(const char attr);
-    char getAttribute();
+    void setAttribute(const string& attr);
+    string getAttribute();
 
 protected:
     void allocateYdYTensor();

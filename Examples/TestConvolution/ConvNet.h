@@ -10,7 +10,7 @@
 
 class ConvNet : public FeedForwardNet {
 public:
-     ConvNet();
+     ConvNet(const string& name);
     ~ConvNet();
 
     virtual void build();

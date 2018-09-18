@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
     //cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
     // Construct FeedForwardNet and Train, Test
-    MnistConvNet net(&mnist);
+    MnistConvNet net("MnistConvNet", &mnist);
     net.build();
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);

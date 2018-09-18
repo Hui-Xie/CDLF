@@ -5,6 +5,9 @@
 #include "TestSegmentation3D.h"
 #include <iostream>
 #include "Segmentation3DNet.h"
+#include "GNet.h"
+#include "DNet.h"
+
 using namespace std;
 
 void printUsage(char* argv0){
@@ -16,29 +19,35 @@ void printUsage(char* argv0){
 int main(int argc, char *argv[])
 {
     printUsage(argv[0]);
-    Segmentation3DNet net;
-    net.buildG();
-    net.buildD();
+    GNet Gnet("Generative Network");
+    Gnet.setLearningRate(0.001);
+    Gnet.setLossTolerance(0.02);
+    Gnet.setBatchSize(100);
+    Gnet.initialize();
+    Gnet.printArchitecture();
 
-    if (! net.checkLayerAttribute()){
-        return -1;
-    }
+    DNet Dnet("Dicriminative Network");
+    Dnet.setLearningRate(0.001);
+    Dnet.setLossTolerance(0.02);
+    Dnet.setBatchSize(100);
+    Dnet.initialize();
+    Dnet.printArchitecture();
+
+    Segmentation3DNet gan("3DSegmentationGAN", &Gnet,&Dnet);
 
 
-    net.setLearningRate(0.001);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(100);
-    net.initialize();
 
 
 
-    net.printArchitecture();
+
+
+
 
     long epoch= 100;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
-        net.trainG();
-        accuracy = net.test();
+        //net.trainG();
+        //accuracy = net.test();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
     }
     cout<<"==========End of Mnist Test==========="<<endl;

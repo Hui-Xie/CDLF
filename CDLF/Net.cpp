@@ -7,7 +7,8 @@
 #include "Net.h"
 #include "ConvolutionLayer.h"
 
-Net::Net(){
+Net::Net(const string& name){
+    m_name = name;
     m_layers.clear();
     m_learningRate = 0.01;
     m_lossTolerance = 0.02;
@@ -85,11 +86,6 @@ void Net::addLayer(Layer* layer){
     }
 }
 
-void Net::addLayer(Layer* layer, const char attri){
-    addLayer(layer);
-    layer->setAttribute(attri);
-}
-
 Layer* Net::getLayer(const int ID){
     return m_layers.at(ID);
 }
@@ -138,7 +134,7 @@ void Net::printLayersDY(){
 
 
 void Net::printArchitecture(){
-    cout<<endl<<"Network Architecture: "<<endl;
+    cout<<endl<<"Network Architecture of "<<m_name<<" :"<<endl;
     int i=1;
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         cout<<"Layer_"<<i++<<" ("<<iter->second->m_type<<", id="<<std::to_string(iter->second->m_id)<<"): "<<iter->second->m_name<<" : "<<"OutputSize = "<<vector2Str(iter->second->m_tensorSize)<<"; ";

@@ -11,7 +11,7 @@ Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
     m_name = name;
     m_type = "";
     m_prevLayer = nullptr;
-    m_attribute = 0;
+    m_attribute = "";
 
     m_tensorSize = tensorSize;
     allocateYdYTensor();
@@ -57,11 +57,11 @@ void Layer::zeroDYTensor(){
 }
 
 
-void Layer::setAttribute(const char attr){
+void Layer::setAttribute(const string& attr){
     m_attribute = attr;
 }
 
-char Layer::getAttribute(){
+string Layer::getAttribute(){
    return m_attribute;
 }
 

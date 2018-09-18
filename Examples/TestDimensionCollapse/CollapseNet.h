@@ -10,7 +10,7 @@
 
 class CollapseNet  : public FeedForwardNet {
 public:
-    CollapseNet();
+    CollapseNet(const string& name);
     ~CollapseNet();
 
     virtual void build();

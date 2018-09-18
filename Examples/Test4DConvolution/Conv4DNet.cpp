@@ -6,7 +6,7 @@
 #include "Conv4DNet.h"
 #include "LossConvexExample1.h"
 
-Conv4DNet::Conv4DNet(){
+Conv4DNet::Conv4DNet(const string& name): FeedForwardNet(name){
 
 }
 Conv4DNet::~Conv4DNet(){

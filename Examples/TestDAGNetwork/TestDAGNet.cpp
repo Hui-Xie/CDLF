@@ -6,7 +6,7 @@
 
 int main (int argc, char *argv[])
 {
-    DAGNet net;
+    DAGNet net("DAGNet");
     net.build();
     net.printArchitecture();
 

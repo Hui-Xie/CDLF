@@ -49,7 +49,7 @@ int main (int argc, char *argv[])
         cout<<"Layer width string has error. Exit."<<endl;
         return -1;
     }
-    ConvexNet net(layerWidthVector);
+    ConvexNet net("ConvexNet", layerWidthVector);
 
     net.build();
 

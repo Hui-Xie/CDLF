@@ -10,7 +10,7 @@
 
 class MnistConvNet: public FeedForwardNet{
 public:
-    MnistConvNet(MNIST* pMnistData);
+    MnistConvNet(const string& name, MNIST* pMnistData);
     ~MnistConvNet();
 
     Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);

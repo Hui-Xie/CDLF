@@ -9,7 +9,7 @@ int main (int argc, char *argv[])
     cout<<"This program test that 2 simple convolutional layers can approximate a convex function, and converge."<<endl;
     cout<<"This program support real 3D convolution."<<endl;
 
-    ConvNet net;
+    ConvNet net("ConvNet");
     net.build();
     net.printArchitecture();
 

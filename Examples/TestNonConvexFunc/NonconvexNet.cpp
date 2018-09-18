@@ -5,7 +5,7 @@
 
 #include "NonconvexNet.h"
 
-NonconvexNet::NonconvexNet(const vector<long>& layerWidthVector){
+NonconvexNet::NonconvexNet(const string& name, const vector<long>& layerWidthVector): FeedForwardNet(name){
   m_layerWidthVector = layerWidthVector;
 }
 
