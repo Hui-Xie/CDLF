@@ -14,19 +14,15 @@ Segmentation3DNet::~Segmentation3DNet(){
 
 }
 
+void Segmentation3DNet::trainG(const int N){
+    InputLayer* inputLayer = m_pGNet->m_pInputXLayer;
+    CrossEntropyLoss* lossGxLayer = (CrossEntropyLoss *) m_pGNet->getFinalLayer();
+    CrossEntropyLoss* lossDLayer = (CrossEntropyLoss *) m_pDNet->getFinalLayer();
 
-
-
-
-
-void Segmentation3DNet::trainG(){
-   /* InputLayer *inputLayer = getInputLayer();
-    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
-
-    long maxIteration =420;
+    long maxIteration = N;
     long NTrain = maxIteration;
-    int batchSize = getBatchSize();
-    float learningRate = getLearningRate();
+    int batchSize = m_pGNet->getBatchSize();
+    float learningRateG = m_pGNet->getLearningRate();
     long numBatch = maxIteration / batchSize;
     if (0 != maxIteration % batchSize) {
         numBatch += 1;
@@ -37,21 +33,24 @@ void Segmentation3DNet::trainG(){
     //random reshuffle data samples
     vector<long> randSeq = generateRandomSequence(NTrain);
     while (nBatch < numBatch) {
-        zeroParaGradient();
+        m_pGNet->zeroParaGradient();
+        m_pDNet->zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
-            //inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
-            //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
-            //forwardPropagate();
-            //backwardPropagate();
+            //todo: set input and groundtruth
+            //inputLayer->setInputTensor();
+            //lossGxLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
+            //lossDLayer->setGroundTruth();
+            forwardG();
+            backwardG();
             ++nIter;
         }
-        //sgd(learningRate, i);
+        m_pGNet->sgd(learningRateG, i);
         ++nBatch;
-    }*/
+    }
 }
 
-void Segmentation3DNet::trainD(){
+void Segmentation3DNet::trainD(const int N){
 
 
 }

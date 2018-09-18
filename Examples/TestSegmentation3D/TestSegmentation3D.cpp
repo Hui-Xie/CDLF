@@ -22,14 +22,14 @@ int main(int argc, char *argv[])
     SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
     Gnet.setLossTolerance(0.02);
-    Gnet.setBatchSize(100);
+    Gnet.setBatchSize(3);
     Gnet.initialize();
     Gnet.printArchitecture();
 
     SegmentDNet Dnet("Dicriminative Network");
     Dnet.setLearningRate(0.001);
     Dnet.setLossTolerance(0.02);
-    Dnet.setBatchSize(100);
+    Dnet.setBatchSize(3);
     Dnet.initialize();
     Dnet.printArchitecture();
 

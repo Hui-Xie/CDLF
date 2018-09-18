@@ -15,7 +15,7 @@ public:
     ~GNet();
 
     Layer* m_pGxLayer;
-    Layer* m_pInputXLayer;
+    InputLayer* m_pInputXLayer;
 
 };
 

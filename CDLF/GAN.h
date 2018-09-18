@@ -16,8 +16,8 @@ public:
     GAN(const string& name, GNet* pGNet, DNet* pDNet);
     ~GAN();
 
-    virtual void trainG() = 0;
-    virtual void trainD() = 0;
+    virtual void trainG(const int N) = 0;
+    virtual void trainD(const int N) = 0;
     virtual float test() = 0;
 
     void forwardG();
