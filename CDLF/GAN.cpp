@@ -7,17 +7,11 @@
 #include "GAN.h"
 
 
-GAN::GAN(const string& name, FeedForwardNet* pGNet, FeedForwardNet* pDNet){
+GAN::GAN(const string& name, GNet* pGNet, DNet* pDNet){
     m_name = name;
     m_pGNet = pGNet;
     m_pDNet = pDNet;
 
-    if (nullptr != m_pGNet){
-        m_pInputLayer = m_pGNet->getInputLayer();
-    }
-
-    m_pGTLayer = nullptr;
-    m_pGxLayer = nullptr;
 }
 
 GAN::~GAN(){

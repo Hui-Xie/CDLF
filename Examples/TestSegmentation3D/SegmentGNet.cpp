@@ -5,18 +5,18 @@
 //
 
 #include "CDLF.h"
-#include "GNet.h"
+#include "SegmentGNet.h"
 
-GNet::GNet(const string& name): FeedForwardNet(name){
+SegmentGNet::SegmentGNet(const string& name): GNet(name){
     m_pGxLayer = nullptr;
     m_pInputXLayer = nullptr;
 }
 
-GNet::~GNet(){
+SegmentGNet::~SegmentGNet(){
 
 }
 
-void GNet::build(){
+void SegmentGNet::build(){
     // it is a good design if all numFilter is odd;
     InputLayer* inputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
     addLayer(inputLayer);
@@ -108,10 +108,10 @@ void GNet::build(){
 
 }
 
-void GNet::train(){
+void SegmentGNet::train(){
 
 }
 
-float GNet::test(){
+float SegmentGNet::test(){
     return 0;
 }

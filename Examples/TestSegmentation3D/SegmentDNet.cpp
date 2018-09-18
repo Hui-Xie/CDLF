@@ -4,20 +4,20 @@
 
 //
 
-#include "DNet.h"
+#include "SegmentDNet.h"
 #include "CDLF.h"
 
-DNet::DNet(const string& name): FeedForwardNet(name) {
+SegmentDNet::SegmentDNet(const string& name): DNet(name) {
     m_pGTLayer = nullptr;
     m_pGxLayer = nullptr;
     m_pInputXLayer = nullptr;
 }
 
-DNet::~DNet() {
+SegmentDNet::~SegmentDNet() {
 
 }
 
-void DNet::build(){
+void SegmentDNet::build(){
     m_pInputXLayer = new InputLayer(1,"OriginalInputLayer", {277,277,120});
     addLayer(m_pInputXLayer);
     NormalizationLayer* normAfterInput = new NormalizationLayer(4, "NormAfterInput", m_pInputXLayer);
@@ -141,10 +141,10 @@ void DNet::build(){
 }
 
 
-void DNet::train(){
+void SegmentDNet::train(){
 
 }
 
-float DNet::test(){
+float SegmentDNet::test(){
     return 0;
 }

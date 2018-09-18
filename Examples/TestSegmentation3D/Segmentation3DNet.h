@@ -10,7 +10,7 @@
 
 class Segmentation3DNet: public GAN{
 public:
-    Segmentation3DNet(const string& name, FeedForwardNet* pGNet, FeedForwardNet* pDNet);
+    Segmentation3DNet(const string& name, GNet* pGNet, DNet* pDNet);
     ~Segmentation3DNet();
 
     Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);

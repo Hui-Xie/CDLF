@@ -15,7 +15,7 @@ set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet
         statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp
         ConvolutionLayer.cpp BiasLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
         IdentityLayer.cpp MergerLayer.cpp BranchLayer.cpp
-        SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp SubTensorLayer.cpp GAN.cpp Net.cpp)
+        SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp GNet.h DNet.cpp DNet.h)
 
 add_library(CDLF SHARED ${CDLF_SRCS})
 

@@ -7,11 +7,13 @@
 #ifndef CDLF_FRAMEWORK_GANET_H
 #define CDLF_FRAMEWORK_GANET_H
 
-#include "FeedForwardNet.h"
+#include "GNet.h"
+#include "DNet.h"
+
 
 class GAN {
 public:
-    GAN(const string& name, FeedForwardNet* pGNet, FeedForwardNet* pDNet);
+    GAN(const string& name, GNet* pGNet, DNet* pDNet);
     ~GAN();
 
     virtual void trainG() = 0;
@@ -31,12 +33,8 @@ public:
     void copyGxYFromGtoD();
     void copyGxGradientFromDtoG();
 
-    InputLayer* m_pInputLayer;
-    InputLayer* m_pGTLayer; // groundtruth Layer
-    Layer* m_pGxLayer; // the output of G, and also input to D.
-
-    FeedForwardNet* m_pGNet;
-    FeedForwardNet* m_pDNet;
+    GNet* m_pGNet;
+    DNet* m_pDNet;
 
     string m_name;
 

@@ -9,23 +9,16 @@
 
 #include "FeedForwardNet.h"
 
-//Discriminate Network
 
 class DNet : public FeedForwardNet {
 public:
     DNet(const string& name);
     ~DNet();
 
-    virtual void build();
-    virtual void train();
-    virtual float test();
 
     Layer* m_pGTLayer;
     Layer* m_pGxLayer;
     Layer* m_pInputXLayer;
-
-
 };
-
 
 #endif //CDLF_FRAMEWORK_DNET_H

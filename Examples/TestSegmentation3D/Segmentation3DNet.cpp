@@ -6,7 +6,7 @@
 
 
 
-Segmentation3DNet::Segmentation3DNet(const string& name, FeedForwardNet* pGNet, FeedForwardNet* pDNet): GAN(name, pGNet, pDNet){
+Segmentation3DNet::Segmentation3DNet(const string& name, GNet* pGNet, DNet* pDNet): GAN(name, pGNet, pDNet){
 
 }
 

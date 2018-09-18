@@ -9,23 +9,14 @@
 
 #include "FeedForwardNet.h"
 
-//Generative Network
-
-class GNet : public FeedForwardNet {
+class GNet  : public FeedForwardNet {
 public:
     GNet(const string& name);
     ~GNet();
 
-    virtual void build();
-    virtual void train();
-    virtual float test();
-
     Layer* m_pGxLayer;
     Layer* m_pInputXLayer;
 
-    string m_name;
-
 };
-
 
 #endif //CDLF_FRAMEWORK_GNET_H

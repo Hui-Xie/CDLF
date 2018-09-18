@@ -5,8 +5,8 @@
 #include "TestSegmentation3D.h"
 #include <iostream>
 #include "Segmentation3DNet.h"
-#include "GNet.h"
-#include "DNet.h"
+#include "SegmentGNet.h"
+#include "SegmentDNet.h"
 
 using namespace std;
 
@@ -19,14 +19,14 @@ void printUsage(char* argv0){
 int main(int argc, char *argv[])
 {
     printUsage(argv[0]);
-    GNet Gnet("Generative Network");
+    SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
     Gnet.setLossTolerance(0.02);
     Gnet.setBatchSize(100);
     Gnet.initialize();
     Gnet.printArchitecture();
 
-    DNet Dnet("Dicriminative Network");
+    SegmentDNet Dnet("Dicriminative Network");
     Dnet.setLearningRate(0.001);
     Dnet.setLossTolerance(0.02);
     Dnet.setBatchSize(100);
