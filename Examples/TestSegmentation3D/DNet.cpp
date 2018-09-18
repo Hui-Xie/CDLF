@@ -18,121 +18,125 @@ DNet::~DNet() {
 }
 
 void DNet::build(){
-
-    m_pGTLayer = new InputLayer(151, "GroundTruthLayer", {277, 277,120}); //output size: 277*277*120
-    addLayer(m_pGTLayer);
-
-    //extract original input for D
-    Layer* branch1 = getLayer(20); //  BranchLayer* branch1 = new BranchLayer(20, "Branch1", normAfterInput);
-
-    SubTensorLayer* subTensor2 = new SubTensorLayer(540,"SubTensor2", branch1, {5,5,10}, {257,257,100});
-    addLayer(subTensor2);
-
-    //todo: this conv21 needs to fixed parameter. Namely non-learning parameter
-    ConvolutionLayer* conv21 = new ConvolutionLayer(550, "Conv21", subTensor2,{1,1,1},3); //output: 3*257*257*100
-    addLayer(conv21);
-    NormalizationLayer* norm21 = new NormalizationLayer(554, "Norm21", conv21);
-    addLayer(norm21);
-
-    MergerLayer* merger2 = new MergerLayer(600, "Merger2", {3,257,257,100});
-    addLayer(merger2);
-    merger2->addPreviousLayer(norm21);
-    //merger2->addPreviousLayer(m_pGroundTruthLayer);
-
-    ConvolutionLayer* conv22 = new ConvolutionLayer(610,"Conv22", merger2,{3,31,31,31},15);//outputsize: 15*227*227*70
-    addLayer(conv22);
-    ReLU* reLU22 = new ReLU(612, "ReLU22", conv22);
-    addLayer(reLU22);
-    NormalizationLayer* norm22 = new NormalizationLayer(614,"norm22", reLU22);
-    addLayer(norm22);
-
-    ConvolutionLayer* conv23 = new ConvolutionLayer(620,"Conv23", norm22,{15,27,27,27},11);//outputsize: 11*201*201*44
-    addLayer(conv23);
-    ReLU* reLU23 = new ReLU(622, "ReLU23", conv23);
-    addLayer(reLU23);
-    NormalizationLayer* norm23 = new NormalizationLayer(624,"norm23", reLU23);
-    addLayer(norm23);
-
-    ConvolutionLayer* conv24 = new ConvolutionLayer(630,"Conv24", norm23,{11,21,21,21},7);//outputsize: 7*181*181*24
-    addLayer(conv24);
-    ReLU* reLU24 = new ReLU(632, "ReLU24", conv24);
-    addLayer(reLU24);
-    NormalizationLayer* norm24 = new NormalizationLayer(634,"norm24", reLU24);
+    m_pInputXLayer = new InputLayer(1,"OriginalInputLayer", {277,277,120});
+    addLayer(m_pInputXLayer);
+    NormalizationLayer* normAfterInput = new NormalizationLayer(4, "NormAfterInput", m_pInputXLayer);
+    addLayer(normAfterInput);
+    SubTensorLayer* subTensor1 = new SubTensorLayer(10,"SubTensor1", normAfterInput, {10,10,10}, {257,257,100}); //output size: 257*257*100
+    addLayer(subTensor1);
+    //let this convolution layer to learn best parameter to match the probability
+    ConvolutionLayer* conv20 = new ConvolutionLayer(20, "Conv20", subTensor1,{1,1,1},3); //output: 3*257*257*100
+    addLayer(conv20);
+    NormalizationLayer* norm24 = new NormalizationLayer(24, "Norm24", conv20);
     addLayer(norm24);
 
-    ConvolutionLayer* conv25 = new ConvolutionLayer(640,"Conv25", norm24,{7,33,33,24},1);//outputsize: 149*149
-    addLayer(conv25);
-    ReLU* reLU25 = new ReLU(642, "ReLU25", conv25);
-    addLayer(reLU25);
-    NormalizationLayer* norm25 = new NormalizationLayer(644,"norm25", reLU25);
-    addLayer(norm25);
 
-    ConvolutionLayer* conv26 = new ConvolutionLayer(650,"Conv26", norm25,{41,41},1);//outputsize: 109*109
-    addLayer(conv26);
-    ReLU* reLU26 = new ReLU(652, "ReLU26", conv26);
-    addLayer(reLU26);
-    NormalizationLayer* norm26 = new NormalizationLayer(654,"norm26", reLU26);
-    addLayer(norm26);
+    m_pGTLayer = new InputLayer(0, "GroundTruthLayer", {3, 257, 257,100}); //output size: 3*277*277*120
+    addLayer(m_pGTLayer);
 
-    ConvolutionLayer* conv27 = new ConvolutionLayer(660,"Conv27", norm26,{25,25});//outputsize: 85*85
-    addLayer(conv27);
-    ReLU* reLU27 = new ReLU(662, "ReLU27", conv27);
-    addLayer(reLU27);
-    NormalizationLayer* norm27 = new NormalizationLayer(664,"norm27", reLU27);
-    addLayer(norm27);
+    m_pGxLayer = new InputLayer(2, "GxLayer", {3, 257, 257,100}); //output size: 3*277*277*120
+    addLayer(m_pGxLayer);
 
-    ConvolutionLayer* conv28 = new ConvolutionLayer(670,"Conv28", norm27,{23,23});//outputsize: 63*63
-    addLayer(conv28);
-    ReLU* reLU28 = new ReLU(672, "ReLU28", conv28);
-    addLayer(reLU28);
-    NormalizationLayer* norm28 = new NormalizationLayer(674,"norm28", reLU28);
-    addLayer(norm28);
+    MergerLayer* merger1 = new MergerLayer(30, "Merger1", {3,257,257,100});
+    addLayer(merger1);
+    merger1->addPreviousLayer(norm24);
+    merger1->addPreviousLayer(m_pGTLayer);
+    merger1->addPreviousLayer(m_pGxLayer);
 
-    VectorizationLayer* vec1= new VectorizationLayer(680, "Vectorization1", norm28); // outputsize: 3969*1
-    addLayer(vec1);
-
-    FCLayer* fc41 = new FCLayer(690, "fc41", vec1, 500); //outputsize 500*1
-    addLayer(fc41);
-    ReLU* reLU41 = new ReLU(692, "ReLU41", fc41);
-    addLayer(reLU41);
-    NormalizationLayer* norm41 = new NormalizationLayer(694,"norm41", reLU41);
-    addLayer(norm41);
-
-    FCLayer* fc42 = new FCLayer(700, "fc42", norm41, 200); //outputsize 200*1
-    addLayer(fc42);
-    ReLU* reLU42 = new ReLU(702, "ReLU42", fc42);
+    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"Conv40", merger1,{3,31,31,31},15);//outputsize: 15*227*227*70
+    addLayer(conv40);
+    ReLU* reLU42 = new ReLU(42, "ReLU42", conv40);
     addLayer(reLU42);
-    NormalizationLayer* norm42 = new NormalizationLayer(704,"norm42", reLU42);
-    addLayer(norm42);
-
-
-    FCLayer* fc43 = new FCLayer(710, "fc43", norm42, 50); //outputsize 50*1
-    addLayer(fc43);
-    ReLU* reLU43 = new ReLU(712, "ReLU43", fc43);
-    addLayer(reLU43);
-    NormalizationLayer* norm43 = new NormalizationLayer(714,"norm43", reLU43);
-    addLayer(norm43);
-
-    FCLayer* fc44 = new FCLayer(720, "fc44", norm43, 10); //outputsize 10*1
-    addLayer(fc44);
-    ReLU* reLU44 = new ReLU(722, "ReLU44", fc44);
-    addLayer(reLU44);
-    NormalizationLayer* norm44 = new NormalizationLayer(724,"norm44", reLU44);
+    NormalizationLayer* norm44 = new NormalizationLayer(44,"norm44", reLU42);
     addLayer(norm44);
 
+    ConvolutionLayer* conv50 = new ConvolutionLayer(50,"Conv50", norm44,{15,27,27,27},11);//outputsize: 11*201*201*44
+    addLayer(conv50);
+    ReLU* reLU52 = new ReLU(52, "ReLU52", conv50);
+    addLayer(reLU52);
+    NormalizationLayer* norm54 = new NormalizationLayer(54,"norm54", reLU52);
+    addLayer(norm54);
 
-    FCLayer* fc45 = new FCLayer(730, "fc45", norm44, 2); //outputsize 2*1
-    addLayer(fc45);
-    ReLU* reLU45 = new ReLU(732, "ReLU45", fc45);
-    addLayer(reLU45);
-    NormalizationLayer* norm45 = new NormalizationLayer(734,"norm45", reLU45);
-    addLayer(norm45);
+    ConvolutionLayer* conv60 = new ConvolutionLayer(60,"Conv60", norm54,{11,21,21,21},7);//outputsize: 7*181*181*24
+    addLayer(conv60);
+    ReLU* reLU62 = new ReLU(62, "ReLU62", conv60);
+    addLayer(reLU62);
+    NormalizationLayer* norm64 = new NormalizationLayer(64,"norm64", reLU62);
+    addLayer(norm64);
 
-    SoftmaxLayer* softmax2 = new SoftmaxLayer(740, "softmax2", norm45);
-    addLayer(softmax2);
+    ConvolutionLayer* conv70 = new ConvolutionLayer(70,"Conv70", norm64,{7,33,33,24},1);//outputsize: 149*149
+    addLayer(conv70);
+    ReLU* reLU72 = new ReLU(72, "ReLU72", conv70);
+    addLayer(reLU72);
+    NormalizationLayer* norm74 = new NormalizationLayer(74,"norm74", reLU72);
+    addLayer(norm74);
 
-    CrossEntropyLoss* crossEntropy2 = new CrossEntropyLoss(750, "CrossEntropy2", softmax2);
-    addLayer(crossEntropy2);
+    ConvolutionLayer* conv80 = new ConvolutionLayer(80,"Conv80", norm74,{41,41},1);//outputsize: 109*109
+    addLayer(conv80);
+    ReLU* reLU82 = new ReLU(82, "ReLU82", conv80);
+    addLayer(reLU82);
+    NormalizationLayer* norm84 = new NormalizationLayer(84,"norm84", reLU82);
+    addLayer(norm84);
+
+    ConvolutionLayer* conv90 = new ConvolutionLayer(90,"Conv90", norm84,{25,25});//outputsize: 85*85
+    addLayer(conv90);
+    ReLU* reLU92 = new ReLU(92, "ReLU92", conv90);
+    addLayer(reLU92);
+    NormalizationLayer* norm94 = new NormalizationLayer(94,"norm94", reLU92);
+    addLayer(norm94);
+
+    ConvolutionLayer* conv100 = new ConvolutionLayer(100,"Conv100", norm94,{23,23});//outputsize: 63*63
+    addLayer(conv100);
+    ReLU* reLU102 = new ReLU(102, "ReLU102", conv100);
+    addLayer(reLU102);
+    NormalizationLayer* norm104 = new NormalizationLayer(104,"norm104", reLU102);
+    addLayer(norm104);
+
+    VectorizationLayer* vec1= new VectorizationLayer(110, "Vectorization1", norm104); // outputsize: 3969*1
+    addLayer(vec1);
+
+    FCLayer* fc120 = new FCLayer(120, "fc120", vec1, 500); //outputsize 500*1
+    addLayer(fc120);
+    ReLU* reLU122 = new ReLU(122, "ReLU122", fc120);
+    addLayer(reLU122);
+    NormalizationLayer* norm124 = new NormalizationLayer(124,"norm124", reLU122);
+    addLayer(norm124);
+
+    FCLayer* fc130 = new FCLayer(130, "fc130", norm124, 200); //outputsize 200*1
+    addLayer(fc130);
+    ReLU* reLU132 = new ReLU(132, "ReLU132", fc130);
+    addLayer(reLU132);
+    NormalizationLayer* norm134 = new NormalizationLayer(134,"norm134", reLU132);
+    addLayer(norm134);
+
+
+    FCLayer* fc140 = new FCLayer(140, "fc140", norm134, 50); //outputsize 50*1
+    addLayer(fc140);
+    ReLU* reLU142 = new ReLU(142, "ReLU142", fc140);
+    addLayer(reLU142);
+    NormalizationLayer* norm144 = new NormalizationLayer(144,"norm144", reLU142);
+    addLayer(norm144);
+
+    FCLayer* fc150 = new FCLayer(150, "fc150", norm144, 10); //outputsize 10*1
+    addLayer(fc150);
+    ReLU* reLU152 = new ReLU(152, "ReLU152", fc150);
+    addLayer(reLU152);
+    NormalizationLayer* norm154 = new NormalizationLayer(154,"norm154", reLU152);
+    addLayer(norm154);
+
+
+    FCLayer* fc160 = new FCLayer(160, "fc160", norm154, 2); //outputsize 2*1
+    addLayer(fc160);
+    ReLU* reLU162 = new ReLU(162, "ReLU162", fc160);
+    addLayer(reLU162);
+    NormalizationLayer* norm164 = new NormalizationLayer(164,"norm164", reLU162);
+    addLayer(norm164);
+
+    SoftmaxLayer* softmax1 = new SoftmaxLayer(170, "softmax1", norm164);
+    addLayer(softmax1);
+
+    CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(180, "CrossEntropy1", softmax1);
+    addLayer(crossEntropy1);
 
 }
 

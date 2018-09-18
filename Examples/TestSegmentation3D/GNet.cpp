@@ -9,6 +9,7 @@
 
 GNet::GNet(const string& name): FeedForwardNet(name){
     m_pGxLayer = nullptr;
+    m_pInputXLayer = nullptr;
 }
 
 GNet::~GNet(){
@@ -19,14 +20,12 @@ void GNet::build(){
     // it is a good design if all numFilter is odd;
     InputLayer* inputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
     addLayer(inputLayer);
+    m_pInputXLayer = inputLayer;
 
     NormalizationLayer* normAfterInput = new NormalizationLayer(2, "NormAfterInput", inputLayer);
     addLayer(normAfterInput);
 
-    BranchLayer* branch1 = new BranchLayer(20, "Branch1", normAfterInput);
-    addLayer(branch1);
-
-    ConvolutionLayer* conv1 = new ConvolutionLayer(30, "Conv1", branch1, {3,3, 3}, 5); //output size: 5*275*275*118
+    ConvolutionLayer* conv1 = new ConvolutionLayer(30, "Conv1", normAfterInput, {3,3, 3}, 5); //output size: 5*275*275*118
     addLayer(conv1);
     ReLU* reLU1 = new ReLU(32, "ReLU1", conv1);
     addLayer(reLU1);
@@ -36,9 +35,9 @@ void GNet::build(){
     BiasLayer* bias1 = new BiasLayer(40, "Bias1", norm1); //output size: 5*275*275*118
     addLayer(bias1);
 
-    BranchLayer* branch2 = new BranchLayer(50, "Branch2", bias1); //output size: 5*275*275*118
-    addLayer(branch2);
-    ReLU* reLU2 = new ReLU(52, "ReLU2", branch2);
+    BranchLayer* branch1 = new BranchLayer(50, "Branch2", bias1); //output size: 5*275*275*118
+    addLayer(branch1);
+    ReLU* reLU2 = new ReLU(52, "ReLU2", branch1);
     addLayer(reLU2);
     NormalizationLayer* norm2 = new NormalizationLayer(54, "Norm2", reLU2);
     addLayer(norm2);
@@ -82,7 +81,7 @@ void GNet::build(){
     addLayer(norm7);
 
 
-    SubTensorLayer* subTensor1 = new SubTensorLayer(110, "SubTensor1", branch2, {1,4,4,9},{3,257,257,100}); //output size: 3*257*257*100
+    SubTensorLayer* subTensor1 = new SubTensorLayer(110, "SubTensor1", branch1, {1,4,4,9},{3,257,257,100}); //output size: 3*257*257*100
     addLayer(subTensor1);
     ReLU* reLU8 = new ReLU(112, "ReLU8", subTensor1);
     addLayer(reLU8);

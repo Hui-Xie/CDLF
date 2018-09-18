@@ -21,6 +21,7 @@ public:
     virtual float test();
 
     Layer* m_pGxLayer;
+    Layer* m_pInputXLayer;
 
     string m_name;
 
