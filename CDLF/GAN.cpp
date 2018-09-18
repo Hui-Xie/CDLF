@@ -38,20 +38,14 @@ void GAN::backwardD(){
   m_pDNet->backwardPropagate();
 }
 
-void GAN::sgdG(){
-
+void GAN::switchDToGT(){
+   m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGxLayer);
+   m_pDNet->m_pMerger->addPreviousLayer(m_pDNet->m_pGTLayer);
 }
 
-void GAN::sgdD(){
-
-}
-
-void GAN::switchToGT(){
-
-}
-
-void GAN::switchToGx(){
-
+void GAN::switchDToGx(){
+    m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGTLayer);
+    m_pDNet->m_pMerger->addPreviousLayer(m_pDNet->m_pGxLayer);
 }
 
 void GAN::copyGxYFromGtoD(){
@@ -62,6 +56,3 @@ void GAN::copyGxYFromGtoD(){
 void GAN::copyGxGradientFromDtoG(){
     *m_pGNet->m_pGxLayer->m_pdYTensor = *m_pDNet->m_pGxLayer->m_pdYTensor;
 }
-
-
-

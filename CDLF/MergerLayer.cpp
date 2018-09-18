@@ -43,7 +43,6 @@ void MergerLayer::addPreviousLayer(Layer* prevLayer)
 {
     if (nullptr != prevLayer){
         if (isLayerInList(prevLayer)){
-            cout<<"Error: repeatedly add layer to MergerLayer:"<<prevLayer->m_name<<endl;
             return;
         }
         if (!sameVector(m_tensorSize,prevLayer->m_tensorSize)){

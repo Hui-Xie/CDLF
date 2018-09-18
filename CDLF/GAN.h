@@ -24,11 +24,9 @@ public:
     void forwardD();
     void backwardG();
     void backwardD();
-    void sgdG();
-    void sgdD();
 
-    void switchToGT();
-    void switchToGx();
+    void switchDToGT();
+    void switchDToGx();
 
     void copyGxYFromGtoD();
     void copyGxGradientFromDtoG();

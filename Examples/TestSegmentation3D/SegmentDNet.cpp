@@ -37,13 +37,13 @@ void SegmentDNet::build(){
     m_pGxLayer = new InputLayer(2, "GxLayer", {3, 257, 257,100}); //output size: 3*277*277*120
     addLayer(m_pGxLayer);
 
-    MergerLayer* merger1 = new MergerLayer(30, "Merger1", {3,257,257,100});
-    addLayer(merger1);
-    merger1->addPreviousLayer(norm24);
-    merger1->addPreviousLayer(m_pGTLayer);
-    merger1->addPreviousLayer(m_pGxLayer);
+    MergerLayer* m_pMerger = new MergerLayer(30, "Merger1", {3,257,257,100});
+    addLayer(m_pMerger);
+    m_pMerger->addPreviousLayer(norm24);
+    m_pMerger->addPreviousLayer(m_pGTLayer);
+    m_pMerger->addPreviousLayer(m_pGxLayer);
 
-    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"Conv40", merger1,{3,31,31,31},15);//outputsize: 15*227*227*70
+    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"Conv40", m_pMerger,{3,31,31,31},15);//outputsize: 15*227*227*70
     addLayer(conv40);
     ReLU* reLU42 = new ReLU(42, "ReLU42", conv40);
     addLayer(reLU42);
