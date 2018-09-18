@@ -18,7 +18,7 @@ public:
 
     Layer* m_pGTLayer;
     Layer* m_pGxLayer;
-    Layer* m_pInputXLayer;
+    InputLayer* m_pInputXLayer;
     MergerLayer* m_pMerger;
 
 };

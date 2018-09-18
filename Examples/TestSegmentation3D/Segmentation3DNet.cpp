@@ -51,7 +51,45 @@ void Segmentation3DNet::trainG(const int N){
 }
 
 void Segmentation3DNet::trainD(const int N){
+    InputLayer* inputLayer = m_pDNet->m_pInputXLayer;
+    Layer* GxLayer = m_pDNet->m_pGxLayer;
+    Layer* GTLayer = m_pDNet->m_pGTLayer;
+    CrossEntropyLoss* lossDLayer = (CrossEntropyLoss *) m_pDNet->getFinalLayer();
 
+    long maxIteration = N;
+    long NTrain = maxIteration;
+    int batchSize = m_pGNet->getBatchSize();
+    float learningRateG = m_pGNet->getLearningRate();
+    long numBatch = maxIteration / batchSize;
+    if (0 != maxIteration % batchSize) {
+        numBatch += 1;
+    }
+
+    long nIter = 0;
+    long nBatch = 0;
+    //random reshuffle data samples
+    vector<long> randSeq = generateRandomSequence(NTrain);
+    while (nBatch < numBatch) {
+        m_pDNet->zeroParaGradient();
+        int i = 0;
+        for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
+            switchDToGx();
+            //todo: set Gx and loss Label
+            //inputLayer->setInputTensor();
+            //lossGxLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
+            //lossDLayer->setGroundTruth();
+            forwardD();
+            backwardD();
+
+            switchDToGT();
+            //todo: set GT and  loss label
+            forwardD();
+            backwardD();
+            ++nIter;
+        }
+        m_pDNet->sgd(learningRateG, i);
+        ++nBatch;
+    }
 
 }
 
