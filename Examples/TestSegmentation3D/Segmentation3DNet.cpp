@@ -73,6 +73,9 @@ void Segmentation3DNet::trainD(const int N){
         m_pDNet->zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
+
+            if (*m_pDNet->m_pGxLayer->m_pYTensor == *m_pDNet->m_pGTLayer->m_pYTensor)  break;
+
             switchDToGx();
             //todo: set Gx and loss Label
             //inputLayer->setInputTensor();

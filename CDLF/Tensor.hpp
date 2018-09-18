@@ -378,6 +378,21 @@ Tensor<ValueType>& Tensor<ValueType>::operator-= (const Tensor& right){
 }
 
 template<class ValueType>
+bool Tensor<ValueType>::operator== (const Tensor& right){
+    if (this == &right) return true;
+    else{
+        if (!sameVector(getDims(), right.getDims())) return false;
+        else{
+            long N = getLength();
+            for (long i=0; i<N; ++i){
+                if (e(i) != right.e(i)) return false;
+            }
+            return true;
+        }
+    }
+}
+
+template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator+= (const float right){
     long N = getLength();
     for (long i=0; i<N; ++i){

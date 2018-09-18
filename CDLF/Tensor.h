@@ -60,11 +60,13 @@ public:
 
     Tensor& operator+= (const Tensor& right);
     Tensor& operator-= (const Tensor& right);
+    bool    operator== (const Tensor& right);
 
     Tensor& operator+= (const float right);
     Tensor& operator-= (const float right);
     Tensor& operator*= (const float factor);
     Tensor& operator/= (const float divisor);
+
 
     void printElements(bool fixWidth = false);
     void zeroInitialize();
