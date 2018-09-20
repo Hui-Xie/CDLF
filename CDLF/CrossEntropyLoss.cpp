@@ -59,7 +59,7 @@ float CrossEntropyLoss::diceCoefficient(){
     Tensor<int> GTMaxPosTensor = GT.getMaxPositionSubTensor();
     const long N = predictMaxPosTensor.getLength();
     if (N != GTMaxPosTensor.getLength()){
-        cout <<"Error: predict Tensor has different dimension with groundtruth"<<endl;
+        cout <<"Error: predicting Tensor has a different dimension with groundtruth"<<endl;
         return -1;
     }
     long nSuccess = 0;
