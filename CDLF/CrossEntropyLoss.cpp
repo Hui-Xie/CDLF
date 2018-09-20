@@ -39,7 +39,7 @@ void CrossEntropyLoss::gradientCompute() {
             dX[i] -= m_pGroundTruth->e(i)/X.e(i);
         }
         else{
-            dX[i] -= m_pGroundTruth->e(i)/(1e-5);
+            dX[i] -= m_pGroundTruth->e(i)/0.0001;
         }
 
     }
