@@ -22,7 +22,7 @@ void printUsage(char* argv0){
     cout<<argv0<<"<fullPathFileName> <pathSuffix> <labelChange> <sizeX> <sizeY> <sizeZ> <spacingX> <spacingY> <spacingZ>"<<endl;
     cout<<"Paraemeters Notes:"<<endl
         <<"pathSuffix: used to generate outputfile's path suffix"<<endl
-        <<"labelChange: 0: no changes; 2To1: lable 2 changes to 1; 3To0: label 3 changes to 0, etc"<<endl;
+        <<"labelChange: 0: no changes; 2To1: label 2 changes to 1; 3To0: label 3 changes to 0, etc"<<endl;
     cout<<endl;
 }
 
