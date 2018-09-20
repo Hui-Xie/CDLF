@@ -22,6 +22,7 @@ public:
 
     virtual void  printGroundTruth();
     bool predictSuccessInColVec();
+    float diceCoefficient();
 
 private:
     virtual float lossCompute();

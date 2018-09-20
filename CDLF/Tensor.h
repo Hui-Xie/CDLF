@@ -77,6 +77,8 @@ public:
     ValueType variance();
     ValueType max();
     long maxPosition();
+    Tensor<int> getMaxPositionSubTensor();
+
 
     Tensor ln();//natural logarithm
     Tensor hadamard(const Tensor& right); //element-wise product

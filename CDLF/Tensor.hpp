@@ -432,20 +432,29 @@ Tensor<ValueType>& Tensor<ValueType>::operator/= (const float divisor){
 
 template<class ValueType>
 void Tensor<ValueType>::printElements(bool fixWidth){
-    if (2 != m_dims.size()) {
-        cout<<"Sorry. TensorDimSize >2 can not print."<<endl;
-        return;
+    if (2 == m_dims.size()) {
+        for (int i=0; i< m_dims[0];++i){
+            for(int j=0; j<m_dims[1];++j) {
+                if (fixWidth) {
+                    cout << setw(3)<<(int)e({i, j});
+                }
+                else {
+                    cout << e({i, j})<<" ";
+                }
+            }
+            cout<<endl;
+        }
     }
-    for (int i=0; i< m_dims[0];++i){
-        for(int j=0; j<m_dims[1];++j) {
-            if (fixWidth) {
-                cout << setw(3)<<(int)e({i, j});
-            }
-            else {
-                cout << e({i, j})<<" ";
-            }
+    else if (1 == m_dims.size()){
+        long N = getLength();
+        for(long i = 0; i< N; ++i){
+            cout<<e(i)<<"  ";
         }
         cout<<endl;
+    }
+    else {
+        cout<<"Sorry. TensorDimSize >2 can not print."<<endl;
+        return;
     }
 }
 
@@ -502,6 +511,31 @@ long Tensor<ValueType>::maxPosition(){
         }
     }
     return maxPos;
+}
+
+/* getMaxPositionSubTensor():
+ * gets all indexes of max value along the 0th dimension, then combine them into a subTensor.
+ *
+ * */
+template<class ValueType>
+Tensor<int> Tensor<ValueType>::getMaxPositionSubTensor(){
+    vector<long> subTensorDims = m_dims;
+    subTensorDims.erase(subTensorDims.begin());
+    Tensor<int> subTensor(subTensorDims);
+    int compareN = m_dims[0];
+    long N = subTensor.getLength();
+    for (long j=0; j<N; ++j){
+        int maxIndex = 0;
+        int maxValue = e(j);
+        for (int i=1; i< compareN; ++i){
+            if (e(i*N+j) > maxValue){
+                maxValue = e(i*N+j);
+                maxIndex = i;
+            }
+        }
+        subTensor(j) = maxIndex;
+    }
+    return subTensor;
 }
 
 //natural logarithm

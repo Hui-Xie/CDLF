@@ -51,3 +51,24 @@ bool CrossEntropyLoss::predictSuccessInColVec(){
         return false;
     }
 }
+
+float CrossEntropyLoss::diceCoefficient(){
+    Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
+    Tensor<float> &GT = *m_pGroundTruth;
+    Tensor<int> predictMaxPosTensor = predict.getMaxPositionSubTensor();
+    Tensor<int> GTMaxPosTensor = GT.getMaxPositionSubTensor();
+    const long N = predictMaxPosTensor.getLength();
+    if (N != GTMaxPosTensor.getLength()){
+        cout <<"Error: predict Tensor has different dimension with groundtruth"<<endl;
+        return -1;
+    }
+    long nSuccess = 0;
+    for (long i=0; i< N; ++i)
+    {
+        if (predictMaxPosTensor(i) == GTMaxPosTensor(i)){
+            ++nSuccess;
+        }
+    }
+    return nSuccess*1.0/N;
+
+}

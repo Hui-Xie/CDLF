@@ -101,18 +101,18 @@ float Segmentation3DNet::testG(){
     InputLayer *inputLayer = m_pGNet->m_pInputXLayer;
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_pGNet->getFinalLayer();
     long n = 0;
-    long nSuccess = 0;
+    float dice = 0.0;
     const long Ntest= 10000;
     while (n < Ntest) {
         //inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
         //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
         m_pGNet->forwardPropagate();
-        if (lossLayer->predictSuccessInColVec()) ++nSuccess;
+        dice += lossLayer->diceCoefficient();
         ++n;
     }
-    cout<<"Info: nSuccess = "<<nSuccess<<" in "<<Ntest<<" test samples."<<endl;
-    return  nSuccess * 1.0 / Ntest;
-
+    dice = dice/Ntest;
+    cout<<"Info: average dice coefficient = "<<dice<<" in "<<Ntest<<" test samples."<<endl;
+    return dice;
 }
 
 //construct a 2*1 one-hot vector

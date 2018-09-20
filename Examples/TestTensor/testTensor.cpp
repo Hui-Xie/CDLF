@@ -5,6 +5,7 @@
 #include "../../CDLF/Tensor.h"
 #include <list>
 #include "../../CDLF/Tools.h"
+#include "../../CDLF/statisTool.h"
 
 
 int main (int argc, char *argv[]) {
@@ -181,6 +182,18 @@ int main (int argc, char *argv[]) {
 
     cout<<"colunmn(3) = tensor20.column(3)="<<endl;
     tensor20.column(3).printElements();
+
+    cout<<"Test getMaxPositionSubTensor:"<<endl;
+    Tensor<float> tensor30({7,5});
+    generateGaussian(&tensor30, 2,3);
+    cout<<"Tensor30 :"<<endl;
+    tensor30.printElements();
+    cout<<"subTensorMaxPos = tensor30.getMaxPositionSubTensor(): "<<endl;
+    Tensor<int> subTensorMaxPos = tensor30.getMaxPositionSubTensor();
+    subTensorMaxPos.printElements();
+
+
+
 
 
 
