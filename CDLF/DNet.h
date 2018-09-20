@@ -11,6 +11,11 @@
 #include "MergerLayer.h"
 
 
+/* Discriminate Network
+ * the derived class of DNet is responsible to assign m_pGxLayer, m_pGTLayer,  m_pMerger, and m_pInputXLayer in its build method
+ *
+ * */
+
 class DNet : public FeedForwardNet {
 public:
     DNet(const string& name);

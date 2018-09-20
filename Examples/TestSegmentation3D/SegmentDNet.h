@@ -9,7 +9,11 @@
 
 #include "DNet.h"
 
-//Discriminate Network
+
+/* Discriminate Network
+ * the derived class of DNet is responsible to assign m_pGxLayer, m_pGTLayer,  m_pMerger, and m_pInputXLayer in its build method
+ *
+ * */
 
 class SegmentDNet : public DNet {
 public:

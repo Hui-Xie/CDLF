@@ -9,6 +9,11 @@
 
 #include "FeedForwardNet.h"
 
+/* Generative Network
+ * the derived class of GNet is responsible to assign m_pGxLayer and m_pInputXLayer in its build method
+ *
+ * */
+
 class GNet  : public FeedForwardNet {
 public:
     GNet(const string& name);

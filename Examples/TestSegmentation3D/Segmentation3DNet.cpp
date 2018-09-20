@@ -97,21 +97,22 @@ void Segmentation3DNet::trainD(const int N){
 }
 
 
-float Segmentation3DNet::test(){
-   /* InputLayer *inputLayer = getInputLayer();
-    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
+float Segmentation3DNet::testG(){
+    InputLayer *inputLayer = m_pGNet->m_pInputXLayer;
+    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_pGNet->getFinalLayer();
     long n = 0;
     long nSuccess = 0;
-    const long Ntest= 10000; //= m_pMnistData->m_pTestLabels->getLength();
+    const long Ntest= 10000;
     while (n < Ntest) {
         //inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
         //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
-        //forwardPropagate();
+        m_pGNet->forwardPropagate();
         if (lossLayer->predictSuccessInColVec()) ++nSuccess;
         ++n;
     }
     cout<<"Info: nSuccess = "<<nSuccess<<" in "<<Ntest<<" test samples."<<endl;
-    return  nSuccess * 1.0 / Ntest;*/
+    return  nSuccess * 1.0 / Ntest;
+
 }
 
 //construct a 2*1 one-hot vector

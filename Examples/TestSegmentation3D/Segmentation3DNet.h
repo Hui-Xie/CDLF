@@ -17,7 +17,7 @@ public:
 
     virtual void trainG(const int N);
     virtual void trainD(const int N);
-    virtual float test();
+    virtual float testG();
 
 };
 

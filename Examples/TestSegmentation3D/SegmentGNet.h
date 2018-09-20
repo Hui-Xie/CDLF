@@ -9,7 +9,12 @@
 
 #include "GNet.h"
 
-//Generative Network
+
+/* Generative Network
+ * the derived class of GNet is responsible to assign m_pGxLayer and m_pInputXLayer in its build method
+ *
+ * */
+
 
 class SegmentGNet : public GNet {
 public:
