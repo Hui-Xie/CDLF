@@ -34,7 +34,7 @@ public:
     void zeroYTensor();
     void zeroDYTensor(); //ConvolutionLayer, MaxPoolLayer, ReLu all needs dX =0;
     virtual  void forward()=0;
-    virtual  void backward()=0;
+    virtual  void backward(bool computeW)=0;
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;
 
 

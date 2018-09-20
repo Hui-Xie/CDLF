@@ -42,7 +42,7 @@ void SoftmaxLayer::forward(){
     }
 }
 
-void SoftmaxLayer::backward(){
+void SoftmaxLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;

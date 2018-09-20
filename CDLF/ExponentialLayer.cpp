@@ -28,7 +28,7 @@ void ExponentialLayer::forward(){
         Y.e(i) = exp(X.e(i));
     }
 }
-void ExponentialLayer::backward(){
+void ExponentialLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;

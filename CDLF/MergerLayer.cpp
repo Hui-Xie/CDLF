@@ -29,7 +29,7 @@ void MergerLayer::forward(){
   }
 }
 
-void MergerLayer::backward(){
+void MergerLayer::backward(bool computeW){
     for(list<Layer*>::iterator it= m_prevLayers.begin(); it != m_prevLayers.end();++it){
         *((*it)->m_pdYTensor) += *m_pdYTensor;
     }

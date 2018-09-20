@@ -29,13 +29,13 @@ void GAN::forwardD(){
 }
 
 void GAN::backwardG(){
-  m_pDNet->backwardPropagate();
+  m_pDNet->backwardPropagate(false);
   copyGxGradientFromDtoG();
-  m_pGNet->backwardPropagate();
+  m_pGNet->backwardPropagate(true);
 }
 
 void GAN::backwardD(){
-  m_pDNet->backwardPropagate();
+  m_pDNet->backwardPropagate(true);
 }
 
 void GAN::switchDToGT(){

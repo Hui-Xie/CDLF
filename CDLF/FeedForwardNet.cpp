@@ -35,7 +35,7 @@ void FeedForwardNet::forwardPropagate(){
        iter->second->forward();
     }
 }
-void FeedForwardNet::backwardPropagate(){
+void FeedForwardNet::backwardPropagate(bool computeW){
    // first initialize all dy into zero.
    // this is a necessary step. as ConvolutionalLayer, MaxPoolLayer, ReLULayer all need this.
    // the previous layer of any layer may be a branch Layer, so when we compute m_pdYTensor, always use +=
@@ -43,7 +43,7 @@ void FeedForwardNet::backwardPropagate(){
        iter->second->zeroDYTensor();
    }
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
-         rit->second->backward();
+         rit->second->backward(computeW);
    }
 }
 

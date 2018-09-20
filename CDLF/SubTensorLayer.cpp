@@ -41,7 +41,7 @@ void SubTensorLayer::forward(){
     }
 }
 
-void SubTensorLayer::backward(){
+void SubTensorLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
     long N = dY.getLength();

@@ -89,7 +89,7 @@ void MnistConvNet::train(){
             inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
             lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
             forwardPropagate();
-            backwardPropagate();
+            backwardPropagate(true);
             ++nIter;
         }
         sgd(learningRate, i);

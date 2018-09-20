@@ -25,7 +25,7 @@ void InputLayer::zeroParaGradient(){
 void InputLayer::forward(){
     //null
 }
-void InputLayer::backward(){
+void InputLayer::backward(bool computeW){
     //null
 }
 

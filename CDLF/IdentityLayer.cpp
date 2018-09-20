@@ -18,7 +18,7 @@ IdentityLayer::~IdentityLayer(){
 void IdentityLayer::forward(){
     *m_pYTensor = *m_prevLayer->m_pYTensor;
 }
-void IdentityLayer::backward(){
+void IdentityLayer::backward(bool computeW){
    *m_prevLayer->m_pdYTensor += *m_pdYTensor;
 }
 void IdentityLayer::initialize(const string& initialMethod){

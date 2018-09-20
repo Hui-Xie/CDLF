@@ -41,8 +41,10 @@ void BiasLayer::forward(){
 
 // dL/dX = dL/dY    Where L is Loss
 // dL/db = dL/dY
-void BiasLayer::backward(){
-    *m_pdBTensor += *m_pdYTensor;
+void BiasLayer::backward(bool computeW){
+    if (computeW) {
+        *m_pdBTensor += *m_pdYTensor;
+    }
     *(m_prevLayer->m_pdYTensor) += *m_pdYTensor;
 }
 

@@ -14,7 +14,7 @@ public:
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void forward();
-    virtual  void backward();
+    virtual  void backward(bool computeW);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
 };
 

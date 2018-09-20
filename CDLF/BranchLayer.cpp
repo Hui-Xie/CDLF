@@ -27,7 +27,7 @@ void BranchLayer::forward(){
     *m_pYTensor = *(m_prevLayer->m_pYTensor);
 }
 
-void BranchLayer::backward(){
+void BranchLayer::backward(bool computeW){
     // m_pdYTensor has been initialize to zero
     *(m_prevLayer->m_pdYTensor) += *(m_pdYTensor);
 }

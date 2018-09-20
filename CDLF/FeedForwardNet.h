@@ -14,7 +14,7 @@ public:
     ~FeedForwardNet();
 
     void forwardPropagate();
-    void backwardPropagate();
+    void backwardPropagate(bool computeW);
     void sgd(const float lr, const int batchSize);
 
     virtual void build() = 0;

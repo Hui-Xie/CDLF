@@ -26,7 +26,7 @@ void ReLU::forward(){
        else Y.e(i) = 0;
     }
 }
-void ReLU::backward(){
+void ReLU::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;

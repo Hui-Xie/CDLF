@@ -26,7 +26,7 @@ void SigmoidLayer::forward(){
         Y.e(i) = m_k/(1+exp_x);
     }
 }
-void SigmoidLayer::backward(){
+void SigmoidLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;

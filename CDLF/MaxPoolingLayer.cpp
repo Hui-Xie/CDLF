@@ -163,7 +163,7 @@ void MaxPoolingLayer::forward() {
 
 // Y_i = max(X_i) in filterSize range
 // dL/dX_i = dL/dY * 1 when Xi = max; 0 otherwise;
-void MaxPoolingLayer::backward() {
+void MaxPoolingLayer::backward(bool computeW) {
     Tensor<float> &dLdy = *m_pdYTensor;
     const int N = m_filterSize.size();
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);

@@ -284,20 +284,20 @@ void ConvolutionLayer::forward() {
 // dL/dW = dL/dY * dY/dW;
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
-void ConvolutionLayer::backward() {
+void ConvolutionLayer::backward(bool computeW) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //index of Filter
             Tensor<float> *dY = nullptr;
             m_pdYTensor->extractLowerDTensor(idxF, dY);
-            computeDW(dY, m_pdW[idxF]);
+            if (computeW) computeDW(dY, m_pdW[idxF]);
             computeDX(dY, m_pW[idxF]);//Note: dx need to accumulate along filters
             if(nullptr != dY){
                 delete dY;
             }
         }
     } else {
-        computeDW(m_pdYTensor, m_pdW[0]);
+        if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
         computeDX(m_pdYTensor, m_pW[0]);
     }
 }

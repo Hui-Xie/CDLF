@@ -36,7 +36,7 @@ void NormalizationLayer::forward(){
         Y.e(i) = (X.e(i)- mean)/(sigma+m_epsilon);
     }
 }
-void NormalizationLayer::backward(){
+void NormalizationLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
     Tensor<float>& X =  *(m_prevLayer->m_pYTensor);

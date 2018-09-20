@@ -20,7 +20,7 @@ void VectorizationLayer::forward(){
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     Y = X.vectorize();
 }
-void VectorizationLayer::backward(){
+void VectorizationLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     dX += dY.reshape(dX.getDims());

@@ -55,7 +55,7 @@ void CollapseNet::train(){
             generateGaussian(&inputTensor,0,1);
             inputLayer->setInputTensor(inputTensor);
             forwardPropagate();
-            backwardPropagate();
+            backwardPropagate(true);
         }
         sgd(getLearningRate(), batchSize);
         printIteration(lossLayer, i);
