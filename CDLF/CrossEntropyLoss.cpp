@@ -26,13 +26,22 @@ float CrossEntropyLoss::lossCompute(){
 
 // L= -\sum p_i * log(x_i)
 // dL/dx_i = - p_i/x_i
+// this formula implies it is better for p_i is one-hot vector;
+// and we need to check X.e(i) ==0 case.
+
 void CrossEntropyLoss::gradientCompute() {
     //symbol deduced formula to compute gradient to prevLayer->m_pdYTensor
     Tensor<float> &X = *(m_prevLayer->m_pYTensor);
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
     long N = dX.getLength();
     for (long i = 0; i < N; ++i) {
-        dX[i] -= m_pGroundTruth->e(i)/X.e(i);
+        if (0 != X.e(i)){
+            dX[i] -= m_pGroundTruth->e(i)/X.e(i);
+        }
+        else{
+            dX[i] -= m_pGroundTruth->e(i)/(1e-5);
+        }
+
     }
 }
 
