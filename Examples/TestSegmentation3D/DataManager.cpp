@@ -47,12 +47,12 @@ void DataManager::readTestImageFile(const int index, Tensor<float>* pImage){
     readImageFile(m_testImagesVector[index], pImage);
 }
 
-void DataManager::readTrainLabelFile(const int index, Tensor<float>* pLabel){
+void DataManager::readTrainLabelFile(const int index, Tensor<unsigned char>* pLabel){
     string filename = getFileName(m_trainImagesVector[index]);
     readLabelFile(m_trainLabelsDir+"/"+filename, pLabel);
 }
 
-void DataManager::readTestLabelFile(const int index, Tensor<float>* pLabel){
+void DataManager::readTestLabelFile(const int index, Tensor<unsigned char>* pLabel){
     string filename = getFileName(m_testImagesVector[index]);
     readLabelFile(m_testLabelsDir+"/"+filename, pLabel);
 }
@@ -62,7 +62,7 @@ void DataManager::readImageFile(const string& filename, Tensor<float>* pImage){
     itkImageIO.readFile(filename, pImage);
 }
 
-void DataManager::readLabelFile(const string& filename, Tensor<float>* pLabel){
+void DataManager::readLabelFile(const string& filename, Tensor<unsigned char>* pLabel){
     freeItkImageIO();
     m_labelItkImageIO = new ITKImageIO<unsigned char, 3>;
     m_labelItkImageIO->readFile(filename, pLabel);
@@ -70,7 +70,7 @@ void DataManager::readLabelFile(const string& filename, Tensor<float>* pLabel){
 
 // k indicates number of categories
 // the original label must be continuous integer starting from 0.
-void DataManager::oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>* pOneHotLabel, const int k){
+void DataManager::oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<float>* pOneHotLabel, const int k){
     const long N = pLabel->getLength();
     vector<long> newDims =  pLabel->getDims();
     newDims.insert(newDims.begin(), k);

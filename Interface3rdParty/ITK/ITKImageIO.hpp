@@ -36,7 +36,7 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<V
         tensorSize.push_back(m_imageSize[i]);
     }
     tensorSize = reverseVector(tensorSize);
-    pTensor = new Tensor<float>(tensorSize);
+    pTensor = new Tensor<VoxelType>(tensorSize);
 
     //get Image origin, spacing etc
     m_origin = image->GetOrigin();
