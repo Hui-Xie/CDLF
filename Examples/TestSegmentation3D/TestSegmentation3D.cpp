@@ -8,6 +8,7 @@
 #include "SegmentGNet.h"
 #include "SegmentDNet.h"
 #include "FileTools.h"
+#include "StubNetForD.h"
 
 using namespace std;
 
@@ -34,9 +35,13 @@ int main(int argc, char *argv[])
 
     vector<string> trainImagesVector;
     getFileVector(trainImagesDir, trainImagesVector);
+    const int NTrainFile = trainImagesDir.size();
+    cout<<"Info: totally read in "<<NTrainFile << "train images file. "<<endl;
+
     vector<string> testImagesVector;
     getFileVector(testImagesDir, testImagesVector);
-
+    const int NTestFile = testImagesDir.size();
+    cout<<"Info: totally read in "<<NTestFile << "test images file. "<<endl;
 
     SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
@@ -56,6 +61,10 @@ int main(int argc, char *argv[])
     long epochs = 1000;
 
     // pretrain D:
+    StubNetForD stubNet("Stub Network for Discriminative Network");
+
+
+
 
 
     // train G, D
