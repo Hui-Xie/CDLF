@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
 
     }
     cout<<"Infor: output "<<countTrain << " image files to train image directory: "<<outputTrainImagesDir<<endl;
-    cout<<"Infor: output "<<countTrain << " label  files to train label directory: "<<outputTrainLabelsDir<<endl;
+    cout<<"Infor: output "<<countTrain << " label files to train label directory: "<<outputTrainLabelsDir<<endl;
     cout<<"Infor: output "<<countTest  << " image files to test image directory: "<<outputTestImagesDir<<endl;
     cout<<"Infor: output "<<countTest  << " label files to test label directory: "<<outputTestLabelsDir<<endl;
 
