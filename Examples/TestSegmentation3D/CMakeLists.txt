@@ -8,7 +8,9 @@ if(ITK_FOUND)
     set (LinuxFileDir ../../Interface3rdParty/LinuxFile)
     include_directories(${LinuxFileDir})
 
-    set(TestSegmentation3DSrc TestSegmentation3D.cpp Segmentation3DNet.cpp SegmentGNet.cpp SegmentDNet.cpp ${LinuxFileDir}/FileTools.cpp StubNetForD.cpp)
+    set(TestSegmentation3DSrc TestSegmentation3D.cpp Segmentation3DNet.cpp SegmentGNet.cpp
+                              SegmentDNet.cpp ${LinuxFileDir}/FileTools.cpp StubNetForD.cpp
+                              DataManager.cpp)
     add_executable(TestSegmentation3D ${TestSegmentation3DSrc})
     target_link_libraries(TestSegmentation3D  ${ITK_LIBRARIES} ${CDLFLib} )
 else(ITK_FOUND )

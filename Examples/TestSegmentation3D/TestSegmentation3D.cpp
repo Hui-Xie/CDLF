@@ -7,8 +7,9 @@
 #include "Segmentation3DNet.h"
 #include "SegmentGNet.h"
 #include "SegmentDNet.h"
-#include "FileTools.h"
+
 #include "StubNetForD.h"
+#include "DataManager.h"
 
 using namespace std;
 
@@ -27,21 +28,9 @@ int main(int argc, char *argv[])
         cout<<"Error: parameter error. Exit. "<<endl;
         return -1;
     }
-    const string dataSetDir = argv[1];
-    const string trainImagesDir = dataSetDir +"/trainImages";
-    const string trainLabelsDir = dataSetDir +"/trainLabels";
-    const string testImagesDir = dataSetDir +"/testImages";
-    const string testLabelsDir = dataSetDir +"/testLabels";
 
-    vector<string> trainImagesVector;
-    getFileVector(trainImagesDir, trainImagesVector);
-    const int NTrainFile = trainImagesDir.size();
-    cout<<"Info: totally read in "<<NTrainFile << "train images file. "<<endl;
+    DataManager dataMgr(string(argv[0]));
 
-    vector<string> testImagesVector;
-    getFileVector(testImagesDir, testImagesVector);
-    const int NTestFile = testImagesDir.size();
-    cout<<"Info: totally read in "<<NTestFile << "test images file. "<<endl;
 
     SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
