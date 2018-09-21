@@ -57,3 +57,17 @@ void DataManager::readLabelFile(const string& filename, Tensor<float>* pLabel){
     ITKImageIO<unsigned char, 3> itkImageIO;
     itkImageIO.readFile(filename, pLabel);
 }
+
+// k indicates number of categories
+// the original label must be continous integer starting from 0.
+void DataManager::oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>* pOneHotLabel, const int k){
+    const long N = pLabel->getLength();
+    vector<long> newDims =  pLabel->getDims();
+    newDims.insert(newDims.begin(), k);
+    pOneHotLabel = new Tensor<float> (newDims);
+    pOneHotLabel->zeroInitialize();
+    for(long i=0; i<N; ++i){
+        int label = int(pLabel->e(i));
+        pOneHotLabel->e((label%k)*N+i) = 1.0;
+    }
+}

@@ -35,6 +35,8 @@ public:
     void readTrainLabelFile(const int index, Tensor<float>* pLabel);
     void readTestLabelFile(const int index, Tensor<float>* pLabel);
 
+    void oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>* pOneHotLabel, const int k);
+
 
 private:
     void readImageFile(const string& filename, Tensor<float>* pImage);
