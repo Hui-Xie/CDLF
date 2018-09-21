@@ -3,10 +3,10 @@ find_package(ITK QUIET)
 if(ITK_FOUND)
     include(${ITK_USE_FILE})
 
-    set (FileToolsDir ../FileTools)
-    include_directories(${FileToolsDir})
+    set (LinuxFileDir ../../Interface3rdParty/LinuxFile)
+    include_directories(${LinuxFileDir})
 
-    set(ImageStatSrc ImageStat.cpp ${FileToolsDir}/FileTools.cpp)
+    set(ImageStatSrc ImageStat.cpp ${LinuxFileDir}/FileTools.cpp)
     add_executable(ImageStat ${ImageStatSrc})
     target_link_libraries(ImageStat  ${ITK_LIBRARIES} )
 else(ITK_FOUND )

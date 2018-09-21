@@ -7,20 +7,37 @@
 #include "Segmentation3DNet.h"
 #include "SegmentGNet.h"
 #include "SegmentDNet.h"
+#include "FileTools.h"
 
 using namespace std;
 
 void printUsage(char* argv0){
     cout<<"A Generative Adversarial Network for 3D Medical Images Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
-
-    //todo: add images dirs.
-    cout<<argv0<<endl;
+    cout<<argv0<<" <imageLabelDir>"<<endl;
+    cout<<"Where the imageLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
+    cout<<"And the corresponding images file and label file should have same filename in different directory. "<<endl;
 }
 
 int main(int argc, char *argv[])
 {
     printUsage(argv[0]);
+    if (2 != argc){
+        cout<<"Error: parameter error. Exit. "<<endl;
+        return -1;
+    }
+    const string dataSetDir = argv[1];
+    const string trainImagesDir = dataSetDir +"/trainImages";
+    const string trainLabelsDir = dataSetDir +"/trainLabels";
+    const string testImagesDir = dataSetDir +"/testImages";
+    const string testLabelsDir = dataSetDir +"/testLabels";
+
+    vector<string> trainImagesVector;
+    getFileVector(trainImagesDir, trainImagesVector);
+    vector<string> testImagesVector;
+    getFileVector(testImagesDir, testImagesVector);
+
+
     SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
     Gnet.setLossTolerance(0.02);

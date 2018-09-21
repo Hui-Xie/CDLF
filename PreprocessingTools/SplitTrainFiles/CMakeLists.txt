@@ -1,7 +1,7 @@
 
- set (FileToolsDir ../FileTools)
- include_directories(${FileToolsDir})
+  set (LinuxFileDir ../../Interface3rdParty/LinuxFile)
+  include_directories(${LinuxFileDir})
 
- set(SplitTrainSetSrc splitTrainSet.cpp ${FileToolsDir}/FileTools.cpp)
+ set(SplitTrainSetSrc splitTrainSet.cpp ${LinuxFileDir}/FileTools.cpp)
  add_executable(SplitTrainSet ${SplitTrainSetSrc})
  target_link_libraries(SplitTrainSet )
