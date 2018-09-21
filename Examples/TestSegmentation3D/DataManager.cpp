@@ -6,6 +6,7 @@
 
 #include "DataManager.h"
 #include "FileTools.h"
+#include "ITKImageIO.h"
 
 
 DataManager::DataManager(const string dataSetDir) {
@@ -30,24 +31,29 @@ DataManager::~DataManager(){
 }
 
 void DataManager::readTrainImageFile(const int index, Tensor<float>* pImage){
-
+     readImageFile(m_trainImagesVector[index], pImage);
 }
 
 void DataManager::readTestImageFile(const int index, Tensor<float>* pImage){
-
+    readImageFile(m_testImagesVector[index], pImage);
 }
 
-void DataManager::readTrainLabelFile(const int index, Tensor<unsigned char>* pLabel){
-
+void DataManager::readTrainLabelFile(const int index, Tensor<float>* pLabel){
+    string filename = getFileName(m_trainImagesVector[index]);
+    readLabelFile(m_trainLabelsDir+"/"+filename, pLabel);
 }
 
-void DataManager::readTestLabelFile(const int index, Tensor<unsigned char>* pLabel){
-
+void DataManager::readTestLabelFile(const int index, Tensor<float>* pLabel){
+    string filename = getFileName(m_testImagesVector[index]);
+    readLabelFile(m_testLabelsDir+"/"+filename, pLabel);
 }
 
 void DataManager::readImageFile(const string& filename, Tensor<float>* pImage){
-
+    ITKImageIO<float, 3> itkImageIO;
+    itkImageIO.readFile(filename, pImage);
 }
-void DataManager::readLabelFile(const string& filename, Tensor<unsigned char>* pLabel){
 
+void DataManager::readLabelFile(const string& filename, Tensor<float>* pLabel){
+    ITKImageIO<unsigned char, 3> itkImageIO;
+    itkImageIO.readFile(filename, pLabel);
 }

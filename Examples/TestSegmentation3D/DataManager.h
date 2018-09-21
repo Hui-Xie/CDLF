@@ -32,13 +32,13 @@ public:
 
     void readTrainImageFile(const int index, Tensor<float>* pImage);
     void readTestImageFile(const int index, Tensor<float>* pImage);
-    void readTrainLabelFile(const int index, Tensor<unsigned char>* pLabel);
-    void readTestLabelFile(const int index, Tensor<unsigned char>* pLabel);
+    void readTrainLabelFile(const int index, Tensor<float>* pLabel);
+    void readTestLabelFile(const int index, Tensor<float>* pLabel);
 
 
 private:
     void readImageFile(const string& filename, Tensor<float>* pImage);
-    void readLabelFile(const string& filename, Tensor<unsigned char>* pLabel);
+    void readLabelFile(const string& filename, Tensor<float>* pLabel);
 
 };
 
