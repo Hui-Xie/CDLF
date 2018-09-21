@@ -28,3 +28,26 @@ DataManager::DataManager(const string dataSetDir) {
 DataManager::~DataManager(){
 
 }
+
+void DataManager::readTrainImageFile(const int index, Tensor<float>* pImage){
+
+}
+
+void DataManager::readTestImageFile(const int index, Tensor<float>* pImage){
+
+}
+
+void DataManager::readTrainLabelFile(const int index, Tensor<unsigned char>* pLabel){
+
+}
+
+void DataManager::readTestLabelFile(const int index, Tensor<unsigned char>* pLabel){
+
+}
+
+void DataManager::readImageFile(const string& filename, Tensor<float>* pImage){
+
+}
+void DataManager::readLabelFile(const string& filename, Tensor<unsigned char>* pLabel){
+
+}
