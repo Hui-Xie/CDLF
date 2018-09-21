@@ -189,7 +189,7 @@ int main (int argc, char *argv[]) {
     cout<<"Tensor30 :"<<endl;
     tensor30.printElements();
     cout<<"subTensorMaxPos = tensor30.getMaxPositionSubTensor(): "<<endl;
-    Tensor<int> subTensorMaxPos = tensor30.getMaxPositionSubTensor();
+    Tensor<unsigned char> subTensorMaxPos = tensor30.getMaxPositionSubTensor();
     subTensorMaxPos.printElements();
 
 

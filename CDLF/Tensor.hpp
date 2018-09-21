@@ -518,10 +518,10 @@ long Tensor<ValueType>::maxPosition(){
  *
  * */
 template<class ValueType>
-Tensor<int> Tensor<ValueType>::getMaxPositionSubTensor(){
+Tensor<unsigned char> Tensor<ValueType>::getMaxPositionSubTensor(){
     vector<long> subTensorDims = m_dims;
     subTensorDims.erase(subTensorDims.begin());
-    Tensor<int> subTensor(subTensorDims);
+    Tensor<unsigned char> subTensor(subTensorDims);
     int compareN = m_dims[0];
     long N = subTensor.getLength();
     for (long j=0; j<N; ++j){

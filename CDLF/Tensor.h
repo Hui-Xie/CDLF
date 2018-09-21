@@ -77,7 +77,7 @@ public:
     ValueType variance();
     ValueType max();
     long maxPosition();
-    Tensor<int> getMaxPositionSubTensor();
+    Tensor<unsigned char> getMaxPositionSubTensor();
 
 
     Tensor ln();//natural logarithm

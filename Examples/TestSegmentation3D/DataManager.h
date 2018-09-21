@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include "Tensor.h"
+#include "ITKImageIO.h"
 
 using namespace std;
 
@@ -29,6 +30,8 @@ public:
     int m_NTrainFile;
     int m_NTestFile;
 
+    ITKImageIO<unsigned char, 3>*  m_labelItkImageIO;
+
 
     void readTrainImageFile(const int index, Tensor<float>* pImage);
     void readTestImageFile(const int index, Tensor<float>* pImage);
@@ -36,11 +39,15 @@ public:
     void readTestLabelFile(const int index, Tensor<float>* pLabel);
 
     void oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>* pOneHotLabel, const int k);
+    void oneHot2Label(Tensor<float>* pOneHotLabel,Tensor<unsigned char>* pLabel);
 
+    void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName);
 
 private:
     void readImageFile(const string& filename, Tensor<float>* pImage);
     void readLabelFile(const string& filename, Tensor<float>* pLabel);
+
+    void freeItkImageIO();
 
 };
 

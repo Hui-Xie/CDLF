@@ -6,10 +6,12 @@
 
 #include "DataManager.h"
 #include "FileTools.h"
-#include "ITKImageIO.h"
+
 
 
 DataManager::DataManager(const string dataSetDir) {
+    m_labelItkImageIO = nullptr;
+
     m_dataSetDir = dataSetDir;
     m_trainImagesDir = m_dataSetDir +"/trainImages";
     m_trainLabelsDir = m_dataSetDir +"/trainLabels";
@@ -27,7 +29,14 @@ DataManager::DataManager(const string dataSetDir) {
 }
 
 DataManager::~DataManager(){
+    freeItkImageIO();
+}
 
+void DataManager::freeItkImageIO(){
+    if (nullptr != m_labelItkImageIO){
+        delete m_labelItkImageIO;
+        m_labelItkImageIO = nullptr;
+    }
 }
 
 void DataManager::readTrainImageFile(const int index, Tensor<float>* pImage){
@@ -54,12 +63,13 @@ void DataManager::readImageFile(const string& filename, Tensor<float>* pImage){
 }
 
 void DataManager::readLabelFile(const string& filename, Tensor<float>* pLabel){
-    ITKImageIO<unsigned char, 3> itkImageIO;
-    itkImageIO.readFile(filename, pLabel);
+    freeItkImageIO();
+    m_labelItkImageIO = new ITKImageIO<unsigned char, 3>;
+    m_labelItkImageIO->readFile(filename, pLabel);
 }
 
 // k indicates number of categories
-// the original label must be continous integer starting from 0.
+// the original label must be continuous integer starting from 0.
 void DataManager::oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>* pOneHotLabel, const int k){
     const long N = pLabel->getLength();
     vector<long> newDims =  pLabel->getDims();
@@ -71,3 +81,12 @@ void DataManager::oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>* 
         pOneHotLabel->e((label%k)*N+i) = 1.0;
     }
 }
+
+void DataManager::oneHot2Label(Tensor<float>* pOneHotLabel, Tensor<unsigned char>* pLabel){
+     *pLabel = pOneHotLabel->getMaxPositionSubTensor();
+}
+
+void DataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName){
+    m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+}
+

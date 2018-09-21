@@ -20,7 +20,7 @@ ITKImageIO<VoxelType, Dimension>::~ITKImageIO(){
 }
 
 template <typename VoxelType, int Dimension>
-void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<float>*& pTensor ){
+void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<VoxelType>*& pTensor ){
     using ReaderType = itk::ImageFileReader< ImageType >;
     typename ReaderType::Pointer reader = ReaderType::New();
     reader->SetFileName( filename );
@@ -60,7 +60,7 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<f
 
 
 template <typename VoxelType, int Dimension>
-void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<float>* pTensor, const vector<long>& offset,
+void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<long>& offset,
                                                   const string& filename)
 {
     vector<long> tensorSize = reverseVector(pTensor->getDims());
@@ -114,7 +114,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<fl
 }
 
 template <typename VoxelType, int Dimension>
-void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<float>* pTensor, const vector<long>& offset,
+void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<VoxelType>* pTensor, const vector<long>& offset,
                                                                  const string& filename)
 {
     vector<long> tensorSize = reverseVector(pTensor->getDims());

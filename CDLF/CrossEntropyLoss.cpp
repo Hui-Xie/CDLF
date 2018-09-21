@@ -64,8 +64,8 @@ bool CrossEntropyLoss::predictSuccessInColVec(){
 float CrossEntropyLoss::diceCoefficient(){
     Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
     Tensor<float> &GT = *m_pGroundTruth;
-    Tensor<int> predictMaxPosTensor = predict.getMaxPositionSubTensor();
-    Tensor<int> GTMaxPosTensor = GT.getMaxPositionSubTensor();
+    Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
+    Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
     const long N = predictMaxPosTensor.getLength();
     if (N != GTMaxPosTensor.getLength()){
         cout <<"Error: predicting Tensor has a different dimension with groundtruth"<<endl;
