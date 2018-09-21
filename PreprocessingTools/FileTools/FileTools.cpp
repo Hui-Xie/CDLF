@@ -3,6 +3,7 @@
 //
 
 #include "FileTools.h"
+#include <fstream>
 
 bool isExceptionFile(const string file, const vector<string> exceptionFiles){
     long N = exceptionFiles.size();
@@ -71,4 +72,10 @@ void getFileVector(const string& dir, vector<string>& fileVector){
         }
     }
     closedir(pDir);
+}
+
+void copyFile(const string& srcFilename, const string& dstFilename){
+    std::ifstream  src(srcFilename.c_str(), std::ios::binary);
+    std::ofstream  dst(dstFilename.c_str(),   std::ios::binary);
+    dst << src.rdbuf();
 }

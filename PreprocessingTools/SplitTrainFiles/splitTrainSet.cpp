@@ -10,7 +10,7 @@
 
 void printUsage(char* argv0){
     cout<<"============= Split Train Files into Tain and Test Set ==========="<<endl;
-    cout<<"As our Test files in hands has no label, we need split some train files with labels into test files"<<endl;
+    cout<<"As our Test files in hands has no label, we need split some train files with labels into test set."<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<trainImagesDir> <trainLabelsDir> <outputDir> "<<endl;
     cout<<endl;
@@ -58,21 +58,30 @@ int main(int argc, char *argv[]) {
     int countTrain = 0;
     int countTest  = 0;
     for (int i=0; i< N ; ++i){
+        const string srcImage = fileVector[i];
+        const string filename = getFileName(srcImage);
+        const string srcLabel = trainLabelsDir +"/"+ filename;
+        string dstImage = "";
+        string dstLabel = "";
         if (0 !=i && 0 == i%step){ //copy to test dir
-
-
+            dstImage = outputTestImagesDir +"/" + filename;
+            dstLabel = outputTestLabelsDir +"/" + filename;
             ++countTest;
         }
         else{  //copy to train dir
-
-
+            dstImage = outputTrainImagesDir +"/" + filename;
+            dstLabel = outputTrainLabelsDir +"/" + filename;
             ++countTrain;
         }
+        copyFile(srcImage, dstImage);
+        copyFile(srcLabel, dstLabel);
 
     }
-    cout<<"Infor: output "<<countTrain << " files to train directory. "<<endl;
-    cout<<"Infor: output "<<countTest <<  " files to test directory. "<<endl;
-    
+    cout<<"Infor: output "<<countTrain << " image files to train image directory: "<<outputTrainImagesDir<<endl;
+    cout<<"Infor: output "<<countTrain << " label  files to train label directory: "<<outputTrainLabelsDir<<endl;
+    cout<<"Infor: output "<<countTest  << " image files to test image directory: "<<outputTestImagesDir<<endl;
+    cout<<"Infor: output "<<countTest  << " label files to test label directory: "<<outputTestLabelsDir<<endl;
+
     return 0;
 }
 
