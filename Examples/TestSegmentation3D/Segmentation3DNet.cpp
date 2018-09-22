@@ -74,89 +74,109 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
         m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreGx);
         ++batch;
     }
-
 }
 
 void Segmentation3DNet::trainG(){
-    InputLayer* inputLayer = m_pGNet->m_pInputXLayer;
-    CrossEntropyLoss* lossGxLayer = (CrossEntropyLoss *) m_pGNet->getFinalLayer();
-    CrossEntropyLoss* lossDLayer = (CrossEntropyLoss *) m_pDNet->getFinalLayer();
-
-    long maxIteration = 0;
-    long NTrain = maxIteration;
-    int batchSize = m_pGNet->getBatchSize();
-    float learningRateG = m_pGNet->getLearningRate();
-    long numBatch = maxIteration / batchSize;
-    if (0 != maxIteration % batchSize) {
+    const long N = m_pDataMgr->m_NTrainFile;
+    const int batchSize = m_pGNet->getBatchSize();
+    long numBatch = N / batchSize;
+    if (0 != N % batchSize) {
         numBatch += 1;
     }
 
     long nIter = 0;
-    long nBatch = 0;
-    //random reshuffle data samples
-    vector<long> randSeq = generateRandomSequence(NTrain);
-    while (nBatch < numBatch) {
+    long batch = 0;
+    vector<long> randSeq = generateRandomSequence(N);
+
+    m_pDNet->setAlphaGroundTruth(true);
+    switchDtoGx();
+
+    while (batch < numBatch) {
         m_pGNet->zeroParaGradient();
-        m_pDNet->zeroParaGradient();
         int i = 0;
-        for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
-            //todo: set input and groundtruth
-            //inputLayer->setInputTensor();
-            //lossGxLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
-            //lossDLayer->setGroundTruth();
+        for (i = 0; i < batchSize && nIter < N; ++i) {
+            long index = randSeq[nIter];
+
+            Tensor<float> *pImage= nullptr;
+            m_pDataMgr->readTrainImageFile(index, pImage);
+            m_pGNet->m_pInputXLayer->setInputTensor(*pImage);
+            m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
+            delete pImage;
+
+            Tensor<unsigned char> *pLabel= nullptr;
+            m_pDataMgr->readTrainLabelFile(index, pLabel);
+            Tensor<float>* pOneHotLabel= nullptr;
+            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);
+            delete pLabel;
+            m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
+            delete pOneHotLabel;
+
             forwardG();
             backwardG();
+
             ++nIter;
         }
-        m_pGNet->sgd(learningRateG, i);
-        ++nBatch;
+        m_pGNet->sgd(m_pGNet->getLearningRate(), i);
+        ++batch;
     }
 }
 
 void Segmentation3DNet::trainD(){
-    InputLayer* inputLayer = m_pDNet->m_pInputXLayer;
-    Layer* GxLayer = m_pDNet->m_pGxLayer;
-    Layer* GTLayer = m_pDNet->m_pGTLayer;
-    CrossEntropyLoss* lossDLayer = (CrossEntropyLoss *) m_pDNet->getFinalLayer();
-
-    long maxIteration = 0;
-    long NTrain = maxIteration;
-    int batchSize = m_pGNet->getBatchSize();
-    float learningRateG = m_pGNet->getLearningRate();
-    long numBatch = maxIteration / batchSize;
-    if (0 != maxIteration % batchSize) {
+    const long N = m_pDataMgr->m_NTrainFile;
+    const int batchSize = m_pGNet->getBatchSize();
+    long numBatch = N / batchSize;
+    if (0 != N % batchSize) {
         numBatch += 1;
     }
 
     long nIter = 0;
-    long nBatch = 0;
-    //random reshuffle data samples
-    vector<long> randSeq = generateRandomSequence(NTrain);
-    while (nBatch < numBatch) {
+    long batch = 0;
+    vector<long> randSeq = generateRandomSequence(N);
+    while (batch < numBatch) {
         m_pDNet->zeroParaGradient();
         int i = 0;
-        for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
+        int ignoreGx = 0;
+        for (i = 0; i < batchSize && nIter < N; ++i) {
+            long index = randSeq[nIter];
 
-            if (*m_pDNet->m_pGxLayer->m_pYTensor == *m_pDNet->m_pGTLayer->m_pYTensor)  break;
+            Tensor<float> *pImage= nullptr;
+            m_pDataMgr->readTrainImageFile(index, pImage);
+            m_pGNet->m_pInputXLayer->setInputTensor(*pImage);
+            m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
+            delete pImage;
 
-            switchDtoGx();
-            //todo: set Gx and loss Label
-            //inputLayer->setInputTensor();
-            //lossGxLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
-            //lossDLayer->setGroundTruth();
-            forwardD();
-            backwardD();
+            Tensor<unsigned char> *pLabel= nullptr;
+            m_pDataMgr->readTrainLabelFile(index, pLabel);
+            Tensor<float>* pOneHotLabel= nullptr;
+            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);
+            delete pLabel;
+            m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
+            delete pOneHotLabel;
 
+            // generative Gx
+            forwardG();
+
+            // train D for GT
+            m_pDNet->setAlphaGroundTruth(true);
             switchDtoGT();
-            //todo: set GT and  loss label
             forwardD();
             backwardD();
+
+            // train D for Gx
+            if (*m_pGNet->m_pGxLayer->m_pYTensor != *m_pDNet->m_pGTLayer->m_pYTensor){
+                m_pDNet->setAlphaGroundTruth(false);
+                switchDtoGx();
+                forwardD();
+                backwardD();
+            }
+            else{
+                ++ignoreGx;
+            }
             ++nIter;
         }
-        m_pDNet->sgd(learningRateG, i);
-        ++nBatch;
+        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreGx);
+        ++batch;
     }
-
 }
 
 

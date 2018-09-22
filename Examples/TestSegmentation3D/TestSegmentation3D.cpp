@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
     }
-    // train G, D: slow alternative train
+    // train G, D: slowly alternative train
     int epochsSlowSwitch = 100;
     int epochsAlone = 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
             gan.trainG();
         }
     }
- 
+
     cout<<"==========End of Mnist Test==========="<<endl;
     return 0;
 }
