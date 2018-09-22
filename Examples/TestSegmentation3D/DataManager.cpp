@@ -19,12 +19,12 @@ DataManager::DataManager(const string dataSetDir, const string outputLabelsDir) 
     m_testLabelsDir = m_dataSetDir +"/testLabels";
 
     getFileVector(m_trainImagesDir, m_trainImagesVector);
-    m_NTrainFile = m_trainImagesDir.size();
-    cout<<"Info: totally read in "<<m_NTrainFile << "train images file. "<<endl;
+    m_NTrainFile = m_trainImagesVector.size();
+    cout<<"Info: totally read in "<<m_NTrainFile << " train images file. "<<endl;
 
     getFileVector(m_testImagesDir, m_testImagesVector);
-    m_NTestFile = m_testImagesDir.size();
-    cout<<"Info: totally read in "<<m_NTestFile << "test images file. "<<endl;
+    m_NTestFile = m_testImagesVector.size();
+    cout<<"Info: totally read in "<<m_NTestFile << " test images file. "<<endl;
 
     if (0 == outputLabelsDir.size()){
         m_outputLabelsDir = m_dataSetDir+"/OutputLabels";

@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     Gnet.printArchitecture();
 
     SegmentDNet Dnet("Discriminative Network");
-    Gnet.build();
+    Dnet.build();
     Dnet.setLearningRate(0.001);
     Dnet.setLossTolerance(0.02);
     Dnet.setBatchSize(3);
