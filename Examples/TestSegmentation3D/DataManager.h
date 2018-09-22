@@ -41,7 +41,7 @@ public:
     void readTestLabelFile(const int index, Tensor<unsigned char>*& pLabel);
 
     void oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<float>*& pOneHotLabel, const int k);
-    void saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName);
+    void saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<long> originalImageTensorSize);
 
 private:
     void readImageFile(const string& filename, Tensor<float>*& pImage);

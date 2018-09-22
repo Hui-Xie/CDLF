@@ -103,9 +103,11 @@ void DataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<lon
     m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
 }
 
-void DataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName){
+void DataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<long> originalImageTensorSize){
     Tensor<unsigned char>* pLabel = nullptr;
     oneHot2Label(pOneHotLabel, pLabel);
-    saveLabel2File(pLabel, {0,0,0}, fullPathFileName);
+    vector<long> offset = (originalImageTensorSize - pLabel->getDims())/2;
+    saveLabel2File(pLabel, offset, fullPathFileName);
+    delete pLabel;
 }
 

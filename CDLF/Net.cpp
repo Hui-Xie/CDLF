@@ -135,6 +135,7 @@ void Net::printLayersDY(){
 
 void Net::printArchitecture(){
     cout<<endl<<"Network Architecture of "<<m_name<<" :"<<endl;
+    cout<<"======================================================"<<endl;
     int i=1;
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         cout<<"Layer_"<<i++<<" ("<<iter->second->m_type<<", id="<<std::to_string(iter->second->m_id)<<"): "<<iter->second->m_name<<" : "<<"OutputSize = "<<vector2Str(iter->second->m_tensorSize)<<"; ";
