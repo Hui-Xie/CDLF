@@ -16,20 +16,25 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"A Generative Adversarial Network for Global 3D Medical Images Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" <imageAndLabelDir>"<<endl;
+    cout<<argv0<<" <imageAndLabelDir> [outputTestLabelsDir]"<<endl;
     cout<<"Where the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directory. "<<endl;
+    cout<<"outputTestLabelsDir is the directory for outputing test label files"<<endl;
 }
 
 int main(int argc, char *argv[])
 {
     printUsage(argv[0]);
-    if (2 != argc){
+    if (2 != argc && 3 != argc){
         cout<<"Error: parameter error. Exit. "<<endl;
         return -1;
     }
     string dataSetDir = argv[1];
-    DataManager dataMgr(dataSetDir);
+    string outputLabelsDir = "";
+    if (3 == argc ){
+        outputLabelsDir = argv[2];
+    }
+    DataManager dataMgr(dataSetDir, outputLabelsDir);
 
     SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
@@ -56,17 +61,20 @@ int main(int argc, char *argv[])
     gan.setStubLayer(stubNet.getFinalLayer());
 
     // pretrain DNet
+    cout<<"Info: start pretrain D "<<endl;
     int epochsPretrainD = 100;
     for (int i=0; i< epochsPretrainD; ++i){
         gan.pretrainD();
     }
 
     // train G, D: quick alternative train
+    cout<<"Info: start quickly switch train G and D "<<endl;
     int epochsQuickSwitch = 100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
     }
     // train G, D: slowly alternative train
+    cout<<"Info: start slowly switch train G and D "<<endl;
     int epochsSlowSwitch = 100;
     int epochsAlone = 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
@@ -76,6 +84,15 @@ int main(int argc, char *argv[])
         for(int j=0; j<epochsAlone; ++j){
             gan.trainG();
         }
+
+        cout<<"Slowly Switch Epoch: "<<i<<endl;
+        if (i != epochsSlowSwitch -1){
+            gan.testG(false);
+        }
+        else{
+            gan.testG(true); //output file
+        }
+
     }
 
     cout<<"==========End of Mnist Test==========="<<endl;

@@ -19,7 +19,7 @@ public:
     virtual void quicklySwitchTrainG_D() = 0;
     virtual void trainG() = 0;
     virtual void trainD() = 0;
-    virtual float testG() = 0;
+    virtual float testG(bool outputFile) = 0;
 
     void forwardG();
     void forwardD();

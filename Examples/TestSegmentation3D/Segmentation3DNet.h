@@ -18,7 +18,7 @@ public:
     virtual void quicklySwitchTrainG_D();
     virtual void trainG();
     virtual void trainD();
-    virtual float testG();
+    virtual float testG(bool outputFile);
 
 
     void setDataMgr(DataManager* pDataMgr);

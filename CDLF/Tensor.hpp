@@ -464,9 +464,9 @@ void Tensor<ValueType>::printElements(bool fixWidth){
 }
 
 template<class ValueType>
-ValueType Tensor<ValueType>::sum(){
+float Tensor<ValueType>::sum(){
     long N = getLength();
-    ValueType sum = 0;
+    float sum = 0;
     for(long i=0; i<N; ++i){
         sum += e(i);
     }
@@ -474,7 +474,7 @@ ValueType Tensor<ValueType>::sum(){
 }
 
 template<class ValueType>
-ValueType Tensor<ValueType>::average(){
+float Tensor<ValueType>::average(){
     long N = getLength();
     if (0 == N) return 0;
     else {
@@ -483,11 +483,11 @@ ValueType Tensor<ValueType>::average(){
 }
 
 template<class ValueType>
-ValueType Tensor<ValueType>::variance(){
-    ValueType mu = average();
+float Tensor<ValueType>::variance(){
+    float mu = average();
     long N = getLength();
     if (1 == N || 0 == N) return 0;
-    ValueType sum = 0;
+    float sum = 0;
     for (long i = 0; i < N; ++i) {
         sum += pow((e(i) - mu), 2);
     }
@@ -495,13 +495,23 @@ ValueType Tensor<ValueType>::variance(){
 }
 
 template<class ValueType>
-ValueType Tensor<ValueType>::max(){
+float Tensor<ValueType>::max(){
     long N = getLength();
-    ValueType maxValue = e(0);
+    float maxValue = (float)e(0);
     for(long i=1; i<N; ++i){
         if (e(i) > maxValue) maxValue = e(i);
     }
     return maxValue;
+}
+
+template<class ValueType>
+float Tensor<ValueType>::min(){
+    long N = getLength();
+    float minValue = (float)e(0);
+    for(long i=1; i<N; ++i){
+        if (e(i) < minValue) minValue = (float)e(i);
+    }
+    return minValue;
 }
 
 template<class ValueType>

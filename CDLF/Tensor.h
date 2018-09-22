@@ -73,10 +73,11 @@ public:
     void zeroInitialize();
     void uniformInitialize(const ValueType x);
 
-    ValueType sum();
-    ValueType average();
-    ValueType variance();
-    ValueType max();
+    float sum();
+    float average();
+    float variance();
+    float max();
+    float min();
     long maxPosition();
     Tensor<unsigned char> getMaxPositionSubTensor();
 

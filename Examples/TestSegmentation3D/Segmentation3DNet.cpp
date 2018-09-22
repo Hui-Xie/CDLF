@@ -2,6 +2,7 @@
 // Created by Hui Xie on 9/14/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <FileTools.h>
 #include "Segmentation3DNet.h"
 
 
@@ -180,22 +181,42 @@ void Segmentation3DNet::trainD(){
 }
 
 
-float Segmentation3DNet::testG(){
-    InputLayer *inputLayer = m_pGNet->m_pInputXLayer;
-    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) m_pGNet->getFinalLayer();
-    long n = 0;
-    float dice = 0.0;
-    const long Ntest= 10000;
-    while (n < Ntest) {
-        //inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
-        //lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
-        m_pGNet->forwardPropagate();
-        dice += lossLayer->diceCoefficient();
-        ++n;
+float Segmentation3DNet::testG(bool outputFile){
+    if (outputFile){
+        if (!dirExist(m_pDataMgr->m_outputLabelsDir)){
+            mkdir(m_pDataMgr->m_outputLabelsDir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+        }
     }
-    dice = dice/Ntest;
-    cout<<"Info: average dice coefficient = "<<dice<<" in "<<Ntest<<" test samples."<<endl;
-    return dice;
+
+    const long N = m_pDataMgr->m_NTestFile;
+    Tensor<float> dice({N,1});
+    for (long i = 0; i <  N; ++i) {
+        Tensor<float> *pImage = nullptr;
+        m_pDataMgr->readTestImageFile(i, pImage);
+        m_pGNet->m_pInputXLayer->setInputTensor(*pImage);
+        delete pImage;
+
+        Tensor<unsigned char> *pLabel = nullptr;
+        m_pDataMgr->readTestLabelFile(i, pLabel);
+        Tensor<float> *pOneHotLabel = nullptr;
+        m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);
+        delete pLabel;
+        m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
+        delete pOneHotLabel;
+
+        forwardG();
+        dice.e(i) = m_pGNet->m_pLossLayer->diceCoefficient();
+
+        //0utput file
+        if (outputFile){
+            string filename = getFileName(m_pDataMgr->m_testImagesVector[i]);
+            string outputFilename = m_pDataMgr->m_outputLabelsDir+ "/" + filename;
+            m_pDataMgr->saveOneHotCode2LabelFile(m_pGNet->m_pGxLayer->m_pYTensor, outputFilename);
+         }
+    }
+    cout<<"Test "<<N<<" files: "<<"Dice avg=" <<dice.average()<<"; min="<<dice.min()
+        <<"; max="<<dice.max()<<"; variance=" <<dice.variance() <<endl;
+
 }
 
 // pretrain an epoch for D

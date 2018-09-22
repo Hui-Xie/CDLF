@@ -9,7 +9,7 @@
 
 
 
-DataManager::DataManager(const string dataSetDir) {
+DataManager::DataManager(const string dataSetDir, const string outputLabelsDir) {
     m_labelItkImageIO = nullptr;
 
     m_dataSetDir = dataSetDir;
@@ -26,6 +26,12 @@ DataManager::DataManager(const string dataSetDir) {
     m_NTestFile = m_testImagesDir.size();
     cout<<"Info: totally read in "<<m_NTestFile << "test images file. "<<endl;
 
+    if (0 == outputLabelsDir.size()){
+        m_outputLabelsDir = m_dataSetDir+"/OutputLabels";
+    }
+    else{
+        m_outputLabelsDir = outputLabelsDir;
+    }
 }
 
 DataManager::~DataManager(){
@@ -88,5 +94,11 @@ void DataManager::oneHot2Label(Tensor<float>* pOneHotLabel, Tensor<unsigned char
 
 void DataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName){
     m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+}
+
+void DataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName){
+    Tensor<unsigned char>* pLabel = nullptr;
+    oneHot2Label(pOneHotLabel, pLabel);
+    saveLabel2File(pLabel, {0,0,0}, fullPathFileName);
 }
 

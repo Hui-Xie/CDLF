@@ -16,7 +16,7 @@ using namespace std;
 
 class DataManager {
 public:
-    DataManager(const string dataSetDir);
+    DataManager(const string dataSetDir, const string outputLabelsDir);
     ~DataManager();
 
     string m_dataSetDir;
@@ -24,6 +24,8 @@ public:
     string m_trainLabelsDir;
     string m_testImagesDir;
     string m_testLabelsDir;
+
+    string m_outputLabelsDir;
 
     vector<string> m_testImagesVector;
     vector<string> m_trainImagesVector;
@@ -39,13 +41,13 @@ public:
     void readTestLabelFile(const int index, Tensor<unsigned char>* pLabel);
 
     void oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<float>* pOneHotLabel, const int k);
-    void oneHot2Label(Tensor<float>* pOneHotLabel,Tensor<unsigned char>* pLabel);
-
-    void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName);
+    void saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName);
 
 private:
     void readImageFile(const string& filename, Tensor<float>* pImage);
     void readLabelFile(const string& filename, Tensor<unsigned char>* pLabel);
+    void oneHot2Label(Tensor<float>* pOneHotLabel,Tensor<unsigned char>* pLabel);
+    void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName);
 
     void freeItkImageIO();
 
