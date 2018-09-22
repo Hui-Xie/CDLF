@@ -35,18 +35,18 @@ public:
     ITKImageIO<unsigned char, 3>*  m_labelItkImageIO;
 
 
-    void readTrainImageFile(const int index, Tensor<float>* pImage);
-    void readTestImageFile(const int index, Tensor<float>* pImage);
-    void readTrainLabelFile(const int index, Tensor<unsigned char>* pLabel);
-    void readTestLabelFile(const int index, Tensor<unsigned char>* pLabel);
+    void readTrainImageFile(const int index, Tensor<float>*& pImage);
+    void readTestImageFile(const int index, Tensor<float>*& pImage);
+    void readTrainLabelFile(const int index, Tensor<unsigned char>*& pLabel);
+    void readTestLabelFile(const int index, Tensor<unsigned char>*& pLabel);
 
-    void oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<float>* pOneHotLabel, const int k);
+    void oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<float>*& pOneHotLabel, const int k);
     void saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName);
 
 private:
-    void readImageFile(const string& filename, Tensor<float>* pImage);
-    void readLabelFile(const string& filename, Tensor<unsigned char>* pLabel);
-    void oneHot2Label(Tensor<float>* pOneHotLabel,Tensor<unsigned char>* pLabel);
+    void readImageFile(const string& filename, Tensor<float>*& pImage);
+    void readLabelFile(const string& filename, Tensor<unsigned char>*& pLabel);
+    void oneHot2Label(Tensor<float>* pOneHotLabel,Tensor<unsigned char>*& pLabel);
     void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName);
 
     void freeItkImageIO();
