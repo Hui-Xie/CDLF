@@ -40,7 +40,6 @@ void InputLayer::setInputTensor(const Tensor<float>& inputTensor){
     else{
         cout<<"Error: setInputTensor(const Tensor<float>& inputTensor) has different tensorSize."<<endl;
     }
-
 }
 
 void InputLayer::setInputTensor(const Tensor<unsigned char>& inputTensor){

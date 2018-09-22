@@ -17,53 +17,53 @@ SegmentDNet::~SegmentDNet() {
 
 // build method must assign m_pGTLayer, m_pGxLayer, m_pInputXLayer, m_pMerger, m_pLossLayer;
 void SegmentDNet::build(){
-    m_pInputXLayer = new InputLayer(1,"OriginalInputLayer", {277,277,120});
+    m_pInputXLayer = new InputLayer(1,"OriginalInputLayer", {120,277,277});
     addLayer(m_pInputXLayer);
     NormalizationLayer* normAfterInput = new NormalizationLayer(4, "NormAfterInput", m_pInputXLayer);
     addLayer(normAfterInput);
-    SubTensorLayer* subTensor1 = new SubTensorLayer(10,"SubTensor1", normAfterInput, {10,10,10}, {257,257,100}); //output size: 257*257*100
+    SubTensorLayer* subTensor1 = new SubTensorLayer(10,"SubTensor1", normAfterInput, {10,10,10}, {100,257,257}); //output size: 100*257*257
     addLayer(subTensor1);
     //let this convolution layer to learn best parameter to match the probability
-    ConvolutionLayer* conv20 = new ConvolutionLayer(20, "Conv20", subTensor1,{1,1,1},3); //output: 3*257*257*100
+    ConvolutionLayer* conv20 = new ConvolutionLayer(20, "Conv20", subTensor1,{1,1,1},3); //output: 3*100*257*257
     addLayer(conv20);
     NormalizationLayer* norm24 = new NormalizationLayer(24, "Norm24", conv20);
     addLayer(norm24);
 
 
-    m_pGTLayer = new InputLayer(0, "GroundTruthLayer", {3, 257, 257,100}); //output size: 3*277*277*120
+    m_pGTLayer = new InputLayer(0, "GroundTruthLayer", {3, 100,257, 257}); //output size: 3*100*257*257
     addLayer(m_pGTLayer);
 
-    m_pGxLayer = new InputLayer(2, "GxLayer", {3, 257, 257,100}); //output size: 3*277*277*120
+    m_pGxLayer = new InputLayer(2, "GxLayer", {3, 100,257, 257}); //output size: 3*100*257*257
     addLayer(m_pGxLayer);
 
-    m_pMerger = new MergerLayer(30, "Merger1", {3,257,257,100});
+    m_pMerger = new MergerLayer(30, "Merger1", {3,100,257,257});//output size: 3*100*257*257
     addLayer(m_pMerger);
     m_pMerger->addPreviousLayer(norm24);
     m_pMerger->addPreviousLayer(m_pGTLayer);
     m_pMerger->addPreviousLayer(m_pGxLayer);
 
-    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"Conv40", m_pMerger,{3,31,31,31},15);//outputsize: 15*227*227*70
+    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"Conv40", m_pMerger,{3,31,31,31},15);//outputsize: 15*70*227*227
     addLayer(conv40);
     ReLU* reLU42 = new ReLU(42, "ReLU42", conv40);
     addLayer(reLU42);
     NormalizationLayer* norm44 = new NormalizationLayer(44,"norm44", reLU42);
     addLayer(norm44);
 
-    ConvolutionLayer* conv50 = new ConvolutionLayer(50,"Conv50", norm44,{15,27,27,27},11);//outputsize: 11*201*201*44
+    ConvolutionLayer* conv50 = new ConvolutionLayer(50,"Conv50", norm44,{15,27,27,27},11);//outputsize: 11*44*201*201
     addLayer(conv50);
     ReLU* reLU52 = new ReLU(52, "ReLU52", conv50);
     addLayer(reLU52);
     NormalizationLayer* norm54 = new NormalizationLayer(54,"norm54", reLU52);
     addLayer(norm54);
 
-    ConvolutionLayer* conv60 = new ConvolutionLayer(60,"Conv60", norm54,{11,21,21,21},7);//outputsize: 7*181*181*24
+    ConvolutionLayer* conv60 = new ConvolutionLayer(60,"Conv60", norm54,{11,21,21,21},7);//outputsize: 7*24*181*181
     addLayer(conv60);
     ReLU* reLU62 = new ReLU(62, "ReLU62", conv60);
     addLayer(reLU62);
     NormalizationLayer* norm64 = new NormalizationLayer(64,"norm64", reLU62);
     addLayer(norm64);
 
-    ConvolutionLayer* conv70 = new ConvolutionLayer(70,"Conv70", norm64,{7,33,33,24},1);//outputsize: 149*149
+    ConvolutionLayer* conv70 = new ConvolutionLayer(70,"Conv70", norm64,{7,24,33,33},1);//outputsize: 149*149
     addLayer(conv70);
     ReLU* reLU72 = new ReLU(72, "ReLU72", conv70);
     addLayer(reLU72);
@@ -134,7 +134,7 @@ void SegmentDNet::build(){
     SoftmaxLayer* softmax1 = new SoftmaxLayer(170, "softmax1", norm164);
     addLayer(softmax1);
 
-    CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(180, "CrossEntropy1", softmax1);
+    CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(180, "CrossEntropy1", softmax1);//outputsize 2*1
     addLayer(crossEntropy1);
     m_pLossLayer = crossEntropy1;
 
