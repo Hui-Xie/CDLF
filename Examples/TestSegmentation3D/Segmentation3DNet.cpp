@@ -198,15 +198,6 @@ float Segmentation3DNet::testG(){
     return dice;
 }
 
-//construct a 2*1 one-hot vector
-Tensor<float> Segmentation3DNet::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
-    Tensor<float> tensor({10, 1});
-    tensor.zeroInitialize();
-    tensor.e(pLabels->e(index)) = 1;
-    return tensor;
-}
-
-
 // pretrain an epoch for D
 void Segmentation3DNet::pretrainD() {
     const long N = m_pDataMgr->m_NTrainFile;

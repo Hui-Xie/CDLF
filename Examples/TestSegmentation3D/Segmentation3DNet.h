@@ -15,8 +15,6 @@ public:
     Segmentation3DNet(const string& name, GNet* pGNet, DNet* pDNet);
     ~Segmentation3DNet();
 
-    Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
-
     virtual void quicklySwitchTrainG_D();
     virtual void trainG();
     virtual void trainD();
