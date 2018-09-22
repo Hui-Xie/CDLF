@@ -9,6 +9,7 @@
 
 #include "FeedForwardNet.h"
 #include "MergerLayer.h"
+#include "CrossEntropyLoss.h"
 
 
 /* Discriminate Network
@@ -28,6 +29,7 @@ public:
     Layer* m_pGxLayer;
     InputLayer* m_pInputXLayer;
     MergerLayer* m_pMerger;
+    CrossEntropyLoss* m_pLossLayer;
 
     void setAlphaGroundTruth(bool alpha);
 

@@ -9,7 +9,11 @@
 
 
 DNet::DNet(const string& name):FeedForwardNet(name){
-
+    m_pGTLayer = nullptr;
+    m_pGxLayer = nullptr;
+    m_pInputXLayer = nullptr;
+    m_pMerger = nullptr;
+    m_pLossLayer = nullptr;
 }
 
 DNet::~DNet(){
@@ -20,7 +24,7 @@ DNet::~DNet(){
  * */
 
 void DNet::setAlphaGroundTruth(bool alpha){
-    Tensor<float>* pGT = ((CrossEntropyLoss*)getFinalLayer())->m_pGroundTruth;
+    Tensor<float>* pGT = m_pLossLayer->m_pGroundTruth;
     pGT->zeroInitialize();
     if (alpha) pGT->e(1) =1;
     else pGT->e(0) =1;

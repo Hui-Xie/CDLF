@@ -8,14 +8,14 @@
 #include "SegmentGNet.h"
 
 SegmentGNet::SegmentGNet(const string& name): GNet(name){
-    m_pGxLayer = nullptr;
-    m_pInputXLayer = nullptr;
+
 }
 
 SegmentGNet::~SegmentGNet(){
 
 }
 
+// build method must assign the m_pInputXLayer, m_pGxLayer, m_pLossLayer
 void SegmentGNet::build(){
     // it is a good design if all numFilter is odd;
     InputLayer* inputLayer = new InputLayer(1, "InputLayer", {277, 277,120}); //output size: 277*277*120
@@ -105,6 +105,7 @@ void SegmentGNet::build(){
 
     CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(160, "CrossEntropy1", branch3);
     addLayer(crossEntropy1);
+    m_pLossLayer = crossEntropy1;
 
 }
 

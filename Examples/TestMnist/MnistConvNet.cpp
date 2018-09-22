@@ -65,6 +65,7 @@ void MnistConvNet::build(){
     addLayer(crossEntropyLoss);
 }
 
+// train one epoch
 void MnistConvNet::train(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();

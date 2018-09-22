@@ -39,7 +39,7 @@ void GAN::backwardD(){
   m_pDNet->backwardPropagate(true);
 }
 
-void GAN::switchDToGT(){
+void GAN::switchDtoGT(){
    m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGxLayer);
    if (nullptr != m_pStubLayer) {
        m_pDNet->m_pMerger->delPreviousLayer(m_pStubLayer);
@@ -47,7 +47,7 @@ void GAN::switchDToGT(){
    m_pDNet->m_pMerger->addPreviousLayer(m_pDNet->m_pGTLayer);
 }
 
-void GAN::switchDToGx(){
+void GAN::switchDtoGx(){
     m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGTLayer);
     if (nullptr != m_pStubLayer) {
         m_pDNet->m_pMerger->delPreviousLayer(m_pStubLayer);
@@ -55,7 +55,7 @@ void GAN::switchDToGx(){
     m_pDNet->m_pMerger->addPreviousLayer(m_pDNet->m_pGxLayer);
 }
 
-void GAN::switchDToStub(){
+void GAN::switchDtoStub(){
     m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGTLayer);
     m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGxLayer);
     m_pDNet->m_pMerger->addPreviousLayer(m_pStubLayer);

@@ -8,6 +8,7 @@
 #define CDLF_FRAMEWORK_GNET_H
 
 #include "FeedForwardNet.h"
+#include "CrossEntropyLoss.h"
 
 /* Generative Network
  * the derived class of GNet is responsible to assign m_pGxLayer and m_pInputXLayer in its build method
@@ -19,8 +20,9 @@ public:
     GNet(const string& name);
     ~GNet();
 
-    Layer* m_pGxLayer;
     InputLayer* m_pInputXLayer;
+    Layer* m_pGxLayer;
+    CrossEntropyLoss* m_pLossLayer;
 
 };
 

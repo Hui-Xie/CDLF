@@ -16,8 +16,9 @@ public:
     GAN(const string& name, GNet* pGNet, DNet* pDNet);
     ~GAN();
 
-    virtual void trainG(const int N) = 0;
-    virtual void trainD(const int N) = 0;
+    virtual void quicklySwitchTrainG_D() = 0;
+    virtual void trainG() = 0;
+    virtual void trainD() = 0;
     virtual float testG() = 0;
 
     void forwardG();
@@ -25,9 +26,9 @@ public:
     void backwardG();
     void backwardD();
 
-    void switchDToGT();
-    void switchDToGx();
-    void switchDToStub();
+    void switchDtoGT();
+    void switchDtoGx();
+    void switchDtoStub();
     void setStubLayer(Layer* pStubLayer);
 
     void copyGxYFromGtoD();

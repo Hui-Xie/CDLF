@@ -17,8 +17,9 @@ public:
 
     Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
 
-    virtual void trainG(const int N);
-    virtual void trainD(const int N);
+    virtual void quicklySwitchTrainG_D();
+    virtual void trainG();
+    virtual void trainD();
     virtual float testG();
 
 

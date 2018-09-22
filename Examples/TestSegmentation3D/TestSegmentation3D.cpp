@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
     long epochs = 1000;
     float accuracy = 0;
     for (long i=0; i<epochs; ++i){
-        gan.trainG(1);
-        gan.trainD(1);
+        gan.trainG();
+        gan.trainD();
         accuracy = gan.testG();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
     }

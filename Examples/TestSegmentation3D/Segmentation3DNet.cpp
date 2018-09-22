@@ -14,12 +14,70 @@ Segmentation3DNet::~Segmentation3DNet(){
 
 }
 
-void Segmentation3DNet::trainG(const int N){
+void Segmentation3DNet::quicklySwitchTrainG_D(){
+    const long N = m_pDataMgr->m_NTrainFile;
+    const int batchSize = m_pGNet->getBatchSize();
+    long numBatch = N / batchSize;
+    if (0 != N % batchSize) {
+        numBatch += 1;
+    }
+
+    long nIter = 0;
+    long batch = 0;
+    vector<long> randSeq = generateRandomSequence(N);
+    while (batch < numBatch) {
+        m_pGNet->zeroParaGradient();
+        m_pDNet->zeroParaGradient();
+        int i = 0;
+        for (i = 0; i < batchSize && nIter < N; ++i) {
+            long index = randSeq[nIter];
+
+            Tensor<float> *pImage= nullptr;
+            m_pDataMgr->readTrainImageFile(index, pImage);
+            m_pGNet->m_pInputXLayer->setInputTensor(*pImage);
+            m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
+            delete pImage;
+
+            Tensor<unsigned char> *pLabel= nullptr;
+            m_pDataMgr->readTrainLabelFile(index, pLabel);
+            Tensor<float>* pOneHotLabel= nullptr;
+            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);
+            delete pLabel;
+            m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
+            m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
+            delete pOneHotLabel;
+
+            // train G
+            m_pDNet->setAlphaGroundTruth(true);
+            switchDtoGx();
+            forwardG();
+            backwardG();
+
+            // train G
+            switchDtoGT();
+            forwardD();
+            backwardD();
+
+            m_pDNet->setAlphaGroundTruth(false);
+            switchDtoGx();
+            forwardD();
+            backwardD();
+
+            ++nIter;
+        }
+        m_pGNet->sgd(m_pGNet->getLearningRate(), i);
+        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2);
+        ++batch;
+    }
+
+}
+
+void Segmentation3DNet::trainG(){
     InputLayer* inputLayer = m_pGNet->m_pInputXLayer;
     CrossEntropyLoss* lossGxLayer = (CrossEntropyLoss *) m_pGNet->getFinalLayer();
     CrossEntropyLoss* lossDLayer = (CrossEntropyLoss *) m_pDNet->getFinalLayer();
 
-    long maxIteration = N;
+    long maxIteration = 0;
     long NTrain = maxIteration;
     int batchSize = m_pGNet->getBatchSize();
     float learningRateG = m_pGNet->getLearningRate();
@@ -50,13 +108,13 @@ void Segmentation3DNet::trainG(const int N){
     }
 }
 
-void Segmentation3DNet::trainD(const int N){
+void Segmentation3DNet::trainD(){
     InputLayer* inputLayer = m_pDNet->m_pInputXLayer;
     Layer* GxLayer = m_pDNet->m_pGxLayer;
     Layer* GTLayer = m_pDNet->m_pGTLayer;
     CrossEntropyLoss* lossDLayer = (CrossEntropyLoss *) m_pDNet->getFinalLayer();
 
-    long maxIteration = N;
+    long maxIteration = 0;
     long NTrain = maxIteration;
     int batchSize = m_pGNet->getBatchSize();
     float learningRateG = m_pGNet->getLearningRate();
@@ -76,7 +134,7 @@ void Segmentation3DNet::trainD(const int N){
 
             if (*m_pDNet->m_pGxLayer->m_pYTensor == *m_pDNet->m_pGTLayer->m_pYTensor)  break;
 
-            switchDToGx();
+            switchDtoGx();
             //todo: set Gx and loss Label
             //inputLayer->setInputTensor();
             //lossGxLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
@@ -84,7 +142,7 @@ void Segmentation3DNet::trainD(const int N){
             forwardD();
             backwardD();
 
-            switchDToGT();
+            switchDtoGT();
             //todo: set GT and  loss label
             forwardD();
             backwardD();
@@ -142,29 +200,31 @@ void Segmentation3DNet::pretrainD() {
         for (i = 0; i < batchSize && nIter < N; ++i) {
             long index = randSeq[nIter];
 
-            Tensor<float> *pImage;
+            Tensor<float> *pImage= nullptr;
             m_pDataMgr->readTrainImageFile(index, pImage);
             m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
+            delete pImage;
 
-            Tensor<unsigned char> *pLabel;
+            Tensor<unsigned char> *pLabel= nullptr;
             m_pDataMgr->readTrainLabelFile(index, pLabel);
-            m_pDNet->m_pGTLayer->setInputTensor(*pLabel);
+            Tensor<float>* pOneHotLabel= nullptr;
+            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);
+            delete pLabel;
+            m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
+            delete pOneHotLabel;
+
             m_pDNet->setAlphaGroundTruth(true);
-            switchDToGT();
+            switchDtoGT();
             m_pDNet->forwardPropagate();
             m_pDNet->backwardPropagate(true);
 
             m_pStubNet->randomOutput();
             if (*m_pStubNet->getOutput() != *m_pDNet->m_pGTLayer->m_pYTensor){
                 m_pDNet->setAlphaGroundTruth(false);
-                switchDToStub();
+                switchDtoStub();
                 m_pDNet->forwardPropagate();
                 m_pDNet->backwardPropagate(true);
             }
-
-            delete pImage;
-            delete pLabel;
-
             ++nIter;
         }
         m_pDNet->sgd(m_pDNet->getLearningRate(), i);

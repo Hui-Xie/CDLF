@@ -8,15 +8,14 @@
 #include "CDLF.h"
 
 SegmentDNet::SegmentDNet(const string& name): DNet(name) {
-    m_pGTLayer = nullptr;
-    m_pGxLayer = nullptr;
-    m_pInputXLayer = nullptr;
+
 }
 
 SegmentDNet::~SegmentDNet() {
 
 }
 
+// build method must assign m_pGTLayer, m_pGxLayer, m_pInputXLayer, m_pMerger, m_pLossLayer;
 void SegmentDNet::build(){
     m_pInputXLayer = new InputLayer(1,"OriginalInputLayer", {277,277,120});
     addLayer(m_pInputXLayer);
@@ -37,7 +36,7 @@ void SegmentDNet::build(){
     m_pGxLayer = new InputLayer(2, "GxLayer", {3, 257, 257,100}); //output size: 3*277*277*120
     addLayer(m_pGxLayer);
 
-    MergerLayer* m_pMerger = new MergerLayer(30, "Merger1", {3,257,257,100});
+    m_pMerger = new MergerLayer(30, "Merger1", {3,257,257,100});
     addLayer(m_pMerger);
     m_pMerger->addPreviousLayer(norm24);
     m_pMerger->addPreviousLayer(m_pGTLayer);
@@ -137,6 +136,7 @@ void SegmentDNet::build(){
 
     CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(180, "CrossEntropy1", softmax1);
     addLayer(crossEntropy1);
+    m_pLossLayer = crossEntropy1;
 
 }
 

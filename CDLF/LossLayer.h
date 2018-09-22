@@ -32,6 +32,7 @@ public:
     Tensor<float>* m_pGroundTruth;
 
     void setGroundTruth( const Tensor<float>& groundTruth);
+    void setGroundTruth( const Tensor<unsigned  char>& groundTruth);
 
 };
 

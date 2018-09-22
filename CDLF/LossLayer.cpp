@@ -49,5 +49,15 @@ void LossLayer::setGroundTruth( const Tensor<float>& groundTruth){
     * m_pGroundTruth = groundTruth;
 }
 
+void LossLayer::setGroundTruth( const Tensor<unsigned  char>& groundTruth){
+    if (nullptr == m_pGroundTruth){
+        m_pGroundTruth = new Tensor<float> (groundTruth.getDims());
+    }
+    long N = m_pGroundTruth->getLength();
+    for (long i=0; i<N; ++i){
+        m_pGroundTruth->e(i) = (float) groundTruth.e(i);
+    }
+}
+
 
 
