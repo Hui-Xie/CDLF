@@ -155,17 +155,17 @@ void Segmentation3DNet::pretrainD() {
             m_pDNet->backwardPropagate(true);
 
             m_pStubNet->randomOutput();
-            //todo: judge stubNet->output dees not equal with GT
-            m_pDNet->setAlphaGroundTruth(false);
-            switchDToStub();
-            m_pDNet->forwardPropagate();
-            m_pDNet->backwardPropagate(true);
-
-            ++nIter;
+            if (*m_pStubNet->getOutput() != *m_pDNet->m_pGTLayer->m_pYTensor){
+                m_pDNet->setAlphaGroundTruth(false);
+                switchDToStub();
+                m_pDNet->forwardPropagate();
+                m_pDNet->backwardPropagate(true);
+            }
 
             delete pImage;
             delete pLabel;
 
+            ++nIter;
         }
         m_pDNet->sgd(m_pDNet->getLearningRate(), i);
         ++batch;

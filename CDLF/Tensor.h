@@ -61,6 +61,7 @@ public:
     Tensor& operator+= (const Tensor& right);
     Tensor& operator-= (const Tensor& right);
     bool    operator== (const Tensor& right);
+    bool    operator!= (const Tensor& right);
 
     Tensor& operator+= (const float right);
     Tensor& operator-= (const float right);

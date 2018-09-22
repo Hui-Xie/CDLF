@@ -14,10 +14,10 @@
 using namespace std;
 
 void printUsage(char* argv0){
-    cout<<"A Generative Adversarial Network for 3D Medical Images Segmentation: "<<endl;
+    cout<<"A Generative Adversarial Network for Global 3D Medical Images Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" <imageLabelDir>"<<endl;
-    cout<<"Where the imageLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
+    cout<<argv0<<" <imageAndLabelDir>"<<endl;
+    cout<<"Where the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directory. "<<endl;
 }
 
@@ -30,7 +30,6 @@ int main(int argc, char *argv[])
     }
     string dataSetDir = argv[1];
     DataManager dataMgr(dataSetDir);
-
 
     SegmentGNet Gnet("Generative Network");
     Gnet.setLearningRate(0.001);
@@ -46,17 +45,15 @@ int main(int argc, char *argv[])
     Dnet.initialize();
     Dnet.printArchitecture();
 
-    StubNetForD stubNet("Stub Network for Discriminative Network");
+    StubNetForD stubNet("StubNetwork for Discriminative Network");
     stubNet.setBatchSize(3);
+    stubNet.initialize();
+    stubNet.printArchitecture();
 
     Segmentation3DNet gan("3DSegmentationGAN", &Gnet,&Dnet);
     gan.setDataMgr(&dataMgr);
     gan.setStubNet(&stubNet);
     gan.setStubLayer(stubNet.getFinalLayer());
-
-
-
-    long epochs = 1000;
 
     // pretrain DNet
     int epochsPretrainD = 100;
@@ -64,14 +61,8 @@ int main(int argc, char *argv[])
         gan.pretrainD();
     }
 
-
-
-
-
-
-
-    // train G, D
-    // quick alternative train
+    // train G, D: quick alternative train
+    long epochs = 1000;
     float accuracy = 0;
     for (long i=0; i<epochs; ++i){
         gan.trainG(1);
@@ -79,11 +70,7 @@ int main(int argc, char *argv[])
         accuracy = gan.testG();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
     }
-    //slow alternative train
-
-
-
-
+    // train G, D: slow alternative train
 
     cout<<"==========End of Mnist Test==========="<<endl;
     return 0;

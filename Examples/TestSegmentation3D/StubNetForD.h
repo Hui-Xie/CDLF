@@ -19,6 +19,7 @@ public:
     virtual float test();
 
     void randomOutput();
+    Tensor<float>* getOutput();
 };
 
 

@@ -393,6 +393,11 @@ bool Tensor<ValueType>::operator== (const Tensor& right){
 }
 
 template<class ValueType>
+bool Tensor<ValueType>::operator!= (const Tensor& right){
+    return !(*this == right);
+}
+
+template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator+= (const float right){
     long N = getLength();
     for (long i=0; i<N; ++i){
