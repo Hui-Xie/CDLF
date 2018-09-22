@@ -122,3 +122,60 @@ Tensor<float> Segmentation3DNet::constructGroundTruth(Tensor<unsigned char> *pLa
     tensor.e(pLabels->e(index)) = 1;
     return tensor;
 }
+
+
+// pretrain an epoch for D
+void Segmentation3DNet::pretrainD() {
+    const long N = m_pDataMgr->m_NTrainFile;
+    const int batchSize = m_pStubNet->getBatchSize();
+    long numBatch = N / batchSize;
+    if (0 != N % batchSize) {
+        numBatch += 1;
+    }
+
+    long nIter = 0;
+    long batch = 0;
+    vector<long> randSeq = generateRandomSequence(N);
+    while (batch < numBatch) {
+        m_pDNet->zeroParaGradient();
+        int i = 0;
+        for (i = 0; i < batchSize && nIter < N; ++i) {
+            long index = randSeq[nIter];
+
+            Tensor<float> *pImage;
+            m_pDataMgr->readTrainImageFile(index, pImage);
+            m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
+
+            Tensor<unsigned char> *pLabel;
+            m_pDataMgr->readTrainLabelFile(index, pLabel);
+            m_pDNet->m_pGTLayer->setInputTensor(*pLabel);
+            m_pDNet->setAlphaGroundTruth(true);
+            switchDToGT();
+            m_pDNet->forwardPropagate();
+            m_pDNet->backwardPropagate(true);
+
+            m_pStubNet->randomOutput();
+            //todo: judge stubNet->output dees not equal with GT
+            m_pDNet->setAlphaGroundTruth(false);
+            switchDToStub();
+            m_pDNet->forwardPropagate();
+            m_pDNet->backwardPropagate(true);
+
+            ++nIter;
+
+            delete pImage;
+            delete pLabel;
+
+        }
+        m_pDNet->sgd(m_pDNet->getLearningRate(), i);
+        ++batch;
+    }
+}
+
+void Segmentation3DNet::setDataMgr(DataManager* pDataMgr){
+    m_pDataMgr = pDataMgr;
+}
+
+void Segmentation3DNet::setStubNet(StubNetForD* pStubNet){
+    m_pStubNet = pStubNet;
+}

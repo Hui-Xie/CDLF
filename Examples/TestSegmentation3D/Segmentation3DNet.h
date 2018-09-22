@@ -6,6 +6,8 @@
 #define CDLF_FRAMEWORK_3DSEGMENTATIONNET_H
 
 #include "CDLF.h"
+#include "DataManager.h"
+#include "StubNetForD.h"
 
 
 class Segmentation3DNet: public GAN{
@@ -18,6 +20,16 @@ public:
     virtual void trainG(const int N);
     virtual void trainD(const int N);
     virtual float testG();
+
+
+    void setDataMgr(DataManager* pDataMgr);
+    void setStubNet(StubNetForD* pStubNet);
+
+    void pretrainD();
+
+    StubNetForD* m_pStubNet;
+    DataManager* m_pDataMgr;
+
 
 };
 

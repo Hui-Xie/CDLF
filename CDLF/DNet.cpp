@@ -19,7 +19,7 @@ DNet::~DNet(){
  * [1,0]' indicate alpha = false;
  * */
 
-void DNet::setAlpha(bool alpha){
+void DNet::setAlphaGroundTruth(bool alpha){
     Tensor<float>* pGT = ((CrossEntropyLoss*)getFinalLayer())->m_pGroundTruth;
     pGT->zeroInitialize();
     if (alpha) pGT->e(1) =1;

@@ -29,7 +29,7 @@ public:
     InputLayer* m_pInputXLayer;
     MergerLayer* m_pMerger;
 
-    void setAlpha(bool alpha);
+    void setAlphaGroundTruth(bool alpha);
 
 };
 
