@@ -45,5 +45,7 @@ vector<long> generateRandomSequence(const long range);
 
 string getStemName(const string& filename);
 
+void printCurrentLocalTime();
+
 
 #endif //RL_NONCONVEX_TOOLS_H

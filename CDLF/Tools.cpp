@@ -185,6 +185,13 @@ string getStemName(const string& filename){
 
 }
 
+void printCurrentLocalTime(){
+    time_t tt;
+    time(&tt);
+    tm TM = *localtime(&tt);
+    cout<<"Current time: "<<1900+TM.tm_year<<"-"<<TM.tm_mon<<"-"<<TM.tm_mday<<"  "<<TM.tm_hour<<":"<<TM.tm_min<<":"<<TM.tm_sec<<endl;
+}
+
 
 
 

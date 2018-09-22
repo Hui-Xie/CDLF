@@ -24,6 +24,9 @@ void printUsage(char* argv0){
 
 int main(int argc, char *argv[])
 {
+    cout<<"main program start: ";
+    printCurrentLocalTime();
+
     printUsage(argv[0]);
     if (2 != argc && 3 != argc){
         cout<<"Error: parameter error. Exit. "<<endl;
@@ -65,19 +68,23 @@ int main(int argc, char *argv[])
 
     // pretrain DNet
     cout<<"Info: start pretrain D "<<endl;
+    printCurrentLocalTime();
     int epochsPretrainD = 1; //100;
     for (int i=0; i< epochsPretrainD; ++i){
         gan.pretrainD();
     }
 
+
     // train G, D: quick alternative train
     cout<<"Info: start quickly switch train G and D "<<endl;
+    printCurrentLocalTime();
     int epochsQuickSwitch = 1; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
     }
     // train G, D: slowly alternative train
     cout<<"Info: start slowly switch train G and D "<<endl;
+    printCurrentLocalTime();
     int epochsSlowSwitch = 1;//100;
     int epochsAlone = 1;// 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
@@ -89,6 +96,7 @@ int main(int argc, char *argv[])
         }
 
         cout<<"Slowly Switch Epoch: "<<i<<endl;
+        printCurrentLocalTime();
         if (i != epochsSlowSwitch -1){
             gan.testG(false);
         }
@@ -99,5 +107,6 @@ int main(int argc, char *argv[])
     }
 
     cout<<"==========End of Mnist Test==========="<<endl;
+    printCurrentLocalTime();
     return 0;
 }

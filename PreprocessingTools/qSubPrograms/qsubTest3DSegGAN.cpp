@@ -1,0 +1,31 @@
+//
+// Created by Hui Xie on 9/22/18.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
+
+//
+
+#include <iostream>
+using namespace std;
+
+string cmdPath = "/Users/hxie1/temp_release/Examples/TestSegmentation3D/TestSegmentation3D";
+string cmdPara = "/Users/hxie1/msd/Task07_Pancreas/CDLFData   /Users/hxie1/temp_3DGANOuput";
+
+
+int main(int argc, char *argv[]) {
+    // notes: all command paramaeters have a space at front and at tail
+    string jobName = "GAN3DSeg";
+    string qsubStrBasic = string(" qsub -b y -cwd ")
+                          + " -N " + jobName + " "
+                          + " -q COE,COE-GPU,UI-DEVELOP "
+                          + " -pe smp 5"
+                          + " -e ~/temp_qsub/Error_" + jobName + ".txt "
+                          + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
+    string qsubStrCmd = " " + cmdPath +" "+ cmdPara;
+
+    string qsubStr = qsubStrBasic + " " + qsubStrCmd;
+    system(qsubStr.c_str());
+
+    cout << "qsubTest3DSegGAN submitted." << endl;
+    return 0;
+
+}
