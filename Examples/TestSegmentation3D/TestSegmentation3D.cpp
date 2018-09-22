@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
     DataManager dataMgr(dataSetDir, outputLabelsDir);
 
     SegmentGNet Gnet("Generative Network");
+    Gnet.build();
     Gnet.setLearningRate(0.001);
     Gnet.setLossTolerance(0.02);
     Gnet.setBatchSize(3);
@@ -44,6 +45,7 @@ int main(int argc, char *argv[])
     Gnet.printArchitecture();
 
     SegmentDNet Dnet("Discriminative Network");
+    Gnet.build();
     Dnet.setLearningRate(0.001);
     Dnet.setLossTolerance(0.02);
     Dnet.setBatchSize(3);
@@ -51,6 +53,7 @@ int main(int argc, char *argv[])
     Dnet.printArchitecture();
 
     StubNetForD stubNet("StubNetwork for Discriminative Network");
+    stubNet.build();
     stubNet.setBatchSize(3);
     stubNet.initialize();
     stubNet.printArchitecture();
@@ -62,21 +65,21 @@ int main(int argc, char *argv[])
 
     // pretrain DNet
     cout<<"Info: start pretrain D "<<endl;
-    int epochsPretrainD = 100;
+    int epochsPretrainD = 1; //100;
     for (int i=0; i< epochsPretrainD; ++i){
         gan.pretrainD();
     }
 
     // train G, D: quick alternative train
     cout<<"Info: start quickly switch train G and D "<<endl;
-    int epochsQuickSwitch = 100;
+    int epochsQuickSwitch = 1; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
     }
     // train G, D: slowly alternative train
     cout<<"Info: start slowly switch train G and D "<<endl;
-    int epochsSlowSwitch = 100;
-    int epochsAlone = 20;
+    int epochsSlowSwitch = 1;//100;
+    int epochsAlone = 1;// 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
         for(int j=0; j< epochsAlone; ++j){
             gan.trainD();
