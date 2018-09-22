@@ -62,16 +62,22 @@ int main(int argc, char *argv[])
     }
 
     // train G, D: quick alternative train
-    long epochs = 1000;
-    float accuracy = 0;
-    for (long i=0; i<epochs; ++i){
-        gan.trainG();
-        gan.trainD();
-        accuracy = gan.testG();
-        cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
+    int epochsQuickSwitch = 100;
+    for (int i=0; i<epochsQuickSwitch; ++i){
+        gan.quicklySwitchTrainG_D();
     }
     // train G, D: slow alternative train
-
+    int epochsSlowSwitch = 100;
+    int epochsAlone = 20;
+    for (int i=0; i< epochsSlowSwitch; ++i){
+        for(int j=0; j< epochsAlone; ++j){
+            gan.trainD();
+        }
+        for(int j=0; j<epochsAlone; ++j){
+            gan.trainG();
+        }
+    }
+ 
     cout<<"==========End of Mnist Test==========="<<endl;
     return 0;
 }
