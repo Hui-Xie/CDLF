@@ -11,6 +11,7 @@ GAN::GAN(const string& name, GNet* pGNet, DNet* pDNet){
     m_name = name;
     m_pGNet = pGNet;
     m_pDNet = pDNet;
+    m_pStubLayer = nullptr;
 
 }
 
@@ -40,12 +41,28 @@ void GAN::backwardD(){
 
 void GAN::switchDToGT(){
    m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGxLayer);
+   if (nullptr != m_pStubLayer) {
+       m_pDNet->m_pMerger->delPreviousLayer(m_pStubLayer);
+   }
    m_pDNet->m_pMerger->addPreviousLayer(m_pDNet->m_pGTLayer);
 }
 
 void GAN::switchDToGx(){
     m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGTLayer);
+    if (nullptr != m_pStubLayer) {
+        m_pDNet->m_pMerger->delPreviousLayer(m_pStubLayer);
+    }
     m_pDNet->m_pMerger->addPreviousLayer(m_pDNet->m_pGxLayer);
+}
+
+void GAN::switchDToStub(){
+    m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGTLayer);
+    m_pDNet->m_pMerger->delPreviousLayer(m_pDNet->m_pGxLayer);
+    m_pDNet->m_pMerger->addPreviousLayer(m_pStubLayer);
+}
+
+void GAN::setStubLayer(Layer* pStubLayer){
+    m_pStubLayer = pStubLayer;
 }
 
 void GAN::copyGxYFromGtoD(){

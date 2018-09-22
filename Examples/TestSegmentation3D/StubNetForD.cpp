@@ -35,8 +35,7 @@ float StubNetForD::test(){
    //null
 }
 
-Tensor<float>* StubNetForD::getRandomOutput(){
+void  StubNetForD::randomOutput(){
     generateGaussian(getInputLayer()->m_pYTensor, 0,1);
     forwardPropagate();
-    return getFinalLayer()->m_pYTensor;
 }

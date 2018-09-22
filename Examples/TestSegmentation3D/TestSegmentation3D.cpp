@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
         cout<<"Error: parameter error. Exit. "<<endl;
         return -1;
     }
-
-    DataManager dataMgr(string(argv[0]));
+    string dataSetDir = argv[1];
+    DataManager dataMgr(dataSetDir);
 
 
     SegmentGNet Gnet("Generative Network");
@@ -49,9 +49,56 @@ int main(int argc, char *argv[])
     Segmentation3DNet gan("3DSegmentationGAN", &Gnet,&Dnet);
     long epochs = 1000;
 
-    // pretrain D:
+    // pretrain DNet
+    int epochsPretrainD = 100;
     StubNetForD stubNet("Stub Network for Discriminative Network");
+    const long N = dataMgr.m_NTrainFile;
+    const int batchSize = 3;
+    long numBatch = N / batchSize;
+    if (0 != N % batchSize) {
+        numBatch += 1;
+    }
 
+    for (int epoch=0; epoch<epochsPretrainD; ++epoch){
+        long nIter = 0;
+        long batch = 0;
+        vector<long> randSeq = generateRandomSequence(N);
+        while (batch < numBatch) {
+            Dnet.zeroParaGradient();
+            int i = 0;
+            for (i = 0; i < batchSize && nIter < N; ++i) {
+                long index = randSeq[nIter];
+
+                Tensor<float>* pImage;
+                dataMgr.readTrainImageFile(index, pImage);
+                Dnet.m_pInputXLayer->setInputTensor(*pImage);
+
+                Tensor<unsigned char>* pLabel;
+                dataMgr.readTrainLabelFile(index, pLabel);
+                Dnet.m_pGTLayer->setInputTensor(*pLabel);
+                Dnet.setAlpha(true);
+                gan.switchDToGT();
+                Dnet.forwardPropagate();
+                Dnet.backwardPropagate(true);
+
+                gan.setStubLayer(stubNet.getFinalLayer());
+                stubNet.randomOutput();
+                gan.switchDToStub();
+                Dnet.forwardPropagate();
+                Dnet.backwardPropagate(true);
+
+                ++nIter;
+
+                delete pImage;
+                delete pLabel;
+
+            }
+            Dnet.sgd(Dnet.getLearningRate(), i);
+            ++batch;
+        }
+
+
+    }
 
 
 

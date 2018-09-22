@@ -27,8 +27,8 @@ public:
 
     vector<string> m_testImagesVector;
     vector<string> m_trainImagesVector;
-    int m_NTrainFile;
-    int m_NTestFile;
+    long m_NTrainFile;
+    long m_NTestFile;
 
     ITKImageIO<unsigned char, 3>*  m_labelItkImageIO;
 

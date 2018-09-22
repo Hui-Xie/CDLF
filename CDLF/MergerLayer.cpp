@@ -59,9 +59,6 @@ void MergerLayer::delPreviousLayer(Layer* prevLayer){
     if (nullptr != prevLayer  &&  isLayerInList(prevLayer) ){
         delLayerFromList(prevLayer);
     }
-    else{
-        cout<<"Error: delete invalid previousLayer at mergerLayer:  id="<<m_id<<", name = "<<m_name<<endl;
-    }
 }
 
 bool MergerLayer::isLayerInList(const Layer* layer){

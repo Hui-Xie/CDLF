@@ -13,6 +13,9 @@
 
 /* Discriminate Network
  * the derived class of DNet is responsible to assign m_pGxLayer, m_pGTLayer,  m_pMerger, and m_pInputXLayer in its build method
+ * alpha is the final out of DNet
+ * [0,1]' indicate alpha = true;
+ * [1,0]' indicate alpha = false;
  *
  * */
 
@@ -21,10 +24,12 @@ public:
     DNet(const string& name);
     ~DNet();
 
-    Layer* m_pGTLayer;
+    InputLayer* m_pGTLayer;
     Layer* m_pGxLayer;
     InputLayer* m_pInputXLayer;
     MergerLayer* m_pMerger;
+
+    void setAlpha(bool alpha);
 
 };
 

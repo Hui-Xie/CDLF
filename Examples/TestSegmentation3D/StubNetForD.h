@@ -18,7 +18,7 @@ public:
     virtual void train();
     virtual float test();
 
-    Tensor<float>* getRandomOutput();
+    void randomOutput();
 };
 
 

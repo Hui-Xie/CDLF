@@ -27,12 +27,15 @@ public:
 
     void switchDToGT();
     void switchDToGx();
+    void switchDToStub();
+    void setStubLayer(Layer* pStubLayer);
 
     void copyGxYFromGtoD();
     void copyGxGradientFromDtoG();
 
     GNet* m_pGNet;
     DNet* m_pDNet;
+    Layer* m_pStubLayer;
 
     string m_name;
 
