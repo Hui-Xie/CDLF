@@ -29,6 +29,7 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
         m_pGNet->zeroParaGradient();
         m_pDNet->zeroParaGradient();
         int i = 0;
+        int ignoreGx = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
             long index = randSeq[nIter];
 
@@ -53,20 +54,24 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
             forwardG();
             backwardG();
 
-            // train G
+            // train D
             switchDtoGT();
             forwardD();
             backwardD();
 
-            m_pDNet->setAlphaGroundTruth(false);
-            switchDtoGx();
-            forwardD();
-            backwardD();
-
+            if (*m_pGNet->m_pGxLayer->m_pYTensor != *m_pDNet->m_pGTLayer->m_pYTensor){
+                m_pDNet->setAlphaGroundTruth(false);
+                switchDtoGx();
+                forwardD();
+                backwardD();
+            }
+            else{
+                ++ignoreGx;
+            }
             ++nIter;
         }
         m_pGNet->sgd(m_pGNet->getLearningRate(), i);
-        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2);
+        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreGx);
         ++batch;
     }
 
@@ -197,6 +202,7 @@ void Segmentation3DNet::pretrainD() {
     while (batch < numBatch) {
         m_pDNet->zeroParaGradient();
         int i = 0;
+        int ignoreStub = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
             long index = randSeq[nIter];
 
@@ -225,9 +231,12 @@ void Segmentation3DNet::pretrainD() {
                 m_pDNet->forwardPropagate();
                 m_pDNet->backwardPropagate(true);
             }
+            else {
+                ++ignoreStub;
+            }
             ++nIter;
         }
-        m_pDNet->sgd(m_pDNet->getLearningRate(), i);
+        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreStub);
         ++batch;
     }
 }
