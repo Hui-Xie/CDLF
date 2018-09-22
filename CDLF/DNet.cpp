@@ -24,6 +24,9 @@ DNet::~DNet(){
  * */
 
 void DNet::setAlphaGroundTruth(bool alpha){
+    if (nullptr == m_pLossLayer->m_pGroundTruth){
+        m_pLossLayer->m_pGroundTruth = new Tensor<float>({2,1});
+    }
     Tensor<float>* pGT = m_pLossLayer->m_pGroundTruth;
     pGT->zeroInitialize();
     if (alpha) pGT->e(1) =1;
