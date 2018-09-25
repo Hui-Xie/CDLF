@@ -35,10 +35,10 @@ DataManager::DataManager(const string dataSetDir, const string outputLabelsDir) 
 
     //debug temp
     cout<<"================================================================"<<endl;
-    cout<<"Temporarily reduce train files into 8, and test files into 2."<<endl;
+    cout<<"Temporarily reduce train files into 1, and test files into 1."<<endl;
     cout<<"================================================================"<<endl;
-    m_NTrainFile = 8;
-    m_NTestFile = 2;
+    m_NTrainFile = 1;
+    m_NTestFile = 1;
 
 }
 

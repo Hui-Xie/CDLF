@@ -1,4 +1,4 @@
 add_subdirectory(ImagesStatistics)
 add_subdirectory(UniformImage)
-add_subdirectory(qSubPrograms)
+add_subdirectory(qsubPrograms)
 add_subdirectory(SplitTrainFiles)
