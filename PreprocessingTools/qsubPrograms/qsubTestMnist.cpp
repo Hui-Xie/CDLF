@@ -6,12 +6,12 @@
 using namespace std;
 
 string cmdPath = "/Users/hxie1/temp_release/Examples/TestMnist/TestMnist";
-string cmdPara = "/Users/hxie1/Projects/mnist";
+string cmdPara = "/Users/hxie1/Projects/mnist 2D";
 
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
-    string jobName = "Mnist";
+    string jobName = "Mnist2D";
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
                           + " -q COE,COE-GPU,UI-DEVELOP "

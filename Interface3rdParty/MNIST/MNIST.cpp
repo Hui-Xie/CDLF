@@ -168,6 +168,8 @@ void MNIST::loadData() {
     readIdxFile(m_trainLabelFile, m_pTrainLabels);
     readIdxFile(m_testImageFile, m_pTestImages);
     readIdxFile(m_testLabelFile, m_pTestLabels);
+    cout<<"Info: read "<<m_pTrainImages->getDims()[0] <<" training images. "<<endl;
+    cout<<"Info: read "<<m_pTestImages->getDims()[0] <<" test images. "<<endl;
 }
 
 void MNIST::tailorData(){

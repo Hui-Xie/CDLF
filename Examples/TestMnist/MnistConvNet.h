@@ -21,6 +21,9 @@ public:
 
     MNIST* m_pMnistData;
 
+    void build4DConvolutionNet();
+    void build2DConvolutionNet();
+
 
 };
 
