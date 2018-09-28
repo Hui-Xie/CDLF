@@ -316,4 +316,8 @@ void MaxPoolingLayer::updateParameters(const float lr, const string &method, con
     //null
 }
 
+long  MaxPoolingLayer::getNumParameters(){
+    return 0;
+}
+
 

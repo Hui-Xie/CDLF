@@ -33,6 +33,7 @@ public:
 
     void setGroundTruth( const Tensor<float>& groundTruth);
     void setGroundTruth( const Tensor<unsigned  char>& groundTruth);
+    virtual  long getNumParameters();
 
 };
 

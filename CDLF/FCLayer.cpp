@@ -101,3 +101,7 @@ void FCLayer::printdWanddBVector() {
     cout << "dB-transpose:" << endl;
     m_pdBTensor->transpose().printElements();
 }
+
+long FCLayer::getNumParameters(){
+    return m_pW->getLength() + m_pBTensor->getLength();
+}

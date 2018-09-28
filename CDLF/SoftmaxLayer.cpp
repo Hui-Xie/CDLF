@@ -75,3 +75,7 @@ void SoftmaxLayer::backward(bool computeW){
 void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //Null
 }
+
+long  SoftmaxLayer::getNumParameters(){
+    return 0;
+}

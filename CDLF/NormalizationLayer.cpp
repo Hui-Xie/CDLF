@@ -49,3 +49,7 @@ void NormalizationLayer::backward(bool computeW){
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null
 }
+
+long  NormalizationLayer::getNumParameters(){
+    return 0;
+}

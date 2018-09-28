@@ -56,6 +56,7 @@ private:
     void updateTensorSize();
     void computeOneFiterN();
 
+    virtual  long getNumParameters();
 };
 
 

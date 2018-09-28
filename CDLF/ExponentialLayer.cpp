@@ -48,3 +48,7 @@ void ExponentialLayer::zeroParaGradient(){
 void ExponentialLayer::updateParameters(const float lr, const string& method, const int batchSize) {
     //null
 }
+
+long ExponentialLayer::getNumParameters(){
+    return 0;
+}

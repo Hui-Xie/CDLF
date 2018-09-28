@@ -31,6 +31,8 @@ public:
     long getEpoch();
     map<int, Layer*> getLayersMap();
 
+    long getNumParameters();
+
 
     void addLayer(Layer* layer);
     Layer* getLayer(const int ID);

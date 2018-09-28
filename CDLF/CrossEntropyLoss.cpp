@@ -81,3 +81,7 @@ float CrossEntropyLoss::diceCoefficient(){
     return nSuccess*1.0/N;
 
 }
+
+long CrossEntropyLoss::getNumParameters(){
+    return 0;
+}

@@ -27,6 +27,7 @@ public:
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
     void addNextLayer(Layer* nextLayer);
+    virtual  long getNumParameters();
 };
 
 

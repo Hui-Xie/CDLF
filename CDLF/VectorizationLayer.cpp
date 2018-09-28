@@ -36,3 +36,7 @@ void VectorizationLayer::zeroParaGradient(){
 void VectorizationLayer::updateParameters(const float lr, const string& method, const int batchSize) {
     //null
 }
+
+long  VectorizationLayer::getNumParameters(){
+    return 0;
+}

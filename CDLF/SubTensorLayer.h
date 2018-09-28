@@ -27,6 +27,7 @@ public:
     virtual void backward(bool computeW);
 
     virtual void updateParameters(const float lr, const string &method, const int batchSize = 1);
+    virtual  long getNumParameters();
 
 private:
     vector<long> m_start;

@@ -34,6 +34,7 @@ public:
 
     void printWandBVector();
     void printdWanddBVector();
+    virtual  long getNumParameters();
 };
 
 

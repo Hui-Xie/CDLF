@@ -32,3 +32,7 @@ void IdentityLayer::zeroParaGradient(){
 void IdentityLayer::updateParameters(const float lr, const string& method, const int batchSize) {
     //null
 }
+
+long IdentityLayer::getNumParameters(){
+    return 0;
+}

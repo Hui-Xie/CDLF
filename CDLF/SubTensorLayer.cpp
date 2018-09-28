@@ -53,3 +53,8 @@ void SubTensorLayer::backward(bool computeW){
 void SubTensorLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null
 }
+
+
+long  SubTensorLayer::getNumParameters(){
+    return 0;
+}

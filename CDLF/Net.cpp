@@ -65,7 +65,13 @@ map<int, Layer*> Net::getLayersMap(){
     return m_layers;
 }
 
-
+long Net::getNumParameters(){
+    long num = 0;
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        num +=  iter->second->getNumParameters();
+    }
+    return num;
+}
 
 void Net::zeroParaGradient(){
     for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
@@ -144,6 +150,8 @@ void Net::printArchitecture(){
         }
         cout<<endl;
     }
+
+    cout<<"This network has total "<<getNumParameters()<<" learning parameters. "<<endl;
     cout<<"=========== End of Network Architecture =============="<<endl;
 }
 

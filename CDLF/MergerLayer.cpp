@@ -76,3 +76,7 @@ void MergerLayer::delLayerFromList(const Layer* layer){
         }
     }
 }
+
+long  MergerLayer::getNumParameters(){
+    return 0;
+}

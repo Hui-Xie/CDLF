@@ -652,3 +652,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
     }
     freeExpandDy();
 }
+
+long ConvolutionLayer::getNumParameters(){
+    return m_pW[0]->getLength()*m_numFilters;
+}

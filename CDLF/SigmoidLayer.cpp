@@ -47,3 +47,7 @@ void SigmoidLayer::zeroParaGradient(){
 void SigmoidLayer::updateParameters(const float lr, const string& method, const int batchSize) {
     //null
 }
+
+long  SigmoidLayer::getNumParameters(){
+    return 0;
+}

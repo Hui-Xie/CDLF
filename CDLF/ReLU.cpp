@@ -47,3 +47,7 @@ void ReLU::zeroParaGradient(){
 void ReLU::updateParameters(const float lr, const string& method, const int batchSize) {
     //null
 }
+
+long  ReLU::getNumParameters(){
+    return 0;
+}

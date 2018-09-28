@@ -59,5 +59,8 @@ void LossLayer::setGroundTruth( const Tensor<unsigned  char>& groundTruth){
     }
 }
 
+long LossLayer::getNumParameters(){
+    return 0;
+}
 
 

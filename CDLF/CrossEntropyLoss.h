@@ -24,6 +24,8 @@ public:
     bool predictSuccessInColVec();
     float diceCoefficient();
 
+    virtual  long getNumParameters();
+
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();

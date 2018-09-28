@@ -53,3 +53,7 @@ void BiasLayer::updateParameters(const float lr, const string& method, const int
         *m_pBTensor -=  (*m_pdBTensor)*(lr/batchSize);
     }
 }
+
+long BiasLayer::getNumParameters(){
+    return m_pBTensor->getLength();
+}

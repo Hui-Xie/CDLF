@@ -54,3 +54,7 @@ void InputLayer::setInputTensor(const Tensor<unsigned char>& inputTensor){
     }
 
 }
+
+long InputLayer::getNumParameters() {
+    return 0;
+}

@@ -28,6 +28,7 @@ public:
 
     virtual void addPreviousLayer(Layer* prevLayer);
     void delPreviousLayer(Layer* prevLayer);
+    virtual  long getNumParameters();
 
 private:
     bool isLayerInList(const Layer* layer);
