@@ -85,6 +85,7 @@ public:
     Tensor ln();//natural logarithm
     Tensor hadamard(const Tensor& right); //element-wise product
     Tensor vectorize();
+    float  dotProduct(const Tensor& right);
     Tensor reshape(vector<long> newDims);
 
 

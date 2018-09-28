@@ -577,6 +577,17 @@ Tensor<ValueType> Tensor<ValueType>::hadamard(const Tensor& right){
     return tensor;
 }
 
+template<class ValueType>
+float  Tensor<ValueType>::dotProduct(const Tensor& right){
+    assert(sameVector(m_dims, right.m_dims));
+    float sum=0.0;
+    long N = getLength();
+    for (long i=0; i<N; ++i){
+        sum += e(i)*right.e(i);
+    }
+    return sum;
+}
+
 
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::vectorize(){
