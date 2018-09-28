@@ -26,6 +26,7 @@
 #include "ExponentialLayer.h"
 #include "SubTensorLayer.h"
 #include "GAN.h"
+#include "ScaleLayer.h"
 
 
 #endif //CDLF_FRAMEWORK_CDLF_H

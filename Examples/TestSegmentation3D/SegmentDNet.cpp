@@ -28,6 +28,8 @@ void SegmentDNet::build(){
     addLayer(conv20);
     NormalizationLayer* norm24 = new NormalizationLayer(24, "Norm24", conv20);
     addLayer(norm24);
+    ScaleLayer* scale1 =new ScaleLayer(26, "Scale26", norm24);
+    addLayer(scale1);
 
 
     m_pGTLayer = new InputLayer(0, "GroundTruthLayer", {3, 100,257, 257}); //output size: 3*100*257*257
@@ -38,7 +40,7 @@ void SegmentDNet::build(){
 
     m_pMerger = new MergerLayer(30, "Merger1", {3,100,257,257});//output size: 3*100*257*257
     addLayer(m_pMerger);
-    m_pMerger->addPreviousLayer(norm24);
+    m_pMerger->addPreviousLayer(scale1);
     m_pMerger->addPreviousLayer(m_pGTLayer);
     m_pMerger->addPreviousLayer(m_pGxLayer);
 
