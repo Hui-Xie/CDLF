@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     string jobName = "HuiSess";
     string qsubStrBasic = string(" qlogin ")
                           + " -N " + jobName + " "
-                          + " -q COE-GPU,UI-DEVELOP,UI-GPU "
+                          + " -q UI-GPU "  //specify one of them: COE-GPU,UI-DEVELOP,UI-GPU
                           + " -pe smp 4"
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
