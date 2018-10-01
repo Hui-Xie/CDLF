@@ -10,6 +10,11 @@ using namespace std;
 //string cmdPath = "/Users/hxie1/temp_release/Examples/TestMnist/TestMnist";
 //string cmdPara = "/Users/hxie1/Projects/mnist 2D";
 
+/*  verrify GPU resource
+ *  in node: lspci | grep -i nvidia
+ * */
+
+
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
