@@ -9,6 +9,7 @@
 #include <cstring>  //for memcpy function
 #include <cmath> //for pow()
 #include <iomanip>      // std::setw
+#include "TensorKernels.cu"
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<long>& dims){
@@ -25,12 +26,17 @@ Tensor<ValueType>::Tensor(const Tensor& other){
         *this = other;
     }
 }
+
+
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize(){
     long N= getLength();
-    for(long i=0; i<N;++i){
+    /*for(long i=0; i<N;++i){
         e(i) = 0;
-    }
+    }*/  // for CPU
+
+    zeroInitialize<<< (N+1023)/1024,1024 >>> (m_data, N);
+
 }
 
 template<class ValueType>
