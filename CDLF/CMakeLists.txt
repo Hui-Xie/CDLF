@@ -1,6 +1,8 @@
-project (CDLF LANGUAGES CXX CUDA)  # C++ Deep Learning Framework
+#project (CDLF LANGUAGES CXX CUDA)  # C++ Deep Learning Framework
 
-cmake_minimum_required (VERSION 3.8)
+# cmake_minimum_required (VERSION 3.8)
+
+set(CMAKE_CUDA_COMPILER /opt/apps/cuda/9.1.85.2/bin/nvcc)
 
 message("Config StatsLab Notes:")
 message("0  Courtesy of Keith O'Hara (https://github.com/kthohr/stats) for StatsLab")
