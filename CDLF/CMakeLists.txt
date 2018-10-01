@@ -4,7 +4,7 @@ set(CMAKE_CUDA_FLAGS -arch=sm_70)
 
 #[[ methodds of getting  GPU informaiton
   use lspci | grep -i nvidia to get GPU information
-  use nvidia-smi to get more detailed information of GPU
+  use nvidia-smi -q to get more detailed information of GPU
   use cat  /proc/driver/nvidia/gpus/0000:3b:00.0/information to get model number
 
 [hxie1@argon-itf-ca38-07 0000:3b:00.0]$ cat /proc/driver/nvidia/gpus/0000:3b:00.0/information
@@ -37,7 +37,8 @@ set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet
         ConvolutionLayer.cpp BiasLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
         IdentityLayer.cpp MergerLayer.cpp BranchLayer.cpp
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
-        SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp)
+        SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp Managed.h)
+
 
 add_library(CDLF SHARED ${CDLF_SRCS})
 set_target_properties(CDLF PROPERTIES CUDA_SEPARABLE_COMPILATION ON )
