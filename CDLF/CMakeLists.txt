@@ -1,8 +1,27 @@
-#project (CDLF LANGUAGES CXX CUDA)  # C++ Deep Learning Framework
-
-# cmake_minimum_required (VERSION 3.8)
 
 set(CMAKE_CUDA_COMPILER /opt/apps/cuda/9.1.85.2/bin/nvcc)
+set(CMAKE_CUDA_FLAGS -arch=sm_70)
+
+#[[ methodds of getting  GPU informaiton
+  use lspci | grep -i nvidia to get GPU information
+  use nvidia-smi to get more detailed information of GPU
+  use cat  /proc/driver/nvidia/gpus/0000:3b:00.0/information to get model number
+
+[hxie1@argon-itf-ca38-07 0000:3b:00.0]$ cat /proc/driver/nvidia/gpus/0000:3b:00.0/information
+Model: 		 TITAN V
+IRQ:   		 136
+GPU UUID: 	 GPU-a6cba209-8da6-6676-9415-e364f1035a3a
+Video BIOS: 	 88.00.41.00.18
+Bus Type: 	 PCIe
+DMA Size: 	 47 bits
+DMA Mask: 	 0x7fffffffffff
+Bus Location: 	 0000:3b:00.0
+Device Minor: 	 0
+
+in this case, Titan V has a compute capability 7.0
+
+]]
+
 
 message("Config StatsLab Notes:")
 message("0  Courtesy of Keith O'Hara (https://github.com/kthohr/stats) for StatsLab")
@@ -12,34 +31,6 @@ message("*************************************")
 
 #set(STATS_INCLUDE_DIR /Users/hxie1/Projects/stats/include)
 include_directories(${STATS_INCLUDE_DIR})
-
-#[[
-# For Cuda Library
-message("Config CUDA Notes:")
-message("0  Courtesy of Nvidia Company (https://www.nvidia.com/en-us/) for its cuda_toolkit;")
-message("1  download from https://developer.nvidia.com/cuda-downloads into your intall directory;")
-message("2  decompress, ccmake, make ITK version using same version compilers with CDLF; Different compiler will result link errors;")
-# make sure ITK and CDLF to use same compiler to compile
-message("3  in Clion File/Setting/Build/CMake/CMakeOptions config -DITK_DIR=the/Full/Path/Of/ITK-Build/Dir ;")
-message("*************************************")
-
-
-set(CUDA_HOME /opt/apps/cuda/9.1.85.2)
-
-find_package(CUDA QUIET)
-if(CUDA_FOUND)
-    # Pass options to NVCC
-    set(CUDA_NVCC_FLAGS   ${CUDA_NVCC_FLAGS}; -O3 -gencode arch=compute_22,code=sm_22)
-
-    # Specify include directories
-    include_directories(kernels  utility)
-else(CUDA_FOUND )
-    message("Infor: we can not find CUDA.")
-endif(CUDA_FOUND)
-]]
-
-
-
 
 set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet.cpp
         statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp
