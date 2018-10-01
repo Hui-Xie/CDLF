@@ -8,6 +8,7 @@
 int main (int argc, char *argv[])
 {
     cout<<"Test 4D Convolution"<<endl;
+    printCurrentLocalTime();
 
     Conv4DNet net("Conv4DNet");
     net.build();
@@ -23,5 +24,6 @@ int main (int argc, char *argv[])
     net.train();
     net.test();
     cout<< "=========== End of ConvolutionLayer Test ============"<<endl;
+    printCurrentLocalTime();
     return 0;
 }

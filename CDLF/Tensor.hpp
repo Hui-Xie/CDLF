@@ -21,11 +21,10 @@ Tensor<ValueType>::Tensor(const vector<long>& dims){
 template<class ValueType>
 Tensor<ValueType>::Tensor(const Tensor& other){
     if (this != &other){
-        m_data = nullptr;
+        freeMem();
         *this = other;
     }
 }
-
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize(){
     long N= getLength();
@@ -91,17 +90,18 @@ long Tensor<ValueType>::getLength() const{
 
 template<class ValueType>
 void  Tensor<ValueType>::allocateMem(){
-   if (nullptr != m_data){
-       delete[] m_data;
-       m_data = nullptr;
-   }
-   m_data = new ValueType[getLength()];
+   freeMem();
+   // m_data = new ValueType[getLength()]; // for CPU
+   cudaMallocManaged((ValueType**)&m_data, getLength()* sizeof(ValueType));
+   cudaDeviceSynchronize();
 }
 
 template<class ValueType>
 void  Tensor<ValueType>::freeMem(){
    if (nullptr != m_data){
-      delete[] m_data;
+      //delete[] m_data; //for CPU
+      cudaDeviceSynchronize();
+      cudaFree(m_data);
       m_data = nullptr;
    }
 }

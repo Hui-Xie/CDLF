@@ -21,6 +21,7 @@ public:
     void operator delete(void *ptr) {
         cudaDeviceSynchronize();
         cudaFree(ptr);
+        ptr = nullptr;
     }
 };
 
