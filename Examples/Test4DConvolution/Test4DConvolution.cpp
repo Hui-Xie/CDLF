@@ -2,6 +2,11 @@
 // Created by Hui Xie on 8/17/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 //
+/*
+ * before GPU implementation: this program run 15 mins in HPC in debug mode;
+ *
+ * */
+
 
 #include "Conv4DNet.h"
 

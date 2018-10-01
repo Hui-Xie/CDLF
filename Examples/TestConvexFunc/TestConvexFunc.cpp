@@ -37,6 +37,7 @@ int convertCommaStrToVector(const string commaStr, std::vector<long>& widthVecto
 
 int main (int argc, char *argv[])
 {
+    printCurrentLocalTime();
     if (2 != argc){
         cout<<"Input parameter error. Exit"<<endl;
         printUsage();
@@ -68,6 +69,7 @@ int main (int argc, char *argv[])
     net.train();
     net.test();
     std::cout<<"====================End of This Program==================="<<std::endl;
+    printCurrentLocalTime();
     return 0;
 
 }
