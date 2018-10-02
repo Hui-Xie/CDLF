@@ -35,7 +35,7 @@ void Tensor<ValueType>::zeroInitialize(){
         e(i) = 0;
     }*/  // for CPU
 
-    zeroInitialize<<< (N+1023)/1024,1024 >>> (m_data, N);
+    zeroInitialize<<< (N+1023)/1024,1024 >>>(m_data, N);
 
 }
 
