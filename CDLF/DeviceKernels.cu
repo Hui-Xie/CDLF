@@ -5,7 +5,10 @@
 #include "DeviceKernels.h"
 
 __global__ void deviceZeroInitialize(float *pData, const long N) {
-    long index = threadIdx.x + blockIdx.x * blockDim.x;// + gridIdx.x * gridDim.x * blockDim.x;
-    if (index < N) pData[index] = 0;
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pData[index] = 0;
+        index += blockDim.x*gridDim.x;
+    }
 }
 
