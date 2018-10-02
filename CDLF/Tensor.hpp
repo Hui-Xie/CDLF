@@ -9,7 +9,7 @@
 #include <cstring>  //for memcpy function
 #include <cmath> //for pow()
 #include <iomanip>      // std::setw
-#include "TensorKernels.cu"
+#include "TensorCuda.h"
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<long>& dims){
@@ -35,7 +35,7 @@ void Tensor<ValueType>::zeroInitialize(){
         e(i) = 0;
     }*/  // for CPU
 
-    zeroInitialize<<< (N+1023)/1024,1024 >>>(m_data, N);
+    cudaZeroInitialize(m_data, N);
 
 }
 

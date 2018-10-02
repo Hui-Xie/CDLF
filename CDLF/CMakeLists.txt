@@ -33,14 +33,15 @@ message("*************************************")
 #set(STATS_INCLUDE_DIR /Users/hxie1/Projects/stats/include)
 include_directories(${STATS_INCLUDE_DIR})
 
-set(CDLF_SRCS  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet.cpp
+set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet.cpp
         statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.h Tools.cpp
         ConvolutionLayer.cpp BiasLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
         IdentityLayer.cpp MergerLayer.cpp BranchLayer.cpp
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
-        SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp Managed.h TensorKernels.cu)
+        SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp Managed.h)
 
+set(CDLF_CUDA_Src DeviceKernels.cu)
 
-add_library(CDLF SHARED ${CDLF_SRCS})
+add_library(CDLF SHARED ${CDLF_CXX_Src} ${CDLF_CUDA_Src})
 set_target_properties(CDLF PROPERTIES CUDA_SEPARABLE_COMPILATION ON )
 
