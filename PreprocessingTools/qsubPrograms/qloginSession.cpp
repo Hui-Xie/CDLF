@@ -14,19 +14,31 @@ using namespace std;
  *  in node: lspci | grep -i nvidia
  * */
 
+void printUsage(char* argv0){
+    cout<<"qlogin to apply GPU resouce in HPC"<<endl;
+    cout<<"Usage: "<<endl;
+    cout<<argv0<<" <GPUQueue> [numSlots]"<<endl;
+    cout<<"GPUQueue: COE-GPU,UI-DEVELOP,UI-GPU;  Choose only one." <<endl;
+    cout<<"numSlots: number of slots"<<endl;
+}
 
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
-    string jobName = "HuiSess";
+    if (3 != argc){
+        printUsage(argv[0]);
+        return -1;
+    }
+    string queue = argv[1];
+    int numSlots = atoi(argv[2]);
+
+    string jobName = "Session";
     string qsubStrBasic = string(" qlogin ")
                           + " -N " + jobName + " "
-                          + " -q COE-GPU "  //specify one of them: COE-GPU,UI-DEVELOP,UI-GPU
-                          + " -pe smp 4"
+                          + " -q " + queue + " " //specify one of them: COE-GPU,UI-DEVELOP,UI-GPU
+                          + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
-    //string qsubStrCmd = " " + cmdPath +" "+ cmdPara;
-
     string qsubStr = qsubStrBasic; // + " " + qsubStrCmd;
     system(qsubStr.c_str());
 
