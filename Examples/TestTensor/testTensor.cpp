@@ -6,9 +6,13 @@
 #include <list>
 #include "../../CDLF/Tools.h"
 #include "../../CDLF/statisTool.h"
+#include "GPUAttr.h"
 
 
 int main (int argc, char *argv[]) {
+
+    getGPUAttr();
+
     Tensor<float> tensor1({3,4});
     int k=0;
     for (int i=0; i<3; ++i){

@@ -5,8 +5,9 @@
 
 #include "TensorCuda.h"
 #include "DeviceKernels.h"
+#include "GPUAttr.h"
 
 void cudaZeroInitialize(float* m_data, const long N){
-    deviceZeroInitialize<<<N+1023/1024, 1024>>>(m_data, N);
-    
+    deviceZeroInitialize<<<g_blockCount, g_maxThhreasPerBlock>>>(m_data, N);
+    cudaDeviceSynchronize();
 }

@@ -8,6 +8,10 @@
 
 //cuda is a bridge between Tensor and Device
 
+
+
 void cudaZeroInitialize(float* m_data, const long N);
+
+
 
 #endif //CDLF_FRAMEWORK_TENSORDEVICE_H
