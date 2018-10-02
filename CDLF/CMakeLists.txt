@@ -1,6 +1,7 @@
 
 # set(CMAKE_CUDA_COMPILER /opt/apps/cuda/9.1.85.2/bin/nvcc)
-set(CMAKE_CUDA_FLAGS -arch=sm_70)
+#set(CMAKE_CUDA_FLAGS -arch=sm_70)   #Nvidia Titan V in COE_GPU
+set(CMAKE_CUDA_FLAGS -arch=sm_60)   #Nvidia Tesla P100 in UI_GPU
 
 #[[ methodds of getting  GPU informaiton
   use lspci | grep -i nvidia to get GPU information
