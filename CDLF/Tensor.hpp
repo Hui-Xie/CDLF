@@ -341,9 +341,15 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator+ (const float other){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
-    for (long i=0; i<N; ++i){
-        tensor.e(i) =e(i)+ other;
+    if (g_useGPU){
+        //todo:
     }
+    else{
+        for (long i=0; i<N; ++i){
+            tensor.e(i) =e(i)+ other;
+        }
+    }
+
     return tensor;
 }
 
@@ -374,10 +380,15 @@ Tensor<ValueType> Tensor<ValueType>::operator+ (const Tensor<ValueType>& other){
    assert(sameVector(m_dims, other.getDims()));
    Tensor tensor (m_dims);
    long N = getLength();
-   for (long i=0; i<N; ++i){
-       tensor.e(i) = e(i) + other.e(i);
-    }
-    return tensor;
+   if (g_useGPU){
+       cudaTensorAdd(m_data, other.m_data, tensor.m_data, N);
+   }
+   else{
+       for (long i=0; i<N; ++i){
+           tensor.e(i) = e(i) + other.e(i);
+       }
+   }
+   return tensor;
 
 }
 

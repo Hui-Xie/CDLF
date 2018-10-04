@@ -24,3 +24,9 @@ void cuda2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
     cudaDeviceSynchronize();
 
 }
+
+// C = A+B, where C has a length of N
+void cudaTensorAdd(float* pA, float* pB, float* pC, const long N){
+    deviceTensorAdd<<<g_blocksPerGrid, g_maxThreadsPerBlock>>>(pA, pB, pC, N);
+    cudaDeviceSynchronize();
+}

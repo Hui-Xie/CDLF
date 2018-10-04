@@ -38,3 +38,12 @@ __global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, cons
         index += blockDim.x*gridDim.x;  //grid-stride loop
     }
 }
+
+// C = A+B, where C has a length of N
+__global__ void deviceTensorAdd(float* pA, float* pB, float* pC, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pC[index] += pA[index] + pB[index];
+        index += blockDim.x*gridDim.x;
+    }
+}
