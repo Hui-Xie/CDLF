@@ -32,20 +32,25 @@ template<class ValueType>
 void Tensor<ValueType>::zeroInitialize(){
     long N= getLength();
     if (g_useGPU){
-        cudaZeroInitialize(m_data, N);
+        cudaInitialize(m_data, N, 0);
     }
     else{
         for(long i=0; i<N;++i){
            e(i) = 0;
-        }  // for CPU
+        }
     }
 }
 
 template<class ValueType>
 void Tensor<ValueType>::uniformInitialize(const ValueType x){
     long N= getLength();
-    for(long i=0; i<N;++i){
-        e(i) = x;
+    if (g_useGPU){
+        cudaInitialize(m_data, N, x);
+    }
+    else{
+        for(long i=0; i<N;++i){
+            e(i) = x;
+        }
     }
 }
 
@@ -113,12 +118,11 @@ void  Tensor<ValueType>::freeMem(){
        if (g_useGPU){
            cudaDeviceSynchronize();
            cudaFree(m_data);
-           m_data = nullptr;
        }
        else{
            delete[] m_data; //for CPU
-           m_data = nullptr;
        }
+       m_data = nullptr;
    }
 }
 

@@ -7,7 +7,7 @@
 #include "DeviceKernels.h"
 #include "GPUAttr.h"
 
-void cudaZeroInitialize(float* m_data, const long N){
-    deviceZeroInitialize<<<g_blockCount, g_maxThhreasPerBlock>>>(m_data, N);
+void cudaInitialize(float* m_data, const long N, const float value){
+    deviceInitialize<<<g_blockCount, g_maxThhreasPerBlock>>>(m_data, N, value);
     cudaDeviceSynchronize();
 }

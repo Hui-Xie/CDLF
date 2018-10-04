@@ -10,7 +10,7 @@
 
 
 
-void cudaZeroInitialize(float* m_data, const long N);
+void cudaInitialize(float* m_data, const long N, const float value=0);
 
 
 

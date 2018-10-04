@@ -4,10 +4,10 @@
 //
 #include "DeviceKernels.h"
 
-__global__ void deviceZeroInitialize(float *pData, const long N) {
+__global__ void deviceInitialize(float *pData, const long N, const float value) {
     long index = threadIdx.x + blockIdx.x * blockDim.x;
     while (index < N){
-        pData[index] = 0;
+        pData[index] = value;
         index += blockDim.x*gridDim.x;  //grid-stride loop
     }
 }

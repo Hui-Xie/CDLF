@@ -12,6 +12,6 @@
 //Device is an implement carrier.
 
 
-__global__ void deviceZeroInitialize(float *pData, const long N);
+__global__ void deviceInitialize(float *pData, const long N, const float value= 0);
 
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H
