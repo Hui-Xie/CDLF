@@ -285,9 +285,14 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     Tensor tensor (newDims);
     int dim = m_dims.size();
     assert(dim ==2 );
-    for (long i=0; i<newDims[0]; ++i){
-        for (long j=0; j< newDims[1];++j){
-            tensor.e({i,j}) = e({j,i});
+    if (g_useGPU){
+        cuda2DMatrixTranspose(m_data, tensor.m_data, newDims[0], newDims[1]);
+    }
+    else{
+        for (long i=0; i<newDims[0]; ++i){
+            for (long j=0; j< newDims[1];++j){
+                tensor.e({i,j}) = e({j,i});
+            }
         }
     }
     return tensor;

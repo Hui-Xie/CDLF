@@ -17,3 +17,10 @@ void cuda2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const lon
     device2DMatrixProduct<<<g_blocksPerGrid, g_maxThreadsPerBlock>>>(pA,pB,pB, M, N, K);
     cudaDeviceSynchronize();
 }
+
+// B = A', where B has a size M*N
+void cuda2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
+    device2DMatrixTranspose<<<g_blocksPerGrid, g_maxThreadsPerBlock>>>(pA,pB,M, N);
+    cudaDeviceSynchronize();
+
+}

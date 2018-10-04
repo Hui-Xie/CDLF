@@ -26,3 +26,15 @@ __global__ void device2DMatrixProduct(float* pA, float* pB, float* pC, const lon
         index += blockDim.x*gridDim.x;  //grid-stride loop
     }
 }
+
+// B = A', where B has a size M*N
+__global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    long totalN  = M*N;
+    while (index < totalN){
+        long m = index/N;
+        long n = index%N; //index = m*N+n
+        pB[index] = pA[n*M+m];
+        index += blockDim.x*gridDim.x;  //grid-stride loop
+    }
+}

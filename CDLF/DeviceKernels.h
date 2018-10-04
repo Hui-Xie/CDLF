@@ -15,4 +15,7 @@
 __global__ void deviceInitialize(float *pData, const long N, const float value= 0);
 __global__ void device2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const long N, const long K);
 
+// B = A', where B has a size M*N
+__global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, const long N);
+
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H
