@@ -6,6 +6,7 @@
 
 #include "Net.h"
 #include "ConvolutionLayer.h"
+#include "GPUAttr.h"
 
 Net::Net(const string& name){
     m_name = name;
@@ -14,6 +15,7 @@ Net::Net(const string& name){
     m_lossTolerance = 0.02;
     m_judgeLoss = true;
     m_batchSize = 1;
+    getGPUAttr();
 }
 
 Net::~Net() {

@@ -27,6 +27,7 @@
 #include "SubTensorLayer.h"
 #include "GAN.h"
 #include "ScaleLayer.h"
+#include "GPUAttr.h"
 
 
 #endif //CDLF_FRAMEWORK_CDLF_H
