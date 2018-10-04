@@ -65,7 +65,13 @@ Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other)
             generateDimsSpan();
             allocateMem();
         }
-        memcpy(m_data, other.getData(), length*sizeof(ValueType));
+        if (g_useGPU){
+            cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
+        }
+        else{
+            memcpy(m_data, other.getData(), length*sizeof(ValueType));
+        }
+
     }
     return *this;
 }
@@ -82,7 +88,13 @@ void Tensor<ValueType>::copyDataFrom(void* buff, const long numBytes){
         return;
     }
     else{
-        memcpy(m_data, buff, numBytes);
+        if (g_useGPU){
+            cudaMemcpy(m_data, buff, numBytes, cudaMemcpyDefault);
+        }
+        else{
+            memcpy(m_data, buff, numBytes);
+        }
+
     }
 }
 
@@ -170,7 +182,13 @@ ValueType& Tensor<ValueType>::e(const vector<long>& index) const{
 
 template<class ValueType>
 void Tensor<ValueType>::copyDataTo(Tensor* pTensor, const long offset, const long length){
-    memcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType));
+    if (g_useGPU){
+        cudaMemcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType), cudaMemcpyDefault);
+    }
+    else{
+        memcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType));
+    }
+
 }
 
 template<class ValueType>

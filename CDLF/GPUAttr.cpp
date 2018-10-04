@@ -24,10 +24,10 @@ void getGPUAttr(){
         cudaDeviceGetAttribute ( &g_numSMs, cudaDevAttrMultiProcessorCount, 0);
         cout<<"g_numSMs = "<< g_numSMs<<endl;
 
-        cudaDeviceGetAttribute ( &g_maxThhreasPerBlock, cudaDevAttrMaxThreadsPerBlock, 0);
-        cout<<"g_maxThhreasPerBlock = "<< g_maxThhreasPerBlock<<endl;
+        cudaDeviceGetAttribute ( &g_maxThreadsPerBlock, cudaDevAttrMaxThreadsPerBlock, 0);
+        cout<<"g_maxThreadsPerBlock = "<< g_maxThreadsPerBlock<<endl;
 
-        g_blockCount = 32* g_numSMs;
+        g_blocksPerGrid = 32* g_numSMs;
     }
 
 }

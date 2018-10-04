@@ -7,8 +7,8 @@
 #define CDLF_FRAMEWORK_GPUATTR_H
 
 static  int g_numSMs = 0;
-static  int g_maxThhreasPerBlock = 0;
-static  long g_blockCount = 0;
+static  int g_maxThreadsPerBlock = 0;
+static  long g_blocksPerGrid = 0;
 static  bool g_useGPU = true;
 
 void setUseGPU(const bool useGPU);

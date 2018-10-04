@@ -8,6 +8,6 @@
 #include "GPUAttr.h"
 
 void cudaInitialize(float* m_data, const long N, const float value){
-    deviceInitialize<<<g_blockCount, g_maxThhreasPerBlock>>>(m_data, N, value);
+    deviceInitialize<<<g_blocksPerGrid, g_maxThreadsPerBlock>>>(m_data, N, value);
     cudaDeviceSynchronize();
 }
