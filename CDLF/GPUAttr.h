@@ -11,7 +11,6 @@ static  int g_maxThhreasPerBlock = 0;
 static  long g_blockCount = 0;
 
 
-
 void getGPUAttr();
 
 #endif //CDLF_FRAMEWORK_GPUATTR_H
