@@ -12,7 +12,7 @@ void cudaInitialize(float* m_data, const long N, const float value){
     cudaDeviceSynchronize();
 }
 
-// C = A*B, where A has a size of M*K, B has a size of k*N, C will has a size of M*N
+// C = A*B, where A has a size of M*K, B has a size of K*N, C will has a size of M*N
 void cuda2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const long N, const long K){
     device2DMatrixProduct<<<g_blocksPerGrid, g_maxThreadsPerBlock>>>(pA,pB,pB, M, N, K);
     cudaDeviceSynchronize();

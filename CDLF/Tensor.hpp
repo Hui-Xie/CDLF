@@ -308,15 +308,21 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     if (2 == thisDim && 2 == otherDim){
         vector<long> newDims{m_dims[0], otherDims[1]};
         Tensor tensor (newDims);
-        for (long i=0; i<newDims[0]; ++i){
-            for (long j=0; j< newDims[1];++j){
-                ValueType value =0;
-                for (long k=0; k< m_dims[1]; ++k){
-                    value += e({i,k})*other.e({k,j});
+        if (g_useGPU){
+            cuda2DMatrixProduct(m_data,other.m_data, tensor.m_data, newDims[0], newDims[1], m_dims[1]);
+        }
+        else{
+            for (long i=0; i<newDims[0]; ++i){
+                for (long j=0; j< newDims[1];++j){
+                    ValueType value =0;
+                    for (long k=0; k< m_dims[1]; ++k){
+                        value += e({i,k})*other.e({k,j});
+                    }
+                    tensor.e({i,j}) = value;
                 }
-                tensor.e({i,j}) = value;
             }
         }
+
         return tensor;
     }
     else {
