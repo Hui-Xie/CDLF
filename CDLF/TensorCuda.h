@@ -12,6 +12,10 @@
 
 void cudaInitialize(float* m_data, const long N, const float value=0);
 
+// C = A*B, where A has a size of M*K, B has a size of K*N, C will has a size of M*N
+void cuda2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const long N, const long K);
+
+
 
 
 #endif //CDLF_FRAMEWORK_TENSORDEVICE_H

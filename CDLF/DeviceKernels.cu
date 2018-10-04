@@ -12,3 +12,14 @@ __global__ void deviceInitialize(float *pData, const long N, const float value) 
     }
 }
 
+__global__ void device2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const long N, const long K){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    long totalN  = M*N;
+    while (index < N){
+        pC[index] = 0.0f;
+
+
+
+        index += blockDim.x*gridDim.x;  //grid-stride loop
+    }
+}
