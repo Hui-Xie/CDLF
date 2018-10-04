@@ -31,12 +31,14 @@ Tensor<ValueType>::Tensor(const Tensor& other){
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize(){
     long N= getLength();
-    /*for(long i=0; i<N;++i){
-        e(i) = 0;
-    }*/  // for CPU
-
-    cudaZeroInitialize(m_data, N);
-
+    if (g_useGPU){
+        cudaZeroInitialize(m_data, N);
+    }
+    else{
+        for(long i=0; i<N;++i){
+           e(i) = 0;
+        }  // for CPU
+    }
 }
 
 template<class ValueType>
@@ -95,20 +97,28 @@ long Tensor<ValueType>::getLength() const{
 }
 
 template<class ValueType>
-void  Tensor<ValueType>::allocateMem(){
-   freeMem();
-   // m_data = new ValueType[getLength()]; // for CPU
-   cudaMallocManaged((ValueType**)&m_data, getLength()* sizeof(ValueType));
-   cudaDeviceSynchronize();
+void  Tensor<ValueType>::allocateMem() {
+    freeMem();
+    if (g_useGPU) {
+        cudaMallocManaged((ValueType **) &m_data, getLength() * sizeof(ValueType));
+        cudaDeviceSynchronize();
+    } else {
+        m_data = new ValueType[getLength()]; // for CPU
+    }
 }
 
 template<class ValueType>
 void  Tensor<ValueType>::freeMem(){
    if (nullptr != m_data){
-      //delete[] m_data; //for CPU
-      cudaDeviceSynchronize();
-      cudaFree(m_data);
-      m_data = nullptr;
+       if (g_useGPU){
+           cudaDeviceSynchronize();
+           cudaFree(m_data);
+           m_data = nullptr;
+       }
+       else{
+           delete[] m_data; //for CPU
+           m_data = nullptr;
+       }
    }
 }
 

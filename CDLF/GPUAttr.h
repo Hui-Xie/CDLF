@@ -9,7 +9,9 @@
 static  int g_numSMs = 0;
 static  int g_maxThhreasPerBlock = 0;
 static  long g_blockCount = 0;
+static  bool g_useGPU = true;
 
+void setUseGPU(const bool useGPU);
 
 void getGPUAttr();
 

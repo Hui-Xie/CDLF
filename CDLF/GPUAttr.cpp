@@ -8,15 +8,26 @@
 #include <iostream>
 using namespace std;
 
+
+void setUseGPU(const bool useGPU){
+    g_useGPU = useGPU;
+    if (g_useGPU){
+        cout<<"Info: program will use GPU."<<endl;
+    }
+    else{
+        cout<<"Info: program will use CPU instead of GPU." <<endl;
+    }
+}
+
 void getGPUAttr(){
-    cudaDeviceGetAttribute ( &g_numSMs, cudaDevAttrMultiProcessorCount, 0);
-    cout<<"g_numSMs = "<< g_numSMs<<endl;
+    if (g_useGPU){
+        cudaDeviceGetAttribute ( &g_numSMs, cudaDevAttrMultiProcessorCount, 0);
+        cout<<"g_numSMs = "<< g_numSMs<<endl;
 
-    cudaDeviceGetAttribute ( &g_maxThhreasPerBlock, cudaDevAttrMaxThreadsPerBlock, 0);
-    cout<<"g_maxThhreasPerBlock = "<< g_maxThhreasPerBlock<<endl;
+        cudaDeviceGetAttribute ( &g_maxThhreasPerBlock, cudaDevAttrMaxThreadsPerBlock, 0);
+        cout<<"g_maxThhreasPerBlock = "<< g_maxThhreasPerBlock<<endl;
 
-    g_blockCount = 32* g_numSMs;
-
-
+        g_blockCount = 32* g_numSMs;
+    }
 
 }
