@@ -18,20 +18,23 @@ void cuda2DMatrixTranspose(float* pA, float* pB, const long M, const long N);
 // C = A*B, where A has a size of M*K, B has a size of K*N, C will has a size of M*N
 void cuda2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const long N, const long K);
 
+// C = A*d, where C has a length of N, d is a scalar
+void cudaTensorMultiply(float* pA, const float d, float* pC, const long N);
+
 // C = A+B, where C has a length of N
 void cudaTensorAdd(float* pA, float* pB, float* pC, const long N);
 
-// C = A+d, where C has a length of N, d is scalar
+// C = A+d, where C has a length of N, d is a scalar
 void cudaTensorAdd(float* pA, const float d, float* pC, const long N);
 
 
 // C = A-B, where C has a length of N
 void cudaTensorSubtraction(float* pA, float* pB, float* pC, const long N);
 
-// C = A-d, where C has a length of N, d is scalar
+// C = A-d, where C has a length of N, d is a scalar
 void cudaTensorSubtraction(float* pA, const float d, float* pC, const long N);
 
-// C = A/d, where C has a length of N, d is scalar
+// C = A/d, where C has a length of N, d is a scalar
 void cudaTensorDivide(float* pA, const float d, float* pC, const long N);
 
 

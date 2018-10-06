@@ -365,9 +365,13 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator* (const float factor){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
+#ifdef Use_GPU
+    cudaTensorMultiply(m_data, factor, tensor.m_data, N);
+#else
     for (long i=0; i<N; ++i){
          tensor.e(i) =e(i)* factor;
     }
+#endif
     return tensor;
 }
 

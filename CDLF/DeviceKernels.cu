@@ -27,6 +27,15 @@ __global__ void device2DMatrixProduct(float* pA, float* pB, float* pC, const lon
     }
 }
 
+// C = A*d, where C has a length of N, d is a scalar
+__global__ void deviceTensorMultiply(float* pA, const float d, float* pC, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pC[index] = pA[index] * d;
+        index += blockDim.x*gridDim.x;
+    }
+}
+
 // B = A', where B has a size M*N
 __global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
     long index = threadIdx.x + blockIdx.x * blockDim.x;
@@ -48,7 +57,7 @@ __global__ void deviceTensorAdd(float* pA, float* pB, float* pC, const long N){
     }
 }
 
-// C = A+d, where C has a length of N, d is scalar
+// C = A+d, where C has a length of N, d is a scalar
 __global__ void deviceTensorAdd(float* pA, const float d, float* pC, const long N){
     long index = threadIdx.x + blockIdx.x * blockDim.x;
     while (index < N){
@@ -66,7 +75,7 @@ __global__ void deviceTensorSubtraction(float* pA, float* pB, float* pC, const l
     }
 }
 
-// C = A-d, where C has a length of N, d is scalar
+// C = A-d, where C has a length of N, d is a scalar
 __global__ void deviceTensorSubtraction(float* pA, const float d, float* pC, const long N){
     long index = threadIdx.x + blockIdx.x * blockDim.x;
     while (index < N){
@@ -75,7 +84,7 @@ __global__ void deviceTensorSubtraction(float* pA, const float d, float* pC, con
     }
 }
 
-// C = A/d, where C has a length of N, d is scalar
+// C = A/d, where C has a length of N, d is a scalar
 __global__ void deviceTensorDivide(float* pA, const float d, float* pC, const long N){
     long index = threadIdx.x + blockIdx.x * blockDim.x;
     while (index < N){
