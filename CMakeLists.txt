@@ -34,8 +34,8 @@ message("3  in Clion File/Setting/Build/CMake/CMakeOptions config, there should 
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
--DUseGPU=TRUE")
-message("4  if you use CPU, instead of GPU, above -DUseGPU=FALSE")
+-DUseGPU=1")
+message("4  if you use CPU, instead of GPU, above -DUseGPU=0")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
