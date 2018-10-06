@@ -4,7 +4,9 @@
 //
 
 #include "GPUAttr.h"
-#include "cuda_runtime.h"
+#ifdef UseGPU
+   #include "cuda_runtime.h"
+#endif
 #include <iostream>
 
 using namespace std;
@@ -22,6 +24,7 @@ GPUAttr::~GPUAttr() {
 }
 
 void GPUAttr::getGPUAttr() {
+#ifdef UseGPU
     cudaDeviceGetAttribute(&m_numSMs, cudaDevAttrMultiProcessorCount, 0);
     cout << "m_numSMs = " << m_numSMs << endl;
 
@@ -29,5 +32,6 @@ void GPUAttr::getGPUAttr() {
     cout << "m_maxThreadsPerBlock = " << m_maxThreadsPerBlock << endl;
 
     m_blocksPerGrid = 32 * m_numSMs;
+#endif
 
 }

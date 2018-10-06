@@ -7,7 +7,9 @@
 #define CDLF_FRAMEWORK_MANAGED_H
 
 #include <cstdlib>
-#include <cuda_runtime.h>
+#ifdef UseGPU
+   #include <cuda_runtime.h>
+#endif
 #include "GPUAttr.h"
 
 class Managed {

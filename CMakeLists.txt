@@ -1,7 +1,10 @@
-project (CDLF_Framework LANGUAGES CXX CUDA)
+if (${UseGPU})
+   project (CDLF_Framework LANGUAGES CXX CUDA)
+else(${UseGPU})
+   project (CDLF_Framework LANGUAGES CXX)
+endif(${UseGPU})
 
 cmake_minimum_required (VERSION 3.12)
-
 set(CMAKE_CXX_STANDARD 11)
 
 # set(UseGPU TRUE) # already configed in Clion File/Setting/Build/CMake/CMakeOptions config,
@@ -14,7 +17,7 @@ if (${UseGPU})
     find_package(CUDA QUIET)
     message("Info: Program compile with Cuda GPU.")
 else(${UseGPU})
-    message(Info: Program compile with CPU, instead of GPU.')
+    message("Info: Program compile with CPU, without GPU.")
 endif(${UseGPU})
 
 message("*************************************")
@@ -32,6 +35,7 @@ message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
 -DUseGPU=TRUE")
+message("4  if you use CPU, instead of GPU, above -DUseGPU=FALSE")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
