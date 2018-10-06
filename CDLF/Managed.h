@@ -7,7 +7,7 @@
 #define CDLF_FRAMEWORK_MANAGED_H
 
 #include <cstdlib>
-#ifdef UseGPU
+#ifdef Use_GPU
    #include <cuda_runtime.h>
 #endif
 #include "GPUAttr.h"
@@ -16,7 +16,7 @@ class Managed {
 public:
     void *operator new(size_t len) {
         void *ptr = nullptr;
-        #ifdef UseGPU
+        #ifdef Use_GPU
             cudaMallocManaged(&ptr, len);
             cudaDeviceSynchronize();
         #else
@@ -26,7 +26,7 @@ public:
     }
 
     void operator delete(void *ptr) {
-        #ifdef UseGPU
+        #ifdef Use_GPU
             cudaDeviceSynchronize();
             cudaFree(ptr);
         #else

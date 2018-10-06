@@ -11,7 +11,7 @@
 
 int main (int argc, char *argv[]) {
 
-#ifdef UseGPU
+#ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
     cout<<"Info: program use Cuda GPU."<<endl;

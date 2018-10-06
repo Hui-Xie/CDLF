@@ -1,9 +1,9 @@
 
-if (${UseGPU})
+if (${Use_GPU})
    # set(CMAKE_CUDA_COMPILER /opt/apps/cuda/9.1.85.2/bin/nvcc)
    #set(CMAKE_CUDA_FLAGS -arch=sm_70)   #Nvidia Titan V in COE_GPU
    set(CMAKE_CUDA_FLAGS -arch=sm_60)   #Nvidia Tesla P100 in UI_GPU
-endif(${UseGPU})
+endif(${Use_GPU})
 
 #[[ methodds of getting  GPU informaiton
   use lspci | grep -i nvidia to get GPU information
@@ -42,11 +42,11 @@ set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForward
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
         SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp Managed.h GPUAttr.cpp)
 
-if (${UseGPU})
+if (${Use_GPU})
    set(CDLF_CUDA_Src TensorCuda.cu DeviceKernels.cu )
-else(${UseGPU})
+else(${Use_GPU})
    set(CDLF_CUDA_Src "")
-endif(${UseGPU})
+endif(${Use_GPU})
 
 add_library(CDLF SHARED ${CDLF_CXX_Src} ${CDLF_CUDA_Src})
 set_target_properties(CDLF PROPERTIES CUDA_SEPARABLE_COMPILATION ON )

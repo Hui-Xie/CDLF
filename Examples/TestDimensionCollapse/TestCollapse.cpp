@@ -9,7 +9,7 @@ int main (int argc, char *argv[])
 {
     cout<<"Test Dimensional Collapse in Convolution"<<endl;
 
-#ifdef UseGPU
+#ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
     cout<<"Info: program use Cuda GPU."<<endl;

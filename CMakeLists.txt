@@ -1,24 +1,24 @@
-if (${UseGPU})
+if (${Use_GPU})
    project (CDLF_Framework LANGUAGES CXX CUDA)
-else(${UseGPU})
+else(${Use_GPU})
    project (CDLF_Framework LANGUAGES CXX)
-endif(${UseGPU})
+endif(${Use_GPU})
 
 cmake_minimum_required (VERSION 3.12)
 set(CMAKE_CXX_STANDARD 11)
 
-# set(UseGPU TRUE) # already configed in Clion File/Setting/Build/CMake/CMakeOptions config,
+# set(Use_GPU TRUE) # already configed in Clion File/Setting/Build/CMake/CMakeOptions config,
 
-if (${UseGPU})
-    add_compile_definitions(UseGPU)
+if (${Use_GPU})
+    add_compile_definitions(Use_GPU)
     include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
     set(CUDA_TOOLKIT_INCLUDE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
     set(CMAKE_LIBRARY_PATH ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}/../lib64)
     find_package(CUDA QUIET)
     message("Info: Program compile with Cuda GPU.")
-else(${UseGPU})
+else(${Use_GPU})
     message("Info: Program compile with CPU, without GPU.")
-endif(${UseGPU})
+endif(${Use_GPU})
 
 message("*************************************")
 
@@ -34,8 +34,8 @@ message("3  in Clion File/Setting/Build/CMake/CMakeOptions config, there should 
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
--DUseGPU=1")
-message("4  if you use CPU, instead of GPU, above -DUseGPU=0")
+-DUse_GPU=1")
+message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll

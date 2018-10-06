@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
     const string inputFilename = argv[1];
     const string outputFilename = argv[2];
 
-#ifdef UseGPU
+#ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
     cout<<"Info: program use Cuda GPU."<<endl;

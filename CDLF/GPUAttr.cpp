@@ -4,7 +4,7 @@
 //
 
 #include "GPUAttr.h"
-#ifdef UseGPU
+#ifdef Use_GPU
    #include "cuda_runtime.h"
 #endif
 #include <iostream>
@@ -24,7 +24,7 @@ GPUAttr::~GPUAttr() {
 }
 
 void GPUAttr::getGPUAttr() {
-#ifdef UseGPU
+#ifdef Use_GPU
     cudaDeviceGetAttribute(&m_numSMs, cudaDevAttrMultiProcessorCount, 0);
     cout << "m_numSMs = " << m_numSMs << endl;
 

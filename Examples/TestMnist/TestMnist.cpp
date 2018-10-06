@@ -26,7 +26,7 @@ int main(int argc, char *argv[]){
     const string mnistDir = argv[1];
     const string netType = argv[2]; // 2D or 4D
 
-#ifdef UseGPU
+#ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
     cout<<"Info: program use Cuda GPU."<<endl;

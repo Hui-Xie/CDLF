@@ -31,7 +31,7 @@ Tensor<ValueType>::Tensor(const Tensor& other){
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize(){
     long N= getLength();
-    #ifdef UseGPU
+    #ifdef Use_GPU
         cudaInitialize(m_data, N, 0);
 
     #else
@@ -44,7 +44,7 @@ void Tensor<ValueType>::zeroInitialize(){
 template<class ValueType>
 void Tensor<ValueType>::uniformInitialize(const ValueType x){
     long N= getLength();
-    #ifdef UseGPU
+    #ifdef Use_GPU
         cudaInitialize(m_data, N, x);
 
     #else
@@ -65,7 +65,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other)
             generateDimsSpan();
             allocateMem();
         }
-        #ifdef UseGPU
+        #ifdef Use_GPU
             cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
 
         #else
@@ -88,7 +88,7 @@ void Tensor<ValueType>::copyDataFrom(void* buff, const long numBytes){
         return;
     }
     else{
-        #ifdef UseGPU
+        #ifdef Use_GPU
             cudaMemcpy(m_data, buff, numBytes, cudaMemcpyDefault);
         #else
             memcpy(m_data, buff, numBytes);
@@ -115,7 +115,7 @@ long Tensor<ValueType>::getLength() const{
 template<class ValueType>
 void  Tensor<ValueType>::allocateMem() {
     freeMem();
-    #ifdef UseGPU
+    #ifdef Use_GPU
         cudaMallocManaged((ValueType **) &m_data, getLength() * sizeof(ValueType));
         cudaDeviceSynchronize();
     #else
@@ -126,7 +126,7 @@ void  Tensor<ValueType>::allocateMem() {
 template<class ValueType>
 void  Tensor<ValueType>::freeMem(){
    if (nullptr != m_data){
-       #ifdef UseGPU
+       #ifdef Use_GPU
            cudaDeviceSynchronize();
            cudaFree(m_data);
        #else
@@ -180,7 +180,7 @@ ValueType& Tensor<ValueType>::e(const vector<long>& index) const{
 
 template<class ValueType>
 void Tensor<ValueType>::copyDataTo(Tensor* pTensor, const long offset, const long length){
-    #ifdef UseGPU
+    #ifdef Use_GPU
         cudaMemcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType), cudaMemcpyDefault);
     #else
         memcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType));
@@ -282,7 +282,7 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     Tensor tensor (newDims);
     int dim = m_dims.size();
     assert(dim ==2 );
-    #ifdef UseGPU
+    #ifdef Use_GPU
         cuda2DMatrixTranspose(m_data, tensor.m_data, newDims[0], newDims[1]);
     #else
         for (long i=0; i<newDims[0]; ++i){
@@ -310,7 +310,7 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     if (2 == thisDim && 2 == otherDim){
         vector<long> newDims{m_dims[0], otherDims[1]};
         Tensor tensor (newDims);
-        #ifdef UseGPU
+        #ifdef Use_GPU
             cuda2DMatrixProduct(m_data,other.m_data, tensor.m_data, newDims[0], newDims[1], m_dims[1]);
         #else
             for (long i=0; i<newDims[0]; ++i){
@@ -336,7 +336,7 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator+ (const float other){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
-    #ifdef UseGPU
+    #ifdef Use_GPU
         cudaTensorAdd(m_data, other, tensor.m_data, N);
     #else
         for (long i=0; i<N; ++i){
@@ -351,9 +351,13 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator- (const float other){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
+#ifdef Use_GPU
+    cudaTensorSubtraction(m_data, other, tensor.m_data, N);
+#else
     for (long i=0; i<N; ++i){
         tensor.e(i) =e(i)- other;
     }
+#endif
     return tensor;
 }
 
@@ -374,7 +378,7 @@ Tensor<ValueType> Tensor<ValueType>::operator+ (const Tensor<ValueType>& other){
    assert(sameVector(m_dims, other.getDims()));
    Tensor tensor (m_dims);
    long N = getLength();
-   #ifdef UseGPU
+   #ifdef Use_GPU
        cudaTensorAdd(m_data, other.m_data, tensor.m_data, N);
    #else
       for (long i=0; i<N; ++i){
@@ -390,9 +394,14 @@ Tensor<ValueType> Tensor<ValueType>::operator- (const Tensor<ValueType>& other){
     assert(sameVector(m_dims, other.getDims()));
     Tensor tensor (m_dims);
     long N = getLength();
+
+#ifdef Use_GPU
+    cudaTensorSubtraction(m_data, other.m_data, tensor.m_data, N);
+#else
     for (long i=0; i<N; ++i){
         tensor.e(i) = e(i) - other.e(i);
     }
+#endif
     return tensor;
 }
 template<class ValueType>
@@ -403,9 +412,13 @@ Tensor<ValueType> Tensor<ValueType>::operator/ (const float divisor){
     else{
         Tensor tensor (m_dims);
         long N = getLength();
+#ifdef Use_GPU
+        cudaTensorDivide(m_data, divisor, tensor.m_data, N);
+#else
         for (long i=0; i<N; ++i){
             tensor.e(i) = e(i)/divisor;
         }
+#endif
         return tensor;
     }
 }
