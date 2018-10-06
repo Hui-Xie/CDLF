@@ -202,6 +202,8 @@ int main (int argc, char *argv[]) {
     Tensor<unsigned char> subTensorMaxPos = tensor30.getMaxPositionSubTensor();
     subTensorMaxPos.printElements();
 
+    cout<<"========End of Test Tensor=========="<<endl;
+
 
 
 

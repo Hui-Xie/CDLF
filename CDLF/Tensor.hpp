@@ -557,7 +557,7 @@ void Tensor<ValueType>::printElements(bool fixWidth) {
                 if (fixWidth) {
                     cout << setw(3) << (int) e({i, j});
                 } else {
-                    cout << e({i, j}) << "   ";
+                    cout << (float) e({i, j}) << "   ";
                 }
             }
             cout << endl;
@@ -565,7 +565,7 @@ void Tensor<ValueType>::printElements(bool fixWidth) {
     } else if (1 == m_dims.size()) {
         long N = getLength();
         for (long i = 0; i < N; ++i) {
-            cout << e(i) << "     ";
+            cout << (float) e(i) << "     ";
         }
         cout << endl;
     } else {
