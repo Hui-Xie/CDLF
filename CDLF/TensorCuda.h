@@ -21,5 +21,8 @@ void cuda2DMatrixTranspose(float* pA, float* pB, const long M, const long N);
 // C = A+B, where C has a length of N
 void cudaTensorAdd(float* pA, float* pB, float* pC, const long N);
 
+// C = A+d, where C has a length of N, d is scalar
+void cudaTensorAdd(float* pA, const float d, float* pC, const long N);
+
 
 #endif //CDLF_FRAMEWORK_TENSORDEVICE_H

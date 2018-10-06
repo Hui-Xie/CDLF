@@ -90,7 +90,6 @@ void Tensor<ValueType>::copyDataFrom(void* buff, const long numBytes){
     else{
         #ifdef UseGPU
             cudaMemcpy(m_data, buff, numBytes, cudaMemcpyDefault);
-
         #else
             memcpy(m_data, buff, numBytes);
         #endif
@@ -285,8 +284,6 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     assert(dim ==2 );
     #ifdef UseGPU
         cuda2DMatrixTranspose(m_data, tensor.m_data, newDims[0], newDims[1]);
-        cout<<"use GPU in transpose"<<endl;
-
     #else
         for (long i=0; i<newDims[0]; ++i){
             for (long j=0; j< newDims[1];++j){
@@ -295,10 +292,6 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
         }
         cout<<"use CPU in transpose"<<endl;
     #endif
-
-    cout<<"in the function transpose, before return:"<<endl;
-    tensor.printElements();
-
     return tensor;
 }
 
@@ -330,7 +323,6 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
                 }
             }
         #endif
-
         return tensor;
     }
     else {
@@ -345,7 +337,7 @@ Tensor<ValueType> Tensor<ValueType>::operator+ (const float other){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
     #ifdef UseGPU
-        //todo:
+        cudaTensorAdd(m_data, other, tensor.m_data, N);
     #else
         for (long i=0; i<N; ++i){
             tensor.e(i) =e(i)+ other;

@@ -23,4 +23,7 @@ __global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, cons
 // C = A+B, where C has a length of N
 __global__ void deviceTensorAdd(float* pA, float* pB, float* pC, const long N);
 
+// C = A+d, where C has a length of N, d is scalar
+__global__ void deviceTensorAdd(float* pA, const float d, float* pC, const long N);
+
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H

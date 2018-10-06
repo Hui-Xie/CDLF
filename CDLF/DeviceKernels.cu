@@ -47,3 +47,12 @@ __global__ void deviceTensorAdd(float* pA, float* pB, float* pC, const long N){
         index += blockDim.x*gridDim.x;
     }
 }
+
+// C = A+d, where C has a length of N, d is scalar
+__global__ void deviceTensorAdd(float* pA, const float d, float* pC, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pC[index] += pA[index] + d;
+        index += blockDim.x*gridDim.x;
+    }
+}
