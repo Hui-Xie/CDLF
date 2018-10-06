@@ -66,7 +66,7 @@ int main (int argc, char *argv[]) {
     tensor5.printElements();
 
     Tensor<float> tensor6 = tensor1-  tensor4;
-    cout <<"tensor6 = tensor1-  tensor4; = "<<endl;
+    cout <<"tensor6 = tensor1-  tensor4 = "<<endl;
     tensor6.printElements();
 
     Tensor<float> tensor7 = tensor6/2;
@@ -74,23 +74,23 @@ int main (int argc, char *argv[]) {
     tensor7.printElements();
 
     tensor7 += 2;
-    cout <<"tensor7 += 2; = "<<endl;
+    cout <<"tensor7 += 2 = "<<endl;
     tensor7.printElements();
 
     tensor7 -= 2;
-    cout <<"tensor7 -= 2; = "<<endl;
+    cout <<"tensor7 -= 2 = "<<endl;
     tensor7.printElements();
 
     tensor7 *= 2;
-    cout <<"tensor7 *= 2; = "<<endl;
+    cout <<"tensor7 *= 2 = "<<endl;
     tensor7.printElements();
 
     tensor7 /= 2;
-    cout <<"tensor7 /= 2; = "<<endl;
+    cout <<"tensor7 /= 2 = "<<endl;
     tensor7.printElements();
 
     Tensor<float> tensor8 = tensor7 +2;
-    cout <<"tensor8 = tensor7 +2; = "<<endl;
+    cout <<"tensor8 = tensor7 +2 = "<<endl;
     tensor8.printElements();
 
     Tensor<float> tensor9 = tensor8- 2;
@@ -102,7 +102,7 @@ int main (int argc, char *argv[]) {
     tensor10.printElements();
 
     Tensor<float> tensor11 = tensor10/ 2;
-    cout <<" tensor11 = tensor10/ 2; = "<<endl;
+    cout <<" tensor11 = tensor10/ 2 = "<<endl;
     tensor11.printElements();
 
     cout <<"tensor1:"<<endl;

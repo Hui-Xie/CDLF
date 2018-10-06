@@ -14,6 +14,9 @@
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<long>& dims){
    m_dims = dims;
+   if (1 == m_dims.size()) {
+       m_dims.push_back(1);
+   }
    generateDimsSpan();
    m_data = nullptr;
    allocateMem();
@@ -115,12 +118,15 @@ long Tensor<ValueType>::getLength() const{
 template<class ValueType>
 void  Tensor<ValueType>::allocateMem() {
     freeMem();
-    #ifdef Use_GPU
+    if (getLength() > 0 ){
+#ifdef Use_GPU
         cudaMallocManaged((ValueType **) &m_data, getLength() * sizeof(ValueType));
         cudaDeviceSynchronize();
-    #else
+#else
         m_data = new ValueType[getLength()]; // for CPU
-    #endif
+#endif
+    }
+
 }
 
 template<class ValueType>
@@ -538,7 +544,7 @@ void Tensor<ValueType>::printElements(bool fixWidth){
                     cout << setw(3)<<(int)e({i, j});
                 }
                 else {
-                    cout << e({i, j})<<" ";
+                    cout << e({i, j})<<"   ";
                 }
             }
             cout<<endl;
@@ -547,7 +553,7 @@ void Tensor<ValueType>::printElements(bool fixWidth){
     else if (1 == m_dims.size()){
         long N = getLength();
         for(long i = 0; i< N; ++i){
-            cout<<e(i)<<"  ";
+            cout<<e(i)<<"     ";
         }
         cout<<endl;
     }
