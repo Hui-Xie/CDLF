@@ -4,11 +4,10 @@ cmake_minimum_required (VERSION 3.12)
 
 set(CMAKE_CXX_STANDARD 11)
 
-# for use GPU version, you need to use the below 2 lines.
-add_compile_definitions(UseGPU)
-set(UseGPU TRUE)
+# set(UseGPU TRUE) # already configed in Clion File/Setting/Build/CMake/CMakeOptions config,
 
 if (${UseGPU})
+    add_compile_definitions(UseGPU)
     include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
     set(CUDA_TOOLKIT_INCLUDE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
     set(CMAKE_LIBRARY_PATH ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}/../lib64)
@@ -18,6 +17,7 @@ else(${UseGPU})
     message(Info: Program compile with CPU, instead of GPU.')
 endif(${UseGPU})
 
+message("*************************************")
 
 set(CDLF_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF)
 include_directories(${CDLF_SRC_DIR})
@@ -30,7 +30,8 @@ message("2  you need to set the directory including CDLFLib into your environmen
 message("3  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
--DTIPL_Dir=/Users/hxie1/Projects/TIPL")
+-DTIPL_Dir=/Users/hxie1/Projects/TIPL
+-DUseGPU=TRUE")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
