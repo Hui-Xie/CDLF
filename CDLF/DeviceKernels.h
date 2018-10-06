@@ -23,6 +23,9 @@ __global__ void device2DMatrixProduct(float* pA, float* pB, float* pC, const lon
 // C = A*d, where C has a length of N, d is a scalar
 __global__ void deviceTensorMultiply(float* pA, const float d, float* pC, const long N);
 
+// C = A .* B, hadamard product of A and B; A,B,C have same size
+__global__ void deviceTensorHadamard(float* pA, float* pB, float* pC, const long N);
+
 // C = A+B, where C has a length of N
 __global__ void deviceTensorAdd(float* pA, float* pB, float* pC, const long N);
 
@@ -37,6 +40,12 @@ __global__ void deviceTensorSubtraction(float* pA, const float d, float* pC, con
 
 // C = A/d, where C has a length of N, d is a scalar
 __global__ void deviceTensorDivide(float* pA, const float d, float* pC, const long N);
+
+// C = (A-d)^2, where d is a scalar, power is element-wise
+__global__ void deviceTensorDiffPower(float* pA, const float d, float* pC, const long N);
+
+//C = ln(A) natural logarithm
+__global__ void deviceTensorLn(float* pA, float* pC, const long N);
 
 
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H

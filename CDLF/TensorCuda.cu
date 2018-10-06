@@ -31,6 +31,12 @@ void cudaTensorMultiply(float* pA, const float d, float* pC, const long N){
     cudaDeviceSynchronize();
 }
 
+// C = A .* B, hadamard product of A and B; A,B,C have same size
+void cudaTensorHadamard(float* pA, float* pB, float* pC, const long N){
+    deviceTensorHadamard<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA,pB,pC, N);
+    cudaDeviceSynchronize();
+}
+
 // C = A+B, where C has a length of N
 void cudaTensorAdd(float* pA, float* pB, float* pC, const long N){
     deviceTensorAdd<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pB, pC, N);
@@ -58,5 +64,17 @@ void cudaTensorSubtraction(float* pA, const float d, float* pC, const long N){
 // C = A/d, where C has a length of N, d is a scalar
 void cudaTensorDivide(float* pA, const float d, float* pC, const long N){
     deviceTensorDivide<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, d, pC, N);
+    cudaDeviceSynchronize();
+}
+
+// C = (A-d)^2, where d is a scalar, power is element-wise
+void cudaTensorDiffPower(float* pA, const float d, float* pC, const long N){
+    deviceTensorDiffPower<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, d, pC, N);
+    cudaDeviceSynchronize();
+}
+
+//C = ln(A) natural logarithm
+void cudaTensorLn(float* pA, float* pC, const long N){
+    deviceTensorLn<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pC, N);
     cudaDeviceSynchronize();
 }

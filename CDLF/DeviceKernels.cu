@@ -3,11 +3,24 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 //
 #include "DeviceKernels.h"
+#include <cmath> //for pow()
 
 __global__ void deviceInitialize(float *pData, const long N, const float value) {
     long index = threadIdx.x + blockIdx.x * blockDim.x;
     while (index < N){
         pData[index] = value;
+        index += blockDim.x*gridDim.x;  //grid-stride loop
+    }
+}
+
+// B = A', where B has a size M*N
+__global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    long totalN  = M*N;
+    while (index < totalN){
+        long m = index/N;
+        long n = index%N; //index = m*N+n
+        pB[index] = pA[n*M+m];
         index += blockDim.x*gridDim.x;  //grid-stride loop
     }
 }
@@ -36,15 +49,12 @@ __global__ void deviceTensorMultiply(float* pA, const float d, float* pC, const 
     }
 }
 
-// B = A', where B has a size M*N
-__global__ void device2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
+// C = A .* B, hadamard product of A and B; A,B,C have same size
+__global__ void deviceTensorHadamard(float* pA, float* pB, float* pC, const long N){
     long index = threadIdx.x + blockIdx.x * blockDim.x;
-    long totalN  = M*N;
-    while (index < totalN){
-        long m = index/N;
-        long n = index%N; //index = m*N+n
-        pB[index] = pA[n*M+m];
-        index += blockDim.x*gridDim.x;  //grid-stride loop
+    while (index < N){
+        pC[index] = pA[index] * pB[index];
+        index += blockDim.x*gridDim.x;
     }
 }
 
@@ -91,4 +101,24 @@ __global__ void deviceTensorDivide(float* pA, const float d, float* pC, const lo
         pC[index] = pA[index]/d;
         index += blockDim.x*gridDim.x;
     }
+}
+
+// C = (A-d)^2, where d is a scalar, power is element-wise
+__global__ void deviceTensorDiffPower(float* pA, const float d, float* pC, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pC[index] = pow(pA[index] - d, 2);
+        index += blockDim.x*gridDim.x;
+    }
+}
+
+
+//C = ln(A) natural logarithm
+__global__ void deviceTensorLn(float* pA, float* pC, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pC[index] = log(pA[index]);
+        index += blockDim.x*gridDim.x;
+    }
+
 }

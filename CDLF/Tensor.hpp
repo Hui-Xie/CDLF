@@ -431,9 +431,13 @@ template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator+= (const Tensor& right){
     assert(sameVector(m_dims, right.getDims()));
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorAdd(m_data, right.m_data, m_data, N);
+#else
     for (long i=0; i<N; ++i){
         e(i) += right.e(i);
     }
+#endif
     return *this;
 }
 
@@ -441,9 +445,13 @@ template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator-= (const Tensor& right){
     assert(sameVector(m_dims, right.getDims()));
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorSubstraction(m_data, right.m_data, m_data, N);
+#else
     for (long i=0; i<N; ++i){
         e(i) -= right.e(i);
     }
+#endif
     return *this;
 }
 
@@ -470,27 +478,39 @@ bool Tensor<ValueType>::operator!= (const Tensor& right){
 template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator+= (const float right){
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorAdd(m_data, right, m_data, N);
+#else
     for (long i=0; i<N; ++i){
         e(i) += right;
     }
+#endif
     return *this;
 }
 
 template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator-= (const float right){
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorSubtraction(m_data, right, m_data, N);
+#else
     for (long i=0; i<N; ++i){
         e(i) -= right;
     }
+#endif
     return *this;
 }
 
 template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator*= (const float factor){
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorMultiply(m_data, factor, m_data, N);
+#else
     for (long i=0; i<N; ++i){
         e(i) *= factor;
     }
+#endif
     return *this;
 }
 
@@ -498,9 +518,13 @@ template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator/= (const float divisor){
     if (0 != divisor) {
         long N = getLength();
+#ifdef Use_GPU
+        cudaTensorDivide(m_data, divisor, m_data, N);
+#else
         for (long i = 0; i < N; ++i) {
             e(i) /= divisor;
         }
+#endif
     }
     return *this;
 }
@@ -537,6 +561,7 @@ template<class ValueType>
 float Tensor<ValueType>::sum(){
     long N = getLength();
     float sum = 0;
+    //todo: sum use GPU will implement in the future, which will speed up from N to log(N)
     for(long i=0; i<N; ++i){
         sum += e(i);
     }
@@ -558,9 +583,15 @@ float Tensor<ValueType>::variance(){
     long N = getLength();
     if (1 == N || 0 == N) return 0;
     float sum = 0;
+#ifdef Use_GPU
+    Tensor<float> powerTensor(m_dims);
+    cudaTensorDiffPower(m_data, mu, powerTensor.m_data, N);
+    sum = powerTensor.sum();
+#else
     for (long i = 0; i < N; ++i) {
         sum += pow((e(i) - mu), 2);
     }
+#endif
     return sum / (N - 1); // population variance
 }
 
@@ -628,9 +659,13 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::ln(){
     Tensor tensor (m_dims);
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorLn(m_data, tensor.m_data, N);
+#else
     for (long i=0; i<N; ++i){
         tensor.e(i) = log(e(i));
     }
+#endif
     return tensor;
 }
 
@@ -641,22 +676,22 @@ Tensor<ValueType> Tensor<ValueType>::hadamard(const Tensor& right){
     assert(sameVector(m_dims, right.m_dims));
     Tensor tensor (m_dims);
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorHadamard(m_data, right.m_data, tensor.m_data, N);
+#else
     for (long i=0; i<N; ++i){
         tensor.e(i) = e(i)*right.e(i);
     }
+#endif
     return tensor;
 }
 
 template<class ValueType>
 float  Tensor<ValueType>::dotProduct(const Tensor& right){
     assert(sameVector(m_dims, right.m_dims));
-    float sum=0.0;
-    long N = getLength();
-    for (long i=0; i<N; ++i){
-        sum += e(i)*right.e(i);
-    }
-    return sum;
-}
+    Tensor hadamardTensor = this->hadamard(right);
+    return hadamardTensor.sum();
+ }
 
 
 template<class ValueType>

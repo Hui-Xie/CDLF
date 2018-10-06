@@ -21,6 +21,9 @@ void cuda2DMatrixProduct(float* pA, float* pB, float* pC, const long M,const lon
 // C = A*d, where C has a length of N, d is a scalar
 void cudaTensorMultiply(float* pA, const float d, float* pC, const long N);
 
+// C = A .* B, hadamard product of A and B; A,B,C have same size
+void cudaTensorHadamard(float* pA, float* pB, float* pC, const long N);
+
 // C = A+B, where C has a length of N
 void cudaTensorAdd(float* pA, float* pB, float* pC, const long N);
 
@@ -36,6 +39,12 @@ void cudaTensorSubtraction(float* pA, const float d, float* pC, const long N);
 
 // C = A/d, where C has a length of N, d is a scalar
 void cudaTensorDivide(float* pA, const float d, float* pC, const long N);
+
+// C = (A-d)^2, where d is a scalar, power is element-wise
+void cudaTensorDiffPower(float* pA, const float d, float* pC, const long N);
+
+//C = ln(A) natural logarithm
+void cudaTensorLn(float* pA, float* pC, const long N);
 
 
 #endif //CDLF_FRAMEWORK_TENSORDEVICE_H
