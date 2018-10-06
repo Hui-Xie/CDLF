@@ -102,7 +102,7 @@ public:
     void fourDVolume(const int index, Tensor* & pTensor);
     void extractLowerDTensor(const int index, Tensor* & pTensor);
 
-    float conv(const Tensor& other); //convolution or cross-correlation
+    float conv(const Tensor& right); //convolution or cross-correlation
     Tensor& flip();
 
     inline vector<long> offset2Index(const long offset) const;

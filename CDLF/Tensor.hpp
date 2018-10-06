@@ -923,9 +923,18 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
 
 //convolution or cross-correlation
 template<class ValueType>
-float Tensor<ValueType>::conv(const Tensor &other) {
-    assert(sameLength(m_dims, other.getDims()));
-    return this->dotProduct(other);
+float Tensor<ValueType>::conv(const Tensor &right) {
+    assert(sameLength(m_dims, right.getDims()));
+    Tensor tensor(m_dims);
+    long N = getLength();
+#ifdef Use_GPU
+    cudaTensorHadamard(m_data, right.m_data, tensor.m_data, N);
+#else
+    for (long i = 0; i < N; ++i) {
+        tensor.e(i) = e(i) * right.e(i);
+    }
+#endif
+    return tensor.sum();
 }
 
 template<class ValueType>
