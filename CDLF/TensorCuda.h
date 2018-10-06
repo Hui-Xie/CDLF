@@ -32,10 +32,10 @@ void cudaTensorAdd(float* pA, const float d, float* pC, const long N);
 
 
 // C = A-B, where C has a length of N
-void cudaTensorSubtraction(float* pA, float* pB, float* pC, const long N);
+void cudaTensorSubtract(float* pA, float* pB, float* pC, const long N);
 
 // C = A-d, where C has a length of N, d is a scalar
-void cudaTensorSubtraction(float* pA, const float d, float* pC, const long N);
+void cudaTensorSubtract(float* pA, const float d, float* pC, const long N);
 
 // C = A/d, where C has a length of N, d is a scalar
 void cudaTensorDivide(float* pA, const float d, float* pC, const long N);

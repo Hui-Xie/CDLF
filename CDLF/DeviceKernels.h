@@ -33,10 +33,10 @@ __global__ void deviceTensorAdd(float* pA, float* pB, float* pC, const long N);
 __global__ void deviceTensorAdd(float* pA, const float d, float* pC, const long N);
 
 // C = A-B, where C has a length of N
-__global__ void deviceTensorSubtraction(float* pA, float* pB, float* pC, const long N);
+__global__ void deviceTensorSubtract(float* pA, float* pB, float* pC, const long N);
 
 // C = A-d, where C has a length of N, d is a scalar
-__global__ void deviceTensorSubtraction(float* pA, const float d, float* pC, const long N);
+__global__ void deviceTensorSubtract(float* pA, const float d, float* pC, const long N);
 
 // C = A/d, where C has a length of N, d is a scalar
 __global__ void deviceTensorDivide(float* pA, const float d, float* pC, const long N);

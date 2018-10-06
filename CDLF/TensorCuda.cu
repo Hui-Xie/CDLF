@@ -50,14 +50,14 @@ void cudaTensorAdd(float* pA, const float d, float* pC, const long N){
 }
 
 // C = A-B, where C has a length of N
-void cudaTensorSubtraction(float* pA, float* pB, float* pC, const long N){
-    deviceTensorSubtraction<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pB, pC, N);
+void cudaTensorSubtract(float* pA, float* pB, float* pC, const long N){
+    deviceTensorSubtract<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pB, pC, N);
     cudaDeviceSynchronize();
 }
 
 // C = A-d, where C has a length of N, d is a scalar
-void cudaTensorSubtraction(float* pA, const float d, float* pC, const long N){
-    deviceTensorSubtraction<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, d, pC, N);
+void cudaTensorSubtract(float* pA, const float d, float* pC, const long N){
+    deviceTensorSubtract<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, d, pC, N);
     cudaDeviceSynchronize();
 }
 

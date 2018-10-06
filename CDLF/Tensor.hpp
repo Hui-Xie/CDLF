@@ -352,7 +352,7 @@ Tensor<ValueType> Tensor<ValueType>::operator- (const float other){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
 #ifdef Use_GPU
-    cudaTensorSubtraction(m_data, other, tensor.m_data, N);
+    cudaTensorSubtract(m_data, other, tensor.m_data, N);
 #else
     for (long i=0; i<N; ++i){
         tensor.e(i) =e(i)- other;
@@ -400,7 +400,7 @@ Tensor<ValueType> Tensor<ValueType>::operator- (const Tensor<ValueType>& other){
     long N = getLength();
 
 #ifdef Use_GPU
-    cudaTensorSubtraction(m_data, other.m_data, tensor.m_data, N);
+    cudaTensorSubtract(m_data, other.m_data, tensor.m_data, N);
 #else
     for (long i=0; i<N; ++i){
         tensor.e(i) = e(i) - other.e(i);
@@ -446,7 +446,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator-= (const Tensor& right){
     assert(sameVector(m_dims, right.getDims()));
     long N = getLength();
 #ifdef Use_GPU
-    cudaTensorSubstraction(m_data, right.m_data, m_data, N);
+    cudaTensorSubtract(m_data, right.m_data, m_data, N);
 #else
     for (long i=0; i<N; ++i){
         e(i) -= right.e(i);
@@ -492,7 +492,7 @@ template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::operator-= (const float right){
     long N = getLength();
 #ifdef Use_GPU
-    cudaTensorSubtraction(m_data, right, m_data, N);
+    cudaTensorSubtract(m_data, right, m_data, N);
 #else
     for (long i=0; i<N; ++i){
         e(i) -= right;
