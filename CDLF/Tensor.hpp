@@ -905,20 +905,17 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor* & pTensor){
 
 //convolution or cross-correlation
 template<class ValueType>
-ValueType Tensor<ValueType>::conv(const Tensor &other) const{
+float Tensor<ValueType>::conv(const Tensor &other){
     assert(sameLength(m_dims, other.getDims()));
-    long N = getLength();
-    ValueType sum = 0;
-    for (long i = 0; i < N; ++i) {
-        sum += e(i) * other[i];
-    }
-    return sum;
-
+    return this->dotProduct(other);
 }
 
 template<class ValueType>
 Tensor<ValueType>& Tensor<ValueType>::flip(){
     long N = getLength();
+#ifdef Use_GPU
+    cudaTensorFlip(m_data, N);
+#else
     long M = N/2;
     ValueType temp =0;
     for (int i=0; i<M;++i){
@@ -926,6 +923,6 @@ Tensor<ValueType>& Tensor<ValueType>::flip(){
         e(i) = e(N-1-i);
         e(N-1-i) =temp;
     }
+#endif
     return *this;
-
 }

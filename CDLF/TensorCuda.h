@@ -47,4 +47,7 @@ void cudaTensorDiffPower(float* pA, const float d, float* pC, const long N);
 void cudaTensorLn(float* pA, float* pC, const long N);
 
 
+//C = flip(A)
+void cudaTensorFlip(float* pA, const long N);
+
 #endif //CDLF_FRAMEWORK_TENSORDEVICE_H

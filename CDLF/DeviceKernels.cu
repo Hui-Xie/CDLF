@@ -120,5 +120,17 @@ __global__ void deviceTensorLn(float* pA, float* pC, const long N){
         pC[index] = log(pA[index]);
         index += blockDim.x*gridDim.x;
     }
+}
 
+//C = flip(A)
+__global__ void deviceTensorFlip(float* pA, const long N){
+    long M = N/2;
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < M){
+        float temp = 0;
+        temp = pA[index];
+        pA[index] = pA[N-index-1];
+        pA[N-index-1] = temp;
+        index += blockDim.x*gridDim.x;
+    }
 }

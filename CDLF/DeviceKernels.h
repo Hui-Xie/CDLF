@@ -47,5 +47,8 @@ __global__ void deviceTensorDiffPower(float* pA, const float d, float* pC, const
 //C = ln(A) natural logarithm
 __global__ void deviceTensorLn(float* pA, float* pC, const long N);
 
+//C = flip(A)
+__global__ void deviceTensorFlip(float* pA, const long N);
+
 
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H
