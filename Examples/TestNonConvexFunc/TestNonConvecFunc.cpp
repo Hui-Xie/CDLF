@@ -49,6 +49,15 @@ int main (int argc, char *argv[])
         cout<<"Layer width string has error. Exit."<<endl;
         return -1;
     }
+
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
     NonconvexNet net("NonConvextNet", layerWidthVector);
 
     net.build();

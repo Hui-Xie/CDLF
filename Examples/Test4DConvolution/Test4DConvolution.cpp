@@ -15,6 +15,14 @@ int main (int argc, char *argv[])
     cout<<"Test 4D Convolution"<<endl;
     printCurrentLocalTime();
 
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
     Conv4DNet net("Conv4DNet");
     net.build();
 

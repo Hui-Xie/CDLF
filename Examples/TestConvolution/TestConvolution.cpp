@@ -5,6 +5,14 @@
 
 int main (int argc, char *argv[])
 {
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
     cout<<"Notes:"<<endl;
     cout<<"This program test that 2 simple convolutional layers can approximate a convex function, and converge."<<endl;
     cout<<"This program support real 3D convolution."<<endl;

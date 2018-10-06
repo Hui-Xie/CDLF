@@ -26,6 +26,14 @@ int main(int argc, char *argv[]){
     const string mnistDir = argv[1];
     const string netType = argv[2]; // 2D or 4D
 
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
     // Load MNIST Data
     MNIST mnist(mnistDir);
     mnist.loadData();

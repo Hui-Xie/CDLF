@@ -6,6 +6,14 @@
 
 int main (int argc, char *argv[])
 {
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
     DAGNet net("DAGNet");
     net.build();
     net.printArchitecture();

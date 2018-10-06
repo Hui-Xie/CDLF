@@ -27,6 +27,15 @@ int main(int argc, char *argv[])
     cout<<"main program start: ";
     printCurrentLocalTime();
 
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
+
     printUsage(argv[0]);
     if (2 != argc && 3 != argc){
         cout<<"Error: parameter error. Exit. "<<endl;

@@ -38,6 +38,15 @@ int convertCommaStrToVector(const string commaStr, std::vector<long>& widthVecto
 int main (int argc, char *argv[])
 {
     printCurrentLocalTime();
+
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
+
     if (2 != argc){
         cout<<"Input parameter error. Exit"<<endl;
         printUsage();

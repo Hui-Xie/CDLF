@@ -14,7 +14,6 @@ void printUsage(char* argv0){
 
 
 int main(int argc, char *argv[]){
-
     if (3 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
@@ -24,6 +23,13 @@ int main(int argc, char *argv[]){
     const string inputFilename = argv[1];
     const string outputFilename = argv[2];
 
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
 
     ITKImageIO<float, 3> itkImageIO;
 
