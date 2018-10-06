@@ -19,6 +19,7 @@ using namespace std;
 template<class ValueType>
 class Tensor : public Managed {
 public:
+    Tensor();
     Tensor(const vector<long>& dims);
     Tensor(const Tensor& other);
     Tensor& operator= (const Tensor& other);

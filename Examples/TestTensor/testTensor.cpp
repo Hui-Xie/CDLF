@@ -101,7 +101,7 @@ int main (int argc, char *argv[]) {
     cout <<" tensor10 = tensor9* 2 = "<<endl;
     tensor10.printElements();
 
-    Tensor<float> tensor11 = tensor10/ 2;
+    Tensor<float> tensor11 = tensor10 / 2;
     cout <<" tensor11 = tensor10/ 2 = "<<endl;
     tensor11.printElements();
 
