@@ -6,38 +6,28 @@
 #include "GPUAttr.h"
 #include "cuda_runtime.h"
 #include <iostream>
+
 using namespace std;
 
-GPUAttr::GPUAttr(){
-    g_numSMs =0;
-    g_maxThreadsPerBlock = 0;
-    g_blocksPerGrid = 0;
-    g_useGPU = true;
-}
+int GPUAttr::m_numSMs = 0;
+int GPUAttr::m_maxThreadsPerBlock = 0;
+long GPUAttr::m_blocksPerGrid = 0;
 
-GPUAttr::~GPUAttr(){
+GPUAttr::GPUAttr() {
 
 }
 
-void GPUAttr::setUseGPU(const bool useGPU){
-    g_useGPU = useGPU;
-    if (GPUAttr::g_useGPU){
-        cout<<"Info: program will use GPU."<<endl;
-    }
-    else{
-        cout<<"Info: program will use CPU, instead of GPU." <<endl;
-    }
+GPUAttr::~GPUAttr() {
+
 }
 
-void GPUAttr::getGPUAttr(){
-    if (GPUAttr::g_useGPU){
-        cudaDeviceGetAttribute ( &g_numSMs, cudaDevAttrMultiProcessorCount, 0);
-        cout<<"g_numSMs = "<< g_numSMs<<endl;
+void GPUAttr::getGPUAttr() {
+    cudaDeviceGetAttribute(&m_numSMs, cudaDevAttrMultiProcessorCount, 0);
+    cout << "m_numSMs = " << m_numSMs << endl;
 
-        cudaDeviceGetAttribute ( &g_maxThreadsPerBlock, cudaDevAttrMaxThreadsPerBlock, 0);
-        cout<<"g_maxThreadsPerBlock = "<< g_maxThreadsPerBlock<<endl;
+    cudaDeviceGetAttribute(&m_maxThreadsPerBlock, cudaDevAttrMaxThreadsPerBlock, 0);
+    cout << "m_maxThreadsPerBlock = " << m_maxThreadsPerBlock << endl;
 
-        g_blocksPerGrid = 32* g_numSMs;
-    }
+    m_blocksPerGrid = 32 * m_numSMs;
 
 }

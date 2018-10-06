@@ -2,13 +2,22 @@ project (CDLF_Framework LANGUAGES CXX CUDA)
 
 cmake_minimum_required (VERSION 3.12)
 
-include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-set(CUDA_TOOLKIT_INCLUDE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-set(CMAKE_LIBRARY_PATH ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}/../lib64)
-
 set(CMAKE_CXX_STANDARD 11)
 
-find_package(CUDA QUIET)
+# for use GPU version, you need to use the below 2 lines.
+add_compile_definitions(UseGPU)
+set(UseGPU TRUE)
+
+if (${UseGPU})
+    include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+    set(CUDA_TOOLKIT_INCLUDE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+    set(CMAKE_LIBRARY_PATH ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}/../lib64)
+    find_package(CUDA QUIET)
+    message("Info: Program compile with Cuda GPU.")
+else(${UseGPU})
+    message(Info: Program compile with CPU, instead of GPU.')
+endif(${UseGPU})
+
 
 set(CDLF_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF)
 include_directories(${CDLF_SRC_DIR})

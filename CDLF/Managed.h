@@ -14,25 +14,22 @@ class Managed {
 public:
     void *operator new(size_t len) {
         void *ptr = nullptr;
-        if (GPUAttr::g_useGPU){
+        #ifdef UseGPU
             cudaMallocManaged(&ptr, len);
             cudaDeviceSynchronize();
-        }
-        else{
+        #else
             ptr = malloc(len);
-        }
-
+        #endif
         return ptr;
     }
 
     void operator delete(void *ptr) {
-        if (GPUAttr::g_useGPU){
+        #ifdef UseGPU
             cudaDeviceSynchronize();
             cudaFree(ptr);
-        }
-        else{
+        #else
             free(ptr);
-        }
+        #endif
         ptr = nullptr;
     }
 };

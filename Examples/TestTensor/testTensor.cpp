@@ -11,9 +11,13 @@
 
 int main (int argc, char *argv[]) {
 
-    setUseGPU(false);
-    getGPUAttr();
-
+#ifdef UseGPU
+    GPUAttr gpuAttr;
+    gpuAttr.getGPUAttr();
+    cout<<"Info: program use Cuda GPU."<<endl;
+#else
+    cout<<"Info: program use CPU, instead of GPU."<<endl;
+#endif
 
     Tensor<float> tensor1({3,4});
     int k=0;

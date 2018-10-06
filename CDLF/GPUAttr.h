@@ -13,15 +13,11 @@ public:
     GPUAttr();
     ~GPUAttr();
 
-    static  int g_numSMs;
-    static  int g_maxThreadsPerBlock;
-    static  long g_blocksPerGrid;
-    static  bool g_useGPU;
-
-    void setUseGPU(const bool useGPU);
+    static  int m_numSMs;
+    static  int m_maxThreadsPerBlock;
+    static  long m_blocksPerGrid;
 
     void getGPUAttr();
-
 };
 
 

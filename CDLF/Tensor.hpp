@@ -31,27 +31,27 @@ Tensor<ValueType>::Tensor(const Tensor& other){
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize(){
     long N= getLength();
-    if (GPUAttr::g_useGPU){
+    #ifdef UseGPU
         cudaInitialize(m_data, N, 0);
-    }
-    else{
+
+    #else
         for(long i=0; i<N;++i){
            e(i) = 0;
         }
-    }
+    #endif
 }
 
 template<class ValueType>
 void Tensor<ValueType>::uniformInitialize(const ValueType x){
     long N= getLength();
-    if (GPUAttr::g_useGPU){
+    #ifdef UseGPU
         cudaInitialize(m_data, N, x);
-    }
-    else{
+
+    #else
         for(long i=0; i<N;++i){
             e(i) = x;
         }
-    }
+    #endif
 }
 
 
@@ -65,12 +65,12 @@ Tensor<ValueType>& Tensor<ValueType>::operator= (const Tensor<ValueType>& other)
             generateDimsSpan();
             allocateMem();
         }
-        if (GPUAttr::g_useGPU){
+        #ifdef UseGPU
             cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
-        }
-        else{
+
+        #else
             memcpy(m_data, other.getData(), length*sizeof(ValueType));
-        }
+        #endif
 
     }
     return *this;
@@ -88,12 +88,12 @@ void Tensor<ValueType>::copyDataFrom(void* buff, const long numBytes){
         return;
     }
     else{
-        if (GPUAttr::g_useGPU){
+        #ifdef UseGPU
             cudaMemcpy(m_data, buff, numBytes, cudaMemcpyDefault);
-        }
-        else{
+
+        #else
             memcpy(m_data, buff, numBytes);
-        }
+        #endif
 
     }
 }
@@ -116,24 +116,23 @@ long Tensor<ValueType>::getLength() const{
 template<class ValueType>
 void  Tensor<ValueType>::allocateMem() {
     freeMem();
-    if (GPUAttr::g_useGPU) {
+    #ifdef UseGPU
         cudaMallocManaged((ValueType **) &m_data, getLength() * sizeof(ValueType));
         cudaDeviceSynchronize();
-    } else {
+    #else
         m_data = new ValueType[getLength()]; // for CPU
-    }
+    #endif
 }
 
 template<class ValueType>
 void  Tensor<ValueType>::freeMem(){
    if (nullptr != m_data){
-       if (GPUAttr::g_useGPU){
+       #ifdef UseGPU
            cudaDeviceSynchronize();
            cudaFree(m_data);
-       }
-       else{
+       #else
            delete[] m_data; //for CPU
-       }
+       #endif
        m_data = nullptr;
    }
 }
@@ -182,12 +181,11 @@ ValueType& Tensor<ValueType>::e(const vector<long>& index) const{
 
 template<class ValueType>
 void Tensor<ValueType>::copyDataTo(Tensor* pTensor, const long offset, const long length){
-    if (GPUAttr::g_useGPU){
+    #ifdef UseGPU
         cudaMemcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType), cudaMemcpyDefault);
-    }
-    else{
+    #else
         memcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType));
-    }
+    #endif
 
 }
 
@@ -285,18 +283,18 @@ Tensor<ValueType> Tensor<ValueType>::transpose(){
     Tensor tensor (newDims);
     int dim = m_dims.size();
     assert(dim ==2 );
-    if (GPUAttr::g_useGPU){
+    #ifdef UseGPU
         cuda2DMatrixTranspose(m_data, tensor.m_data, newDims[0], newDims[1]);
         cout<<"use GPU in transpose"<<endl;
-    }
-    else{
+
+    #else
         for (long i=0; i<newDims[0]; ++i){
             for (long j=0; j< newDims[1];++j){
                 tensor.e({i,j}) = e({j,i});
             }
         }
         cout<<"use CPU in transpose"<<endl;
-    }
+    #endif
 
     cout<<"in the function transpose, before return:"<<endl;
     tensor.printElements();
@@ -319,10 +317,9 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
     if (2 == thisDim && 2 == otherDim){
         vector<long> newDims{m_dims[0], otherDims[1]};
         Tensor tensor (newDims);
-        if (GPUAttr::g_useGPU){
+        #ifdef UseGPU
             cuda2DMatrixProduct(m_data,other.m_data, tensor.m_data, newDims[0], newDims[1], m_dims[1]);
-        }
-        else{
+        #else
             for (long i=0; i<newDims[0]; ++i){
                 for (long j=0; j< newDims[1];++j){
                     ValueType value =0;
@@ -332,7 +329,7 @@ Tensor<ValueType> Tensor<ValueType>::operator* (const Tensor<ValueType>& other){
                     tensor.e({i,j}) = value;
                 }
             }
-        }
+        #endif
 
         return tensor;
     }
@@ -347,14 +344,13 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator+ (const float other){
     Tensor tensor (m_dims);
     long N = tensor.getLength();
-    if (GPUAttr::g_useGPU){
+    #ifdef UseGPU
         //todo:
-    }
-    else{
+    #else
         for (long i=0; i<N; ++i){
             tensor.e(i) =e(i)+ other;
         }
-    }
+    #endif
 
     return tensor;
 }
@@ -386,14 +382,13 @@ Tensor<ValueType> Tensor<ValueType>::operator+ (const Tensor<ValueType>& other){
    assert(sameVector(m_dims, other.getDims()));
    Tensor tensor (m_dims);
    long N = getLength();
-   if (GPUAttr::g_useGPU){
+   #ifdef UseGPU
        cudaTensorAdd(m_data, other.m_data, tensor.m_data, N);
-   }
-   else{
-       for (long i=0; i<N; ++i){
+   #else
+      for (long i=0; i<N; ++i){
            tensor.e(i) = e(i) + other.e(i);
        }
-   }
+   #endif
    return tensor;
 
 }
