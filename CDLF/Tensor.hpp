@@ -666,7 +666,7 @@ Tensor<unsigned char> Tensor<ValueType>::getMaxPositionSubTensor() {
                 maxIndex = i;
             }
         }
-        subTensor(j) = maxIndex;
+        subTensor(j) = (unsigned char)maxIndex;
     }
     return subTensor;
 }
