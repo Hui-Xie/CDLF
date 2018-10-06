@@ -11,7 +11,9 @@
 
 int main (int argc, char *argv[]) {
 
+    setUseGPU(false);
     getGPUAttr();
+
 
     Tensor<float> tensor1({3,4});
     int k=0;
