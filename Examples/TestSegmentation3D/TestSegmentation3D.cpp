@@ -24,7 +24,7 @@ void printUsage(char* argv0){
 
 int main(int argc, char *argv[])
 {
-    cout<<"main program start: ";
+    cout<<"3D segmentation for One Sample";
     printCurrentLocalTime();
 
 #ifdef Use_GPU

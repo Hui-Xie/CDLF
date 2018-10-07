@@ -13,10 +13,10 @@ string cmdPara = "/Users/hxie1/msd/Task07_Pancreas/CDLFData   /Users/hxie1/temp_
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
-    string jobName = "Seg3DOneSample";
+    string jobName = "SegGPU";
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
-                          + " -q COE,COE-GPU,UI-DEVELOP "
+                          + " -q COE-GPU,UI-DEVELOP "
                           + " -pe smp 5"
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
