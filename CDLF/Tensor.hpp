@@ -311,7 +311,6 @@ Tensor<ValueType> Tensor<ValueType>::transpose() {
             tensor.e({i, j}) = e({j, i});
         }
     }
-    cout << "use CPU in transpose" << endl;
 #endif
     return tensor;
 }
