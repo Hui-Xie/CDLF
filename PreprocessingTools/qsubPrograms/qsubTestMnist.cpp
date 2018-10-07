@@ -11,11 +11,11 @@ string cmdPara = "/Users/hxie1/Projects/mnist 2D";
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
-    string jobName = "Mnist2D";
+    string jobName = "M_GPU_2D";
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
-                          + " -q COE,COE-GPU,UI-DEVELOP "
-                          + " -pe smp 1 "
+                          + " -q COE-GPU,UI-DEVELOP "
+                          + " -pe smp 20 "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
     string qsubStrCmd = " " + cmdPath +" "+ cmdPara;

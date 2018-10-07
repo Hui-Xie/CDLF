@@ -73,7 +73,7 @@ int main(int argc, char *argv[]){
     net.initialize();
 
     net.printArchitecture();
-    long epoch= 1000;
+    long epoch= 2000;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
         net.train();
