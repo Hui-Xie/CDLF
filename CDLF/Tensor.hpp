@@ -9,7 +9,12 @@
 #include <cstring>  //for memcpy function
 #include <cmath> //for pow()
 #include <iomanip>      // std::setw
-#include "TensorCuda.h"
+#ifdef Use_GPU
+  #include <cuda_runtime.h>
+  #include "TensorCuda.h"
+  #include "GPUAttr.h"
+#endif
+
 
 template<class ValueType>
 Tensor<ValueType>::Tensor() {
