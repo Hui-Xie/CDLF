@@ -8,7 +8,7 @@
 
 //cuda is a bridge between Tensor and Device
 
-
+void cudaPrintError();
 
 void cudaInitialize(float* m_data, const long N, const float value=0);
 
