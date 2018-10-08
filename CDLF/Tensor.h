@@ -15,8 +15,6 @@ using namespace std;
 // For 5D Tensor, the dimensional order is n4D*nVolume*nSlice*Height*Width;
 // This Tensor supports 7D tensor maximal.
 
-//template<class ValueType>
-//class Tensor : public Managed {
 template<class ValueType>
 class Tensor {
 public:
