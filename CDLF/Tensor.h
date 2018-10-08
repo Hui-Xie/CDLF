@@ -6,7 +6,6 @@
 #define RL_NONCONVEX_TENSOR_H
 
 #include <vector>
-//#include "Managed.h"
 using namespace std;
 
 // Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect expression;
