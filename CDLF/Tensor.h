@@ -6,7 +6,7 @@
 #define RL_NONCONVEX_TENSOR_H
 
 #include <vector>
-#include "Managed.h"
+//#include "Managed.h"
 using namespace std;
 
 // Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect expression;
@@ -16,8 +16,10 @@ using namespace std;
 // For 5D Tensor, the dimensional order is n4D*nVolume*nSlice*Height*Width;
 // This Tensor supports 7D tensor maximal.
 
+//template<class ValueType>
+//class Tensor : public Managed {
 template<class ValueType>
-class Tensor : public Managed {
+class Tensor {
 public:
     Tensor();
     Tensor(const vector<long>& dims);

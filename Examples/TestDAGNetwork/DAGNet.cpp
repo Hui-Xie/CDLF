@@ -7,7 +7,7 @@
 /*
  *
  *
- * Input-->FC1-->Branch-->|----->FC2-------> FC3----->|-->Sum-->FC4-->Loss
+ * Input-->FC1-->Branch-->|----->FC2-------> FC3----->|-->Merger-->FC4-->Loss
  *                        |                           |
  *                        |-->Conv1-->Conv2-->Conv3-->|
  *

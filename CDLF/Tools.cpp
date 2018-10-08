@@ -21,12 +21,17 @@ bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
 }
 
 long length(const vector<long>& vec){
-    long length=1;
     int dim = vec.size();
-    for(int i =0; i< dim; ++i){
-        length *= vec[i];
+    if (dim >0){
+        long length=vec[0];
+        for(int i =1; i< dim; ++i){
+            length *= vec[i];
+        }
+        return length;
     }
-    return length;
+    else{
+        return 0;
+    }
 }
 
 bool sameLength(const vector<long>& vec1, const vector<long>& vec2){

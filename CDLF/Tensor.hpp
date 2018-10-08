@@ -56,7 +56,7 @@ void Tensor<ValueType>::allocateMem() {
 
 template<class ValueType>
 void Tensor<ValueType>::freeMem() {
-    if (nullptr != m_data && m_dims.size() >0) {
+    if (nullptr != m_data && getLength()>0) {
 #ifdef Use_GPU
         cudaDeviceSynchronize();
         cudaFree(m_data);
