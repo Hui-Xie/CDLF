@@ -134,6 +134,7 @@ void Tensor<ValueType>::copyDataFrom(void *buff, const long numBytes) {
     } else {
 #ifdef Use_GPU
         cudaMemcpy(m_data, buff, numBytes, cudaMemcpyDefault);
+        cudaDeviceSynchronize();
 #else
         memcpy(m_data, buff, numBytes);
 #endif
@@ -204,6 +205,7 @@ template<class ValueType>
 void Tensor<ValueType>::copyDataTo(Tensor *pTensor, const long offset, const long length) {
 #ifdef Use_GPU
     cudaMemcpy(pTensor->m_data, m_data+offset, length*sizeof(ValueType), cudaMemcpyDefault);
+    cudaDeviceSynchronize();
 #else
     memcpy(pTensor->m_data, m_data + offset, length * sizeof(ValueType));
 #endif
