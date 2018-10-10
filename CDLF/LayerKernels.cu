@@ -14,3 +14,13 @@ __global__ void deviceSigmoidDerivative(float* pX, float* pdY, const int k, floa
         i += blockDim.x*gridDim.x;
     }
 }
+
+__global__ void deviceSigmoid(float* pX, float* pY, const int k, const long N){
+    long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
+    while (i < N){
+        float exp_x = exp(-pX[i]);
+        pY[i] = k/(1+exp_x);
+        i += blockDim.x*gridDim.x;
+    }
+
+}

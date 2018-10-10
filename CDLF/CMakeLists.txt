@@ -45,7 +45,7 @@ set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForward
         SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp GPUAttr.cpp)
 
 if (${Use_GPU})
-   set(CDLF_CUDA_Src TensorCuda.cu TensorKernels.cu)
+   set(CDLF_CUDA_Src TensorCuda.cu TensorKernels.cu LayerCuda.cu LayerKernels.cu)
 else(${Use_GPU})
    set(CDLF_CUDA_Src "")
 endif(${Use_GPU})

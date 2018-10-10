@@ -9,4 +9,6 @@
 
 void cudaSigmoidDerivative(float* pX, float* pdY, const int k, float* pdX, const long N);
 
+void cudaSigmoid(float* pX, float* pY, const int k, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERCUDA_H

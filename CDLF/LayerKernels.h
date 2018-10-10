@@ -9,4 +9,7 @@
 
 __global__ void deviceSigmoidDerivative(float* pX, float* pdY, const int k, float* pdX, const long N);
 
+__global__ void deviceSigmoid(float* pX, float* pY, const int k, const long N);
+
+
 #endif //CDLF_FRAMEWORK_LAYERKERNELS_H

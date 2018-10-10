@@ -10,6 +10,10 @@
 #include <list>
 #include "Tensor.h"
 
+#ifdef Use_GPU
+  #include "LayerCuda.h"
+#endif
+
 //using namespace blaze;
 using namespace std;
 
