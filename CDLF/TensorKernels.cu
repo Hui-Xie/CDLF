@@ -2,7 +2,7 @@
 // Created by Hui Xie on 10/1/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 //
-#include "DeviceKernels.h"
+#include "TensorKernels.h"
 #include <cmath> //for pow()
 
 __global__ void deviceInitialize(float *pData, const long N, const float value) {

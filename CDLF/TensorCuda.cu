@@ -4,7 +4,7 @@
 //
 
 #include "TensorCuda.h"
-#include "DeviceKernels.h"
+#include "TensorKernels.h"
 #include "GPUAttr.h"
 #include <iostream>
 using namespace std;
