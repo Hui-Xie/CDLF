@@ -38,14 +38,12 @@ Tensor<ValueType>::Tensor(const vector<long> &dims) {
 template<class ValueType>
 Tensor<ValueType>::Tensor(const Tensor &other) {
     if (this != &other) {
-        freeMem();
         *this = other;
     }
 }
 
 template<class ValueType>
 void Tensor<ValueType>::allocateMem() {
-    freeMem();
     if (getLength() > 0) {
 #ifdef Use_GPU
         cudaMallocManaged((ValueType **) &m_data, getLength() * sizeof(ValueType));
@@ -70,6 +68,7 @@ void Tensor<ValueType>::freeMem() {
 #endif
     }
     m_data = nullptr;
+
 }
 
 
@@ -103,20 +102,16 @@ void Tensor<ValueType>::uniformInitialize(const ValueType x) {
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor<ValueType> &other) {
     if (this != &other) {
+        freeMem();
+        m_dims = other.getDims();
+        generateDimsSpan();
+        allocateMem();
         long length = other.getLength();
-        if (!sameVector(m_dims, other.getDims())) {
-            freeMem();
-            m_dims = other.getDims();
-            generateDimsSpan();
-            allocateMem();
-        }
 #ifdef Use_GPU
         cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
-
 #else
         memcpy(m_data, other.getData(), length * sizeof(ValueType));
 #endif
-
     }
     return *this;
 }
@@ -162,6 +157,7 @@ long Tensor<ValueType>::getLength() const {
 template<class ValueType>
 void Tensor<ValueType>::generateDimsSpan() {
     int N = m_dims.size();
+    if (0 == N) return;
     m_dimsSpan.clear();
     for (int i = 0; i < N; ++i) {
         long span = 1;

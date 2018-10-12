@@ -55,7 +55,7 @@ void ConvNet::train(){
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     int batchSize = getBatchSize();
-    int iBatch = 1000;
+    int iBatch = 130;
 
     long i=0;
     while (i< iBatch){
