@@ -46,7 +46,7 @@ void CollapseNet::train(){
     LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
 
     int batchSize = getBatchSize();
-    int iBatch = 300;
+    int iBatch = 10;
 
     long i=0;
     while (i< iBatch){
