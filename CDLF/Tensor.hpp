@@ -7,7 +7,7 @@
 #include "Tools.h"
 #include <assert.h>
 #include <cstring>  //for memcpy function
-#include <cmath> //for pow()
+#include <cmath> //for pow() and exp
 #include <iomanip>      // std::setw
 
 #ifdef Use_GPU
@@ -16,9 +16,6 @@
 #include "GPUAttr.h"
 #endif
 
-
-#include <sstream>
-#include <iomanip>
 
 
 template<class ValueType>
@@ -701,7 +698,7 @@ Tensor<ValueType> Tensor<ValueType>::ln() {
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::exp(){
+Tensor<ValueType> Tensor<ValueType>::expon(){
     Tensor tensor(m_dims);
     long N = getLength();
 #ifdef Use_GPU

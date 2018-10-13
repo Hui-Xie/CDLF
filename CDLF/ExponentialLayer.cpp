@@ -24,7 +24,7 @@ void ExponentialLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = Y.getLength();
-    Y = X.exp();
+    Y = X.expon();
 }
 void ExponentialLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
