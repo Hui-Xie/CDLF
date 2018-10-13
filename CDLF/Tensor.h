@@ -112,6 +112,7 @@ private:
     vector<long> m_dimsSpan; //express change of index leads how many data storage span.
     ValueType* m_data; //all data are stored in column major. Namely, the the index of 0th dimension varies most slowly
 
+    void initializeMember();
     void allocateMem();
     void freeMem();
     void generateDimsSpan();

@@ -93,7 +93,7 @@ void DAGNet::train(){
     long nIter = 0;
     InputLayer* inputLayer = (InputLayer*)getInputLayer();
     LossLayer* lossLayer = (LossLayer* ) getFinalLayer();
-    long maxIteration = 1000;
+    long maxIteration = 100;
     int batchSize = getBatchSize();
     float lr = getLearningRate();
     long numBatch =  maxIteration / batchSize;

@@ -18,10 +18,7 @@ FeedForwardNet::FeedForwardNet(const string& name):Net(name){
 }
 
 FeedForwardNet::~FeedForwardNet() {
-    for (map<int, Layer *>::iterator it = m_layers.begin(); it != m_layers.end(); ++it) {
-        delete it->second;
-        it->second = nullptr;
-    }
+
 }
 
 void FeedForwardNet::forwardPropagate(){

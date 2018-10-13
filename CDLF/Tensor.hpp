@@ -15,28 +15,33 @@
   #include "GPUAttr.h"
 #endif
 
-
 template<class ValueType>
-Tensor<ValueType>::Tensor() {
+void Tensor<ValueType>::initializeMember(){
     m_data = nullptr;
     m_dims.clear();
     m_dimsSpan.clear();
 }
 
+template<class ValueType>
+Tensor<ValueType>::Tensor() {
+    initializeMember();
+}
+
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const vector<long> &dims) {
+    initializeMember();
     m_dims = dims;
     if (1 == m_dims.size()) {
         m_dims.push_back(1);
     }
     generateDimsSpan();
-    m_data = nullptr;
     allocateMem();
 }
 
 template<class ValueType>
 Tensor<ValueType>::Tensor(const Tensor &other) {
+    initializeMember();
     if (this != &other) {
         *this = other;
     }
@@ -52,20 +57,19 @@ void Tensor<ValueType>::allocateMem() {
         m_data = new ValueType[getLength()]; // for CPU
 #endif
     }
-    else{
-        m_data = nullptr;
-    }
 }
 
 template<class ValueType>
 void Tensor<ValueType>::freeMem() {
-    if (nullptr != m_data && getLength()>0) {
+    if (nullptr != m_data) {
+
 #ifdef Use_GPU
         cudaDeviceSynchronize();
         cudaFree(m_data);
 #else
-        delete[] m_data; //for CPU
+        delete[] m_data;
 #endif
+
     }
     m_data = nullptr;
 
@@ -107,11 +111,14 @@ Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor<ValueType> &other) 
         generateDimsSpan();
         allocateMem();
         long length = other.getLength();
+        if (length > 0){
 #ifdef Use_GPU
-        cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
+            cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
 #else
-        memcpy(m_data, other.getData(), length * sizeof(ValueType));
+            memcpy(m_data, other.getData(), length * sizeof(ValueType));
 #endif
+        }
+
     }
     return *this;
 }
