@@ -29,3 +29,15 @@ void cudaElementCopy(unsigned char* pA,float* pC, const long N){
     deviceElementCopy<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pC, N);
     cudaDeviceSynchronize();
 }
+
+//C = A if A>=0; C =0 else
+void cudaRelu(float* pA,float* pC, const long N){
+    deviceRelu<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pC, N);
+    cudaDeviceSynchronize();
+}
+
+// dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
+void cudaReluDerivative(float* pX,float* pdY, float* pdX, const long N){
+    deviceReluDerivative<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pdY, pdX, N);
+    cudaDeviceSynchronize();
+}

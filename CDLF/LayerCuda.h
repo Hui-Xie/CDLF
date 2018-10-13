@@ -17,4 +17,10 @@ void cudaCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float ep
 //C = A where A and C has different value type
 void cudaElementCopy(unsigned char* pA,float* pC, const long N);
 
+//C = A if A>=0; C =0 else
+void cudaRelu(float* pA,float* pC, const long N);
+
+// dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
+void cudaReluDerivative(float* pX,float* pdY, float* pdX, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERCUDA_H

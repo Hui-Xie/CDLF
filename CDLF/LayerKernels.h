@@ -17,4 +17,10 @@ __global__ void deviceCrossEntropyGradient(float* pX, float* pGTX, float* pdX, c
 //C = A where A and C has different value type
 __global__ void deviceElementCopy(unsigned char* pA,float* pC, const long N);
 
+//C = A if A>=0; C =0 else
+__global__ void deviceRelu(float* pA,float* pC, const long N);
+
+// dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
+__global__ void deviceReluDerivative(float* pX,float* pdY, float* pdX, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERKERNELS_H

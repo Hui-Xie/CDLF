@@ -48,3 +48,32 @@ __global__ void deviceElementCopy(unsigned char* pA,float* pC, const long N){
         i += blockDim.x*gridDim.x;
     }
 }
+
+//C = A if A>=0; C =0 else
+__global__ void deviceRelu(float* pA,float* pC, const long N){
+    long i = threadIdx.x + blockIdx.x * blockDim.x;
+    while (i < N){
+        if (pA[i]>0){
+            pC[i] = pA[i];
+        }
+        else{
+            pC[i] = 0;
+        }
+        i += blockDim.x*gridDim.x;
+    }
+}
+
+// dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
+__global__ void deviceReluDerivative(float* pX,float* pdY, float* pdX, const long N){
+    long i = threadIdx.x + blockIdx.x * blockDim.x;
+    while (i < N){
+        if (pX[i]>= 0){
+            pdX[i] = pdY[i];
+        }
+        else{
+            pdX[i] = 0;
+        }
+        i += blockDim.x*gridDim.x;
+    }
+
+}
