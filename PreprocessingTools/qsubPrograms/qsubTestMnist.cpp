@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     string jobName = "M_GPU_2D";
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
-                          + " -q COE-GPU,UI-DEVELOP "
+                          + " -q COE-GPU "
                           + " -pe smp 20 "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
