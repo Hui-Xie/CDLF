@@ -77,3 +77,40 @@ __global__ void deviceReluDerivative(float* pX,float* pdY, float* pdX, const lon
     }
 
 }
+
+__global__ void deviceSoftmax(float* pX, float* pY, const int nSoftmax, const long N){
+    long j = threadIdx.x + blockIdx.x * blockDim.x; // j is thread index
+    while (j < N){
+        float sumExpX = 1e-8;;
+        for (int i=0; i< nSoftmax; ++i){
+            sumExpX += exp(pX[i*N+j]);
+        }
+        for (int i=0; i< nSoftmax; ++i){
+            pY[i*N+j] = exp(pX[i*N+j])/sumExpX;
+        }
+        j += blockDim.x*gridDim.x;
+    }
+}
+
+__global__ void deviceSoftmaxDerivative(float* pX,float* pdY, float* pdX, const int nSoftmax, const long N){
+    long j = threadIdx.x + blockIdx.x * blockDim.x; // j is thread index
+    while (j < N){
+        float sumExpX = 1e-8;
+        for (int i=0; i< nSoftmax; ++i){
+            sumExpX += exp(pX[i*N+j]);
+        }
+        float sumExpX2 = sumExpX*sumExpX;
+
+        // \sum(dL/dy_j*exp(x_j)
+        float dyDotExpX = 0;
+        for(int i=0; i< nSoftmax; ++i){
+            dyDotExpX += pdY[i*N+j]*exp(pX[i*N+j]);
+        }
+
+        for(int i=0; i< nSoftmax; ++i){
+            pdX[i*N+j] += exp(pX[i*N+j])*(pdY[i*N+j]*sumExpX-dyDotExpX)/sumExpX2;
+        }
+
+        j += blockDim.x*gridDim.x;
+    }
+}

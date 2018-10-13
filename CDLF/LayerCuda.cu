@@ -41,3 +41,13 @@ void cudaReluDerivative(float* pX,float* pdY, float* pdX, const long N){
     deviceReluDerivative<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pdY, pdX, N);
     cudaDeviceSynchronize();
 }
+
+void cudaSoftmax(float* pX, float* pY, const int nSoftmax, const long N){
+    deviceSoftmax<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pY, nSoftmax, N);
+    cudaDeviceSynchronize();
+}
+
+void cudaSoftmaxDerivative(float* pX,float* pdY, float* pdX, const int nSoftmax, const long N){
+    deviceSoftmaxDerivative<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pdY, pdX, nSoftmax, N);
+    cudaDeviceSynchronize();
+}

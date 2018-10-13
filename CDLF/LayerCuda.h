@@ -23,4 +23,8 @@ void cudaRelu(float* pA,float* pC, const long N);
 // dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
 void cudaReluDerivative(float* pX,float* pdY, float* pdX, const long N);
 
+void cudaSoftmax(float* pX, float* pY, const int nSoftmax, const long N);
+
+void cudaSoftmaxDerivative(float* pX,float* pdY, float* pdX, const int nSoftmax, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERCUDA_H
