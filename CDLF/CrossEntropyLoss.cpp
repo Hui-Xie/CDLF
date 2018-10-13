@@ -34,15 +34,20 @@ void CrossEntropyLoss::gradientCompute() {
     Tensor<float> &X = *(m_prevLayer->m_pYTensor);
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
     long N = dX.getLength();
+    const float epsilon = 0.0001;
+#ifdef Use_GPU
+    cudaCrossEntropyGradient(X.getData(), m_pGroundTruth->getData(), dX.getData(),epsilon, N);
+#else
     for (long i = 0; i < N; ++i) {
         if (0 != X.e(i)){
             dX[i] -= m_pGroundTruth->e(i)/X.e(i);
         }
         else{
-            dX[i] -= m_pGroundTruth->e(i)/0.0001;
+            dX[i] -= m_pGroundTruth->e(i)/epsilon;
         }
 
     }
+#endif
 }
 
 void  CrossEntropyLoss::printGroundTruth() {

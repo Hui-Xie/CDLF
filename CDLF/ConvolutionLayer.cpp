@@ -68,10 +68,16 @@ bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *pr
 
 void ConvolutionLayer::computeOneFiterN() {
     int N = m_filterSize.size();
-    m_OneFilterN = 1;
-    for (int i = 0; i < N; ++i) {
-        m_OneFilterN *= m_filterSize[i];
+    if (N > 0){
+        m_OneFilterN = 1;
+        for (int i = 0; i < N; ++i) {
+            m_OneFilterN *= m_filterSize[i];
+        }
     }
+    else{
+        m_OneFilterN = 0;
+    }
+
 }
 
 void ConvolutionLayer::updateTensorSize() {

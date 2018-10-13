@@ -24,3 +24,17 @@ __global__ void deviceSigmoid(float* pX, float* pY, const int k, const long N){
     }
 
 }
+
+
+__global__ void deviceCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float epsilon, const long N){
+    long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
+    while (i < N){
+        if (0 != pX[i]){
+            pdX[i] -= pGTX[i]/X[i];
+        }
+        else{
+            pdX[i] -= pGTX[i])/epsilon;
+        }
+        i += blockDim.x*gridDim.x;
+    }
+}

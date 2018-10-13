@@ -11,4 +11,7 @@ void cudaSigmoidDerivative(float* pX, float* pdY, const int k, float* pdX, const
 
 void cudaSigmoid(float* pX, float* pY, const int k, const long N);
 
+
+void cudaCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float epsilon, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERCUDA_H

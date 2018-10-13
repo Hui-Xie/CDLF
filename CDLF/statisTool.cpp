@@ -9,6 +9,9 @@
 #include <random>
 #include <cmath>
 
+
+// these functions can not GPU parallel.
+
 void generateGaussian(Tensor<float>* yTensor,const float mu, const float sigma ){
     long N = yTensor->getLength();
     unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count() + rand()%5000;

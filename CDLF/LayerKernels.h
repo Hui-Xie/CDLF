@@ -11,5 +11,7 @@ __global__ void deviceSigmoidDerivative(float* pX, float* pdY, const int k, floa
 
 __global__ void deviceSigmoid(float* pX, float* pY, const int k, const long N);
 
+__global__ void deviceCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float epsilon, const long N);
+
 
 #endif //CDLF_FRAMEWORK_LAYERKERNELS_H
