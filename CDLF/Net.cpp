@@ -11,7 +11,7 @@
 Net::Net(const string& name){
     m_name = name;
     m_layers.clear();
-    m_learningRate = 0.01;
+    m_learningRate = 0.001;
     m_lossTolerance = 0.02;
     m_judgeLoss = true;
     m_batchSize = 1;

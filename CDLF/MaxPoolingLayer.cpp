@@ -34,14 +34,7 @@ void MaxPoolingLayer::constructY() {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
-
-    if (0 != m_tensorSize.size()) {
-        m_pYTensor = new Tensor<float>(m_tensorSize);
-        m_pdYTensor = new Tensor<float>(m_tensorSize);
-    } else {
-        m_pYTensor = nullptr;
-        m_pdYTensor = nullptr;
-    }
+    allocateYdYTensor();
 }
 
 void MaxPoolingLayer::initialize(const string &initialMethod) {

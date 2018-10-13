@@ -31,20 +31,15 @@ void NormalizationLayer::forward(){
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     float mean = X.average();
     float sigma = sqrt(X.variance());
-    long N = Y.getLength();
-    for (long i=0; i< N; ++i){
-        Y.e(i) = (X.e(i)- mean)/(sigma+m_epsilon);
-    }
+    Y = (X-mean)/(sigma+m_epsilon);
+
 }
 void NormalizationLayer::backward(bool computeW){
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
     Tensor<float>& X =  *(m_prevLayer->m_pYTensor);
     float sigma = sqrt(X.variance());
-    long N = dY.getLength();
-    for(long i=0; i< N; ++i){
-       dX.e(i) += dY.e(i)/(sigma+m_epsilon);
-    }
+    dX += dY/(sigma+m_epsilon);
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null
