@@ -19,9 +19,12 @@ Net::Net(const string& name){
 
 Net::~Net() {
     for (map<int, Layer *>::iterator it = m_layers.begin(); it != m_layers.end(); ++it) {
-        delete it->second;
-        it->second = nullptr;
+        if (nullptr != it->second){
+            delete it->second;
+            it->second = nullptr;
+        }
     }
+    m_layers.clear();
 }
 
 void Net::setLearningRate(const float learningRate){

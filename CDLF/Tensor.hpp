@@ -9,14 +9,20 @@
 #include <cstring>  //for memcpy function
 #include <cmath> //for pow()
 #include <iomanip>      // std::setw
+
 #ifdef Use_GPU
-  #include <cuda_runtime.h>
-  #include "TensorCuda.h"
-  #include "GPUAttr.h"
+#include <cuda_runtime.h>
+#include "TensorCuda.h"
+#include "GPUAttr.h"
 #endif
 
+
+#include <sstream>
+#include <iomanip>
+
+
 template<class ValueType>
-void Tensor<ValueType>::initializeMember(){
+void Tensor<ValueType>::initializeMember() {
     m_data = nullptr;
     m_dims.clear();
     m_dimsSpan.clear();
@@ -111,7 +117,7 @@ Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor<ValueType> &other) 
         generateDimsSpan();
         allocateMem();
         long length = other.getLength();
-        if (length > 0){
+        if (length > 0) {
 #ifdef Use_GPU
             cudaMemcpy(m_data, other.getData(), length*sizeof(ValueType),cudaMemcpyDefault);
 #else
@@ -158,7 +164,6 @@ template<class ValueType>
 long Tensor<ValueType>::getLength() const {
     return length(m_dims);
 }
-
 
 
 template<class ValueType>
@@ -675,7 +680,7 @@ Tensor<unsigned char> Tensor<ValueType>::getMaxPositionSubTensor() {
                 maxIndex = i;
             }
         }
-        subTensor(j) = (unsigned char)maxIndex;
+        subTensor(j) = (unsigned char) maxIndex;
     }
     return subTensor;
 }

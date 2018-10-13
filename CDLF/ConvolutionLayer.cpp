@@ -95,13 +95,7 @@ void ConvolutionLayer::constructFiltersAndY() {
         m_pdW[i] = new Tensor<float>(m_filterSize);
     }
 
-    if (0 != m_tensorSize.size()) {
-        m_pYTensor = new Tensor<float>(m_tensorSize);
-        m_pdYTensor = new Tensor<float>(m_tensorSize);
-    } else {
-        m_pYTensor = nullptr;
-        m_pdYTensor = nullptr;
-    }
+    allocateYdYTensor();
 }
 
 
