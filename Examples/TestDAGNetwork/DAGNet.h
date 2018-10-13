@@ -13,6 +13,7 @@ public:
     ~DAGNet();
 
     virtual void build();
+    void buildSimple();
     virtual void train();
     virtual float test();
 

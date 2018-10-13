@@ -22,6 +22,22 @@ DAGNet::~DAGNet(){
 
 }
 
+void DAGNet::buildSimple(){
+    int id=1;
+    InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {10,1});
+    addLayer(inputLayer);
+
+    //add parallel convolution path
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", inputLayer, {3,1} ); //output: {8,1}
+    addLayer(conv1);
+
+    //add Loss Layer
+    LossConvexExample1* loss = new LossConvexExample1(id++, "LossLayer", conv1);
+    addLayer(loss);
+
+}
+
+
 void DAGNet::build(){
     // add head path
     int id=1;

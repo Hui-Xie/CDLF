@@ -15,7 +15,8 @@ int main (int argc, char *argv[])
 #endif
 
     DAGNet net("DAGNet");
-    net.build();
+    //net.build();
+    net.buildSimple();
     net.printArchitecture();
 
     net.setLearningRate(0.01);
