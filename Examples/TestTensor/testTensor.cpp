@@ -2,10 +2,8 @@
 // Created by Hui Xie on 7/17/2018.
 //
 #include <iostream>
-#include "../../CDLF/Tensor.h"
+#include "CDLF.h"
 #include <list>
-#include "../../CDLF/Tools.h"
-#include "../../CDLF/statisTool.h"
 #include "GPUAttr.h"
 
 

@@ -22,8 +22,8 @@ endif(${Use_GPU})
 
 message("*************************************")
 
-set(CDLF_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF)
-include_directories(${CDLF_SRC_DIR})
+set(CDLF_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF/include)
+include_directories(${CDLF_INCLUDE_DIR})
 link_directories(${CMAKE_BINARY_DIR}/CDLF)
 
 message("General Notes:")

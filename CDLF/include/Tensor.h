@@ -123,7 +123,7 @@ private:
 
 };
 
-#include "Tensor.hpp"
+#include "../src/Tensor.hpp"
 
 
 #endif //RL_NONCONVEX_TENSOR_H
