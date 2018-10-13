@@ -88,6 +88,13 @@ void cudaTensorLn(float* pA, float* pC, const long N){
     cudaDeviceSynchronize();
 }
 
+
+//C = exp(A) exponential
+void cudaTensorExp(float* pA,float* pC, const long N){
+    deviceTensorExp<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pC, N);
+    cudaDeviceSynchronize();
+}
+
 //C = flip(A)
 void cudaTensorFlip(float* pA, const long N){
     deviceTensorFlip<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, N);

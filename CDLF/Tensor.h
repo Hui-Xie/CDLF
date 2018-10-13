@@ -84,6 +84,7 @@ public:
 
 
     Tensor ln();//natural logarithm
+    Tensor exp();//exponential
     Tensor hadamard(const Tensor& right); //element-wise product
     Tensor vectorize();
     float  dotProduct(const Tensor& right);

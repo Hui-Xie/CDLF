@@ -46,6 +46,9 @@ void cudaTensorDiffPower(float* pA, const float d, float* pC, const long N);
 //C = ln(A) natural logarithm
 void cudaTensorLn(float* pA, float* pC, const long N);
 
+//C = exp(A) exponential
+void cudaTensorExp(float* pA,float* pC, const long N);
+
 
 //C = flip(A)
 void cudaTensorFlip(float* pA, const long N);

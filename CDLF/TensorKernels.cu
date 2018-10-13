@@ -122,6 +122,15 @@ __global__ void deviceTensorLn(float* pA, float* pC, const long N){
     }
 }
 
+//C = exp(A) exponential
+__global__ void deviceTensorExp(float* pA,float* pC, const long N){
+    long index = threadIdx.x + blockIdx.x * blockDim.x;
+    while (index < N){
+        pC[index] = exp(pA[index]);
+        index += blockDim.x*gridDim.x;
+    }
+}
+
 //C = flip(A)
 __global__ void deviceTensorFlip(float* pA, const long N){
     long M = N/2;

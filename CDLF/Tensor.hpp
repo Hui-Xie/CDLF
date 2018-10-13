@@ -700,6 +700,22 @@ Tensor<ValueType> Tensor<ValueType>::ln() {
     return tensor;
 }
 
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::exp(){
+    Tensor tensor(m_dims);
+    long N = getLength();
+#ifdef Use_GPU
+    cudaTensorExp(m_data, tensor.m_data, N);
+#else
+    for (long i = 0; i < N; ++i) {
+        tensor.e(i) = exp(e(i));
+    }
+#endif
+    return tensor;
+
+}
+
+
 //element-wise product
 
 template<class ValueType>

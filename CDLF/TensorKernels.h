@@ -47,6 +47,9 @@ __global__ void deviceTensorDiffPower(float* pA, const float d, float* pC, const
 //C = ln(A) natural logarithm
 __global__ void deviceTensorLn(float* pA, float* pC, const long N);
 
+//C = exp(A) exponential
+__global__ void deviceTensorExp(float* pA,float* pC, const long N);
+
 //C = flip(A)
 __global__ void deviceTensorFlip(float* pA, const long N);
 
