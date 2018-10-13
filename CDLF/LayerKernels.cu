@@ -30,10 +30,10 @@ __global__ void deviceCrossEntropyGradient(float* pX, float* pGTX, float* pdX, c
     long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
     while (i < N){
         if (0 != pX[i]){
-            pdX[i] -= pGTX[i]/X[i];
+            pdX[i] -= pGTX[i]/pX[i];
         }
         else{
-            pdX[i] -= pGTX[i])/epsilon;
+            pdX[i] -= pGTX[i]/epsilon;
         }
         i += blockDim.x*gridDim.x;
     }

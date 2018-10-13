@@ -19,8 +19,7 @@ void cudaSigmoid(float* pX, float* pY, const int k, const long N){
     cudaDeviceSynchronize();
 }
 
-void cudaCrossEntropyGradient(float* pX, loat* pGTX, float* pdX, const float epsilon, const long N){
-    deviceCrossEntropyGradient<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pGTX, pdY, epsilon,N);
+void cudaCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float epsilon, const long N){
+    deviceCrossEntropyGradient<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pGTX, pdX, epsilon,N);
     cudaDeviceSynchronize();
-
 }
