@@ -54,4 +54,5 @@ __global__ void deviceTensorExp(float* pA,float* pC, const long N);
 __global__ void deviceTensorFlip(float* pA, const long N);
 
 
+
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H

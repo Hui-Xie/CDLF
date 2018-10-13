@@ -100,3 +100,4 @@ void cudaTensorFlip(float* pA, const long N){
     deviceTensorFlip<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, N);
     cudaDeviceSynchronize();
 }
+

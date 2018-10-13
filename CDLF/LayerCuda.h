@@ -14,4 +14,7 @@ void cudaSigmoid(float* pX, float* pY, const int k, const long N);
 
 void cudaCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float epsilon, const long N);
 
+//C = A where A and C has different value type
+void cudaElementCopy(unsigned char* pA,float* pC, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERCUDA_H

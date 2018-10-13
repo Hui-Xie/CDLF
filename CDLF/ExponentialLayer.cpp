@@ -31,9 +31,8 @@ void ExponentialLayer::backward(bool computeW){
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = dY.getLength();
-    for(long i=0; i< N; ++i){
-        dX.e(i) += dY.e(i)*exp(X.e(i));
-    }
+    dX += dY.hadamard(X.expon());
+
 }
 void ExponentialLayer::initialize(const string& initialMethod){
     //null

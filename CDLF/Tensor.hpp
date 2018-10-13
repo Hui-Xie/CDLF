@@ -107,7 +107,7 @@ void Tensor<ValueType>::uniformInitialize(const ValueType x) {
 
 
 template<class ValueType>
-Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor<ValueType> &other) {
+Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor &other) {
     if (this != &other) {
         freeMem();
         m_dims = other.getDims();

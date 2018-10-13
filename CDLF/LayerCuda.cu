@@ -23,3 +23,9 @@ void cudaCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float ep
     deviceCrossEntropyGradient<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pGTX, pdX, epsilon,N);
     cudaDeviceSynchronize();
 }
+
+//C = A where A and C has different value type
+void cudaElementCopy(unsigned char* pA,float* pC, const long N){
+    deviceElementCopy<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pC, N);
+    cudaDeviceSynchronize();
+}

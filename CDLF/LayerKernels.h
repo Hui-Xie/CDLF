@@ -14,4 +14,7 @@ __global__ void deviceSigmoid(float* pX, float* pY, const int k, const long N);
 __global__ void deviceCrossEntropyGradient(float* pX, float* pGTX, float* pdX, const float epsilon, const long N);
 
 
+//C = A where A and C has different value type
+__global__ void deviceElementCopy(unsigned char* pA,float* pC, const long N);
+
 #endif //CDLF_FRAMEWORK_LAYERKERNELS_H

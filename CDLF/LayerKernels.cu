@@ -38,3 +38,13 @@ __global__ void deviceCrossEntropyGradient(float* pX, float* pGTX, float* pdX, c
         i += blockDim.x*gridDim.x;
     }
 }
+
+
+//C = A where A and C has different value type
+__global__ void deviceElementCopy(unsigned char* pA,float* pC, const long N){
+    long i = threadIdx.x + blockIdx.x * blockDim.x;
+    while (i < N){
+        pC[i] = (float)pA[i];
+        i += blockDim.x*gridDim.x;
+    }
+}
