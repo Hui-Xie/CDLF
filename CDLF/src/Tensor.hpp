@@ -11,9 +11,9 @@
 #include <iomanip>      // std::setw
 
 #ifdef Use_GPU
-#include <cuda_runtime.h>
-#include "TensorCuda.h"
-#include "GPUAttr.h"
+  #include <cuda_runtime.h>
+  #include "TensorCuda.h"
+  #include "GPUAttr.h"
 #endif
 
 

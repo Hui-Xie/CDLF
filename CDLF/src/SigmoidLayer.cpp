@@ -36,7 +36,7 @@ void SigmoidLayer::backward(bool computeW){
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = dY.getLength();
 #ifdef Use_GPU
-    cudaSigmoidDerivative(X.getData(), dY.getData(), m_k, dX.getData(), N);
+    cudaSigmoidDerivative(X.getData(), dY.getData(), dX.getData(), m_k, N);
 #else
     for(long i=0; i< N; ++i){
         float  expx = exp(X.e(i));

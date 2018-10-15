@@ -7,7 +7,6 @@
 #define CDLF_FRAMEWORK_TENSORDEVICE_H
 
 //cuda is a bridge between Tensor and Device
-
 void cudaPrintError();
 
 void cudaInitialize(float* m_data, const long N, const float value=0);
@@ -32,7 +31,7 @@ void cudaTensorAdd(float* pA, const float d, float* pC, const long N);
 
 
 // C = A-B, where C has a length of N
-void cudaTensorSubtract(float* pA, float* pB, float* pC, const long N);
+void cudaTensorSubtract(float* pA, float*  pB, float* pC, const long N);
 
 // C = A-d, where C has a length of N, d is a scalar
 void cudaTensorSubtract(float* pA, const float d, float* pC, const long N);
