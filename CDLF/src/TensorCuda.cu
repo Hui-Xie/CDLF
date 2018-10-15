@@ -47,7 +47,7 @@ void cudaTensorHadamard(float*  pA, float*  pB, float* pC, const long N){
 }
 
 // C = A+B, where C has a length of N
-void cudaTensorAdd(float*  pA, float*  pB, float* pC, const long N){
+void cudaTensorAdd(float* pA, float*  pB, float* pC, const long N){
     deviceTensorAdd<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pB, pC, N);
     cudaDeviceSynchronize();
 }
