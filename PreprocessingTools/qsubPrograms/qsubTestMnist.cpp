@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
     string qsubStr = qsubStrBasic + " " + qsubStrCmd;
     system(qsubStr.c_str());
 
-    cout << "qsubTestMnist submitted." << endl;
+    cout << "qsubTestMnist submitted: " << jobName <<endl;
     return 0;
 
 }
