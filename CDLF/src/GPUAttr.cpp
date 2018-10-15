@@ -25,6 +25,8 @@ GPUAttr::~GPUAttr() {
 
 void GPUAttr::getGPUAttr() {
 #ifdef Use_GPU
+    cudaDeviceReset();
+
     cudaDeviceGetAttribute(&m_numSMs, cudaDevAttrMultiProcessorCount, 0);
     cout << "m_numSMs = " << m_numSMs << endl;
 
