@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
                           + " -q COE-GPU"
-                          + " -pe smp 5"
+                          + " -pe smp 10"
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
     string qsubStrCmd = " " + cmdPath +" "+ cmdPara;
