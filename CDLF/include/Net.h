@@ -25,6 +25,7 @@ public:
     void setEpoch(const long epoch);
 
     string getName();
+
     float getLearningRate();
     float getLossTolerance();
     bool getJudgeLoss();

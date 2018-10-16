@@ -24,7 +24,7 @@ message("*************************************")
 
 set(CDLF_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF/include)
 include_directories(${CDLF_INCLUDE_DIR})
-link_directories(${CMAKE_BINARY_DIR}/CDLF)
+link_directories(${CMAKE_BINARY_DIR}/CDLF/src)
 
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")

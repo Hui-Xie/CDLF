@@ -5,7 +5,6 @@
 
 #include "ConvCudaNet.h"
 
-
 ConvCudaNet::ConvCudaNet(const string& name): FeedForwardNet(name){
 
 }
@@ -16,33 +15,33 @@ ConvCudaNet::~ConvCudaNet(){
 void ConvCudaNet::build(){
     // build network
     int id =1;
-    InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {7,7,7,7});  //output 7*7*7*7
+    InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {200,250,300});  //output 200*250*300
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {7,3,3,3}, 1); //output 5*5*5
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {3,3,3}, 1); //output 188*248*298
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
     ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2",getFinalLayer(), {5,3,3}, 1); //output 3*3
-    addLayer(conv2);
+    SoftmaxLayer* softmax = new SoftmaxLayer(id++, "Softmax", getFinalLayer());
+    addLayer(softmax);
 
-    VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());
-    addLayer(vec1);
-    FCLayer* fc1 = new FCLayer(id++,"fc1", getFinalLayer(), 9);
-    addLayer(fc1);
-    LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
-    addLayer(loss);
+    CrossEntropyLoss* crossEntropy = new CrossEntropyLoss(id++, "CrossEntropy", getFinalLayer());
+    addLayer(crossEntropy);
+
 }
 void ConvCudaNet::train(){
     InputLayer* inputLayer = getInputLayer();
     Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
-    LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
+    CrossEntropyLoss* lossLayer = (CrossEntropyLoss*) getFinalLayer();
 
     int batchSize = getBatchSize();
     int iBatch = 30;
+
+    Tensor<float> gt({188,248,298});
+    generateGaussian(&gt,0,1);
 
     long i=0;
     while (i< iBatch){
@@ -50,6 +49,8 @@ void ConvCudaNet::train(){
         for(int j=0; j<batchSize; ++j){
             generateGaussian(&inputTensor,0,1);
             inputLayer->setInputTensor(inputTensor);
+
+            lossLayer->setGroundTruth(gt);
             forwardPropagate();
             backwardPropagate(true);
         }
@@ -57,7 +58,7 @@ void ConvCudaNet::train(){
         printIteration(lossLayer, i);
         ++i;
     }
-    lossLayer->printGroundTruth();
+    //lossLayer->printGroundTruth();
 }
 float ConvCudaNet::test(){
     //null

@@ -6,7 +6,7 @@
 #ifndef CDLF_FRAMEWORK_CONV4DNET_H
 #define CDLF_FRAMEWORK_CONV4DNET_H
 
-#include "CDLF.h"
+#include "FeedForwardNet.h"
 
 class Conv4DNet  : public FeedForwardNet {
 public:
