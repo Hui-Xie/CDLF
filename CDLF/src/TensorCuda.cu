@@ -22,7 +22,7 @@ void cudaInitialize(float* m_data, const long N, const float value){
 }
 
 // B = A', where B has a size M*N
-void cuda2DMatrixTranspose(const float* pA, float* pB, const long M, const long N){
+void cuda2DMatrixTranspose(float* pA, float* pB, const long M, const long N){
     device2DMatrixTranspose<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA,pB,M, N);
     cudaDeviceSynchronize();
 
