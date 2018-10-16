@@ -31,6 +31,6 @@ int main (int argc, char *argv[])
     net.initialize();
     net.train();
     net.test();
-    cout<< "=========== End of Dimensional Collapse in Convolution Test ============"<<endl;
+    cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
 }

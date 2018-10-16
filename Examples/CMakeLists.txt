@@ -12,4 +12,4 @@ add_subdirectory(TestDAGNetwork)
 add_subdirectory(TestDimensionCollapse)
 add_subdirectory(TestUnitFilter)
 add_subdirectory(TestSegmentation3D)
-
+add_subdirectory(TestCudaConv)

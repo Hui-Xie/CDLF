@@ -21,6 +21,8 @@ public:
     virtual void trainD() = 0;
     virtual float testG(bool outputFile) = 0;
 
+    string getName();
+
     void forwardG();
     void forwardD();
     void backwardG();

@@ -80,6 +80,6 @@ int main(int argc, char *argv[]){
         accuracy = net.test();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
      }
-    cout<<"==========End of Mnist Test==========="<<endl;
+    cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
 }

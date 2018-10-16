@@ -24,6 +24,7 @@ public:
     void setBatchSize(const int batchSize);
     void setEpoch(const long epoch);
 
+    string getName();
     float getLearningRate();
     float getLossTolerance();
     bool getJudgeLoss();

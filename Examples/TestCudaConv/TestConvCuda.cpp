@@ -1,10 +1,20 @@
 //
-// Created by Hui Xie on 8/13/2018.
+// Created by Hui Xie on 8/17/2018.
+// Copyright (c) 2018 Hui Xie. All rights reserved.
 //
-#include "ConvNet.h"
+/*
+ * before GPU implementation: this program run 15 mins in HPC in debug mode;
+ *
+ * */
+
+
+#include "ConvCudaNet.h"
 
 int main (int argc, char *argv[])
 {
+    cout<<"Test Cuda Convolution"<<endl;
+    printCurrentLocalTime();
+
 #ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
@@ -13,23 +23,20 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    cout<<"Notes:"<<endl;
-    cout<<"This program test that 2 simple convolutional layers can approximate a convex function, and converge."<<endl;
-    cout<<"This program support real 3D convolution."<<endl;
-
-    ConvNet net("ConvNet");
+    ConvCudaNet net("ConvCudaNet");
     net.build();
-    net.printArchitecture();
 
     // config network parameters;
     net.setLearningRate(0.001);
     net.setLossTolerance(0.02);
     net.setBatchSize(20);
+    net.printArchitecture();
 
     //  run network
     net.initialize();
     net.train();
     net.test();
-    cout<< "=========== End of Test:  "<< net.getName() <<" ============"<<endl;
+    cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
+    printCurrentLocalTime();
     return 0;
 }

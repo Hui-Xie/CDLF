@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
 
     }
 
-    cout<<"==========End of Mnist Test==========="<<endl;
+    cout<< "=========== End of Test:  "<<gan.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;
 }

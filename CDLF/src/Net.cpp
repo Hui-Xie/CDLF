@@ -47,6 +47,10 @@ void Net::setEpoch(const long epoch){
     m_epoch = epoch;
 }
 
+string Net::getName(){
+   return m_name;
+}
+
 float Net::getLearningRate(){
     return m_learningRate;
 }

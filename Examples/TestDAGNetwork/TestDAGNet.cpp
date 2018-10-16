@@ -26,6 +26,6 @@ int main (int argc, char *argv[])
 
     net.train();
     net.test();
-    std::cout<<"====================End of This Program==================="<<std::endl;
+    cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
 }

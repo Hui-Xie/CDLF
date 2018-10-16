@@ -36,7 +36,7 @@ int main (int argc, char *argv[])
     net.initialize();
     net.train();
     net.test();
-    cout<< "=========== End of ConvolutionLayer Test ============"<<endl;
+    cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;
 }

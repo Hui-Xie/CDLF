@@ -19,6 +19,10 @@ GAN::~GAN(){
 
 }
 
+string GAN::getName(){
+   return m_name;
+}
+
 void GAN::forwardG(){
    m_pGNet->forwardPropagate();
    copyGxYFromGtoD();
