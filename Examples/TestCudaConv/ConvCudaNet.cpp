@@ -18,7 +18,7 @@ void ConvCudaNet::build(){
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {200,250,300});  //output 200*250*300
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {3,3,3}, 1); //output 188*248*298
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {3,3,3}, 1); //output 198*248*298
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
     addLayer(norm1);
@@ -40,7 +40,7 @@ void ConvCudaNet::train(){
     int batchSize = getBatchSize();
     int iBatch = 30;
 
-    Tensor<float> gt({188,248,298});
+    Tensor<float> gt({198,248,298});
     generateGaussian(&gt,0,1);
 
     long i=0;
@@ -55,7 +55,8 @@ void ConvCudaNet::train(){
             backwardPropagate(true);
         }
         sgd(getLearningRate(), batchSize);
-        printIteration(lossLayer, i);
+        cout<<"Info: ==============================finish batch: "<<i<<endl;
+        //printIteration(lossLayer, i);
         ++i;
     }
     //lossLayer->printGroundTruth();
