@@ -16,10 +16,12 @@ int GPUAttr::m_maxThreadsPerBlock = 0;
 long GPUAttr::m_blocksPerGrid = 0;
 
 void cudaPrintError(){
+#ifdef Use_GPU
     cudaError_t cudaError = cudaGetLastError();
     if (0 != cudaError){
         cout<<"Cuda error: "<<cudaError<< "; Error string = "<< cudaGetErrorString(cudaError)<<endl;
     }
+#endif
 }
 
 GPUAttr::GPUAttr() {
