@@ -30,8 +30,6 @@ void FeedForwardNet::forwardPropagate(){
     }
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();
-       printCurrentLocalTime();
-       cout<<"Info: forward, finished "<<iter->second->m_name<<endl;
     }
 }
 void FeedForwardNet::backwardPropagate(bool computeW){
@@ -43,8 +41,6 @@ void FeedForwardNet::backwardPropagate(bool computeW){
    }
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
        rit->second->backward(computeW);
-       printCurrentLocalTime();
-       cout<<"Info: backward, finished "<<rit->second->m_name<<endl;
    }
 }
 
