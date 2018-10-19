@@ -3,9 +3,9 @@ if (${Use_GPU})
    # set(CMAKE_CUDA_COMPILER /opt/apps/cuda/9.1.85.2/bin/nvcc)
 
    # this must correctly config, otherwise GPU can not work correctly
-   #set(CMAKE_CUDA_FLAGS -arch=sm_70)   #Nvidia Titan V  or GV100 in COE_GPU
-   set(CMAKE_CUDA_FLAGS -arch=sm_61)    #Nvidia GeForce GTX 1080 Ti in COE_GPU
-   #set(CMAKE_CUDA_FLAGS -arch=sm_60)   #Nvidia Tesla P100 in UI_GPU
+   set(CMAKE_CUDA_FLAGS -arch=sm_70)   #Nvidia Titan V  or GV100 in COE-GPU
+   #set(CMAKE_CUDA_FLAGS -arch=sm_61)    #Nvidia GeForce GTX 1080 Ti in COE-GPU or UI-GPU
+   #set(CMAKE_CUDA_FLAGS -arch=sm_60)   #Nvidia Tesla P100 in UI-GPU
 endif(${Use_GPU})
 
 #[[ methodds of getting  GPU informaiton

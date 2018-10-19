@@ -11,10 +11,14 @@ string cmdPara = "/Users/hxie1/Projects/mnist 2D";
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
+
+    string gpuResouce= "gpu_titanv=true" ; // "gpu_1080ti=true" or "gpu_titanv=true"
+
     string jobName = "M2D_GPU";
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
                           + " -q COE-GPU "
+                          + " -l " + gpuResouce+ " "
                           + " -pe smp 10 "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
@@ -23,6 +27,7 @@ int main(int argc, char *argv[]) {
     string qsubStr = qsubStrBasic + " " + qsubStrCmd;
     system(qsubStr.c_str());
 
+    cout<<"GPU Resource: "<<gpuResouce<<endl;
     cout << "qsubTestMnist submitted: " << jobName <<endl;
     return 0;
 

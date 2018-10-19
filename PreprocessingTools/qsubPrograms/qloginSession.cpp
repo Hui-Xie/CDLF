@@ -7,15 +7,12 @@
 #include <iostream>
 using namespace std;
 
-//string cmdPath = "/Users/hxie1/temp_release/Examples/TestMnist/TestMnist";
-//string cmdPara = "/Users/hxie1/Projects/mnist 2D";
-
 /*  verrify GPU resource
  *  in node: lspci | grep -i nvidia
  * */
 
 void printUsage(char* argv0){
-    cout<<"qlogin to apply GPU resouce in HPC"<<endl;
+    cout<<"qlogin to apply GPU resource in HPC"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" <GPUQueue> [numSlots]"<<endl;
     cout<<"GPUQueue: COE-GPU,UI-DEVELOP,UI-GPU;  Choose only one." <<endl;
@@ -32,17 +29,21 @@ int main(int argc, char *argv[]) {
     string queue = argv[1];
     int numSlots = atoi(argv[2]);
 
+    string gpuResouce= "gpu_titanv=true" ; //  "gpu_1080ti=true" or "gpu_titanv=true"
+
     string jobName = "Session";
     string qsubStrBasic = string(" qlogin ")
                           + " -N " + jobName + " "
                           + " -q " + queue + " " //specify one of them: COE-GPU,UI-DEVELOP,UI-GPU
+                          + " -l " + gpuResouce+ " "
                           + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
-    string qsubStr = qsubStrBasic; // + " " + qsubStrCmd;
+    string qsubStr = qsubStrBasic;
     system(qsubStr.c_str());
 
-    cout << "qloginHuiSession submitted." << endl;
+    cout<<"GPU Resource: "<<gpuResouce<<endl;
+    cout << "qlogin submitted: " << jobName <<endl;
     return 0;
 
 }
