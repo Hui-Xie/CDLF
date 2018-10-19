@@ -9,12 +9,7 @@
 #include <iostream>
 using namespace std;
 
-void cudaPrintError(){
-    cudaError_t cudaError = cudaGetLastError();
-    if (0 != cudaError){
-        cout<<"Cuda error: "<<cudaError<< "; Error string = "<< cudaGetErrorString(cudaError)<<endl;
-    }
-}
+
 
 void cudaInitialize(float* m_data, const long N, const float value){
     deviceInitialize<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(m_data, N, value);

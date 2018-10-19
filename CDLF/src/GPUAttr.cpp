@@ -15,6 +15,13 @@ int GPUAttr::m_numSMs = 0;
 int GPUAttr::m_maxThreadsPerBlock = 0;
 long GPUAttr::m_blocksPerGrid = 0;
 
+void cudaPrintError(){
+    cudaError_t cudaError = cudaGetLastError();
+    if (0 != cudaError){
+        cout<<"Cuda error: "<<cudaError<< "; Error string = "<< cudaGetErrorString(cudaError)<<endl;
+    }
+}
+
 GPUAttr::GPUAttr() {
 
 }
@@ -34,6 +41,21 @@ void GPUAttr::getGPUAttr() {
     cout << "m_maxThreadsPerBlock = " << m_maxThreadsPerBlock << endl;
 
     m_blocksPerGrid = 32 * m_numSMs;
+
+    int deviceID = 0;
+    if (cudaSuccess == cudaGetDevice(&deviceID)){
+        cout<<"Currently use GPU device ID: "<<deviceID<<endl;
+    }
+    else{
+        cudaPrintError();
+    }
+
+    cudaDeviceProp deviceProp;
+    cudaGetDeviceProperties(&deviceProp, deviceID);
+    int m_computeCapabilityMajor = deviceProp.major;
+    int m_computeCapabilityMinor = deviceProp.minor;
+    std::printf("GPU Compute Capability: %d.%d\n", m_computeCapabilityMajor, m_computeCapabilityMinor);
+
 #endif
 
 }

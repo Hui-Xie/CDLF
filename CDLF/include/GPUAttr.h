@@ -6,7 +6,7 @@
 #ifndef CDLF_FRAMEWORK_GPUATTR_H
 #define CDLF_FRAMEWORK_GPUATTR_H
 
-
+void cudaPrintError();
 
 class GPUAttr{
 public:
@@ -18,6 +18,9 @@ public:
     static  long m_blocksPerGrid;
 
     void getGPUAttr();
+
+    int m_computeCapabilityMajor;
+    int m_computeCapabilityMinor;
 };
 
 
