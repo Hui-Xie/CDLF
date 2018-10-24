@@ -130,6 +130,7 @@ void ConvolutionLayer::forward() {
     long N = length(m_tensorSize)/m_numFilters;
     long NFilter = length(m_filterSize);
 
+
     vector<long> filterDimsSpan = dimsSpan(m_filterSize);
     vector<long> yDimsSpan;
     yDimsSpan = m_pYTensor->getDimsSpan();
@@ -140,25 +141,31 @@ void ConvolutionLayer::forward() {
     long* pXDimsSpan = nullptr;
     long* pYDimsSpan = nullptr;
     long* pFilterDimsSpan = nullptr;
+    long* pNonZeroIndex = nullptr;
     cudaMallocManaged((long**) &pXDimsSpan, X.getDims().size()* sizeof(long));
     cudaMallocManaged((long**) &pYDimsSpan, yDimsSpan.size() * sizeof(long));
     cudaMallocManaged((long**) &pFilterDimsSpan, Nf * sizeof(long));
+    cudaMallocManaged((long**) &pNonZeroIndex, f.size() * sizeof(long));
 
-    for(int i=0; i<f.size();++i){
+    for(int i=0; i<Nf;++i){
         pXDimsSpan[i] = X.getDimsSpan()[i];
-        pYDimsSpan[i] = yDimsSpan[i];
         pFilterDimsSpan[i] = filterDimsSpan[i];
     }
-    int spanSize = Nf;
+
+    for(int i=0; i<f.size();++i){
+        pYDimsSpan[i] = yDimsSpan[i];
+        pNonZeroIndex[i] = f[i];
+    }
+
     for (int idxF=0; idxF<m_numFilters; ++idxF){
-        cudaConvLayerForward(X.getData(),pXDimsSpan, m_pW[idxF]->getData(), pFilterDimsSpan, spanSize, NFilter,
-                             m_stride, m_pYTensor->getData()+idxF*N*sizeof(float), pYDimsSpan, N);
+        cudaConvLayerForward(X.getData(),pXDimsSpan, m_pW[idxF]->getData(), pFilterDimsSpan, Nf, NFilter,
+                             m_stride, m_pYTensor->getData()+idxF*N*sizeof(float), pYDimsSpan, pNonZeroIndex, yDimsSpan.size(), N);
     }
 
     cudaFree(pXDimsSpan);
     cudaFree(pYDimsSpan);
     cudaFree(pFilterDimsSpan);
-
+    cudaFree(pNonZeroIndex);
 
 #else
     vector<long> Xs(Nf, 0); //the initial topLeft coordinate of subTensor of X

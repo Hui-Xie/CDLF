@@ -28,7 +28,7 @@ __global__ void deviceSoftmax(const float* __restrict__  pX, float* pY, const in
 __global__ void deviceSoftmaxDerivative(const float* __restrict__  pX,const float* __restrict__  pdY, float* pdX, const int nSoftmax, const long N);
 
 //C = A*F in convolution
-__global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int spanSize, const long NFilter,
-                                      const int stride, float* pC, const long* pCDimsSpan, const long N);
+__global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int filterSize, const long NFilter,
+                                      const int stride, float* pC, const long* pCDimsSpan, const long* pNonZeroIndex, const int CDimsSize, const long N);
 
 #endif //CDLF_FRAMEWORK_LAYERKERNELS_H

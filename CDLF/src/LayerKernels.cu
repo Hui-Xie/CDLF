@@ -5,6 +5,7 @@
 //
 
 #include "LayerKernels.h"
+#include "TensorKernels.h"
 
 __global__ void deviceSigmoidDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const int k, const long N){
     long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
@@ -116,15 +117,40 @@ __global__ void deviceSoftmaxDerivative(const float* __restrict__  pX,const floa
 }
 
 //C = A*F in convolution
-__global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int spanSize, const long NFilter,
-                                       const int stride, float* pC, const long* pCDimsSpan, const long N){
+__global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int filterSize, const long NFilter,
+                                       const int stride, float* pC, const long* pCDimsSpan, const long* pNonZeroIndex, const int CDimsSize, const long N){
     long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
-        //generate
+        //generate C index;
+        long* pCIndex= new long [CDimsSize];
+        long n = t;
+        for (int i = 0; i <CDimsSize; ++i) {
+            pCIndex[i] = n / pCDimsSpan[i];
+            n -= pCIndex[i] * pCDimsSpan[i];
+        }
 
+        // generate A index
+        long* pAIndex = new long [filterSize];
+        for (int i=0; i< filterSize; ++i){
+            pAIndex[0] = 0;
+        }
+        for (int i=0; i< CDimsSize; ++i){
+            pAIndex[pNonZeroIndex[i]] = pCIndex[i]*stride;
+        }
 
-
-        //pC[t] = ;
+        float* pSubA= new float[NFilter];
+        deviceSubTensorFromTopLeft<<<1, NFilter>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
+        float* pHadamard = new float[NFilter];
+        deviceTensorHadamard<<<1, NFilter>>>(pSubA, pF, pHadamard, NFilter);
+        float sum =0;
+        for(long i=0; i<NFilter; ++i){
+            sum += pHadamard[i];
+        }
+        pC[t] = sum;
+        delete[] pCIndex;
+        delete[] pAIndex;
+        delete[] pSubA;
+        delete[] pHadamard;
 
         t += blockDim.x*gridDim.x;
     }

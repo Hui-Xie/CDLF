@@ -55,7 +55,7 @@ __global__ void deviceTensorFlip(float* pA, const long N);
 
 
 //C is subtensor of A starting at tlIndex,with span, stride
-__global__ void deviceSubTensorFromTopLeft(const float* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,float* pC,const long N);
-__global__ void deviceSubTensorFromTopLeft(const unsigned char* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,float* pC,const long N);
-__global__ void deviceSubTensorFromTopLeft(const unsigned char* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,unsigned char* pC,const long N);
+__global__ void deviceSubTensorFromTopLeft(const float* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int spanSize, const int stride,float* pC,const long N);
+__global__ void deviceSubTensorFromTopLeft(const unsigned char* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int spanSize, const int stride,float* pC,const long N);
+__global__ void deviceSubTensorFromTopLeft(const unsigned char* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int spanSize, const int stride,unsigned char* pC,const long N);
 #endif //CDLF_FRAMEWORK_TENSORKERNELS_H

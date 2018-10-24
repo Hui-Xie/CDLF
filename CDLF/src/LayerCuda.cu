@@ -53,8 +53,8 @@ void cudaSoftmaxDerivative(const float* __restrict__  pX,const float* __restrict
 }
 
 //C = A*F in convolution
-void cudaConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int spanSize, const long NFilter,
-                          const int stride, float* pC, const long* pCDimsSpan, const long N){
-    deviceConvLayerForward<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA,pADimsSpan,pF,pFDimsSpan, spanSize, NFilter, stride, pC, pCDimsSpan,N);
+void cudaConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int filterSize, const long NFilter,
+                          const int stride, float* pC, const long* pCDimsSpan, const long* pNonZeroIndex, const int CDimsSize, const long N){
+    deviceConvLayerForward<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA,pADimsSpan,pF,pFDimsSpan, filterSize, NFilter, stride, pC, pCDimsSpan,pNonZeroIndex,CDimsSize, N);
     cudaDeviceSynchronize();
 }

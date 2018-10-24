@@ -823,7 +823,7 @@ Tensor<ValueType>::subTensorFromCenter(const vector<long> &centralIndex, const v
 template<class ValueType>
 void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const vector<long> &span, Tensor *&pTensor,
                                              const int stride) {
-    int Ns = span.size();
+    int spanSize = span.size();
     pTensor = new Tensor<ValueType>(span);
 
 
@@ -832,27 +832,27 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const 
     long* pTlIndex = nullptr;
     long* pTensorDimsSpan = nullptr;
     long* pSubDimsSpan = nullptr;
-    cudaMallocManaged((long**) &pTlIndex, Ns * sizeof(long));
-    cudaMallocManaged((long**) &pTensorDimsSpan, Ns * sizeof(long));
-    cudaMallocManaged((long**) &pSubDimsSpan, Ns * sizeof(long));
+    cudaMallocManaged((long**) &pTlIndex, spanSize * sizeof(long));
+    cudaMallocManaged((long**) &pTensorDimsSpan, spanSize * sizeof(long));
+    cudaMallocManaged((long**) &pSubDimsSpan, spanSize * sizeof(long));
     cudaDeviceSynchronize();
-    for (int i=0; i<Ns; ++i){
+    for (int i=0; i<spanSize; ++i){
         pTlIndex[i] = tlIndex[i];
         pTensorDimsSpan[i] = m_dimsSpan[i];
         pSubDimsSpan[i] = pTensor->getDimsSpan()[i];
     }
-    cudaSubTensorFromTopLeft(getData(),pTensorDimsSpan, pTlIndex, pSubDimsSpan, Ns, stride,pTensor->getData(),N);
+    cudaSubTensorFromTopLeft(getData(),pTensorDimsSpan, pTlIndex, pSubDimsSpan, spanSize, stride,pTensor->getData(),N);
     cudaFree(pTlIndex);
     cudaFree(pTensorDimsSpan);
     cudaFree(pSubDimsSpan);
 #else
-    if (2 == Ns) {
+    if (2 == spanSize) {
         for (int i = 0; i < span[0]; ++i) {
             for (int j = 0; j < span[1]; ++j) {
                 pTensor->e(i, j) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride);
             }
         }
-    } else if (3 == Ns) {
+    } else if (3 == spanSize) {
         for (int i = 0; i < span[0]; ++i) {
             for (int j = 0; j < span[1]; ++j) {
                 for (int k = 0; k < span[2]; ++k) {
@@ -860,7 +860,7 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const 
                 }
             }
         }
-    } else if (4 == Ns) {
+    } else if (4 == spanSize) {
         for (int i = 0; i < span[0]; ++i) {
             for (int j = 0; j < span[1]; ++j) {
                 for (int k = 0; k < span[2]; ++k) {
@@ -871,7 +871,7 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const 
                 }
             }
         }
-    } else if (5 == Ns) {
+    } else if (5 == spanSize) {
         for (int i = 0; i < span[0]; ++i) {
             for (int j = 0; j < span[1]; ++j) {
                 for (int k = 0; k < span[2]; ++k) {
