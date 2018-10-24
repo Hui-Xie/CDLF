@@ -54,10 +54,10 @@ void ConvCudaNet::train(){
             forwardPropagate();
 
             //debug
-            cout<<"finished forward Propgate at "<< j<<" sample, in "<<i <<" batch"<<endl;
+            cout<<"finished forward Propagate at "<< j<<" sample, in "<<i <<" batch"<<endl;
             continue;
 
-            
+
             backwardPropagate(true);
         }
         sgd(getLearningRate(), batchSize);
