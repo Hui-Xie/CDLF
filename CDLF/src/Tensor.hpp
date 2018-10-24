@@ -153,6 +153,11 @@ vector<long> Tensor<ValueType>::getDims() const {
 }
 
 template<class ValueType>
+vector<long> Tensor<ValueType>::getDimsSpan() const{
+    return m_dimsSpan;
+}
+
+template<class ValueType>
 ValueType *Tensor<ValueType>::getData() const {
     return m_data;
 }
@@ -825,22 +830,42 @@ Tensor<ValueType>::subTensorFromCenter(const vector<long> &centralIndex, const v
 
 
 template<class ValueType>
-void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tfIndex, const vector<long> &span, Tensor *&pTensor,
+void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const vector<long> &span, Tensor *&pTensor,
                                              const int stride) {
     int Ns = span.size();
     pTensor = new Tensor<ValueType>(span);
 
+
+#ifdef  Use_GPU
+    const long N = pTensor->getLength();
+    long* pTlIndex = nullptr;
+    long* pTensorDimsSpan = nullptr;
+    long* pSubDimsSpan = nullptr;
+    cudaMallocManaged((long**) &pTlIndex, Ns * sizeof(long));
+    cudaMallocManaged((long**) &pTensorDimsSpan, Ns * sizeof(long));
+    cudaMallocManaged((long**) &pSubDimsSpan, Ns * sizeof(long));
+    cudaDeviceSynchronize();
+    for (int i=0; i<Ns; ++i){
+        pTlIndex[i] = tlIndex[i];
+        pTensorDimsSpan[i] = m_dimsSpan[i];
+        pSubDimsSpan[i] = pTensor->getDimsSpan()[i];
+    }
+    cudaSubTensorFromTopLeft(getData(),pTensorDimsSpan, pTlIndex, pSubDimsSpan, Ns, stride,pTensor->getData(),N);
+    cudaFree(pTlIndex);
+    cudaFree(pTensorDimsSpan);
+    cudaFree(pSubDimsSpan);
+#else
     if (2 == Ns) {
         for (int i = 0; i < span[0]; ++i) {
             for (int j = 0; j < span[1]; ++j) {
-                pTensor->e(i, j) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride);
+                pTensor->e(i, j) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride);
             }
         }
     } else if (3 == Ns) {
         for (int i = 0; i < span[0]; ++i) {
             for (int j = 0; j < span[1]; ++j) {
                 for (int k = 0; k < span[2]; ++k) {
-                    pTensor->e(i, j, k) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride, tfIndex[2] + k * stride);
+                    pTensor->e(i, j, k) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride, tlIndex[2] + k * stride);
                 }
             }
         }
@@ -849,8 +874,8 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tfIndex, const 
             for (int j = 0; j < span[1]; ++j) {
                 for (int k = 0; k < span[2]; ++k) {
                     for (int l = 0; l < span[3]; ++l) {
-                        pTensor->e(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride,
-                                                   tfIndex[2] + k * stride, tfIndex[3] + l * stride);
+                        pTensor->e(i, j, k, l) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride,
+                                                   tlIndex[2] + k * stride, tlIndex[3] + l * stride);
                     }
                 }
             }
@@ -861,9 +886,9 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tfIndex, const 
                 for (int k = 0; k < span[2]; ++k) {
                     for (int l = 0; l < span[3]; ++l) {
                         for (int m = 0; m < span[4]; ++m) {
-                            pTensor->e(i, j, k, l) = e(tfIndex[0] + i * stride, tfIndex[1] + j * stride,
-                                                       tfIndex[2] + k * stride, tfIndex[3] + l * stride,
-                                                       tfIndex[4] + m * stride);
+                            pTensor->e(i, j, k, l) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride,
+                                                       tlIndex[2] + k * stride, tlIndex[3] + l * stride,
+                                                       tlIndex[4] + m * stride);
                         }
                     }
                 }
@@ -872,6 +897,7 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tfIndex, const 
     } else {
         cout << "Error: currently do not support 6 and higher dimension in tensor." << endl;
     }
+#endif
 
 }
 

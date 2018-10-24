@@ -96,3 +96,18 @@ void cudaTensorFlip(float* pA, const long N){
     cudaDeviceSynchronize();
 }
 
+//C is subtensor of A starting at tlIndex,with span, stride
+void cudaSubTensorFromTopLeft(const float* pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,float* pC,const long N){
+    deviceSubTensorFromTopLeft<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pTensorDimsSpan, pTlIndex, pSubDimsSpan, Ns, stride, pC,N);
+    cudaDeviceSynchronize();
+}
+
+void cudaSubTensorFromTopLeft(const unsigned char * pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,float* pC,const long N){
+    deviceSubTensorFromTopLeft<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pTensorDimsSpan, pTlIndex, pSubDimsSpan, Ns, stride, pC,N);
+    cudaDeviceSynchronize();
+}
+
+void cudaSubTensorFromTopLeft(const unsigned char * pA,const long* pTensorDimsSpan, const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,unsigned char* pC,const long N){
+    deviceSubTensorFromTopLeft<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pA, pTensorDimsSpan, pTlIndex, pSubDimsSpan, Ns, stride, pC,N);
+    cudaDeviceSynchronize();
+}

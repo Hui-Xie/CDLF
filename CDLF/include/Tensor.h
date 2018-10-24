@@ -28,6 +28,7 @@ public:
 
 
     vector<long> getDims() const;
+    vector<long> getDimsSpan() const;
     ValueType* getData() const;
     long getLength() const;
 
@@ -92,7 +93,7 @@ public:
 
 
     void subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
-    void subTensorFromTopLeft(const vector<long>& tfIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
+    void subTensorFromTopLeft(const vector<long>& tlIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);

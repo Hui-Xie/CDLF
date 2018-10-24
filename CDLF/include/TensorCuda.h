@@ -52,6 +52,9 @@ void cudaTensorExp(float* pA,float* pC, const long N);
 //C = flip(A)
 void cudaTensorFlip(float* pA, const long N);
 
-
+//C is subtensor of A starting at tlIndex,with span, stride
+void cudaSubTensorFromTopLeft(const float* pA,const long* pTensorDimsSpan,const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,float* pC,const long N);
+void cudaSubTensorFromTopLeft(const unsigned char * pA,const long* pTensorDimsSpan,const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,float* pC,const long N);
+void cudaSubTensorFromTopLeft(const unsigned char * pA,const long* pTensorDimsSpan,const long* pTlIndex, const long* pSubDimsSpan, const int Ns, const int stride,unsigned char* pC,const long N);
 
 #endif //CDLF_FRAMEWORK_TENSORDEVICE_H
