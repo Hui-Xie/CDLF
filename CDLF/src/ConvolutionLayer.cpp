@@ -90,7 +90,7 @@ void ConvolutionLayer::updateTensorSize() {
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
     }
-    deleteOnes(m_tensorSize);
+    //deleteOnes(m_tensorSize); //do not use dimension collapse tech.
 }
 
 void ConvolutionLayer::constructFiltersAndY() {
