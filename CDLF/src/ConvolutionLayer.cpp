@@ -77,7 +77,6 @@ void ConvolutionLayer::computeOneFiterN() {
     else{
         m_OneFilterN = 0;
     }
-
 }
 
 void ConvolutionLayer::updateTensorSize() {
@@ -87,10 +86,11 @@ void ConvolutionLayer::updateTensorSize() {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
+
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
     }
-    //deleteOnes(m_tensorSize); //do not use dimension collapse tech.
+    deleteOnes(m_tensorSize);
 }
 
 void ConvolutionLayer::constructFiltersAndY() {
