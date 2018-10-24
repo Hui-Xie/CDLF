@@ -47,5 +47,7 @@ string getStemName(const string& filename);
 
 void printCurrentLocalTime();
 
+vector<long> dimsSpan(const vector<long> vec);
+
 
 #endif //RL_NONCONVEX_TOOLS_H

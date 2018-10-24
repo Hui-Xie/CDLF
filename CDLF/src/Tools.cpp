@@ -198,6 +198,20 @@ void printCurrentLocalTime(){
 }
 
 
+vector<long> dimsSpan(const vector<long> vec){
+    vector<long> dimsSpan;
+    dimsSpan.clear();
+    int N = vec.size();
+    for (int i = 0; i < N; ++i) {
+        long span = 1;
+        for (int j = i + 1; j < N; ++j) {
+            span *= vec[j];
+        }
+        dimsSpan.push_back(span);
+    }
+    return dimsSpan;
+}
+
 
 
 

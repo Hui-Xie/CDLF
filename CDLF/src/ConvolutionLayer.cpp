@@ -121,13 +121,48 @@ void ConvolutionLayer::zeroParaGradient() {
 void ConvolutionLayer::forward() {
     const int Nt = m_tensorSize.size();
     const int Nf = m_filterSize.size();
-    const int Df = (1 == m_numFilters) ? 0 : 1; //Feature dimension, non-one filter will add one feature dimension to output Y
+    const int Df = (1 == m_numFilters) ? 0 : 1; //Feature dimension, if number of filter >1, it will add one feature dimension to output Y
 
     vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
+    Tensor<float> &X = *m_prevLayer->m_pYTensor;
 
+#ifdef Use_GPU
+    long N = length(m_tensorSize)/m_numFilters;
+    long NFilter = length(m_filterSize);
+
+    vector<long> filterDimsSpan = dimsSpan(m_filterSize);
+    vector<long> yDimsSpan;
+    yDimsSpan = m_pYTensor->getDimsSpan();
+    if (1 == Df){
+        yDimsSpan.erase(yDimsSpan.begin());
+    }
+
+    long* pXDimsSpan = nullptr;
+    long* pYDimsSpan = nullptr;
+    long* pFilterDimsSpan = nullptr;
+    cudaMallocManaged((long**) &pXDimsSpan, X.getDims().size()* sizeof(long));
+    cudaMallocManaged((long**) &pYDimsSpan, yDimsSpan.size() * sizeof(long));
+    cudaMallocManaged((long**) &pFilterDimsSpan, Nf * sizeof(long));
+
+    for(int i=0; i<f.size();++i){
+        pXDimsSpan[i] = X.getDimsSpan()[i];
+        pYDimsSpan[i] = yDimsSpan[i];
+        pFilterDimsSpan[i] = filterDimsSpan[i];
+    }
+    int spanSize = Nf;
+    for (int idxF=0; idxF<m_numFilters; ++idxF){
+        cudaConvLayerForward(X.getData(),pXDimsSpan, m_pW[idxF]->getData(), pFilterDimsSpan, spanSize, NFilter,
+                             m_stride, m_pYTensor->getData()+idxF*N*sizeof(float), pYDimsSpan, N);
+    }
+
+    cudaFree(pXDimsSpan);
+    cudaFree(pYDimsSpan);
+    cudaFree(pFilterDimsSpan);
+
+
+#else
     vector<long> Xs(Nf, 0); //the initial topLeft coordinate of subTensor of X
     vector<long> Xc = Xs;  // the topLeft coordinate of subTensor of X
-    Tensor<float> &X = *m_prevLayer->m_pYTensor;
     if (2 == Nt - Df && 1 == f.size()) {
         for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
             Xc[f[0]] = i * m_stride;
@@ -278,6 +313,8 @@ void ConvolutionLayer::forward() {
     else {
         cout << "Error: dimension>6  does not support in convolution forward." << endl;
     }
+#endif
+
 }
 
 // Y =W*X

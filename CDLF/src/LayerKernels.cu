@@ -114,3 +114,19 @@ __global__ void deviceSoftmaxDerivative(const float* __restrict__  pX,const floa
         j += blockDim.x*gridDim.x;
     }
 }
+
+//C = A*F in convolution
+__global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int spanSize, const long NFilter,
+                                       const int stride, float* pC, const long* pCDimsSpan, const long N){
+    long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
+    while (t < N){
+        //generate
+
+
+
+        //pC[t] = ;
+
+        t += blockDim.x*gridDim.x;
+    }
+
+}

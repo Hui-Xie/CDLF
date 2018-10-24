@@ -170,16 +170,7 @@ long Tensor<ValueType>::getLength() const {
 
 template<class ValueType>
 void Tensor<ValueType>::generateDimsSpan() {
-    int N = m_dims.size();
-    if (0 == N) return;
-    m_dimsSpan.clear();
-    for (int i = 0; i < N; ++i) {
-        long span = 1;
-        for (int j = i + 1; j < N; ++j) {
-            span *= m_dims[j];
-        }
-        m_dimsSpan.push_back(span);
-    }
+    m_dimsSpan = dimsSpan(m_dims);
 }
 
 template<class ValueType>
