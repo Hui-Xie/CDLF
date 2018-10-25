@@ -146,6 +146,7 @@ void ConvolutionLayer::forward() {
     cudaMallocManaged((long**) &pYDimsSpan, yDimsSpan.size() * sizeof(long));
     cudaMallocManaged((long**) &pFilterDimsSpan, Nf * sizeof(long));
     cudaMallocManaged((long**) &pNonZeroIndex, f.size() * sizeof(long));
+    cudaDeviceSynchronize();
 
     for(int i=0; i<Nf;++i){
         pXDimsSpan[i] = X.getDimsSpan()[i];
@@ -156,12 +157,17 @@ void ConvolutionLayer::forward() {
         pYDimsSpan[i] = yDimsSpan[i];
         pNonZeroIndex[i] = f[i];
     }
+    // N =1000 is the upper bound for GPU ;
+    size_t deviceHeapSize;
+    cudaDeviceGetLimit ( &deviceHeapSize, cudaLimitMallocHeapSize);
+    cudaDeviceSetLimit(cudaLimitMallocHeapSize, deviceHeapSize*1024);
+    cudaPrintError();
+
 
     for (int idxF=0; idxF<m_numFilters; ++idxF){
         cudaConvLayerForward(X.getData(),pXDimsSpan, m_pW[idxF]->getData(), pFilterDimsSpan, Nf, NFilter,
                              m_stride, m_pYTensor->getData()+idxF*N*sizeof(float), pYDimsSpan, pNonZeroIndex, yDimsSpan.size(), N);
     }
-
     cudaFree(pXDimsSpan);
     cudaFree(pYDimsSpan);
     cudaFree(pFilterDimsSpan);
