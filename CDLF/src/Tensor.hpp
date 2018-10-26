@@ -9,6 +9,7 @@
 #include <cstring>  //for memcpy function
 #include <cmath> //for pow() and exp
 #include <iomanip>      // std::setw
+#include "CPUAttr.h"
 
 #ifdef Use_GPU
   #include <cuda_runtime.h>

@@ -11,9 +11,11 @@
 
 using namespace std;
 
+int GPUAttr::m_numDevices = 0;
 int GPUAttr::m_numSMs = 0;
 int GPUAttr::m_maxThreadsPerBlock = 0;
 long GPUAttr::m_blocksPerGrid = 0;
+
 
 void cudaPrintError(){
 #ifdef Use_GPU
@@ -35,6 +37,9 @@ GPUAttr::~GPUAttr() {
 void GPUAttr::getGPUAttr() {
 #ifdef Use_GPU
     cudaDeviceReset();
+
+    cudaGetDeviceCount(&m_numDevices);
+    cout<<"This host has "<< m_numDevices <<" GPU"<<endl;
 
     cudaDeviceGetAttribute(&m_numSMs, cudaDevAttrMultiProcessorCount, 0);
     cout << "m_numSMs = " << m_numSMs << endl;

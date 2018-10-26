@@ -29,6 +29,7 @@
 #include "GAN.h"
 #include "ScaleLayer.h"
 #include "GPUAttr.h"
+#include "CPUAttr.h"
 
 
 
