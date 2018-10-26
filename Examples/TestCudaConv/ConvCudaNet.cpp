@@ -54,9 +54,9 @@ void ConvCudaNet::train(){
             forwardPropagate();
 
             //debug
-            printCurrentLocalTime();
-            cout<<"finished forward Propagate at "<< j<<" sample, in "<<i <<" batch"<<endl;
-            continue;
+            //printCurrentLocalTime();
+            //cout<<"finished forward Propagate at "<< j<<" sample, in "<<i <<" batch"<<endl;
+            //continue;
 
 
             backwardPropagate(true);
