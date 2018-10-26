@@ -19,16 +19,15 @@ StubNetForD::~StubNetForD(){
 }
 
 void StubNetForD::build(){
-    InputLayer* inputLayer = new InputLayer(1, "InputLayer", {3,100,257,257});
+    InputLayer* inputLayer = new InputLayer(1, "InputLayer", {3,108,265,265});
     addLayer(inputLayer);
 
-    SoftmaxLayer* softmax1 = new SoftmaxLayer(10, "Softmax1",inputLayer); //output size: 3*100*257*257
+    SoftmaxLayer* softmax1 = new SoftmaxLayer(10, "Softmax1",inputLayer); //output size: 3*108*265*265
     addLayer(softmax1);
 }
 
 void StubNetForD::train(){
    //null
-
 }
 
 float StubNetForD::test(){
