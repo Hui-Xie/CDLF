@@ -16,7 +16,7 @@ int main (int argc, char *argv[])
 {
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
-    
+
 #ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
