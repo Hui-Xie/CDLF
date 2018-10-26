@@ -8,6 +8,8 @@
 int main (int argc, char *argv[])
 {
     cout<<"Test Dimensional Collapse in Convolution"<<endl;
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
 
 #ifdef Use_GPU
     GPUAttr gpuAttr;

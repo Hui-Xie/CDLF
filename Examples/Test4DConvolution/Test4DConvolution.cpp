@@ -15,6 +15,9 @@ int main (int argc, char *argv[])
     cout<<"Test 4D Convolution"<<endl;
     printCurrentLocalTime();
 
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
+
 #ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();

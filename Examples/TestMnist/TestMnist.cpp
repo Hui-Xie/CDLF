@@ -26,6 +26,9 @@ int main(int argc, char *argv[]){
     const string mnistDir = argv[1];
     const string netType = argv[2]; // 2D or 4D
 
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
+
 #ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();

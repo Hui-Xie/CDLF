@@ -39,7 +39,7 @@ void GPUAttr::getGPUAttr() {
     cudaDeviceReset();
 
     cudaGetDeviceCount(&m_numDevices);
-    cout<<"This host has "<< m_numDevices <<" GPU"<<endl;
+    cout<<"This host has "<< m_numDevices <<" GPUs"<<endl;
 
     cudaDeviceGetAttribute(&m_numSMs, cudaDevAttrMultiProcessorCount, 0);
     cout << "m_numSMs = " << m_numSMs << endl;

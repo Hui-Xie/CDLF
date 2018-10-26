@@ -50,6 +50,9 @@ int main (int argc, char *argv[])
         return -1;
     }
 
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
+
 #ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();

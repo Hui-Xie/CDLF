@@ -14,6 +14,8 @@ int main (int argc, char *argv[])
 {
     cout<<"Test Cuda Convolution"<<endl;
     printCurrentLocalTime();
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
 
 #ifdef Use_GPU
     GPUAttr gpuAttr;

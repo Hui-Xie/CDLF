@@ -27,6 +27,10 @@ int main(int argc, char *argv[]){
     const string inputFilename = argv[1];
     const string outputFilename = argv[2];
 
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
+
+
 #ifdef Use_GPU
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();

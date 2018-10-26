@@ -38,6 +38,8 @@ int convertCommaStrToVector(const string commaStr, std::vector<long>& widthVecto
 int main (int argc, char *argv[])
 {
     printCurrentLocalTime();
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
 
 #ifdef Use_GPU
     GPUAttr gpuAttr;

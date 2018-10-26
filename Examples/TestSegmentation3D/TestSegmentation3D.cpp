@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 {
     cout<<"3D segmentation for One Sample";
     printCurrentLocalTime();
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
 
 #ifdef Use_GPU
     GPUAttr gpuAttr;
