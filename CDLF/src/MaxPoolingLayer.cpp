@@ -12,7 +12,7 @@ MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, Layer *prevLa
     m_type = "MaxPoolingLayer";
     m_stride = stride;
     m_filterSize = filterSize;
-    m_tensorSize = prevLayer->m_tensorSize; // this is initial, not final size
+    m_tensorSize = prevLayer->m_tensorSize; // this is an initial, not final, size
 
     int N = filterSize.size();
     m_OneFilterN = 1;

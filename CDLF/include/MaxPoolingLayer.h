@@ -11,6 +11,8 @@
  * Notes: max-pooling can simply be replaced by a convolutional layer with increased stride
  *      without loss in accuracy on several image recognition benchmarks.
  *
+ *      current: MaxPoolingLayer does not support dimension collapse.
+ *
  * */
 
 class MaxPoolingLayer :  public Layer {
