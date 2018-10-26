@@ -4,16 +4,20 @@
 #include <iostream>
 #include "CDLF.h"
 #include <list>
-#include "GPUAttr.h"
+
 
 
 int main (int argc, char *argv[]) {
+
+    CPUAttr cpuAttr;
+    cpuAttr.getCPUAttr();
 
 #ifdef Use_GPU
     cout<<"Info: program use Cuda GPU."<<endl;
     GPUAttr gpuAttr;
     gpuAttr.getGPUAttr();
 #else
+
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
     printCurrentLocalTime();
