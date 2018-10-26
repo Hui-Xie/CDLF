@@ -19,6 +19,7 @@ public:
                      const int stride=1);
     ~MaxPoolingLayer();
 
+    vector<long> m_filterSize;
     void constructY();
 
 
@@ -32,7 +33,7 @@ public:
 private:
     int m_stride;
     int m_OneFilterN;
-    vector<long> m_filterSize;
+
 
 };
 

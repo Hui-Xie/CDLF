@@ -16,6 +16,7 @@ int main (int argc, char *argv[]) {
 #else
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
+    printCurrentLocalTime();
 
     Tensor<float> tensor1({3,4});
     int k=0;
