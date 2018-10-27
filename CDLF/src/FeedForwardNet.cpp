@@ -30,7 +30,7 @@ void FeedForwardNet::forwardPropagate(){
     }
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();
-       printf("==> Foward a layer: %s at ", iter->second->m_name.c_str());
+       printf("  ==> Foward a layer: %s at ", iter->second->m_name.c_str());
        printCurrentLocalTime();
     }
 }
