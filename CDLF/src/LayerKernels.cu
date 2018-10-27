@@ -145,10 +145,10 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
         float* pHadamard = new float[NFilter];
 
         deviceSubTensorFromTopLeft<<<1, NFilter, filterSize*sizeof(long)>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
-        __syncthreads();
+        //__syncthreads();
 
         deviceTensorHadamard<<<1, NFilter>>>(pSubA, pF, pHadamard, NFilter);
-        __syncthreads();
+        //__syncthreads();
         float sum =0;
         for(long i=0; i<NFilter; ++i){
             sum += pHadamard[i];
