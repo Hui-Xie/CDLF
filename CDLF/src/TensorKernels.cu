@@ -164,8 +164,6 @@ __global__ void deviceSubTensorFromTopLeft(const float* pA,const long* pTensorDi
         for (int i = 0; i <spanSize; ++i) {
             AIndex += (pTlIndex[i]+pIndex[i]*stride)*pTensorDimsSpan[i];
         }
-        delete[] pIndex;
-
         pC[t] = pA[AIndex];
 
         t += blockDim.x*gridDim.x;
@@ -188,8 +186,6 @@ __global__ void deviceSubTensorFromTopLeft(const unsigned char * pA,const long* 
         for (int i = 0; i <spanSize; ++i) {
             AIndex += (pTlIndex[i]+pIndex[i]*stride)*pTensorDimsSpan[i];
         }
-        delete[] pIndex;
-
         pC[t] = (float) pA[AIndex];
 
         t += blockDim.x*gridDim.x;
@@ -212,8 +208,6 @@ __global__ void deviceSubTensorFromTopLeft(const unsigned char * pA,const long* 
         for (int i = 0; i <spanSize; ++i) {
             AIndex += (pTlIndex[i]+pIndex[i]*stride)*pTensorDimsSpan[i];
         }
-        delete[] pIndex;
-
         pC[t] = pA[AIndex];
 
         t += blockDim.x*gridDim.x;
