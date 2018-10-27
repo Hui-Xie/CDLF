@@ -13,7 +13,7 @@ if(ITK_FOUND)
                               SegmentDNet.cpp ${LinuxFileDir}/FileTools.cpp StubNetForD.cpp
                               DataManager.cpp)
     add_executable(TestSegmentation3D ${TestSegmentation3DSrc})
-    target_link_libraries(TestSegmentation3D  ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES} )
+    target_link_libraries(TestSegmentation3D  ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES} pthread)
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
 endif(ITK_FOUND)

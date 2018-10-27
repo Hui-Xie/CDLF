@@ -4,6 +4,7 @@
 
 #include "ConvolutionLayer.h"
 #include "statisTool.h"
+#include <thread>
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
                                     const int numFilters, const int stride)
@@ -182,8 +183,14 @@ void ConvolutionLayer::forward() {
             Tensor<float>* pSubX = nullptr;
             X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
             if (1 != m_numFilters) {
-                for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                    m_pYTensor->e(idxF, i) = pSubX->conv(*m_pW[idxF]);
+                vector<std::thread> threadVec;
+                for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                    threadVec.push_back(thread(
+                            [&](){ m_pYTensor->e(idxF, i) = pSubX->conv(*m_pW[idxF]);}
+                    ));
+                }
+                for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                    threadVec[idxF].join();
                 }
             } else {
                 m_pYTensor->e(i, 1) = pSubX->conv(*m_pW[0]);  // This maybe has problem.
@@ -200,9 +207,17 @@ void ConvolutionLayer::forward() {
                 Tensor<float>* pSubX = nullptr;
                 X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
                 if (1 != m_numFilters) {
-                    for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                        m_pYTensor->e(idxF, i, j) = pSubX->conv(*m_pW[idxF]);
+                    vector<std::thread> threadVec;
+                    for (int idxF = 0; idxF < m_numFilters; ++idxF){
+
+                        threadVec.push_back(thread(
+                                [&](){ m_pYTensor->e(idxF, i, j) = pSubX->conv(*m_pW[idxF]);}
+                                                  ));
                     }
+                    for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                        threadVec[idxF].join();
+                    }
+
                 } else {
                     m_pYTensor->e(i, j) = pSubX->conv(*m_pW[0]);
                 }
@@ -221,8 +236,14 @@ void ConvolutionLayer::forward() {
                     Tensor<float>* pSubX = nullptr;
                     X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
                     if (1 != m_numFilters) {
-                        for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                            m_pYTensor->e(idxF, i, j, k) = pSubX->conv(*m_pW[idxF]);
+                        vector<std::thread> threadVec;
+                        for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                            threadVec.push_back(thread(
+                                    [&](){ m_pYTensor->e(idxF, i, j, k) = pSubX->conv(*m_pW[idxF]);}
+                            ));
+                        }
+                        for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                            threadVec[idxF].join();
                         }
                     } else {
                         m_pYTensor->e(i, j, k) = pSubX->conv(*m_pW[0]);
@@ -246,8 +267,14 @@ void ConvolutionLayer::forward() {
                         Tensor<float>* pSubX = nullptr;
                         X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
                         if (1 != m_numFilters) {
-                            for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                                m_pYTensor->e(idxF, i, j, k, l) = pSubX->conv(*m_pW[idxF]);
+                            vector<std::thread> threadVec;
+                            for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                threadVec.push_back(thread(
+                                        [&](){ m_pYTensor->e(idxF, i, j, k, l) = pSubX->conv(*m_pW[idxF]);}
+                                ));
+                            }
+                            for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                threadVec[idxF].join();
                             }
                         } else {
                             m_pYTensor->e(i, j, k, l) = pSubX->conv(*m_pW[0]);
@@ -274,8 +301,14 @@ void ConvolutionLayer::forward() {
                             Tensor<float>* pSubX = nullptr;
                             X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
                             if (1 != m_numFilters) {
-                                for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                                    m_pYTensor->e(idxF, i, j, k, l, m) = pSubX->conv(*m_pW[idxF]);
+                                vector<std::thread> threadVec;
+                                for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                    threadVec.push_back(thread(
+                                            [&](){ m_pYTensor->e(idxF, i, j, k, l, m) = pSubX->conv(*m_pW[idxF]);}
+                                    ));
+                                }
+                                for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                    threadVec[idxF].join();
                                 }
                             } else {
                                 m_pYTensor->e(i, j, k, l, m) = pSubX->conv(*m_pW[0]);
@@ -305,8 +338,14 @@ void ConvolutionLayer::forward() {
                                 Tensor<float>* pSubX = nullptr;
                                 X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
                                 if (1 != m_numFilters) {
-                                    for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //indexFilter
-                                        m_pYTensor->e(idxF, i, j, k, l, m, n) = pSubX->conv(*m_pW[idxF]);
+                                    vector<std::thread> threadVec;
+                                    for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                        threadVec.push_back(thread(
+                                                [&](){ m_pYTensor->e(idxF, i, j, k, l, m, n) = pSubX->conv(*m_pW[idxF]);}
+                                        ));
+                                    }
+                                    for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                        threadVec[idxF].join();
                                     }
                                 } else {
                                     m_pYTensor->e(i, j, k, l, m, n) = pSubX->conv(*m_pW[0]);
