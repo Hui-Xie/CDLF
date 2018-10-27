@@ -123,12 +123,9 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
     long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
         //generate C index;
-        //
-        extern __shared__ long sharedMem[];//byteLengthSharedMem=CDimsSize*sizeof(long)+ filterSize*sizeof(long)+ NFilter*sizeof(float)*2;
+        extern __shared__ long sharedMem[];//byteLengthSharedMem=CDimsSize*sizeof(long)+ filterSize*sizeof(long);
         long* pCIndex= sharedMem;
-        long* pAIndex = (long*) &pCIndex[CDimsSize];
-        float* pSubA= (float*) &pAIndex[filterSize];
-        float* pHadamard = (float*) &pSubA[NFilter]; // all pointers does not need to delete.
+        long* pAIndex = (long*) &pCIndex[CDimsSize]; //// all pointers of shared memory does not need to delete.
 
         long n = t;
         for (int i = 0; i <CDimsSize; ++i) {
@@ -144,6 +141,9 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
             pAIndex[pNonZeroIndex[i]] = pCIndex[i]*stride;
         }
 
+        float* pSubA=  new float[NFilter];
+        float* pHadamard = new float[NFilter];
+
         deviceSubTensorFromTopLeft<<<1, NFilter, filterSize*sizeof(long)>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
         __syncthreads();
 
@@ -154,6 +154,9 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
             sum += pHadamard[i];
         }
         pC[t] = sum;
+
+        delete[] pSubA;
+        delete[] pHadamard;
 
         t += blockDim.x*gridDim.x;
     }
