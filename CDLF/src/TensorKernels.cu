@@ -152,7 +152,7 @@ __global__ void deviceSubTensorFromTopLeft(const float* pA,const long* pTensorDi
     long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
         //generate index;
-        long* pIndex= new long [spanSize];
+        extern __shared__ long pIndex[];
         long n = t;
         for (int i = 0; i <spanSize; ++i) {
             pIndex[i] = n / pSubDimsSpan[i];
@@ -176,7 +176,7 @@ __global__ void deviceSubTensorFromTopLeft(const unsigned char * pA,const long* 
     long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
         //generate index;
-        long* pIndex= new long [spanSize];
+        extern __shared__ long pIndex[];
         long n = t;
         for (int i = 0; i <spanSize; ++i) {
             pIndex[i] = n / pSubDimsSpan[i];
@@ -200,7 +200,7 @@ __global__ void deviceSubTensorFromTopLeft(const unsigned char * pA,const long* 
     long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
         //generate index;
-        long* pIndex= new long [spanSize];
+        extern __shared__ long pIndex[];
         long n = t;
         for (int i = 0; i <spanSize; ++i) {
             pIndex[i] = n / pSubDimsSpan[i];

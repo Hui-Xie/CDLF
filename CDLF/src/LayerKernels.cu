@@ -123,7 +123,13 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
     long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
         //generate C index;
-        long* pCIndex= new long [CDimsSize];
+        //
+        extern __shared__ long sharedMem[];//byteLengthSharedMem=CDimsSize*sizeof(long)+ filterSize*sizeof(long)+ NFilter*sizeof(float)*2;
+        long* pCIndex= sharedMem;
+        long* pAIndex = (long*) &pCIndex[CDimsSize];
+        float* pSubA= (float*) &pAIndex[filterSize];
+        float* pHadamard = (float*) &pSubA[NFilter]; // all pointers does not need to delete.
+
         long n = t;
         for (int i = 0; i <CDimsSize; ++i) {
             pCIndex[i] = n / pCDimsSpan[i];
@@ -131,34 +137,23 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
         }
 
         // generate A index
-        long* pAIndex = new long [filterSize];
         for (int i=0; i< filterSize; ++i){
             pAIndex[0] = 0;
         }
         for (int i=0; i< CDimsSize; ++i){
             pAIndex[pNonZeroIndex[i]] = pCIndex[i]*stride;
         }
-        delete[] pCIndex;
 
-        float* pSubA= new float[NFilter];
-
-        deviceSubTensorFromTopLeft<<<1, NFilter>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
+        deviceSubTensorFromTopLeft<<<1, NFilter, filterSize*sizeof(long)>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
         __syncthreads();
-        delete[] pAIndex;
-        float* pHadamard = new float[NFilter];
+
         deviceTensorHadamard<<<1, NFilter>>>(pSubA, pF, pHadamard, NFilter);
         __syncthreads();
-        delete[] pSubA;
         float sum =0;
         for(long i=0; i<NFilter; ++i){
             sum += pHadamard[i];
         }
-        delete[] pHadamard;
         pC[t] = sum;
-
-
-
-
 
         t += blockDim.x*gridDim.x;
     }
