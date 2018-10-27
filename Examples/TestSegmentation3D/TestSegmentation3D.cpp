@@ -20,6 +20,7 @@ void printUsage(char* argv0){
     cout<<"Where the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directory. "<<endl;
     cout<<"outputTestLabelsDir is the directory for outputing test label files"<<endl;
+    cout<<"Input parameter example: /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
 }
 
 int main(int argc, char *argv[])
