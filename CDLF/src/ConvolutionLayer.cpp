@@ -159,10 +159,10 @@ void ConvolutionLayer::forward() {
         pNonZeroIndex[i] = f[i];
     }
     // N =1000 is the upper bound for GPU ;
-    size_t deviceHeapSize;
-    cudaDeviceGetLimit ( &deviceHeapSize, cudaLimitMallocHeapSize);
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, deviceHeapSize*1024);
-    cudaPrintError();
+    //size_t deviceHeapSize;
+    //cudaDeviceGetLimit ( &deviceHeapSize, cudaLimitMallocHeapSize);
+    //cudaDeviceSetLimit(cudaLimitMallocHeapSize, deviceHeapSize*1024);
+    //cudaPrintError();
 
 
     for (int idxF=0; idxF<m_numFilters; ++idxF){
