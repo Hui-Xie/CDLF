@@ -12,10 +12,10 @@ using namespace std;
  * */
 
 void printUsage(char* argv0){
-    cout<<"qlogin to apply GPU resource in HPC"<<endl;
+    cout<<"qlogin to apply CPU resource in HPC"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" <GPUQueue> [numSlots]"<<endl;
-    cout<<"GPUQueue: COE-GPU,UI-DEVELOP,UI-GPU;  Choose only one." <<endl;
+    cout<<argv0<<" <CPUQueue> [numSlots]"<<endl;
+    cout<<"CPUQueue: COE,UI-DEVELOP,UI-HM, UI-MPI;  Choose only one." <<endl;
     cout<<"numSlots: number of slots"<<endl;
 }
 
@@ -29,20 +29,16 @@ int main(int argc, char *argv[]) {
     string queue = argv[1];
     int numSlots = atoi(argv[2]);
 
-    string gpuResouce= "gpu_titanv=true" ; //  "gpu_1080ti=true" or "gpu_titanv=true"
-
-    string jobName = "Session";
+    string jobName = "SessCPU";
     string qsubStrBasic = string(" qlogin ")
                           + " -N " + jobName + " "
-                          + " -q " + queue + " " //specify one of them: COE-GPU,UI-DEVELOP,UI-GPU
-                          + " -l " + gpuResouce+ " "
+                          + " -q " + queue + " " //specify one of them: COE,UI-DEVELOP,UI-HM, UI-MPI
                           + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
     string qsubStr = qsubStrBasic;
     system(qsubStr.c_str());
 
-    cout<<"GPU Resource: "<<gpuResouce<<endl;
     cout << "qlogin submitted: " << jobName <<endl;
     return 0;
 
