@@ -52,7 +52,11 @@ private:
     void expandDyTensor(const Tensor<float>* pdY);
     void freeExpandDy();
     void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
-    void computeDX(const Tensor<float>* pdY, const Tensor<float>* pW);//Note: dx need to accumulate along filters
+
+    //Note: dx need to accumulate along filters
+    // if pdx == nullptr, computeDx will use previousLayer->pdY;
+    // if pdx !=  nullptr, computeX will use it to compute dx for one filter;
+    void computeDX(const Tensor<float>* pdY, const Tensor<float>* pW, Tensor<float>* pdX = nullptr);
     void updateTensorSize();
     void computeOneFiterN();
 
