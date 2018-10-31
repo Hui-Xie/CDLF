@@ -12,7 +12,6 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prev
     if (checkFilterSize(filterSize, prevLayer)) {
         m_type = "ConvolutionLayer";
         m_stride = stride;
-        m_expandDy = nullptr;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
         addPreviousLayer(prevLayer);
@@ -39,11 +38,6 @@ ConvolutionLayer::~ConvolutionLayer() {
     }
     delete[] m_pW;
     delete[] m_pdW;
-
-    if (nullptr != m_expandDy) {
-        delete m_expandDy;
-        m_expandDy = nullptr;
-    }
 }
 
 // the filterSize in each dimension should be odd,
@@ -101,7 +95,6 @@ void ConvolutionLayer::constructFiltersAndY() {
         m_pW[i] = new Tensor<float>(m_filterSize);
         m_pdW[i] = new Tensor<float>(m_filterSize);
     }
-
     allocateYdYTensor();
 }
 
@@ -426,34 +419,48 @@ void ConvolutionLayer::forward() {
 void ConvolutionLayer::backward(bool computeW) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
-        /*// single thread computation
+       /* // single thread computation
+        const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
+        vector<long> expandDyDims = Xdims + m_filterSize - 1;
+        Tensor<float>* pExpandDY = new Tensor<float>(expandDyDims);
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //index of Filter
             Tensor<float> *pdY = nullptr;
             m_pdYTensor->extractLowerDTensor(idxF, pdY);
             if (computeW) computeDW(pdY, m_pdW[idxF]);
-            computeDX(pdY, m_pW[idxF]);//Note: dx need to accumulate along filters
+
+            expandDyTensor(pdY, pExpandDY);
+            computeDX(pExpandDY, m_pW[idxF]);//Note: dx need to accumulate along filters
+
             if(nullptr != pdY){
                 delete pdY;
             }
+        }
+        if(nullptr != pExpandDY){
+            delete pExpandDY;
         }*/
 
         // multithread computation
         // allocate pdX and pdY along the filters
         Tensor<float>** pdY = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float>** pdX = (Tensor<float> **) new void *[m_numFilters];
+        Tensor<float>** pExpandDY = (Tensor<float> **) new void *[m_numFilters];
         for (int i = 0; i < m_numFilters; ++i) {
            pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
            pdX[i]->zeroInitialize();  // this is a necessary step as computeDX use += operator
            //pdY memory will be allocated in the extractLowerDTensor function
+            const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
+            vector<long> expandDyDims = Xdims + m_filterSize - 1;
+            pExpandDY[i] = new Tensor<float>(expandDyDims);
         }
 
         vector<std::thread> threadVec;
         for (int idxF = 0; idxF < m_numFilters; ++idxF){
             threadVec.push_back(thread(
-                    [this, idxF, pdY, computeW, pdX](){
+                    [this, idxF, pdY, pExpandDY, computeW, pdX](){
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        this->computeDX(pdY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                        this->expandDyTensor(pdY[idxF], pExpandDY[idxF]);
+                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                     }
             ));
         }
@@ -477,14 +484,31 @@ void ConvolutionLayer::backward(bool computeW) {
                 delete pdX[i];
                 pdX[i] = nullptr;
             }
+
+            if (nullptr != pExpandDY[i]) {
+                delete pExpandDY[i];
+                pExpandDY[i] = nullptr;
+            }
+
         }
         delete[] pdX;
         delete[] pdY;
+        delete[] pExpandDY;
 
     } else {
         // single thread compute
         if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
-        computeDX(m_pdYTensor, m_pW[0]);
+
+        const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
+        vector<long> expandDyDims = Xdims + m_filterSize - 1;
+        Tensor<float>* pExpandDY = new Tensor<float>(expandDyDims);
+        expandDyTensor(m_pdYTensor, pExpandDY);
+
+        computeDX(pExpandDY, m_pW[0]);
+        if(nullptr != pExpandDY){
+            delete pExpandDY;
+        }
+
     }
 }
 
@@ -496,19 +520,13 @@ void ConvolutionLayer::updateParameters(const float lr, const string &method, co
     }
 }
 
-void ConvolutionLayer::freeExpandDy() {
-    if (nullptr != m_expandDy) {
-        delete m_expandDy;
-        m_expandDy = nullptr;
-    }
-}
 
-void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
-    freeExpandDy();
-    const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-    vector<long> expandDyDims = Xdims + m_filterSize - 1;
-    m_expandDy = new Tensor<float>(expandDyDims);
-    m_expandDy->zeroInitialize();
+void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor<float>* pExpandDY) {
+    //freeExpandDy();
+    //const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
+    //vector<long> expandDyDims = Xdims + m_filterSize - 1;
+    //m_expandDy = new Tensor<float>(expandDyDims);
+    pExpandDY->zeroInitialize();
     const Tensor<float> &dY = *pdY;
     vector<long> dYTensorSize = pdY->getDims();
 
@@ -522,14 +540,14 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
     if (2 == Nt && 1 == f.size()) {
         for (long i = 0; i < dYTensorSize[0]; ++i) {
             Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            m_expandDy->e(Xc) = dY(i, 0);
+            pExpandDY->e(Xc) = dY(i, 0);
         }
     } else if (2 == Nt && 2 == f.size()) {
         for (long i = 0; i < dYTensorSize[0]; ++i) {
             Xc[f[0]] = Xs[f[0]] + i * m_stride;
             for (long j = 0; j < dYTensorSize[1]; ++j) {
                 Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                m_expandDy->e(Xc) = dY(i, j);
+                pExpandDY->e(Xc) = dY(i, j);
             }
         }
     } else if (3 == Nt && 3 == f.size()) {
@@ -539,7 +557,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                 Xc[f[1]] = Xs[f[1]] + j * m_stride;
                 for (long k = 0; k < dYTensorSize[2]; ++k) {
                     Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    m_expandDy->e(Xc) = dY(i, j, k);
+                    pExpandDY->e(Xc) = dY(i, j, k);
                 }
             }
         }
@@ -552,7 +570,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                     Xc[f[2]] = Xs[f[2]] + k * m_stride;
                     for (long l = 0; l < dYTensorSize[3]; ++l) {
                         Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        m_expandDy->e(Xc) = dY(i, j, k, l);
+                        pExpandDY->e(Xc) = dY(i, j, k, l);
                     }
                 }
             }
@@ -568,7 +586,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                         Xc[f[3]] = Xs[f[3]] + l * m_stride;
                         for (long m = 0; m < dYTensorSize[4]; ++m) {
                             Xc[f[4]] = Xs[f[4]] + m * m_stride;
-                            m_expandDy->e(Xc) = dY(i, j, k, l, m);
+                            pExpandDY->e(Xc) = dY(i, j, k, l, m);
                         }
                     }
                 }
@@ -587,7 +605,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                             Xc[f[4]] = Xs[f[4]] + m * m_stride;
                             for (long n = 0; n < dYTensorSize[5]; ++n) {
                                 Xc[f[5]] = Xs[f[5]] + n * m_stride;
-                                m_expandDy->e(Xc) = dY(i, j, k, l, m, n);
+                                pExpandDY->e(Xc) = dY(i, j, k, l, m, n);
                             }
                         }
                     }
@@ -610,7 +628,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY) {
                                 Xc[f[5]] = Xs[f[5]] + n * m_stride;
                                 for (long o = 0; o < dYTensorSize[6]; ++o) {
                                     Xc[f[6]] = Xs[f[6]] + o * m_stride;
-                                    m_expandDy->e(Xc) = dY(i, j, k, l, m, n, o);
+                                    pExpandDY->e(Xc) = dY(i, j, k, l, m, n, o);
                                 }
                             }
                         }
@@ -729,8 +747,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
 }
 
 //Note: dx need to accumulate along filters
-void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *pW, Tensor<float>* pdX) {
-    expandDyTensor(pdY);
+void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float>* pdX) {
     if (nullptr == pdX){
         pdX = m_prevLayer->m_pdYTensor;
     }
@@ -741,7 +758,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
         for (long i = 0; i < dXdims[0]; ++i) {
             for (long j = 0; j < dXdims[1]; ++j) {
                 Tensor<float>* pSubExpandDy = nullptr;
-                m_expandDy->subTensorFromTopLeft({i, j}, m_filterSize, pSubExpandDy,1);
+                pExpandDY->subTensorFromTopLeft({i, j}, m_filterSize, pSubExpandDy,1);
                 pdX->e(i, j) += pSubExpandDy->flip().conv(*pW);
                 if (nullptr != pSubExpandDy){
                     delete pSubExpandDy;
@@ -753,7 +770,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
             for (long j = 0; j < dXdims[1]; ++j) {
                 for (long k = 0; k < dXdims[2]; ++k) {
                     Tensor<float>* pSubExpandDy = nullptr;
-                    m_expandDy->subTensorFromTopLeft({i, j, k}, m_filterSize, pSubExpandDy, 1);
+                    pExpandDY->subTensorFromTopLeft({i, j, k}, m_filterSize, pSubExpandDy, 1);
                     pdX->e(i, j, k) += pSubExpandDy->flip().conv(*pW);
                     if (nullptr != pSubExpandDy){
                         delete pSubExpandDy;
@@ -767,7 +784,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                 for (long k = 0; k < dXdims[2]; ++k) {
                     for (long l = 0; l < dXdims[3]; ++l) {
                         Tensor<float>* pSubExpandDy = nullptr;
-                        m_expandDy->subTensorFromTopLeft({i, j, k, l}, m_filterSize, pSubExpandDy,1);
+                        pExpandDY->subTensorFromTopLeft({i, j, k, l}, m_filterSize, pSubExpandDy,1);
                         pdX->e(i, j, k, l) += pSubExpandDy->flip().conv(*pW);
                         if (nullptr != pSubExpandDy){
                             delete pSubExpandDy;
@@ -783,7 +800,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                     for (long l = 0; l < dXdims[3]; ++l) {
                         for (long m = 0; m < dXdims[4]; ++m) {
                             Tensor<float>* pSubExpandDy = nullptr;
-                            m_expandDy->subTensorFromTopLeft({i, j, k, l, m}, m_filterSize, pSubExpandDy, 1);
+                            pExpandDY->subTensorFromTopLeft({i, j, k, l, m}, m_filterSize, pSubExpandDy, 1);
                             pdX->e(i, j, k, l, m) += pSubExpandDy->flip().conv(*pW);
                             if (nullptr != pSubExpandDy){
                                 delete pSubExpandDy;
@@ -801,7 +818,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                         for (long m = 0; m < dXdims[4]; ++m) {
                             for (long n = 0; n < dXdims[5]; ++n) {
                                 Tensor<float>* pSubExpandDy = nullptr;
-                                m_expandDy->subTensorFromTopLeft({i, j, k, l, m, n}, m_filterSize, pSubExpandDy, 1);
+                                pExpandDY->subTensorFromTopLeft({i, j, k, l, m, n}, m_filterSize, pSubExpandDy, 1);
                                 pdX->e(i, j, k, l, m, n) += pSubExpandDy->flip().conv(*pW);
                                 if (nullptr != pSubExpandDy){
                                     delete pSubExpandDy;
@@ -822,7 +839,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
                             for (long n = 0; n < dXdims[5]; ++n) {
                                 for (long o = 0; o < dXdims[6]; ++o) {
                                     Tensor<float>* pSubExpandDy = nullptr;
-                                    m_expandDy->subTensorFromTopLeft({i, j, k, l, m, n, o}, m_filterSize, pSubExpandDy, 1);
+                                    pExpandDY->subTensorFromTopLeft({i, j, k, l, m, n, o}, m_filterSize, pSubExpandDy, 1);
                                     pdX->e(i, j, k, l, m, n, o) += pSubExpandDy->flip().conv(*pW);
                                     if (nullptr != pSubExpandDy){
                                         delete pSubExpandDy;
@@ -838,7 +855,6 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pdY, const Tensor<float> *
     else {
         cout << "Error: Dimension >7 does not support in ConvolutionLayer::computeDX." << endl;
     }
-    freeExpandDy();
 }
 
 long ConvolutionLayer::getNumParameters(){

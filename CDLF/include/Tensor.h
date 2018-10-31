@@ -92,8 +92,8 @@ public:
     Tensor reshape(vector<long> newDims);
 
 
-    void subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
-    void subTensorFromTopLeft(const vector<long>& tlIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1);
+    void subTensorFromCenter(const vector<long>& centralIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1) const;
+    void subTensorFromTopLeft(const vector<long>& tlIndex,const vector<long>& span, Tensor* & pTensor, const int stride =1) const ;
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);

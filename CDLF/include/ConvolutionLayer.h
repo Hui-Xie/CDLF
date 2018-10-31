@@ -31,7 +31,6 @@ public:
 
     Tensor<float>**  m_pW;
     Tensor<float>**  m_pdW;
-    Tensor<float>*  m_expandDy;
     int m_numFilters;
     vector<long> m_filterSize;
 
@@ -49,14 +48,13 @@ private:
     int m_OneFilterN;
 
     bool checkFilterSize(const vector<long>& filterSize, Layer* prevLayer);
-    void expandDyTensor(const Tensor<float>* pdY);
-    void freeExpandDy();
+    void expandDyTensor(const Tensor<float>* pdY, Tensor<float>* pExpandDY);
     void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
 
     //Note: dx need to accumulate along filters
     // if pdx == nullptr, computeDx will use previousLayer->pdY;
     // if pdx !=  nullptr, computeX will use it to compute dx for one filter;
-    void computeDX(const Tensor<float>* pdY, const Tensor<float>* pW, Tensor<float>* pdX = nullptr);
+    void computeDX(const Tensor<float>* pExpandDY, const Tensor<float>* pW, Tensor<float>* pdX = nullptr);
     void updateTensorSize();
     void computeOneFiterN();
 

@@ -764,7 +764,7 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims) {
 template<class ValueType>
 void
 Tensor<ValueType>::subTensorFromCenter(const vector<long> &centralIndex, const vector<long> &span, Tensor *&pTensor,
-                                       const int stride) {
+                                       const int stride) const {
     pTensor = new Tensor<ValueType>(span);
     int N = span.size();
     vector<long> halfSpan = span / 2; //also the central voxel in the tensor(span), span must be odd in each element.
@@ -823,7 +823,7 @@ Tensor<ValueType>::subTensorFromCenter(const vector<long> &centralIndex, const v
 
 template<class ValueType>
 void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const vector<long> &span, Tensor *&pTensor,
-                                             const int stride) {
+                                             const int stride) const {
     int spanSize = span.size();
     pTensor = new Tensor<ValueType>(span);
 
