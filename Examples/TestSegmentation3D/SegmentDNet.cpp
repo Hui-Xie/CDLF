@@ -44,21 +44,21 @@ void SegmentDNet::build(){
     m_pMerger->addPreviousLayer(m_pGTLayer);
     m_pMerger->addPreviousLayer(m_pGxLayer);
 
-    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"D_Conv40", m_pMerger,{3,3,3,3},21);//outputsize: 21*106*263*263
+    ConvolutionLayer* conv40 = new ConvolutionLayer(40,"D_Conv40", m_pMerger,{3,3,3,3},3);//outputsize: 3*106*263*263
     addLayer(conv40);
     ReLU* reLU42 = new ReLU(42, "D_ReLU42", conv40);
     addLayer(reLU42);
     NormalizationLayer* norm44 = new NormalizationLayer(44,"D_norm44", reLU42);
     addLayer(norm44);
 
-    ConvolutionLayer* conv50 = new ConvolutionLayer(50,"D_Conv50", norm44,{21,3,3,3},21);//outputsize: 21*104*261*261
+    ConvolutionLayer* conv50 = new ConvolutionLayer(50,"D_Conv50", norm44,{3,3,3,3},3);//outputsize: 3*104*261*261
     addLayer(conv50);
     ReLU* reLU52 = new ReLU(52, "D_ReLU52", conv50);
     addLayer(reLU52);
     NormalizationLayer* norm54 = new NormalizationLayer(54,"D_norm54", reLU52);
     addLayer(norm54);
 
-    ConvolutionLayer* conv60 = new ConvolutionLayer(60,"D_Conv60", norm54,{21,3,3,3},1);//outputsize: 102*259*259
+    ConvolutionLayer* conv60 = new ConvolutionLayer(60,"D_Conv60", norm54,{3,3,3,3},1);//outputsize: 102*259*259
     addLayer(conv60);
     ReLU* reLU62 = new ReLU(62, "D_ReLU62", conv60);
     addLayer(reLU62);

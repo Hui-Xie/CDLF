@@ -78,6 +78,9 @@ int main(int argc, char *argv[])
     gan.setStubNet(&stubNet);
     gan.setStubLayer(stubNet.getFinalLayer());
 
+/*    cout<<"debug for network architecture"<<endl;
+    return -1;*/
+
     // pretrain DNet
     cout<<"Info: start pretrain D "<<endl;
     printCurrentLocalTime();
