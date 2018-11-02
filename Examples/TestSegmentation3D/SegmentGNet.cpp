@@ -79,10 +79,12 @@ void SegmentGNet::build(){
     addLayer(norm7);
 
     //connect 2nd branch from branch1 to merger
-    // branch1 output size: 31*118*275*275
-    ConvolutionLayer* conv8 = new ConvolutionLayer(110, "G_Conv8", branch1, {7,11,11,11}, 3); //output size: 3*108*265*265
+    // branch1 output size: 7*118*275*275
+    ConvolutionLayer* conv8 = new ConvolutionLayer(110, "G_Conv8", branch1, {7,3,3,3}, 3); //output size: 3*116*273*273
     addLayer(conv8);
-    ReLU* reLU8 = new ReLU(112, "G_ReLU8", conv8);
+    SubTensorLayer* subTensor8 = new SubTensorLayer(111, "G_SubTensor8", conv8, {0,4,4,4}, {3,108,265,265}); //output size: 3*108*265*265
+    addLayer(subTensor8);
+    ReLU* reLU8 = new ReLU(112, "G_ReLU8", subTensor8);
     addLayer(reLU8);
     NormalizationLayer* norm8 = new NormalizationLayer(114, "G_Norm8", reLU8);
     addLayer(norm8);
