@@ -25,24 +25,24 @@ void SegmentGNet::build(){
     NormalizationLayer* normAfterInput = new NormalizationLayer(2, "G_NormAfterInput", inputLayer);
     addLayer(normAfterInput);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(30, "G_Conv1", normAfterInput, {3,3, 3}, 7); //output size: 7*118*275*275
+    ConvolutionLayer* conv1 = new ConvolutionLayer(30, "G_Conv1", normAfterInput, {3,3, 3}, 3); //output size: 3*118*275*275
     addLayer(conv1);
     ReLU* reLU1 = new ReLU(32, "G_ReLU1", conv1);
     addLayer(reLU1);
     NormalizationLayer* norm1 = new NormalizationLayer(34, "G_Norm1", reLU1);
     addLayer(norm1);
 
-    BiasLayer* bias1 = new BiasLayer(40, "G_Bias1", norm1); //output size: 7*118*275*275
+    BiasLayer* bias1 = new BiasLayer(40, "G_Bias1", norm1); //output size: 3*118*275*275
     addLayer(bias1);
 
-    BranchLayer* branch1 = new BranchLayer(50, "G_Branch1", bias1); //output size: 7*118*275*275
+    BranchLayer* branch1 = new BranchLayer(50, "G_Branch1", bias1); //output size: 3*118*275*275
     addLayer(branch1);
     ReLU* reLU2 = new ReLU(52, "G_ReLU2", branch1);
     addLayer(reLU2);
     NormalizationLayer* norm2 = new NormalizationLayer(54, "G_Norm2", reLU2);
     addLayer(norm2);
 
-    ConvolutionLayer* conv3 = new ConvolutionLayer(60, "G_Conv3", norm2, {7,3, 3,3}, 3); //output size: 3*116*273*273
+    ConvolutionLayer* conv3 = new ConvolutionLayer(60, "G_Conv3", norm2, {3,3, 3,3}, 3); //output size: 3*116*273*273
     addLayer(conv3);
     ReLU* reLU3 = new ReLU(62, "G_ReLU3", conv3);
     addLayer(reLU3);
@@ -80,7 +80,7 @@ void SegmentGNet::build(){
 
     //connect 2nd branch from branch1 to merger
     // branch1 output size: 7*118*275*275
-    ConvolutionLayer* conv8 = new ConvolutionLayer(110, "G_Conv8", branch1, {7,3,3,3}, 3); //output size: 3*116*273*273
+    ConvolutionLayer* conv8 = new ConvolutionLayer(110, "G_Conv8", branch1, {3,3,3,3}, 3); //output size: 3*116*273*273
     addLayer(conv8);
     SubTensorLayer* subTensor8 = new SubTensorLayer(111, "G_SubTensor8", conv8, {0,4,4,4}, {3,108,265,265}); //output size: 3*108*265*265
     addLayer(subTensor8);

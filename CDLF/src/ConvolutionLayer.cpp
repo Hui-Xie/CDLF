@@ -419,7 +419,8 @@ void ConvolutionLayer::forward() {
 void ConvolutionLayer::backward(bool computeW) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
-       /* // single thread computation
+
+        /*//================== single thread computation =======================
         const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
         vector<long> expandDyDims = Xdims + m_filterSize - 1;
         Tensor<float>* pExpandDY = new Tensor<float>(expandDyDims);
@@ -439,7 +440,7 @@ void ConvolutionLayer::backward(bool computeW) {
             delete pExpandDY;
         }*/
 
-        // multithread computation
+        // ==================multithread computation=======================
         // allocate pdX and pdY along the filters
         Tensor<float>** pdY = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float>** pdX = (Tensor<float> **) new void *[m_numFilters];
