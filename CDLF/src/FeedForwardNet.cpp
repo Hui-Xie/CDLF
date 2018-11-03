@@ -30,8 +30,10 @@ void FeedForwardNet::forwardPropagate(){
     }
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
        iter->second->forward();
-       printf("  ==> Foward a layer: %s, finished at ", iter->second->m_name.c_str());
+       #ifdef DevDebug
+       printf("  ==> Foward layer of %s, finished at ", iter->second->m_name.c_str());
        printCurrentLocalTime();
+       #endif
     }
 }
 void FeedForwardNet::backwardPropagate(bool computeW){
@@ -43,8 +45,10 @@ void FeedForwardNet::backwardPropagate(bool computeW){
    }
    for (map<int, Layer*>::reverse_iterator rit=m_layers.rbegin(); rit!=m_layers.rend(); ++rit){
        rit->second->backward(computeW);
-       printf("<== Backward a layer: %s, finished at ", rit->second->m_name.c_str());
+       #ifdef DevDebug
+       printf("<== Backward layer of  %s, finished at ", rit->second->m_name.c_str());
        printCurrentLocalTime();
+       #endif
    }
 }
 

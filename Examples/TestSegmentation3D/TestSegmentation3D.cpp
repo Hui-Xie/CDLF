@@ -82,6 +82,7 @@ int main(int argc, char *argv[])
     return -1;*/
 
     // pretrain DNet
+/*
     cout<<"Info: start pretrain D "<<endl;
     printCurrentLocalTime();
     int epochsPretrainD = 1; //100;
@@ -97,18 +98,22 @@ int main(int argc, char *argv[])
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
     }
+
+    */
     // train G, D: slowly alternative train
     cout<<"Info: start slow switch to train G and D "<<endl;
     printCurrentLocalTime();
     int epochsSlowSwitch = 1;//100;
     int epochsAlone = 1;// 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
+        /*
         for(int j=0; j< epochsAlone; ++j){
             gan.trainD();
         }
         for(int j=0; j<epochsAlone; ++j){
             gan.trainG();
         }
+        */
 
         cout<<"Slow Switch Epoch: "<<i<<endl;
         printCurrentLocalTime();

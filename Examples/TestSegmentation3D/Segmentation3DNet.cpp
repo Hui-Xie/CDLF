@@ -234,7 +234,7 @@ float Segmentation3DNet::testG(bool outputFile){
         m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
         delete pOneHotLabel;
 
-        forwardG();
+        m_pGNet->forwardPropagate();
         dice.e(i) = m_pGNet->m_pLossLayer->diceCoefficient();
 
         //0utput file
