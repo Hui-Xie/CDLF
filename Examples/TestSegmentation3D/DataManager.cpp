@@ -97,7 +97,10 @@ void DataManager::oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<
 }
 
 void DataManager::oneHot2Label(Tensor<float>* pOneHotLabel, Tensor<unsigned char>*& pLabel){
-     *pLabel = pOneHotLabel->getMaxPositionSubTensor();
+    if (nullptr == pLabel){
+        pLabel = new Tensor<unsigned char>();
+    }
+    *pLabel = pOneHotLabel->getMaxPositionSubTensor();
 }
 
 void DataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName){
