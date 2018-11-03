@@ -18,8 +18,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<" <imageAndLabelDir> [outputTestLabelsDir]"<<endl;
     cout<<"Where the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
-    cout<<"And the corresponding images file and label file should have same filename in different directory. "<<endl;
-    cout<<"outputTestLabelsDir is the directory for outputing test label files"<<endl;
+    cout<<"And the corresponding images file and label file should have same filename in different directories. "<<endl;
+    cout<<"outputTestLabelsDir is the directory for outputting test label files"<<endl;
     cout<<"Input parameter example: /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
 }
 
@@ -91,14 +91,14 @@ int main(int argc, char *argv[])
 
 
     // train G, D: quick alternative train
-    cout<<"Info: start quickly switch train G and D "<<endl;
+    cout<<"Info: start quick switch to train G and D "<<endl;
     printCurrentLocalTime();
     int epochsQuickSwitch = 1; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
     }
     // train G, D: slowly alternative train
-    cout<<"Info: start slowly switch train G and D "<<endl;
+    cout<<"Info: start slow switch to train G and D "<<endl;
     printCurrentLocalTime();
     int epochsSlowSwitch = 1;//100;
     int epochsAlone = 1;// 20;
@@ -110,7 +110,7 @@ int main(int argc, char *argv[])
             gan.trainG();
         }
 
-        cout<<"Slowly Switch Epoch: "<<i<<endl;
+        cout<<"Slow Switch Epoch: "<<i<<endl;
         printCurrentLocalTime();
         if (i != epochsSlowSwitch -1){
             gan.testG(false);

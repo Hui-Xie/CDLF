@@ -116,7 +116,7 @@ void Segmentation3DNet::trainG(){
             m_pDataMgr->readTrainLabelFile(index, pLabel);
             // cut original pLabel image to matched size
             Tensor<unsigned char>* pCutLabel = nullptr;
-            vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_pYTensor->getDims();
+            vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_prevLayer->m_pYTensor->getDims();
             cutTensorSize.erase(cutTensorSize.begin());
             pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
                                          cutTensorSize, pCutLabel, 1);
@@ -222,7 +222,7 @@ float Segmentation3DNet::testG(bool outputFile){
         m_pDataMgr->readTestLabelFile(i, pLabel);
         // cut original pLabel image to matched size
         Tensor<unsigned char>* pCutLabel = nullptr;
-        vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_pYTensor->getDims();
+        vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_prevLayer->m_pYTensor->getDims();
         cutTensorSize.erase(cutTensorSize.begin());
         pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
                                      cutTensorSize, pCutLabel, 1);
