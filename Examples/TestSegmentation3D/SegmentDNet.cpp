@@ -17,30 +17,30 @@ SegmentDNet::~SegmentDNet() {
 
 // build method must assign m_pGTLayer, m_pGxLayer, m_pInputXLayer, m_pMerger, m_pLossLayer;
 void SegmentDNet::build(){
-    m_pInputXLayer = new InputLayer(1,"D_OriginalInputLayer", {120,277,277});
+    m_pInputXLayer = new InputLayer(1,"D_OriginalInputLayer01", {120,277,277});
     addLayer(m_pInputXLayer);
-    NormalizationLayer* normAfterInput = new NormalizationLayer(4, "D_NormAfterInput", m_pInputXLayer);
-    addLayer(normAfterInput);
-    SubTensorLayer* subTensor1 = new SubTensorLayer(10,"D_SubTensor1", normAfterInput, {6,6,6}, {108,265,265}); //output size: 108*265*265
-    addLayer(subTensor1);
+    NormalizationLayer* normAfterInput04 = new NormalizationLayer(4, "D_NormAfterInput04", m_pInputXLayer);
+    addLayer(normAfterInput04);
+    SubTensorLayer* subTensor10 = new SubTensorLayer(10,"D_SubTensor10", normAfterInput04, {6,6,6}, {108,265,265}); //output size: 108*265*265
+    addLayer(subTensor10);
     //let this convolution layer to learn best parameter to match the probability
-    ConvolutionLayer* conv20 = new ConvolutionLayer(20, "D_Conv20", subTensor1,{1,1,1},3); //output: 3*108*265*265
+    ConvolutionLayer* conv20 = new ConvolutionLayer(20, "D_Conv20", subTensor10,{1,1,1},3); //output: 3*108*265*265
     addLayer(conv20);
     NormalizationLayer* norm24 = new NormalizationLayer(24, "D_Norm24", conv20);
     addLayer(norm24);
-    ScaleLayer* scale1 =new ScaleLayer(26, "D_Scale26", norm24);
-    addLayer(scale1);
+    ScaleLayer* scale26 =new ScaleLayer(26, "D_Scale26", norm24);
+    addLayer(scale26);
 
 
-    m_pGTLayer = new InputLayer(0, "D_GroundTruthLayer", {3, 108,265, 265}); //output size: 3*108*265*265
+    m_pGTLayer = new InputLayer(0, "D_GroundTruthLayer0", {3, 108,265, 265}); //output size: 3*108*265*265
     addLayer(m_pGTLayer);
 
-    m_pGxLayer = new InputLayer(2, "D_GxLayer", {3, 108,265, 265}); //output size: 3*108*265*265
+    m_pGxLayer = new InputLayer(2, "D_GxLayer02", {3, 108,265, 265}); //output size: 3*108*265*265
     addLayer(m_pGxLayer);
 
-    m_pMerger = new MergerLayer(30, "D_Merger1", {3,108,265,265});//output size: 3*108*265*265
+    m_pMerger = new MergerLayer(30, "D_Merger30", {3,108,265,265});//output size: 3*108*265*265
     addLayer(m_pMerger);
-    m_pMerger->addPreviousLayer(scale1);
+    m_pMerger->addPreviousLayer(scale26);
     m_pMerger->addPreviousLayer(m_pGTLayer);
     m_pMerger->addPreviousLayer(m_pGxLayer);
 
@@ -90,10 +90,10 @@ void SegmentDNet::build(){
     NormalizationLayer* norm94 = new NormalizationLayer(94,"D_norm94", reLU92);
     addLayer(norm94);
 
-    VectorizationLayer* vec1= new VectorizationLayer(110, "D_Vectorization1", norm94); // outputsize: 625*1
-    addLayer(vec1);
+    VectorizationLayer* vec110= new VectorizationLayer(110, "D_Vectorization110", norm94); // outputsize: 625*1
+    addLayer(vec110);
 
-    FCLayer* fc120 = new FCLayer(120, "D_fc120", vec1, 400); //outputsize 400*1
+    FCLayer* fc120 = new FCLayer(120, "D_fc120", vec110, 400); //outputsize 400*1
     addLayer(fc120);
     ReLU* reLU122 = new ReLU(122, "D_ReLU122", fc120);
     addLayer(reLU122);
@@ -130,12 +130,12 @@ void SegmentDNet::build(){
     NormalizationLayer* norm164 = new NormalizationLayer(164,"D_norm164", reLU162);
     addLayer(norm164);
 
-    SoftmaxLayer* softmax1 = new SoftmaxLayer(170, "D_softmax1", norm164);
-    addLayer(softmax1);
+    SoftmaxLayer* softmax170 = new SoftmaxLayer(170, "D_softmax170", norm164);
+    addLayer(softmax170);
 
-    CrossEntropyLoss* crossEntropy1 = new CrossEntropyLoss(180, "D_CrossEntropy1", softmax1);//outputsize 2*1
-    addLayer(crossEntropy1);
-    m_pLossLayer = crossEntropy1;
+    CrossEntropyLoss* crossEntropy200 = new CrossEntropyLoss(200, "D_CrossEntropy200", softmax170);//outputsize 2*1
+    addLayer(crossEntropy200);
+    m_pLossLayer = crossEntropy200;
 
 }
 
