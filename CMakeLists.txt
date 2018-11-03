@@ -20,6 +20,14 @@ else(${Use_GPU})
     message("Info: Program compile with CPU, without GPU.")
 endif(${Use_GPU})
 
+if (${Dev_Debug})
+    add_compile_definitions(Dev_Debug)
+    message("Info: Program will print the excutive time of each layer.")
+else(${Dev_Debug})
+    message("Info: Program Dev_Debug is off, which, if on, will print the excutive time of each layer.")
+endif(${Dev_Debug})
+
+
 message("*************************************")
 
 set(CDLF_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF/include)
@@ -34,7 +42,8 @@ message("3  in Clion File/Setting/Build/CMake/CMakeOptions config, there should 
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
--DUse_GPU=1")
+-DUse_GPU=1
+-DDev_Debug=0")
 message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
