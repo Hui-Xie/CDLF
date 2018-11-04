@@ -25,7 +25,7 @@ void printUsage(char* argv0){
 
 int main(int argc, char *argv[])
 {
-    cout<<"3D segmentation for One Sample";
+    //cout<<"3D segmentation for One Sample";
     printCurrentLocalTime();
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -81,32 +81,40 @@ int main(int argc, char *argv[])
     // pretrain DNet
     cout<<"Info: start pretrain D "<<endl;
     printCurrentLocalTime();
-    int epochsPretrainD = 1; //100;
+    int epochsPretrainD = 5; //100;
     for (int i=0; i< epochsPretrainD; ++i){
         gan.pretrainD();
+        printf("Pre-train D at %d of %d, ", i, epochsPretrainD);
+        printCurrentLocalTime();
     }
 
 
     // train G, D: quick alternative train
     cout<<"Info: start quick switch to train G and D "<<endl;
     printCurrentLocalTime();
-    int epochsQuickSwitch = 1; //100;
+    int epochsQuickSwitch = 10; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
+        printf("Quick switch train G_D at %d of %d, ", i,  epochsQuickSwitch);
+        printCurrentLocalTime();
     }
 
 
     // train G, D: slowly alternative train
     cout<<"Info: start slow switch to train G and D "<<endl;
     printCurrentLocalTime();
-    int epochsSlowSwitch = 1;//100;
-    int epochsAlone = 1;// 20;
+    int epochsSlowSwitch = 10;//100;
+    int epochsAlone = 5;// 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
         for(int j=0; j< epochsAlone; ++j){
             gan.trainD();
+            printf("Slow  switch train D at %d of %d, in %d of %d, ", j,  epochsAlone, i, epochsSlowSwitch);
+            printCurrentLocalTime();
         }
         for(int j=0; j<epochsAlone; ++j){
             gan.trainG();
+            printf("Slow  switch train G at %d of %d, in %d of %d, ", j,  epochsAlone, i, epochsSlowSwitch);
+            printCurrentLocalTime();
         }
 
         cout<<"Slow Switch Epoch: "<<i<<endl;
@@ -117,6 +125,9 @@ int main(int argc, char *argv[])
         else{
             gan.testG(true); //output file
         }
+
+        printf("Test G at %d of %d, ", i,  epochsSlowSwitch);
+        printCurrentLocalTime();
 
     }
 
