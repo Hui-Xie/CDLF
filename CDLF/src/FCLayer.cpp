@@ -115,3 +115,7 @@ void FCLayer::save(const string &netDir) {
 void FCLayer::load(const string &netDir) {
 
 }
+
+void FCLayer::saveArchitectLine(FILE *pFile) {
+
+}

@@ -73,4 +73,8 @@ void LossLayer::load(const string &netDir) {
 
 }
 
+void LossLayer::saveArchitectLine(FILE *pFile) {
+
+}
+
 

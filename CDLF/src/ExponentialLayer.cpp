@@ -59,3 +59,7 @@ void ExponentialLayer::save(const string &netDir) {
 void ExponentialLayer::load(const string &netDir) {
 
 }
+
+void ExponentialLayer::saveArchitectLine(FILE *pFile) {
+
+}

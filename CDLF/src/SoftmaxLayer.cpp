@@ -89,3 +89,7 @@ void SoftmaxLayer::save(const string &netDir) {
 void SoftmaxLayer::load(const string &netDir) {
 
 }
+
+void SoftmaxLayer::saveArchitectLine(FILE *pFile) {
+
+}

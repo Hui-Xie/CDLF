@@ -46,3 +46,7 @@ void IdentityLayer::save(const string &netDir) {
 void IdentityLayer::load(const string &netDir) {
 
 }
+
+void IdentityLayer::saveArchitectLine(FILE *pFile) {
+
+}

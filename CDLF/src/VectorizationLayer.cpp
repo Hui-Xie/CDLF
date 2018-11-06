@@ -50,3 +50,7 @@ void VectorizationLayer::save(const string &netDir) {
 void VectorizationLayer::load(const string &netDir) {
 
 }
+
+void VectorizationLayer::saveArchitectLine(FILE *pFile) {
+
+}

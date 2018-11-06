@@ -68,3 +68,7 @@ void SubTensorLayer::save(const string &netDir) {
 void SubTensorLayer::load(const string &netDir) {
 
 }
+
+void SubTensorLayer::saveArchitectLine(FILE *pFile) {
+
+}

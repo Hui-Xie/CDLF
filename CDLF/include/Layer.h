@@ -9,6 +9,7 @@
 //#include  <blaze/Math.h>
 #include <list>
 #include "Tensor.h"
+#include <cstdio>
 
 #ifdef Use_GPU
   #include "LayerCuda.h"
@@ -43,6 +44,7 @@ public:
     virtual  long getNumParameters() = 0; // return the number of learning parameters
     virtual  void save(const string& netDir)=0;
     virtual  void load(const string& netDir)=0;
+    virtual  void saveArchitectLine(FILE* pFile)=0;
 
 
     virtual void addPreviousLayer(Layer* prevLayer);

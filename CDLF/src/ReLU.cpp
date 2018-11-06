@@ -69,3 +69,7 @@ void ReLU::save(const string &netDir) {
 void ReLU::load(const string &netDir) {
 
 }
+
+void ReLU::saveArchitectLine(FILE *pFile) {
+
+}

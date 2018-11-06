@@ -4,11 +4,14 @@
 
 //
 
+#include <Net.h>
+
 #include "Net.h"
 #include "ConvolutionLayer.h"
 #include "MaxPoolingLayer.h"
 #include "GPUAttr.h"
 #include "FileTools.h"
+#include <cstdio>
 
 Net::Net(const string& name){
     m_name = name;
@@ -190,4 +193,56 @@ bool Net::layerExist(const Layer* layer){
         }
     }
     return false;
+}
+
+void Net::saveLayersArchitect() {
+    const string tableHead= "ID, Type, Name, previousLayerIDs, outputTensorSize, filterSize, numFilter, start, \n";
+    string filename = m_directory + "/LayersArchitetect.csv";
+    FILE * pFile;
+    pFile = fopen (filename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file.\n", filename.c_str());
+        return;
+    }
+    fputs(tableHead.c_str(), pFile);
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->saveArchitectLine(pFile);
+    }
+    fclose (pFile);
+}
+
+void Net::loadlayersArchitect() {
+
+}
+
+void Net::saveLayersParameters() {
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->save(m_directory);
+    }
+}
+
+void Net::loadLayersparameters() {
+    for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
+        iter->second->load(m_directory);
+    }
+}
+
+void Net::saveNetParameters() {
+
+}
+
+void Net::loadNetparameters() {
+
+}
+
+void Net::save() {
+    saveLayersArchitect();
+    saveNetParameters();
+    saveLayersParameters();
+}
+
+void Net::load() {
+   loadlayersArchitect();
+   loadNetparameters();
+   loadLayersparameters();
 }

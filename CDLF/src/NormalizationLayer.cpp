@@ -58,3 +58,7 @@ void NormalizationLayer::save(const string &netDir) {
 void NormalizationLayer::load(const string &netDir) {
 
 }
+
+void NormalizationLayer::saveArchitectLine(FILE *pFile) {
+
+}

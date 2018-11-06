@@ -70,3 +70,7 @@ void SigmoidLayer::save(const string &netDir) {
 void SigmoidLayer::load(const string &netDir) {
 
 }
+
+void SigmoidLayer::saveArchitectLine(FILE *pFile) {
+
+}
