@@ -12,7 +12,8 @@ if(ITK_FOUND)
     target_link_libraries(UniformLabel  ${ITK_LIBRARIES} ${CDLFLib})
 
     set(qSubImagesSrc qSubImages.cpp )
-    add_executable(qSubImages ${qSubImagesSrc} ${CDLFLib})
+    add_executable(qSubImages ${qSubImagesSrc})
+    target_link_libraries(qSubImages  ${CDLFLib} pthread)
 
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
