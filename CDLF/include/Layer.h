@@ -10,6 +10,7 @@
 #include <list>
 #include "Tensor.h"
 #include <cstdio>
+#include "FileTools.h"
 
 #ifdef Use_GPU
   #include "LayerCuda.h"
@@ -42,8 +43,11 @@ public:
     virtual  void backward(bool computeW)=0;
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;
     virtual  long getNumParameters() = 0; // return the number of learning parameters
+
+    // save and load methods are only for learning parameters
     virtual  void save(const string& netDir)=0;
     virtual  void load(const string& netDir)=0;
+
     virtual  void saveArchitectLine(FILE* pFile)=0;
 
 

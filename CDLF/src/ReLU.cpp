@@ -63,11 +63,11 @@ long  ReLU::getNumParameters(){
 }
 
 void ReLU::save(const string &netDir) {
-
+   //null
 }
 
 void ReLU::load(const string &netDir) {
-
+  //null
 }
 
 void ReLU::saveArchitectLine(FILE *pFile) {

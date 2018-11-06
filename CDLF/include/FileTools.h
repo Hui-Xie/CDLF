@@ -25,6 +25,8 @@ string getDirFromFileName(const string& fullPathFileName);
 
 bool dirExist(const string& dirPath);
 
+void createDir(const string& dirPath);
+
 void getFileVector(const string& dir, vector<string>& fileVector);
 
 void copyFile(const string& srcFilename, const string& dstFilename);

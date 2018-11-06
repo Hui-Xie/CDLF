@@ -109,7 +109,37 @@ long FCLayer::getNumParameters(){
 }
 
 void FCLayer::save(const string &netDir) {
+    FILE * pFile;
+    string filename;
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    createDir(layerDir);
+
+    filename= layerDir + "/W.csv";
+    pFile = fopen (filename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file.\n", filename.c_str());
+        return;
+    }
+    long N = m_pW->getLength();
+    for (int i=0; i<N; ++i){
+        fprintf(pFile, "%f,", m_pW->e(i));
+    }
+    fprintf(pFile,"\r\n");
+    fclose (pFile);
+
+    filename= layerDir + "/B.csv";
+    pFile = fopen (filename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file.\n", filename.c_str());
+        return;
+    }
+    N = m_pBTensor->getLength();
+    for (int i=0; i<N; ++i){
+        fprintf(pFile, "%f,", m_pBTensor->e(i));
+    }
+    fprintf(pFile,"\r\n");
+    fclose (pFile);
 }
 
 void FCLayer::load(const string &netDir) {

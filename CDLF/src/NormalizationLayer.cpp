@@ -52,11 +52,11 @@ long  NormalizationLayer::getNumParameters(){
 }
 
 void NormalizationLayer::save(const string &netDir) {
-
+  //null;
 }
 
 void NormalizationLayer::load(const string &netDir) {
-
+  //null;
 }
 
 void NormalizationLayer::saveArchitectLine(FILE *pFile) {

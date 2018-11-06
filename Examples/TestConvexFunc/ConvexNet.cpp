@@ -22,7 +22,7 @@ void ConvexNet::build(){
         return;
     }
     int layerID = 1;
-    InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",{m_layerWidthVector.at(0),1});
+    InputLayer* inputLayer = new InputLayer(layerID++, "InputLayer",{m_layerWidthVector.at(0),1});
     addLayer(inputLayer);
     for(int i =1; i< nLayers; ++i){
         FCLayer* fcLayer = new FCLayer(layerID++, "FCLayer"+to_string(i), getFinalLayer(), m_layerWidthVector.at(i));

@@ -63,6 +63,12 @@ bool dirExist(const string& dirPath){
     }
 }
 
+void createDir(const string& dirPath){
+    if (!dirExist(dirPath)){
+        mkdir(dirPath.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+    }
+}
+
 void getFileVector(const string& dir, vector<string>& fileVector){
     DIR* pDir = opendir(dir.c_str());
     struct dirent* pEntry;

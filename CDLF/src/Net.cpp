@@ -62,9 +62,7 @@ void Net::setDir(const string dir){
         netDir = string(cwd);
     }
     netDir += "/"+ m_name;
-    if (!dirExist(netDir)){
-        mkdir(netDir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
-    }
+    createDir(netDir);
     m_directory = netDir;
 }
 
@@ -238,7 +236,17 @@ void Net::loadLayersparameters() {
 }
 
 void Net::saveNetParameters() {
-
+    const string tableHead = "Name, LearningRate, BatchSize, Epoch, LossTolerance, JudgeLoss, \r\n";
+    string filename = m_directory + "/NetParameters.csv";
+    FILE * pFile;
+    pFile = fopen (filename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file.\n", filename.c_str());
+        return;
+    }
+    fputs(tableHead.c_str(), pFile);
+    fprintf(pFile, "%s, %f, %d, %ld, %f, %d, \r\n", m_name.c_str(), m_learningRate, m_batchSize, m_epoch, m_lossTolerance, m_judgeLoss?1:0);
+    fclose (pFile);
 }
 
 void Net::loadNetparameters() {
@@ -250,7 +258,7 @@ void Net::save() {
     saveNetParameters();
     saveLayersParameters();
 
-    cout<<"net architecture was saved at "<<m_directory<<endl;
+    cout<<"net architecture was saved at "<<m_directory<<" directory."<<endl;
 }
 
 void Net::load() {

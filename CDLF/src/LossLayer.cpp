@@ -66,11 +66,11 @@ long LossLayer::getNumParameters(){
 }
 
 void LossLayer::save(const string &netDir) {
-
+   //null
 }
 
 void LossLayer::load(const string &netDir) {
-
+  //null
 }
 
 void LossLayer::saveArchitectLine(FILE *pFile) {

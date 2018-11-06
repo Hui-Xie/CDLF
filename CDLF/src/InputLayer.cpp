@@ -66,7 +66,7 @@ long InputLayer::getNumParameters() {
 }
 
 void InputLayer::save(const string &netDir) {
-
+   //null
 }
 
 void InputLayer::load(const string &netDir) {
