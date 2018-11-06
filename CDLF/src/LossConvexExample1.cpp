@@ -5,6 +5,8 @@
 #include "LossConvexExample1.h"
 #include <iostream>
 #include <math.h>       /* pow */
+#include <LossConvexExample1.h>
+
 using namespace std;
 
 LossConvexExample1::LossConvexExample1(const int id, const string& name,  Layer *prevLayer): LossLayer(id,name, prevLayer){
@@ -49,3 +51,4 @@ void  LossConvexExample1::printGroundTruth(){
     }
     cout<<" )"<<endl;
 }
+

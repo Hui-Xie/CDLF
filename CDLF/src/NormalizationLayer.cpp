@@ -5,6 +5,8 @@
 #include "NormalizationLayer.h"
 #include "statisTool.h"
 #include <math.h>       /* sqrt */
+#include <NormalizationLayer.h>
+
 
 NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize){
     m_type = "NormalizationLayer";
@@ -47,4 +49,12 @@ void NormalizationLayer::updateParameters(const float lr, const string& method, 
 
 long  NormalizationLayer::getNumParameters(){
     return 0;
+}
+
+void NormalizationLayer::save(const string &netDir) {
+
+}
+
+void NormalizationLayer::load(const string &netDir) {
+
 }

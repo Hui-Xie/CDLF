@@ -2,6 +2,8 @@
 // Created by Hui Xie on 8/8/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved  .
 
+#include <CrossEntropyLoss.h>
+
 #include "CrossEntropyLoss.h"
 
 CrossEntropyLoss::CrossEntropyLoss(const int id, const string& name, Layer *prevLayer ): LossLayer(id,name,prevLayer){
@@ -89,4 +91,12 @@ float CrossEntropyLoss::diceCoefficient(){
 
 long CrossEntropyLoss::getNumParameters(){
     return 0;
+}
+
+void CrossEntropyLoss::save(const string &netDir) {
+
+}
+
+void CrossEntropyLoss::load(const string &netDir) {
+
 }

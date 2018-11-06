@@ -2,6 +2,8 @@
 // Created by Hui Xie on 7/19/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <BiasLayer.h>
+
 #include "BiasLayer.h"
 #include "statisTool.h"
 
@@ -56,4 +58,12 @@ void BiasLayer::updateParameters(const float lr, const string& method, const int
 
 long BiasLayer::getNumParameters(){
     return m_pBTensor->getLength();
+}
+
+void BiasLayer::save(const string &netDir) {
+
+}
+
+void BiasLayer::load(const string &netDir) {
+
 }

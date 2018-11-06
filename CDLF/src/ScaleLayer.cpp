@@ -4,6 +4,8 @@
 
 //
 
+#include <ScaleLayer.h>
+
 #include "ScaleLayer.h"
 
 
@@ -52,4 +54,12 @@ void ScaleLayer::updateParameters(const float lr, const string& method, const in
 
 long ScaleLayer::getNumParameters(){
     return 1;
+}
+
+void ScaleLayer::save(const string &netDir) {
+
+}
+
+void ScaleLayer::load(const string &netDir) {
+
 }

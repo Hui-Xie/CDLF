@@ -2,6 +2,8 @@
 // Created by Hui Xie on 6/7/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <ReLU.h>
+
 #include "ReLU.h"
 
 //ReLU has just one previous layer.
@@ -58,4 +60,12 @@ void ReLU::updateParameters(const float lr, const string& method, const int batc
 
 long  ReLU::getNumParameters(){
     return 0;
+}
+
+void ReLU::save(const string &netDir) {
+
+}
+
+void ReLU::load(const string &netDir) {
+
 }

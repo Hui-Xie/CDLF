@@ -12,6 +12,7 @@ public:
     ~LossConvexExample1();
     virtual void  printGroundTruth();
 
+
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();

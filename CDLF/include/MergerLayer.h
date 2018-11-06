@@ -30,6 +30,9 @@ public:
     void delPreviousLayer(Layer* prevLayer);
     virtual  long getNumParameters();
 
+    virtual  void save(const string& netDir);
+    virtual  void load(const string& netDir);
+
 private:
     bool isLayerInList(const Layer* layer);
     void delLayerFromList(const Layer* layer);

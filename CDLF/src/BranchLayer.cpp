@@ -2,6 +2,8 @@
 // Created by Hui Xie on 8/4/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <BranchLayer.h>
+
 #include "BranchLayer.h"
 
 BranchLayer::BranchLayer(const int id, const string& name, Layer *prevLayer): Layer(id, name, prevLayer->m_tensorSize)
@@ -44,5 +46,13 @@ void BranchLayer::addNextLayer(Layer* nextLayer){
 
 long BranchLayer::getNumParameters(){
     return 0;
+
+}
+
+void BranchLayer::save(const string &netDir) {
+
+}
+
+void BranchLayer::load(const string &netDir) {
 
 }

@@ -22,6 +22,9 @@ public:
     void setInputTensor(const Tensor<float>& inputTensor);
     void setInputTensor(const Tensor<unsigned char>& inputTensor);
     virtual  long getNumParameters();
+
+    virtual  void save(const string& netDir);
+    virtual  void load(const string& netDir);
 };
 
 

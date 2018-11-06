@@ -2,6 +2,8 @@
 // Created by Hui Xie on 6/6/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <InputLayer.h>
+
 #include "InputLayer.h"
 #include "statisTool.h"
 
@@ -60,4 +62,12 @@ void InputLayer::setInputTensor(const Tensor<unsigned char> &inputTensor) {
 
 long InputLayer::getNumParameters() {
     return 0;
+}
+
+void InputLayer::save(const string &netDir) {
+
+}
+
+void InputLayer::load(const string &netDir) {
+
 }

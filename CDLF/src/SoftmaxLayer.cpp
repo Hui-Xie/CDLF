@@ -4,6 +4,8 @@
 
 #include "SoftmaxLayer.h"
 #include <math.h>       /* exp */
+#include <SoftmaxLayer.h>
+
 
 SoftmaxLayer::SoftmaxLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize) {
     m_type = "SoftmaxLayer";
@@ -78,4 +80,12 @@ void SoftmaxLayer::updateParameters(const float lr, const string& method, const 
 
 long  SoftmaxLayer::getNumParameters(){
     return 0;
+}
+
+void SoftmaxLayer::save(const string &netDir) {
+
+}
+
+void SoftmaxLayer::load(const string &netDir) {
+
 }

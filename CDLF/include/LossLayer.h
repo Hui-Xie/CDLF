@@ -35,6 +35,9 @@ public:
     void setGroundTruth( const Tensor<unsigned  char>& groundTruth);
     virtual  long getNumParameters();
 
+    virtual  void save(const string& netDir);
+    virtual  void load(const string& netDir);
+
 };
 
 

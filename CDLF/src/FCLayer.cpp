@@ -5,6 +5,8 @@
 #include "FCLayer.h"
 #include "statisTool.h"
 #include <iostream>
+#include <FCLayer.h>
+
 
 using namespace std;
 
@@ -104,4 +106,12 @@ void FCLayer::printdWanddBVector() {
 
 long FCLayer::getNumParameters(){
     return m_pW->getLength() + m_pBTensor->getLength();
+}
+
+void FCLayer::save(const string &netDir) {
+
+}
+
+void FCLayer::load(const string &netDir) {
+
 }

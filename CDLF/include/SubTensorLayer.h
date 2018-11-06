@@ -29,6 +29,9 @@ public:
     virtual void updateParameters(const float lr, const string &method, const int batchSize = 1);
     virtual  long getNumParameters();
 
+    virtual  void save(const string& netDir);
+    virtual  void load(const string& netDir);
+
 private:
     vector<long> m_start;
     vector<long> m_span;

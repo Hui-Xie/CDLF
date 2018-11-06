@@ -56,6 +56,15 @@ public:
     void printLayersDY();
     void printArchitecture();
 
+    void saveLayersArchitect();
+    void loadlayersArchitect();
+    void saveLayersParameters();
+    void loadLayersparameters();
+    void saveNetParameters();
+    void loadNetparameters();
+
+    void save();
+    void load();
 
 protected:
     string m_name;

@@ -2,6 +2,8 @@
 // Created by Hui Xie on 8/4/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <MergerLayer.h>
+
 #include "MergerLayer.h"
 
 MergerLayer::MergerLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize)
@@ -79,4 +81,12 @@ void MergerLayer::delLayerFromList(const Layer* layer){
 
 long  MergerLayer::getNumParameters(){
     return 0;
+}
+
+void MergerLayer::save(const string &netDir) {
+
+}
+
+void MergerLayer::load(const string &netDir) {
+
 }

@@ -5,6 +5,8 @@
 #include "ConvolutionLayer.h"
 #include "statisTool.h"
 #include <thread>
+#include <ConvolutionLayer.h>
+
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
                                     const int numFilters, const int stride)
@@ -860,4 +862,12 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
 
 long ConvolutionLayer::getNumParameters(){
     return m_pW[0]->getLength()*m_numFilters;
+}
+
+void ConvolutionLayer::save(const string &netDir) {
+
+}
+
+void ConvolutionLayer::load(const string &netDir) {
+
 }

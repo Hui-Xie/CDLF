@@ -31,7 +31,10 @@
 #include "GPUAttr.h"
 #include "CPUAttr.h"
 #include "FileTools.h"
-
+#include "LossConvexExample1.h"
+#include "LossConvexExample2.h"
+#include "LossNonConvexExample1.h"
+#include "LossNonConvexExample2.h"
 
 
 #endif //CDLF_FRAMEWORK_CDLF_H

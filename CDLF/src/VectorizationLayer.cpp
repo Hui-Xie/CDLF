@@ -2,6 +2,8 @@
 // Created by Hui Xie on 8/8/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <VectorizationLayer.h>
+
 #include "VectorizationLayer.h"
 
 
@@ -39,4 +41,12 @@ void VectorizationLayer::updateParameters(const float lr, const string& method, 
 
 long  VectorizationLayer::getNumParameters(){
     return 0;
+}
+
+void VectorizationLayer::save(const string &netDir) {
+
+}
+
+void VectorizationLayer::load(const string &netDir) {
+
 }

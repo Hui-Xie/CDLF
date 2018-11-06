@@ -2,6 +2,8 @@
 // Created by Hui Xie on 7/28/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <MaxPoolingLayer.h>
+
 #include "MaxPoolingLayer.h"
 
 
@@ -311,6 +313,14 @@ void MaxPoolingLayer::updateParameters(const float lr, const string &method, con
 
 long  MaxPoolingLayer::getNumParameters(){
     return 0;
+}
+
+void MaxPoolingLayer::save(const string &netDir) {
+
+}
+
+void MaxPoolingLayer::load(const string &netDir) {
+
 }
 
 

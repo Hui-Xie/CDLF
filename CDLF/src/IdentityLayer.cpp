@@ -2,6 +2,8 @@
 // Created by Hui Xie on 8/3/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <IdentityLayer.h>
+
 #include "IdentityLayer.h"
 
 IdentityLayer::IdentityLayer(const int id, const string& name,Layer* prevLayer): Layer(id,name, prevLayer->m_tensorSize){
@@ -35,4 +37,12 @@ void IdentityLayer::updateParameters(const float lr, const string& method, const
 
 long IdentityLayer::getNumParameters(){
     return 0;
+}
+
+void IdentityLayer::save(const string &netDir) {
+
+}
+
+void IdentityLayer::load(const string &netDir) {
+
 }

@@ -1,5 +1,5 @@
 
 
-set(TestUnitFilterSrc UnitFilterNet.cpp TestUnitFilter.cpp LossConvexExample1.cpp )
+set(TestUnitFilterSrc UnitFilterNet.cpp TestUnitFilter.cpp)
 add_executable(TestUnitFilter ${TestUnitFilterSrc})
 target_link_libraries(TestUnitFilter ${CDLFLib} ${CUDA_LIBRARIES} pthread)

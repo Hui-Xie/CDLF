@@ -2,6 +2,8 @@
 // Created by Hui Xie on 8/4/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <SigmoidLayer.h>
+
 #include "SigmoidLayer.h"
 
 SigmoidLayer::SigmoidLayer(const int id, const string& name,Layer* prevLayer, const int k): Layer(id,name, prevLayer->m_tensorSize){
@@ -59,4 +61,12 @@ void SigmoidLayer::updateParameters(const float lr, const string& method, const 
 
 long  SigmoidLayer::getNumParameters(){
     return 0;
+}
+
+void SigmoidLayer::save(const string &netDir) {
+
+}
+
+void SigmoidLayer::load(const string &netDir) {
+
 }

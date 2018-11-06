@@ -5,6 +5,8 @@
 #include "LossLayer.h"
 #include <cmath>
 #include <iostream>
+#include <LossLayer.h>
+
 using namespace std;
 
 LossLayer::LossLayer(const int id, const string& name, Layer *prevLayer) : Layer(id,name,{}){
@@ -61,6 +63,14 @@ void LossLayer::setGroundTruth( const Tensor<unsigned  char>& groundTruth){
 
 long LossLayer::getNumParameters(){
     return 0;
+}
+
+void LossLayer::save(const string &netDir) {
+
+}
+
+void LossLayer::load(const string &netDir) {
+
 }
 
 

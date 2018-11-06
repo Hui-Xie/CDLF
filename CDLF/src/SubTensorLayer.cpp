@@ -2,6 +2,8 @@
 // Created by Hui Xie on 9/13/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <SubTensorLayer.h>
+
 #include "SubTensorLayer.h"
 
 
@@ -57,4 +59,12 @@ void SubTensorLayer::updateParameters(const float lr, const string& method, cons
 
 long  SubTensorLayer::getNumParameters(){
     return 0;
+}
+
+void SubTensorLayer::save(const string &netDir) {
+
+}
+
+void SubTensorLayer::load(const string &netDir) {
+
 }

@@ -26,6 +26,9 @@ public:
 
     virtual  long getNumParameters();
 
+    virtual  void save(const string& netDir);
+    virtual  void load(const string& netDir);
+
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();

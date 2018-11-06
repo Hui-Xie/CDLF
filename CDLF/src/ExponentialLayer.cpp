@@ -2,6 +2,8 @@
 // Created by Hui Xie on 9/10/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
+#include <ExponentialLayer.h>
+
 #include "ExponentialLayer.h"
 
 /* y_i = exp(x_i)
@@ -48,4 +50,12 @@ void ExponentialLayer::updateParameters(const float lr, const string& method, co
 
 long ExponentialLayer::getNumParameters(){
     return 0;
+}
+
+void ExponentialLayer::save(const string &netDir) {
+
+}
+
+void ExponentialLayer::load(const string &netDir) {
+
 }
