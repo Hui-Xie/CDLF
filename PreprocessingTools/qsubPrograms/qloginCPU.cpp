@@ -14,25 +14,26 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"qlogin to apply CPU resource in HPC"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" <CPUQueue> [numSlots]"<<endl;
-    cout<<"CPUQueue: COE,UI-DEVELOP,UI-HM, UI-MPI;  Choose only one." <<endl;
+    cout<<argv0<<" <jobName> <CPUQueue> <numSlots>"<<endl;
+    cout<<"jobName: it specify the output file in the ~/temp_qsub directory."<<endl;
+    cout<<"CPUQueue: COE, UI-DEVELOP, UI-HM, UI-MPI, all.q;  Choose only one." <<endl;
     cout<<"numSlots: number of slots"<<endl;
 }
 
 
 int main(int argc, char *argv[]) {
     // notes: all command paramaeters have a space at front and at tail
-    if (3 != argc){
+    if (4 != argc){
         printUsage(argv[0]);
         return -1;
     }
-    string queue = argv[1];
-    int numSlots = atoi(argv[2]);
+    string jobName = argv[1];
+    string queue = argv[2];
+    int numSlots = atoi(argv[3]);
 
-    string jobName = "SessCPU";
     string qsubStrBasic = string(" qlogin ")
                           + " -N " + jobName + " "
-                          + " -q " + queue + " " //specify one of them: COE,UI-DEVELOP,UI-HM, UI-MPI
+                          + " -q " + queue + " "
                           + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
