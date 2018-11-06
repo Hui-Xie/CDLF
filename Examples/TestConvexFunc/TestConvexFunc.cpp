@@ -76,11 +76,18 @@ int main (int argc, char *argv[])
     net.setLossTolerance(0.02);
     net.setBatchSize(20);
     net.initialize();
+    net.setDir(".");
+    net.printArchitecture();
+
+
 
     net.train();
     net.test();
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     printCurrentLocalTime();
+
+    net.save();
+
     return 0;
 
 }

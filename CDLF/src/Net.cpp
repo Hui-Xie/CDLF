@@ -12,6 +12,8 @@
 #include "GPUAttr.h"
 #include "FileTools.h"
 #include <cstdio>
+#include <unistd.h>
+
 
 Net::Net(const string& name){
     m_name = name;
@@ -53,10 +55,17 @@ void Net::setEpoch(const long epoch){
 }
 
 void Net::setDir(const string dir){
-    if (!dirExist(dir)){
-        mkdir(dir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+    string netDir = dir;
+    if ("." == netDir){
+        char cwd[PATH_MAX];
+        getcwd(cwd, sizeof(cwd));
+        netDir = string(cwd);
     }
-    m_directory = dir;
+    netDir += "/"+ m_name;
+    if (!dirExist(netDir)){
+        mkdir(netDir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+    }
+    m_directory = netDir;
 }
 
 string Net::getName(){
@@ -196,8 +205,8 @@ bool Net::layerExist(const Layer* layer){
 }
 
 void Net::saveLayersArchitect() {
-    const string tableHead= "ID, Type, Name, previousLayerIDs, outputTensorSize, filterSize, numFilter, start, \n";
-    string filename = m_directory + "/LayersArchitetect.csv";
+    const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, StartPosition, \r\n";
+    string filename = m_directory + "/LayersArchitecture.csv";
     FILE * pFile;
     pFile = fopen (filename.c_str(),"w");
     if (nullptr == pFile){
@@ -211,6 +220,7 @@ void Net::saveLayersArchitect() {
     fclose (pFile);
 }
 
+//load Architecture file and create layers
 void Net::loadlayersArchitect() {
 
 }
@@ -239,6 +249,8 @@ void Net::save() {
     saveLayersArchitect();
     saveNetParameters();
     saveLayersParameters();
+
+    cout<<"net architecture was saved at "<<m_directory<<endl;
 }
 
 void Net::load() {

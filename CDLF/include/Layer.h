@@ -23,7 +23,7 @@ public:
     Layer(const int id, const string& name, const vector<long>& tensorSize);
     ~Layer();
 
-    int m_id;
+    int m_id; // id >0, 0 means null;
     string m_name;
     string m_type;
 

@@ -74,7 +74,9 @@ void LossLayer::load(const string &netDir) {
 }
 
 void LossLayer::saveArchitectLine(FILE *pFile) {
-
+    //const string tableHead= "ID, Type, Name, previousLayerIDs, outputTensorSize, filterSize, numFilter, startPosition, \r\n";
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), "{}", 0, "{}");
 }
 
 

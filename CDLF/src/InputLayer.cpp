@@ -6,6 +6,7 @@
 
 #include "InputLayer.h"
 #include "statisTool.h"
+#include "Tools.h"
 
 InputLayer::InputLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize){
     m_type = "InputLayer";
@@ -73,5 +74,6 @@ void InputLayer::load(const string &netDir) {
 }
 
 void InputLayer::saveArchitectLine(FILE *pFile) {
-
+    //const string tableHead= "ID, Type, Name, previousLayerIDs, outputTensorSize, filterSize, numFilter, startPosition, \r\n";
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), 0, vector2Str(m_tensorSize).c_str(), "{}", 0, "{}");
 }

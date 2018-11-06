@@ -5,6 +5,7 @@
 #include "assert.h"
 #include <iostream>
 #include <ctime>
+#include <sstream>
 
 
 bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
@@ -45,16 +46,6 @@ vector<long> reverseVector(const vector<long>& src){
         target.push_back(src[i]);
     }
     return target;
-}
-
-
-string vector2String(const vector<long>& src){
-    string outputString;
-    int length = src.size();
-    for(int i=0; i< length; ++i){
-        outputString += to_string(src[i])+ ((i==length-1)? " ": "*");
-    }
-    return outputString;
 }
 
 vector<long> operator+ (const vector<long>& left, const int offset){
@@ -164,6 +155,21 @@ string vector2Str(const vector<long>& vec){
      }
     result +="}";
     return result;
+}
+
+vector<long> str2Vector(const string& str){
+    string tempStr = str;
+    int N = tempStr.size();
+    for (int i=0; i<N; ++i){
+        if ('{'==tempStr[i] ||  '}' == tempStr[i] || '*'== tempStr[i]) tempStr[i] = ' ';
+    }
+    vector<long> vec;
+    stringstream stream(tempStr);
+    long num;
+    while (stream >> num){
+        vec.push_back(num);
+    }
+    return vec;
 }
 
 vector<long> generateRandomSequence(const long range) {

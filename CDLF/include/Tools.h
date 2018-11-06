@@ -17,8 +17,6 @@ bool sameLength(const vector<long>& vec1, const vector<long>& vec2);
 
 vector<long> reverseVector(const vector<long>& src);
 
-string vector2String(const vector<long>& src);
-
 vector<long> operator+ (const vector<long>& left, const int offset);
 
 vector<long> operator+ (const vector<long>& left, const vector<long>& right);
@@ -40,6 +38,8 @@ vector<long> nonZeroIndex(const vector<long>& vec);
 void printVector(const vector<long>& vec);
 
 string vector2Str(const vector<long>& vec);
+
+vector<long> str2Vector(const string& str);
 
 vector<long> generateRandomSequence(const long range);
 
