@@ -41,6 +41,8 @@ public:
     virtual  void backward(bool computeW)=0;
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;
     virtual  long getNumParameters() = 0; // return the number of learning parameters
+    virtual  void save(const string& netDir)=0;
+    virtual  void load(const string& netDir, const int id)=0;
 
 
     virtual void addPreviousLayer(Layer* prevLayer);
