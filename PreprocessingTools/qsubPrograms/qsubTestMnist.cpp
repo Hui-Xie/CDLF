@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
-                          + " -q " + queue + " " 
+                          + " -q " + queue + " "
                           + " -l " + gpuResouce+ " "
                           + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
