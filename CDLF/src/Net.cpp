@@ -8,6 +8,7 @@
 #include "ConvolutionLayer.h"
 #include "MaxPoolingLayer.h"
 #include "GPUAttr.h"
+#include "FileTools.h"
 
 Net::Net(const string& name){
     m_name = name;
@@ -48,6 +49,13 @@ void Net::setEpoch(const long epoch){
     m_epoch = epoch;
 }
 
+void Net::setDir(const string dir){
+    if (!dirExist(dir)){
+        mkdir(dir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+    }
+    m_directory = dir;
+}
+
 string Net::getName(){
    return m_name;
 }
@@ -68,6 +76,10 @@ int  Net::getBatchSize(){
 
 long  Net::getEpoch(){
     return m_epoch;
+}
+
+string Net::getDir(){
+    return m_directory;
 }
 
 map<int, Layer*> Net::getLayersMap(){

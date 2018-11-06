@@ -23,6 +23,8 @@ public:
     void setJudgeLoss(const bool judgeLoss);
     void setBatchSize(const int batchSize);
     void setEpoch(const long epoch);
+    void setDir(const string dir);
+
 
     string getName();
 
@@ -32,6 +34,7 @@ public:
     int  getBatchSize();
     long getEpoch();
     map<int, Layer*> getLayersMap();
+    string getDir();
 
     long getNumParameters();
 
@@ -64,7 +67,7 @@ protected:
     map<int, Layer*> m_layers;
     // check whether layer pointer and name are duplicated
     bool layerExist(const Layer* layer);
-
+    string m_directory;
 
 };
 

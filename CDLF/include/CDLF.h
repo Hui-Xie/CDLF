@@ -30,6 +30,7 @@
 #include "ScaleLayer.h"
 #include "GPUAttr.h"
 #include "CPUAttr.h"
+#include "FileTools.h"
 
 
 
