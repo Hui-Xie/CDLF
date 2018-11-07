@@ -66,7 +66,7 @@ int main (int argc, char *argv[])
     net.build();
 
     //convex example 1: f= \sum (x_i-i)^2
-    LossConvexExample1* lossLayer = new LossConvexExample1(1000, "ConvexLossLayer", net.getFinalLayer());
+    LossConvexExample1* lossLayer = new LossConvexExample1(100, "ConvexLossLayer", net.getFinalLayer());
 
     //convex example 2: f= = \sum exp(x_i -i)
     //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer",  net.getFinalLayer());

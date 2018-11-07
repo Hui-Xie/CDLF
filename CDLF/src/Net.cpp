@@ -13,6 +13,7 @@
 #include "FileTools.h"
 #include <cstdio>
 #include <unistd.h>
+#include <fstream>
 
 
 Net::Net(const string& name){
@@ -241,7 +242,7 @@ void Net::saveNetParameters() {
     FILE * pFile;
     pFile = fopen (filename.c_str(),"w");
     if (nullptr == pFile){
-        printf("Error: can not open  %s  file.\n", filename.c_str());
+        printf("Error: can not open  %s  file for writing.\n", filename.c_str());
         return;
     }
     fputs(tableHead.c_str(), pFile);
@@ -250,7 +251,19 @@ void Net::saveNetParameters() {
 }
 
 void Net::loadNetparameters() {
-
+    string filename = m_directory + "/NetParameters.csv";
+    ifstream ifs(filename.c_str());;
+    char netParameterChar[100];
+    int judgeLoss =0;
+    char name[100];
+    if (ifs.good()){
+        ifs.ignore(100, '\n'); // ignore the table head
+        ifs.getline(netParameterChar, 100, '\n');
+        sscanf(netParameterChar, "%s, %f, %d, %ld, %f, %d, \r\n", name, &m_learningRate, &m_batchSize, &m_epoch, &m_lossTolerance, &judgeLoss);
+    }
+    m_name = string(name);
+    m_judgeLoss = judgeLoss == 1 ? true: false;
+    ifs.close();
 }
 
 void Net::save() {
