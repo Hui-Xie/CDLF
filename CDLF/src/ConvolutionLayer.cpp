@@ -865,13 +865,56 @@ long ConvolutionLayer::getNumParameters(){
 }
 
 void ConvolutionLayer::save(const string &netDir) {
+    FILE * pFile = nullptr;
+    string filename = "";
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    createDir(layerDir);
+
+    for (int i=0; i<m_numFilters; ++i){
+        filename= layerDir + "/W"+to_string(i)+".csv";
+        pFile = fopen (filename.c_str(),"w");
+        if (nullptr == pFile){
+            printf("Error: can not open  %s  file  in writing.\n", filename.c_str());
+            return;
+        }
+        long N = m_pW[i]->getLength();
+        for (int i=0; i<N; ++i){
+            fprintf(pFile, "%f,", m_pW[i]->e(i));
+        }
+        fprintf(pFile,"\r\n");
+        fclose (pFile);
+    }
 }
 
 void ConvolutionLayer::load(const string &netDir) {
+    FILE *pFile = nullptr;
+    string filename = "";
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    if (!dirExist(layerDir)) {
+        initialize("Xavier");
+        return;
+    }
+    else {
+        for (int i = 0; i < m_numFilters; ++i) {
+            filename = layerDir + "/W" + to_string(i) + ".csv";
+            pFile = fopen(filename.c_str(), "r");
+            if (nullptr == pFile) {
+                printf("Error: can not open  %s  file for reading.\n", filename.c_str());
+                return;
+            }
+            long N = m_pW[i]->getLength();
+            for (int i = 0; i < N; ++i) {
+                fscanf(pFile, "%f,", &m_pW[i]->e(i));
+            }
+            fclose(pFile);
+        }
+    }
 }
 
 void ConvolutionLayer::saveStructLine(FILE *pFile) {
-
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, "{}");
 }

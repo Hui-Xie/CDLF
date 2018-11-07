@@ -84,13 +84,22 @@ long  MergerLayer::getNumParameters(){
 }
 
 void MergerLayer::save(const string &netDir) {
-
+//null
 }
 
 void MergerLayer::load(const string &netDir) {
-
+//null
 }
 
 void MergerLayer::saveStructLine(FILE *pFile) {
-
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
+    string prevLayersStr="";
+    int N = m_prevLayers.size();
+    list<Layer*>::const_iterator iterTemp;
+    for (list<Layer*>::const_iterator iter = m_prevLayers.begin(); iter != m_prevLayers.end(); ++iter){
+        iterTemp = iter;
+        prevLayersStr += to_string((*iter)->m_id) + ((++iterTemp == m_prevLayers.end())?"":"_");
+    }
+    fprintf(pFile, "%d, %s, %s, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), prevLayersStr.c_str(),
+            vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }

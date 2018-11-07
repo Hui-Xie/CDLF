@@ -57,13 +57,46 @@ long ScaleLayer::getNumParameters(){
 }
 
 void ScaleLayer::save(const string &netDir) {
+    FILE * pFile = nullptr;
+    string filename = "";
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    createDir(layerDir);
+
+    filename= layerDir + "/K.csv";
+    pFile = fopen (filename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file  in writing.\n", filename.c_str());
+        return;
+    }
+    fprintf(pFile, "%f,", m_k);
+    fprintf(pFile,"\r\n");
+    fclose (pFile);
 }
 
 void ScaleLayer::load(const string &netDir) {
+    FILE * pFile = nullptr;
+    string filename = "";
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    if (!dirExist(layerDir)){
+        initialize("Xavier");
+        return;
+    }
+    else{
+        filename= layerDir + "/K.csv";
+        pFile = fopen (filename.c_str(),"r");
+        if (nullptr == pFile){
+            printf("Error: can not open  %s  file for reading.\n", filename.c_str());
+            return;
+        }
+        fscanf(pFile, "%f,", &m_k);
+        fclose (pFile);
+    }
 }
 
 void ScaleLayer::saveStructLine(FILE *pFile) {
-
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }

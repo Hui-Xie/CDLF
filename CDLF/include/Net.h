@@ -18,6 +18,7 @@ struct LayerStruct{
     string m_type;
     string m_name;
     int m_preLayerID;
+    vector<long> m_preLayersIDs;
     vector<long> m_outputTensorSize;
     vector<long> m_filterSize;
     int m_numFilter;

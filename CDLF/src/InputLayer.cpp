@@ -70,7 +70,7 @@ void InputLayer::save(const string &netDir) {
 }
 
 void InputLayer::load(const string &netDir) {
-
+//null
 }
 
 void InputLayer::saveStructLine(FILE *pFile) {

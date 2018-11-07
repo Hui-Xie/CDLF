@@ -61,13 +61,52 @@ long BiasLayer::getNumParameters(){
 }
 
 void BiasLayer::save(const string &netDir) {
+    FILE * pFile = nullptr;
+    string filename = "";
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    createDir(layerDir);
+
+    filename= layerDir + "/B.csv";
+    pFile = fopen (filename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file in writing.\n", filename.c_str());
+        return;
+    }
+    long N = m_pBTensor->getLength();
+    for (int i=0; i<N; ++i){
+        fprintf(pFile, "%f,", m_pBTensor->e(i));
+    }
+    fprintf(pFile,"\r\n");
+    fclose (pFile);
 }
 
 void BiasLayer::load(const string &netDir) {
+    FILE * pFile = nullptr;
+    string filename = "";
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    if (!dirExist(layerDir)){
+        initialize("Xavier");
+        return;
+    }
+    else{
+        filename= layerDir + "/B.csv";
+        pFile = fopen (filename.c_str(),"r");
+        if (nullptr == pFile){
+            printf("Error: can not open  %s  file for reading.\n", filename.c_str());
+            return;
+        }
+        long N = m_pBTensor->getLength();
+        for (int i=0; i<N; ++i){
+            fscanf(pFile, "%f,", &m_pBTensor->e(i));
+        }
+        fclose (pFile);
+    }
 }
 
 void BiasLayer::saveStructLine(FILE *pFile) {
-
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }

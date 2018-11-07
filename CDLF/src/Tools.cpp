@@ -6,6 +6,7 @@
 #include <iostream>
 #include <ctime>
 #include <sstream>
+#include <cctype>
 
 
 bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
@@ -161,7 +162,7 @@ vector<long> str2Vector(const string& str){
     string tempStr = str;
     int N = tempStr.size();
     for (int i=0; i<N; ++i){
-        if ('{'==tempStr[i] ||  '}' == tempStr[i] || '*'== tempStr[i]) tempStr[i] = ' ';
+        if (!isdigit(tempStr[i])) tempStr[i] = ' ';
     }
     vector<long> vec;
     stringstream stream(tempStr);

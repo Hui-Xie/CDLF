@@ -229,6 +229,7 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
     char outputTensorSizeChar[30];
     char filterSizeChar[30];
     char startPosition[30];
+    char preLayersIDsChar[30];
     if (ifs.good()) {
         ifs.ignore(120, '\n'); // ignore the table head
         while (ifs.peek() != EOF) {
@@ -238,14 +239,18 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
             }
             // tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride, StartPosition,
             struct LayerStruct layerStruct;
-            int nFills = sscanf(lineChar, "%d  %s  %s  %d  %s  %s  %d  %d  %s  \r\n",
-                                &layerStruct.m_id, type, name, &layerStruct.m_preLayerID, outputTensorSizeChar,
+            int nFills = sscanf(lineChar, "%d  %s  %s  %s  %s  %s  %d  %d  %s  \r\n",
+                                &layerStruct.m_id, type, name, preLayersIDsChar, outputTensorSizeChar,
                                 filterSizeChar, &layerStruct.m_numFilter, &layerStruct.m_stride, startPosition);
             if (9 != nFills) {
                 cout << "Error: sscanf netParameterChar in loadLayersStruct at line: " << string(lineChar) << endl;
             } else {
                 layerStruct.m_type = string(type);
                 layerStruct.m_name = string(name);
+                layerStruct.m_preLayersIDs = str2Vector(string(preLayersIDsChar));
+                if (0 < layerStruct.m_preLayersIDs.size()){
+                    layerStruct.m_preLayerID = layerStruct.m_preLayersIDs[0];
+                }
                 layerStruct.m_outputTensorSize = str2Vector(string(outputTensorSizeChar));
                 layerStruct.m_filterSize = str2Vector(string(filterSizeChar));
                 layerStruct.m_startPosition = str2Vector(string(startPosition));
@@ -287,7 +292,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            pLayer = new ConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, s.m_stride);
         }
         else if ("BranchLayer" == s.m_type) {
-           pLayer = new BranchLayer(s.m_id, s.m_name, pPreLayer);  //todo: add branch
+           pLayer = new BranchLayer(s.m_id, s.m_name, pPreLayer);
         }
         else if ("BiasLayer" == s.m_type) {
            pLayer = new BiasLayer(s.m_id, s.m_name, pPreLayer);
@@ -305,7 +310,11 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            pLayer = new MaxPoolingLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_stride);
         }
         else if ("MergerLayer" == s.m_type) {
-           pLayer = new MergerLayer(s.m_id, s.m_name, s.m_outputTensorSize); //todo: add branch
+           pLayer = new MergerLayer(s.m_id, s.m_name, s.m_outputTensorSize);
+           int nInBranches = s.m_preLayersIDs.size();
+           for(int k=0; k<nInBranches; ++k){
+               pLayer->addPreviousLayer(m_layers[s.m_preLayersIDs[k]]);
+           }
         }
         else if ("ScaleLayer" == s.m_type) {
            pLayer = new ScaleLayer(s.m_id, s.m_name, pPreLayer);
@@ -410,4 +419,5 @@ void Net::load() {
     loadLayersStruct();
     loadNetParameters();
     loadLayersParameters();
+    cout<<"Net was loaded from "<<m_directory<<endl;
 }
