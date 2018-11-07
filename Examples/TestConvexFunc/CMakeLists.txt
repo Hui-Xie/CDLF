@@ -1,5 +1,5 @@
 
 
-set(TestConvexFuncSRCS ConvexNet.cpp TestConvexFunc.cpp)
-add_executable(TestConvexFunc ${TestConvexFuncSRCS})
-target_link_libraries(TestConvexFunc ${CDLFLib} ${CUDA_LIBRARIES} pthread)
+set(TrainConvexFuncSRCS ConvexNet.cpp TrainConvexFunc.cpp)
+add_executable(TrainConvexFunc ${TrainConvexFuncSRCS})
+target_link_libraries(TrainConvexFunc ${CDLFLib} ${CUDA_LIBRARIES} pthread)

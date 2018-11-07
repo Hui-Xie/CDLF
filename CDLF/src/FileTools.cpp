@@ -4,6 +4,8 @@
 
 #include "FileTools.h"
 #include <fstream>
+#include <dirent.h>
+#include <sys/types.h>
 
 bool isExceptionFile(const string file, const vector<string> exceptionFiles){
     long N = exceptionFiles.size();
@@ -84,4 +86,22 @@ void copyFile(const string& srcFilename, const string& dstFilename){
     std::ifstream  src(srcFilename.c_str(), std::ios::binary);
     std::ofstream  dst(dstFilename.c_str(),   std::ios::binary);
     dst << src.rdbuf();
+}
+
+
+
+int countEntriesInDir(const string& dirStr)
+{
+    int count=0;
+    dirent* entity;
+    DIR* pDir = opendir(dirStr.c_str());
+    if (pDir == NULL) return 0;
+    while((entity = readdir(pDir))!=NULL) count++;
+    closedir(pDir);
+    return count;
+}
+
+bool isEmptyDir(const string& dirStr){
+    if (countEntriesInDir(dirStr) > 2 ) return false;
+    else return true;
 }

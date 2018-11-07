@@ -59,9 +59,9 @@ public:
     void saveLayersArchitect();
     void loadlayersArchitect();
     void saveLayersParameters();
-    void loadLayersparameters();
+    void loadLayersParameters();
     void saveNetParameters();
-    void loadNetparameters();
+    void loadNetParameters();
 
     void save();
     void load();

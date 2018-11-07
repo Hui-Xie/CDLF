@@ -10,11 +10,13 @@
 
 using namespace std;
 
-void printUsage(){
+void printUsage(char* argv0){
     cout<<"A Fully-Connected Network compute loss function using statistic gradient descent."<<endl;
-    cout<<"Usage: cmd layerWidthVector"<<endl
-        <<"For example: cmd 5,7,8,10,5"<<endl
-        <<"Where layerWidthVector uses comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl;
+    cout<<"Usage: "<<endl
+        <<argv0<<" <layerWidthVector>  <netDirectory>"<<endl
+        <<"Where:"<<endl
+        <<"layerWidthVector: e.g.  5,7,8,10,5   uses comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl
+        <<"netDirectory: the storing directory of net parameters. If not empty, program will load network from this directory instead build network using layerWidthVector"<<endl;
 
 }
 
@@ -49,9 +51,9 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    if (2 != argc){
+    if (3 != argc){
         cout<<"Input parameter error. Exit"<<endl;
-        printUsage();
+        printUsage(argv[0]);
         return -1;
     }
     string stringLayersWidth = string(argv[1]);
@@ -61,25 +63,22 @@ int main (int argc, char *argv[])
         cout<<"Layer width string has error. Exit."<<endl;
         return -1;
     }
+
+    string netDir= string(argv[2]);
+
+    if (!dirExist(netDir)){
+        cout<<"Error: netParameter directory does not exist. exist"<<endl;
+        return -2;
+    }
+
     ConvexNet net("ConvexNet", layerWidthVector);
-
+    net.setDir(netDir);
     net.build();
-
-    //convex example 1: f= \sum (x_i-i)^2
-    LossConvexExample1* lossLayer = new LossConvexExample1(100, "ConvexLossLayer", net.getFinalLayer());
-
-    //convex example 2: f= = \sum exp(x_i -i)
-    //LossConvexExample2* lossLayer = new LossConvexExample2(1003, "ConvexLossLayer",  net.getFinalLayer());
-
-    net.addLayer(lossLayer);
     net.setLearningRate(0.01);
     net.setLossTolerance(0.02);
     net.setBatchSize(20);
     net.initialize();
-    net.setDir(".");
     net.printArchitecture();
-
-
 
     net.train();
     net.test();

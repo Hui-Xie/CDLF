@@ -230,7 +230,7 @@ void Net::saveLayersParameters() {
     }
 }
 
-void Net::loadLayersparameters() {
+void Net::loadLayersParameters() {
     for(map<int, Layer*>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter){
         iter->second->load(m_directory);
     }
@@ -250,7 +250,7 @@ void Net::saveNetParameters() {
     fclose (pFile);
 }
 
-void Net::loadNetparameters() {
+void Net::loadNetParameters() {
     string filename = m_directory + "/NetParameters.csv";
     ifstream ifs(filename.c_str());;
     char netParameterChar[100];
@@ -259,7 +259,13 @@ void Net::loadNetparameters() {
     if (ifs.good()){
         ifs.ignore(100, '\n'); // ignore the table head
         ifs.getline(netParameterChar, 100, '\n');
-        sscanf(netParameterChar, "%s, %f, %d, %ld, %f, %d, \r\n", name, &m_learningRate, &m_batchSize, &m_epoch, &m_lossTolerance, &judgeLoss);
+        for(int i=0; i< 100; ++i) {
+            if (netParameterChar[i] == ',') netParameterChar[i] = ' ';
+        }
+        int nFills = sscanf(netParameterChar, "%s  %f  %d  %ld  %f  %d  \r\n", name, &m_learningRate, &m_batchSize, &m_epoch, &m_lossTolerance, &judgeLoss);
+        if (6 != nFills){
+            cout<<"Error: sscanf netParameterChar in loadNetParameters."<<endl;
+        }
     }
     m_name = string(name);
     m_judgeLoss = judgeLoss == 1 ? true: false;
@@ -276,6 +282,6 @@ void Net::save() {
 
 void Net::load() {
    loadlayersArchitect();
-   loadNetparameters();
-   loadLayersparameters();
+   loadNetParameters();
+   loadLayersParameters();
 }
