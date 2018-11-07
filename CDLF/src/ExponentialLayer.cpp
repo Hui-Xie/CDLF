@@ -12,7 +12,7 @@
 
 
 ExponentialLayer::ExponentialLayer(const int id, const string& name,Layer* prevLayer): Layer(id,name, prevLayer->m_tensorSize){
-    m_type = "Exponential";
+    m_type = "ExponentialLayer";
     addPreviousLayer(prevLayer);
 }
 

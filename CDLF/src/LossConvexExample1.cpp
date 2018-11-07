@@ -10,7 +10,7 @@
 using namespace std;
 
 LossConvexExample1::LossConvexExample1(const int id, const string& name,  Layer *prevLayer): LossLayer(id,name, prevLayer){
-
+   m_type = "LossConvexExample1";
 }
 LossConvexExample1::~LossConvexExample1(){
 

@@ -90,6 +90,9 @@ protected:
     bool layerExist(const Layer* layer);
     string m_directory;
 
+    void readLayesStruct(vector<struct LayerStruct>& layersStructVec);
+    void createLayers(const vector<struct LayerStruct>& layersStructVec);
+
 };
 
 

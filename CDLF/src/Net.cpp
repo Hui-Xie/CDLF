@@ -7,14 +7,13 @@
 #include <Net.h>
 
 #include "Net.h"
-#include "ConvolutionLayer.h"
-#include "MaxPoolingLayer.h"
 #include "GPUAttr.h"
 #include "FileTools.h"
 #include <cstdio>
 #include <unistd.h>
 #include <fstream>
 #include "Tools.h"
+#include "AllLayers.h"
 
 
 Net::Net(const string& name){
@@ -220,9 +219,7 @@ void Net::saveLayersStruct(){
     fclose (pFile);
 }
 
-// tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, StartPosition,
-//load layers structure file and create layers
-void Net::loadLayersStruct() {
+void Net::readLayesStruct(vector<struct LayerStruct>& layersStructVec){
     string filename = m_directory + "/LayersStruct.csv";
     ifstream ifs(filename.c_str());;
     char lineChar[120];
@@ -231,7 +228,6 @@ void Net::loadLayersStruct() {
     char outputTensorSizeChar[30];
     char filterSizeChar[30];
     char startPosition[30];
-    vector<struct LayerStruct> layersStructVec;
     if (ifs.good()) {
         ifs.ignore(120, '\n'); // ignore the table head
         while (ifs.peek() != EOF) {
@@ -245,7 +241,7 @@ void Net::loadLayersStruct() {
                                 &layerStruct.m_id, type, name, &layerStruct.m_preLayerID, outputTensorSizeChar,
                                 filterSizeChar, &layerStruct.m_numFilter, startPosition);
             if (8 != nFills) {
-                cout << "Error: sscanf netParameterChar in loadLayersStruct." << endl;
+                cout << "Error: sscanf netParameterChar in loadLayersStruct at line: "<<string(lineChar) << endl;
             } else {
                 layerStruct.m_type = string(type);
                 layerStruct.m_name = string(name);
@@ -258,8 +254,49 @@ void Net::loadLayersStruct() {
         }
     }
     ifs.close();
+}
+
+void Net::createLayers(const vector<struct LayerStruct>& layersStructVec){
+    int N = layersStructVec.size();
+    Layer* pLayer = nullptr;
+    Layer* pPreLayer = nullptr;
+    for (int i=0; i<N; ++i){
+        const struct LayerStruct& s = layersStructVec[i];
+        if ("InputLayer" == s.m_type){
+            pLayer = new InputLayer(s.m_id, s.m_name,s.m_outputTensorSize);
+        }
+        else if ("FullyConnected" == s.m_type){
+            pPreLayer = m_layers[s.m_preLayerID];
+            pLayer = new FCLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize[0]);
+        }
+        else if ("ReLU" == s.m_type){
+            pPreLayer = m_layers[s.m_preLayerID];
+            pLayer = new ReLU(s.m_id, s.m_name, pPreLayer);
+        }
+        else if ("NormalizationLayer" == s.m_type){
+            pPreLayer = m_layers[s.m_preLayerID];
+            pLayer = new NormalizationLayer(s.m_id, s.m_name, pPreLayer);
+        }
+        else if ("LossConvexExample1" == s.m_type){
+            pPreLayer = m_layers[s.m_preLayerID];
+            pLayer = new LossConvexExample1(s.m_id, s.m_name, pPreLayer);
+        }
+        else{
+            cout<<"Error: "<<layersStructVec[i].m_type<<" does not support at the "<<i<<" line."<<endl;
+            break;
+        }
+        addLayer(pLayer);
+
+    }
+}
 
 
+// tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, StartPosition,
+//load layers structure file and create layers
+void Net::loadLayersStruct() {
+    vector<struct LayerStruct> layersStructVec;
+    readLayesStruct(layersStructVec);
+    createLayers(layersStructVec);
 }
 
 void Net::saveLayersParameters() {
@@ -314,7 +351,6 @@ void Net::save() {
     saveLayersStruct();
     saveNetParameters();
     saveLayersParameters();
-
     cout<<"net architecture was saved at "<<m_directory<<" directory."<<endl;
 }
 

@@ -17,7 +17,7 @@ using namespace std;
 FCLayer::FCLayer(const int id, const string &name,  Layer *prevLayer, const long outputWidth)
 : Layer(id, name,{outputWidth,1})
 {
-    m_type = "FullyConnected";
+    m_type = "FCLayer";
     m_m = outputWidth;
     m_n = prevLayer->m_tensorSize[0]; //input width
     m_pW = new Tensor<float>({m_m, m_n});

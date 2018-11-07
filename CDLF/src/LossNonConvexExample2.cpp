@@ -8,6 +8,7 @@
 using namespace std;
 
 LossNonConvexExample2::LossNonConvexExample2(const int id, const string& name,  Layer *prevLayer): LossLayer(id,name, prevLayer){
+    m_type = "LossNonConvexExample2";
     //previousLayer's width must be 2 for this specific non-convex function
     cout<<"Notes: Make sure that final layer only 1 neuron."<<endl;
 }
