@@ -265,7 +265,7 @@ void Net::createLayers(const vector<struct LayerStruct>& layersStructVec){
         if ("InputLayer" == s.m_type){
             pLayer = new InputLayer(s.m_id, s.m_name,s.m_outputTensorSize);
         }
-        else if ("FullyConnected" == s.m_type){
+        else if ("FCLayer" == s.m_type){
             pPreLayer = m_layers[s.m_preLayerID];
             pLayer = new FCLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize[0]);
         }
