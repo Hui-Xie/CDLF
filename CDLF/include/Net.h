@@ -13,6 +13,18 @@
 #include "InputLayer.h"
 #include "LossLayer.h"
 
+struct LayerStruct{
+    int m_id;
+    string m_type;
+    string m_name;
+    int m_preLayerID;
+    vector<long> m_outputTensorSize;
+    vector<long> m_filterSize;
+    int m_numFilter;
+    vector<long> m_startPosition;
+};
+
+
 class Net {
 public:
     Net(const string& name);
@@ -56,8 +68,8 @@ public:
     void printLayersDY();
     void printArchitecture();
 
-    void saveLayersArchitect();
-    void loadlayersArchitect();
+    void saveLayersStruct();
+    void loadLayersStruct();
     void saveLayersParameters();
     void loadLayersParameters();
     void saveNetParameters();

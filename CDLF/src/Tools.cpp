@@ -218,6 +218,16 @@ vector<long> dimsSpan(const vector<long> vec){
     return dimsSpan;
 }
 
+string eraseAllSpaces(string str){
+    for (string::iterator iter = str.begin(); iter< str.end(); ++iter){
+          if (*iter == ' '){
+              str.erase(iter);
+              --iter;
+          }
+    }
+    return str;
+}
+
 
 
 

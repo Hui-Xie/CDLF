@@ -14,10 +14,11 @@
 #include <cstdio>
 #include <unistd.h>
 #include <fstream>
+#include "Tools.h"
 
 
 Net::Net(const string& name){
-    m_name = name;
+    m_name = eraseAllSpaces(name);
     m_layers.clear();
     m_learningRate = 0.001;
     m_lossTolerance = 0.02;
@@ -203,9 +204,9 @@ bool Net::layerExist(const Layer* layer){
     return false;
 }
 
-void Net::saveLayersArchitect() {
+void Net::saveLayersStruct(){
     const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, StartPosition, \r\n";
-    string filename = m_directory + "/LayersArchitecture.csv";
+    string filename = m_directory + "/LayersStruct.csv";
     FILE * pFile;
     pFile = fopen (filename.c_str(),"w");
     if (nullptr == pFile){
@@ -219,8 +220,45 @@ void Net::saveLayersArchitect() {
     fclose (pFile);
 }
 
-//load Architecture file and create layers
-void Net::loadlayersArchitect() {
+// tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, StartPosition,
+//load layers structure file and create layers
+void Net::loadLayersStruct() {
+    string filename = m_directory + "/LayersStruct.csv";
+    ifstream ifs(filename.c_str());;
+    char lineChar[120];
+    char type[30];
+    char name[30];
+    char outputTensorSizeChar[30];
+    char filterSizeChar[30];
+    char startPosition[30];
+    vector<struct LayerStruct> layersStructVec;
+    if (ifs.good()) {
+        ifs.ignore(120, '\n'); // ignore the table head
+        while (ifs.peek() != EOF) {
+            ifs.getline(lineChar, 120, '\n');
+            for (int i = 0; i < 120; ++i) {
+                if (lineChar[i] == ',') lineChar[i] = ' ';
+            }
+            // tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, StartPosition,
+            struct LayerStruct layerStruct;
+            int nFills = sscanf(lineChar, "%d  %s  %s  %d  %s  %s  %d %s  \r\n",
+                                &layerStruct.m_id, type, name, &layerStruct.m_preLayerID, outputTensorSizeChar,
+                                filterSizeChar, &layerStruct.m_numFilter, startPosition);
+            if (8 != nFills) {
+                cout << "Error: sscanf netParameterChar in loadLayersStruct." << endl;
+            } else {
+                layerStruct.m_type = string(type);
+                layerStruct.m_name = string(name);
+                layerStruct.m_outputTensorSize = str2Vector(string(outputTensorSizeChar));
+                layerStruct.m_filterSize = str2Vector(string(filterSizeChar));
+                layerStruct.m_startPosition = str2Vector(string(startPosition));
+
+                layersStructVec.push_back(layerStruct);
+            }
+        }
+    }
+    ifs.close();
+
 
 }
 
@@ -273,7 +311,7 @@ void Net::loadNetParameters() {
 }
 
 void Net::save() {
-    saveLayersArchitect();
+    saveLayersStruct();
     saveNetParameters();
     saveLayersParameters();
 
@@ -281,7 +319,7 @@ void Net::save() {
 }
 
 void Net::load() {
-   loadlayersArchitect();
+   loadLayersStruct();
    loadNetParameters();
    loadLayersParameters();
 }

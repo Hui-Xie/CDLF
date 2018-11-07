@@ -4,11 +4,12 @@
 
 #include "Layer.h"
 #include <iostream>
+#include "Tools.h"
 using namespace std;
 
 Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
     m_id = id;
-    m_name = name;
+    m_name = eraseAllSpaces(name);
     m_type = "";
     m_prevLayer = nullptr;
     m_attribute = "";

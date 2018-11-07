@@ -49,5 +49,7 @@ void printCurrentLocalTime();
 
 vector<long> dimsSpan(const vector<long> vec);
 
+string eraseAllSpaces(string str);
+
 
 #endif //RL_NONCONVEX_TOOLS_H
