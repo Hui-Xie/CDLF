@@ -21,6 +21,7 @@ struct LayerStruct{
     vector<long> m_outputTensorSize;
     vector<long> m_filterSize;
     int m_numFilter;
+    int m_stride;  // or k in sigmoid
     vector<long> m_startPosition;
 };
 

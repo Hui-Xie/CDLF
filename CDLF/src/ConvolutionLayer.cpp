@@ -872,6 +872,6 @@ void ConvolutionLayer::load(const string &netDir) {
 
 }
 
-void ConvolutionLayer::saveArchitectLine(FILE *pFile) {
+void ConvolutionLayer::saveStructLine(FILE *pFile) {
 
 }

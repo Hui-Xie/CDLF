@@ -71,6 +71,6 @@ void SigmoidLayer::load(const string &netDir) {
 
 }
 
-void SigmoidLayer::saveArchitectLine(FILE *pFile) {
+void SigmoidLayer::saveStructLine(FILE *pFile) {
 
 }

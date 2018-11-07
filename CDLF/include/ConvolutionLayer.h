@@ -62,7 +62,7 @@ private:
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
-    virtual  void saveArchitectLine(FILE* pFile);
+    virtual  void saveStructLine(FILE* pFile);
 };
 
 

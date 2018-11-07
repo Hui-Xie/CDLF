@@ -64,6 +64,6 @@ void ScaleLayer::load(const string &netDir) {
 
 }
 
-void ScaleLayer::saveArchitectLine(FILE *pFile) {
+void ScaleLayer::saveStructLine(FILE *pFile) {
 
 }

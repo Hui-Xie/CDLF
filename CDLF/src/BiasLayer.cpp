@@ -68,6 +68,6 @@ void BiasLayer::load(const string &netDir) {
 
 }
 
-void BiasLayer::saveArchitectLine(FILE *pFile) {
+void BiasLayer::saveStructLine(FILE *pFile) {
 
 }

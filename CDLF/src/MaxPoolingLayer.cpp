@@ -323,7 +323,7 @@ void MaxPoolingLayer::load(const string &netDir) {
 
 }
 
-void MaxPoolingLayer::saveArchitectLine(FILE *pFile) {
+void MaxPoolingLayer::saveStructLine(FILE *pFile) {
 
 }
 

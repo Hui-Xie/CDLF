@@ -57,6 +57,6 @@ void BranchLayer::load(const string &netDir) {
 
 }
 
-void BranchLayer::saveArchitectLine(FILE *pFile) {
+void BranchLayer::saveStructLine(FILE *pFile) {
 
 }

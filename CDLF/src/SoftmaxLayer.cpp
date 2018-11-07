@@ -90,6 +90,6 @@ void SoftmaxLayer::load(const string &netDir) {
 
 }
 
-void SoftmaxLayer::saveArchitectLine(FILE *pFile) {
+void SoftmaxLayer::saveStructLine(FILE *pFile) {
 
 }

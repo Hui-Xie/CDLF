@@ -48,7 +48,7 @@ public:
     virtual  void save(const string& netDir)=0;
     virtual  void load(const string& netDir)=0;
 
-    virtual  void saveArchitectLine(FILE* pFile)=0;
+    virtual  void saveStructLine(FILE* pFile)=0;
 
 
     virtual void addPreviousLayer(Layer* prevLayer);

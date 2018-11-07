@@ -101,6 +101,6 @@ void CrossEntropyLoss::load(const string &netDir) {
 
 }
 
-void CrossEntropyLoss::saveArchitectLine(FILE *pFile) {
+void CrossEntropyLoss::saveStructLine(FILE *pFile) {
 
 }

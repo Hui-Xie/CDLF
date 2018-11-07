@@ -91,6 +91,6 @@ void MergerLayer::load(const string &netDir) {
 
 }
 
-void MergerLayer::saveArchitectLine(FILE *pFile) {
+void MergerLayer::saveStructLine(FILE *pFile) {
 
 }
