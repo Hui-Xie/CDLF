@@ -4,8 +4,6 @@
 
 //
 
-#include <Net.h>
-
 #include "Net.h"
 #include "GPUAttr.h"
 #include "FileTools.h"
@@ -14,7 +12,6 @@
 #include <fstream>
 #include "Tools.h"
 #include "AllLayers.h"
-
 
 Net::Net(const string &name) {
     m_name = eraseAllSpaces(name);

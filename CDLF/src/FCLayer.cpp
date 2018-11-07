@@ -143,7 +143,39 @@ void FCLayer::save(const string &netDir) {
 }
 
 void FCLayer::load(const string &netDir) {
+    FILE * pFile;
+    string filename;
 
+    string layerDir = netDir + "/" + to_string(m_id);
+    if (!dirExist(layerDir)){
+        initialize("Xavier");
+        return;
+    }
+    else{
+        filename= layerDir + "/W.csv";
+        pFile = fopen (filename.c_str(),"r");
+        if (nullptr == pFile){
+            printf("Error: can not open  %s  file for reading.\n", filename.c_str());
+            return;
+        }
+        long N = m_pW->getLength();
+        for (int i=0; i<N; ++i){
+            fscanf(pFile, "%f,", &m_pW->e(i));
+        }
+        fclose (pFile);
+
+        filename= layerDir + "/B.csv";
+        pFile = fopen (filename.c_str(),"r");
+        if (nullptr == pFile){
+            printf("Error: can not open  %s  file for reading.\n", filename.c_str());
+            return;
+        }
+        N = m_pBTensor->getLength();
+        for (int i=0; i<N; ++i){
+            fscanf(pFile, "%f,", &m_pBTensor->e(i));
+        }
+        fclose (pFile);
+    }
 }
 
 void FCLayer::saveStructLine(FILE *pFile) {

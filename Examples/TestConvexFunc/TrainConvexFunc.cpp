@@ -73,11 +73,17 @@ int main (int argc, char *argv[])
 
     ConvexNet net("ConvexNet", layerWidthVector);
     net.setDir(netDir);
-    net.build();
-    net.setLearningRate(0.01);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(20);
-    net.initialize();
+
+    if (dirExist(net.getDir())){
+        net.load();
+    }
+    else{
+        net.build();
+        net.initialize();
+        net.setLearningRate(0.01);
+        net.setLossTolerance(0.02);
+        net.setBatchSize(20);
+    }
     net.printArchitecture();
 
     net.train();
