@@ -17,7 +17,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    DAGNet net("DAGNet");
+    DAGNet net("DAGNet", ".");
     //net.build();
     net.buildSimple();
     net.printArchitecture();

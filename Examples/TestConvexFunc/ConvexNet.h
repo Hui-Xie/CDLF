@@ -10,7 +10,7 @@
 
 class ConvexNet : public FeedForwardNet {
 public:
-    ConvexNet(const string& name, const vector<long>& layerWidthVector);
+    ConvexNet(const string& name, const string& saveDir, const vector<long>& layerWidthVector);
     ~ConvexNet();
 
     virtual void build();

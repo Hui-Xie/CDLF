@@ -8,7 +8,7 @@
 void printUsage(char* argv0){
     cout<<"Test 10 digits 0-9 Simultaneously in MNIST Dataset:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" fullPathOfMnistDataDir netType"<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <netType>"<<endl;
     cout<<"where, netType string may choose 2D or 4D, which will build different convolution networks."<<endl;
 }
 
@@ -17,14 +17,15 @@ int main(int argc, char *argv[]){
 
     printCurrentLocalTime();
     
-    if (3 != argc){
+    if (4 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
     }
 
-    const string mnistDir = argv[1];
-    const string netType = argv[2]; // 2D or 4D
+    const string netDir = argv[1];
+    const string mnistDir = argv[2];
+    const string netType = argv[3]; // 2D or 4D
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -57,7 +58,7 @@ int main(int argc, char *argv[]){
     //cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
     // Construct FeedForwardNet and Train, Test
-    MnistConvNet net("MnistConvNet", &mnist);
+    MnistConvNet net("MnistConvNet", netDir, &mnist);
     //net.build();
     if (netType == "2D"){
         net.build2DConvolutionNet();

@@ -10,7 +10,7 @@
 
 class UnitFilterNet : public FeedForwardNet {
 public:
-    UnitFilterNet(const string& name);
+    UnitFilterNet(const string& name, const string& saveDir);
     ~UnitFilterNet();
 
     virtual void build();

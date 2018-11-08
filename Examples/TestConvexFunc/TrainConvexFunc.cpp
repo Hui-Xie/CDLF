@@ -13,10 +13,11 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"A Fully-Connected Network compute loss function using statistic gradient descent."<<endl;
     cout<<"Usage: "<<endl
-        <<argv0<<" <layerWidthVector>  <netDirectory>"<<endl
+        <<argv0<<"<netDirectory>  <layerWidthVector>  "<<endl
         <<"Where:"<<endl
-        <<"layerWidthVector: e.g.  5,7,8,10,5   uses comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl
-        <<"netDirectory: the storing directory of net parameters. If not empty, program will load network from this directory instead build network using layerWidthVector"<<endl;
+        <<"netDirectory: the storing directory of net parameters. If not empty, program will load network from this directory instead build network using layerWidthVector"<<endl
+        <<"layerWidthVector: e.g.  5,7,8,10,5   uses comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl;
+
 
 }
 
@@ -56,7 +57,8 @@ int main (int argc, char *argv[])
         printUsage(argv[0]);
         return -1;
     }
-    string stringLayersWidth = string(argv[1]);
+    string netDir= string(argv[1]);
+    string stringLayersWidth = string(argv[2]);
     vector<long> layerWidthVector;
     int result = convertCommaStrToVector(stringLayersWidth, layerWidthVector);
     if (0 != result){
@@ -64,25 +66,17 @@ int main (int argc, char *argv[])
         return -1;
     }
 
-    string netDir= string(argv[2]);
+    ConvexNet net("ConvexNet", netDir, layerWidthVector);
 
-    if (!dirExist(netDir)){
-        cout<<"Error: netParameter directory does not exist. exist"<<endl;
-        return -2;
-    }
-
-    ConvexNet net("ConvexNet", layerWidthVector);
-    net.setDir(netDir);
-
-    if (dirExist(net.getDir())){
-        net.load();
-    }
-    else{
+    if (isEmptyDir(net.getDir())){
         net.build();
         net.initialize();
         net.setLearningRate(0.01);
         net.setLossTolerance(0.02);
         net.setBatchSize(20);
+    }
+    else{
+        net.load();
     }
     net.printArchitecture();
 

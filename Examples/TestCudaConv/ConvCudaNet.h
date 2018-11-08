@@ -10,7 +10,7 @@
 
 class ConvCudaNet  : public FeedForwardNet {
 public:
-    ConvCudaNet(const string& name);
+    ConvCudaNet(const string& name, const string& saveDir);
     ~ConvCudaNet();
 
     virtual void build();

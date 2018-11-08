@@ -29,7 +29,7 @@ struct LayerStruct{
 
 class Net {
 public:
-    Net(const string& name);
+    Net(const string& name, const string& saveDir);
     ~Net();
 
     void setLearningRate(const float learningRate);

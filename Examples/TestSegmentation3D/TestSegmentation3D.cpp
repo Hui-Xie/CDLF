@@ -16,8 +16,10 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"A Generative Adversarial Network for Global 3D Medical Images Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<" <imageAndLabelDir> [outputTestLabelsDir]"<<endl;
-    cout<<"Where the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
+    cout<<argv0<<"<netDir> <imageAndLabelDir> [outputTestLabelsDir]"<<endl;
+    cout<<"Where"<<endl;
+    cout<<"netDir: the net parameters saved diretory"<<endl;
+    cout<<" the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directories. "<<endl;
     cout<<"outputTestLabelsDir is the directory for outputting test label files"<<endl;
     cout<<"Input parameter example: /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
@@ -40,18 +42,19 @@ int main(int argc, char *argv[])
 
 
     printUsage(argv[0]);
-    if (2 != argc && 3 != argc){
+    if (3 != argc && 4 != argc){
         cout<<"Error: parameter error. Exit. "<<endl;
         return -1;
     }
-    string dataSetDir = argv[1];
+    string netDir = argv[1];
+    string dataSetDir = argv[2];
     string outputLabelsDir = "";
-    if (3 == argc ){
-        outputLabelsDir = argv[2];
+    if (4 == argc ){
+        outputLabelsDir = argv[3];
     }
     DataManager dataMgr(dataSetDir, outputLabelsDir);
 
-    SegmentGNet Gnet("Generative Network");
+    SegmentGNet Gnet("Generative Network", netDir);
     Gnet.build();
     Gnet.setLearningRate(0.001);
     Gnet.setLossTolerance(0.02);
@@ -59,7 +62,7 @@ int main(int argc, char *argv[])
     Gnet.initialize();
     Gnet.printArchitecture();
 
-    SegmentDNet Dnet("Discriminative Network");
+    SegmentDNet Dnet("Discriminative Network", netDir);
     Dnet.build();
     Dnet.setLearningRate(0.001);
     Dnet.setLossTolerance(0.02);
@@ -67,7 +70,7 @@ int main(int argc, char *argv[])
     Dnet.initialize();
     Dnet.printArchitecture();
 
-    StubNetForD stubNet("StubNetwork for Discriminative Network");
+    StubNetForD stubNet("StubNetwork for Discriminative Network", netDir);
     stubNet.build();
     stubNet.setBatchSize(3);
     stubNet.initialize();

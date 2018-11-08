@@ -8,7 +8,7 @@
 #include "CrossEntropyLoss.h"
 
 
-DNet::DNet(const string& name):FeedForwardNet(name){
+DNet::DNet(const string& name, const string& saveDir):FeedForwardNet(name, saveDir){
     m_pGTLayer = nullptr;
     m_pGxLayer = nullptr;
     m_pInputXLayer = nullptr;

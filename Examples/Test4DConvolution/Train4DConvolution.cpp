@@ -26,7 +26,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    Conv4DNet net("Conv4DNet");
+    Conv4DNet net("Conv4DNet", ".");
     net.build();
 
     // config network parameters;

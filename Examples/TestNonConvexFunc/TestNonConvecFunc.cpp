@@ -61,7 +61,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    NonconvexNet net("NonConvextNet", layerWidthVector);
+    NonconvexNet net("NonConvextNet", ".", layerWidthVector);
 
     net.build();
 

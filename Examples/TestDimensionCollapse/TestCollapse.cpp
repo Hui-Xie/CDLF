@@ -20,7 +20,7 @@ int main (int argc, char *argv[])
 #endif
 
 
-    CollapseNet net("CollapseNet");
+    CollapseNet net("CollapseNet", ".");
     net.build();
 
     // config network parameters;

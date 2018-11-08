@@ -5,7 +5,7 @@
 
 #include "ConvexNet.h"
 
-ConvexNet::ConvexNet(const string &name, const vector<long> &layerWidthVector) : FeedForwardNet(name) {
+ConvexNet::ConvexNet(const string &name, const string& saveDir, const vector<long> &layerWidthVector) : FeedForwardNet(name, saveDir) {
     m_layerWidthVector = layerWidthVector;
 }
 

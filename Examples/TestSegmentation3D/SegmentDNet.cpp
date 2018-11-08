@@ -7,7 +7,7 @@
 #include "SegmentDNet.h"
 #include "CDLF.h"
 
-SegmentDNet::SegmentDNet(const string &name) : DNet(name) {
+SegmentDNet::SegmentDNet(const string &name, const string& saveDir) : DNet(name, saveDir) {
 
 }
 

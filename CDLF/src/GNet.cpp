@@ -7,7 +7,7 @@
 #include "GNet.h"
 
 
-GNet::GNet(const string& name): FeedForwardNet(name){
+GNet::GNet(const string& name, const string& saveDir): FeedForwardNet(name, saveDir){
     m_pGxLayer = nullptr;
     m_pInputXLayer = nullptr;
     m_pLossLayer = nullptr;

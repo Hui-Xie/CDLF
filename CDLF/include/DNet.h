@@ -22,7 +22,7 @@
 
 class DNet : public FeedForwardNet {
 public:
-    DNet(const string& name);
+    DNet(const string& name, const string& saveDir);
     ~DNet();
 
     InputLayer* m_pGTLayer;

@@ -18,7 +18,7 @@
 
 class SegmentGNet : public GNet {
 public:
-    SegmentGNet(const string& name);
+    SegmentGNet(const string& name, const string& saveDir);
     ~SegmentGNet();
 
     virtual void build();

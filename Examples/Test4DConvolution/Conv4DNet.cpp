@@ -6,7 +6,7 @@
 #include "Conv4DNet.h"
 #include "CDLF.h"
 
-Conv4DNet::Conv4DNet(const string& name): FeedForwardNet(name){
+Conv4DNet::Conv4DNet(const string& name, const string& saveDir): FeedForwardNet(name, saveDir){
 
 }
 Conv4DNet::~Conv4DNet(){

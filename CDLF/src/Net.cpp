@@ -13,13 +13,14 @@
 #include "Tools.h"
 #include "AllLayers.h"
 
-Net::Net(const string &name) {
+Net::Net(const string &name, const string& saveDir) {
     m_name = eraseAllSpaces(name);
     m_layers.clear();
     m_learningRate = 0.001;
     m_lossTolerance = 0.02;
     m_judgeLoss = true;
     m_batchSize = 1;
+    setDir(saveDir);
 }
 
 Net::~Net() {

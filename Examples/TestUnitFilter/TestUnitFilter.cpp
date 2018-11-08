@@ -25,7 +25,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    UnitFilterNet net("UnitfilterNet");
+    UnitFilterNet net("UnitfilterNet", ".");
 
     net.build();
     net.printArchitecture();

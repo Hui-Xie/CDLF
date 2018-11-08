@@ -17,7 +17,7 @@
 
 class SegmentDNet : public DNet {
 public:
-    SegmentDNet(const string& name);
+    SegmentDNet(const string& name, const string& saveDir);
     ~SegmentDNet();
 
     virtual void build();
