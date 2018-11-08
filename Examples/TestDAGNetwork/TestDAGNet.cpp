@@ -18,14 +18,21 @@ int main (int argc, char *argv[])
 #endif
 
     DAGNet net("DAGNet", "/home/hxie1/temp_netParameters");
-    //net.build();
-    net.buildSimple();
+
+    if (isEmptyDir(net.getDir())) {
+        net.build();
+        //net.buildSimple();
+        net.initialize();
+        net.setLearningRate(0.01);
+        net.setLossTolerance(0.02);
+        net.setBatchSize(20);
+        net.setEpoch(100);
+    }
+    else{
+        net.load();
+    }
     net.printArchitecture();
 
-    net.setLearningRate(0.01);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(20);
-    net.initialize();
 
     net.train();
     net.test();
