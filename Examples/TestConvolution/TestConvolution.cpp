@@ -37,6 +37,7 @@ int main (int argc, char *argv[])
     //  run network
     net.train();
     net.test();
+    net.save();
     cout<< "=========== End of Test:  "<< net.getName() <<" ============"<<endl;
     return 0;
 }

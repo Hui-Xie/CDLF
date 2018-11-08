@@ -879,8 +879,8 @@ void ConvolutionLayer::save(const string &netDir) {
             return;
         }
         long N = m_pW[i]->getLength();
-        for (int i=0; i<N; ++i){
-            fprintf(pFile, "%f,", m_pW[i]->e(i));
+        for (int k=0; k<N; ++k){
+            fprintf(pFile, "%f,", m_pW[i]->e(k));
         }
         fprintf(pFile,"\r\n");
         fclose (pFile);
@@ -905,8 +905,8 @@ void ConvolutionLayer::load(const string &netDir) {
                 return;
             }
             long N = m_pW[i]->getLength();
-            for (int i = 0; i < N; ++i) {
-                fscanf(pFile, "%f,", &m_pW[i]->e(i));
+            for (int k = 0; k < N; ++k) {
+                fscanf(pFile, "%f,", &m_pW[i]->e(k));
             }
             fclose(pFile);
         }

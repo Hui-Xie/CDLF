@@ -413,12 +413,12 @@ void Net::save() {
     saveLayersStruct();
     saveNetParameters();
     saveLayersParameters();
-    cout << "net architecture was saved at " << m_directory << " directory." << endl;
+    cout << "Net parameters saved at " << m_directory << " directory." << endl;
 }
 
 void Net::load() {
     loadLayersStruct();
     loadNetParameters();
     loadLayersParameters();
-    cout<<"Net was loaded from "<<m_directory<<endl;
+    cout<<"Net parameters were loaded from "<<m_directory<<endl;
 }

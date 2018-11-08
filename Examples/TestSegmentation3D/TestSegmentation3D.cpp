@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
         printf("Pre-train D at %d of %d, ", i, epochsPretrainD);
         printCurrentLocalTime();
     }
+    Gnet.save(); Dnet.save(); stubNet.save();
 
 
     // train G, D: quick alternative train
@@ -115,7 +116,7 @@ int main(int argc, char *argv[]) {
         printf("Quick switch train G_D at %d of %d, ", i,  epochsQuickSwitch);
         printCurrentLocalTime();
     }
-
+    Gnet.save(); Dnet.save(); stubNet.save();
 
     // train G, D: slowly alternative train
     cout<<"Info: start slow switch to train G and D "<<endl;
@@ -147,7 +148,7 @@ int main(int argc, char *argv[]) {
         printCurrentLocalTime();
 
     }
-
+    Gnet.save(); Dnet.save(); stubNet.save();
     cout<< "=========== End of Test:  "<<gan.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;

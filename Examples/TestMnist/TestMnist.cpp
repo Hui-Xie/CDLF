@@ -86,6 +86,7 @@ int main(int argc, char *argv[]){
         accuracy = net.test();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
      }
+    net.save();
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
 }

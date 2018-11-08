@@ -26,7 +26,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    Conv4DNet net("Conv4DNet", ".");
+    Conv4DNet net("Conv4DNet", "/home/hxie1/temp_netParameters");
 
     if (isEmptyDir(net.getDir())) {
         net.build();
@@ -43,6 +43,7 @@ int main (int argc, char *argv[])
 
     net.train();
     net.test();
+    net.save();
     cout<< "=========== End of Test:  "<< net.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;
