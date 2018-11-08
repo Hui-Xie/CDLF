@@ -21,16 +21,20 @@ int main (int argc, char *argv[])
 
 
     CollapseNet net("CollapseNet", ".");
-    net.build();
 
-    // config network parameters;
-    net.setLearningRate(0.001);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(20);
-    net.printArchitecture();
-
+    if (isEmptyDir(net.getDir())) {
+        net.build();
+        net.initialize();
+        // config network parameters;
+        net.setLearningRate(0.001);
+        net.setLossTolerance(0.02);
+        net.setBatchSize(20);
+        net.printArchitecture();
+    }
+    else{
+        net.load();
+    }
     //  run network
-    net.initialize();
     net.train();
     net.test();
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;

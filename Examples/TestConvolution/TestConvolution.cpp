@@ -21,16 +21,20 @@ int main (int argc, char *argv[])
     cout<<"This program support real 3D convolution."<<endl;
 
     ConvNet net("ConvNet", ".");
-    net.build();
+
+    if (isEmptyDir(net.getDir())) {
+        net.build();
+        net.initialize();
+        net.setLearningRate(0.001);
+        net.setLossTolerance(0.02);
+        net.setBatchSize(20);
+    }
+    else{
+        net.load();
+    }
     net.printArchitecture();
 
-    // config network parameters;
-    net.setLearningRate(0.001);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(20);
-
     //  run network
-    net.initialize();
     net.train();
     net.test();
     cout<< "=========== End of Test:  "<< net.getName() <<" ============"<<endl;

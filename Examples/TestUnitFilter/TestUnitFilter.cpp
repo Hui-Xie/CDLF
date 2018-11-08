@@ -26,14 +26,18 @@ int main (int argc, char *argv[])
 #endif
 
     UnitFilterNet net("UnitfilterNet", ".");
-
-    net.build();
+    if (isEmptyDir(net.getDir())) {
+        net.build();
+        net.initialize();
+        net.setLearningRate(0.01);
+        net.setLossTolerance(0.02);
+        net.setBatchSize(20);
+    }
+    else{
+        net.load();
+    }
     net.printArchitecture();
 
-    net.setLearningRate(0.01);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(20);
-    net.initialize();
 
     net.train();
     net.test();

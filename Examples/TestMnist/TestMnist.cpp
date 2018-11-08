@@ -59,24 +59,26 @@ int main(int argc, char *argv[]){
 
     // Construct FeedForwardNet and Train, Test
     MnistConvNet net("MnistConvNet", netDir, &mnist);
-    //net.build();
-    if (netType == "2D"){
-        net.build2DConvolutionNet();
-    }
-    else if (netType == "4D"){
-        net.build4DConvolutionNet();
+    if (isEmptyDir(net.getDir())) {
+        if (netType == "2D") {
+            net.build2DConvolutionNet();
+        } else if (netType == "4D") {
+            net.build4DConvolutionNet();
+        } else {
+            cout << "Error: the netType parameter is incorrect. Program exit." << endl;
+            return -3;
+        }
+        net.initialize();
+        net.setLearningRate(0.001);
+        net.setLossTolerance(0.02);
+        net.setBatchSize(100);
     }
     else{
-        cout<<"Error: the netType parameter is incorrect. Program exit."<<endl;
-        return -3;
+        net.load();
     }
-
-    net.setLearningRate(0.001);
-    net.setLossTolerance(0.02);
-    net.setBatchSize(100);
-    net.initialize();
-
     net.printArchitecture();
+
+
     long epoch= 2000;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){

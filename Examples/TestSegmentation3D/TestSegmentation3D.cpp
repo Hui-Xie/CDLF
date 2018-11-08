@@ -25,8 +25,7 @@ void printUsage(char* argv0){
     cout<<"Input parameter example: /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     //cout<<"3D segmentation for One Sample";
     printCurrentLocalTime();
     CPUAttr cpuAttr;
@@ -37,43 +36,58 @@ int main(int argc, char *argv[])
     gpuAttr.getGPUAttr();
     cout<<"Info: program use Cuda GPU."<<endl;
 #else
-    cout<<"Info: program use CPU, instead of GPU."<<endl;
+    cout << "Info: program use CPU, instead of GPU." << endl;
 #endif
 
 
     printUsage(argv[0]);
-    if (3 != argc && 4 != argc){
-        cout<<"Error: parameter error. Exit. "<<endl;
+    if (3 != argc && 4 != argc) {
+        cout << "Error: parameter error. Exit. " << endl;
         return -1;
     }
     string netDir = argv[1];
     string dataSetDir = argv[2];
     string outputLabelsDir = "";
-    if (4 == argc ){
+    if (4 == argc) {
         outputLabelsDir = argv[3];
     }
     DataManager dataMgr(dataSetDir, outputLabelsDir);
 
     SegmentGNet Gnet("Generative Network", netDir);
-    Gnet.build();
-    Gnet.setLearningRate(0.001);
-    Gnet.setLossTolerance(0.02);
-    Gnet.setBatchSize(3);
-    Gnet.initialize();
+    if (isEmptyDir(Gnet.getDir())) {
+        Gnet.build();
+        Gnet.initialize();
+        Gnet.setLearningRate(0.001);
+        Gnet.setLossTolerance(0.02);
+        Gnet.setBatchSize(3);
+
+    } else {
+        Gnet.load();
+    }
     Gnet.printArchitecture();
 
     SegmentDNet Dnet("Discriminative Network", netDir);
-    Dnet.build();
-    Dnet.setLearningRate(0.001);
-    Dnet.setLossTolerance(0.02);
-    Dnet.setBatchSize(3);
-    Dnet.initialize();
+    if (isEmptyDir(Dnet.getDir())) {
+        Dnet.build();
+        Dnet.initialize();
+        Dnet.setLearningRate(0.001);
+        Dnet.setLossTolerance(0.02);
+        Dnet.setBatchSize(3);
+    }
+    else{
+        Dnet.load();
+    }
     Dnet.printArchitecture();
 
     StubNetForD stubNet("StubNetwork for Discriminative Network", netDir);
-    stubNet.build();
-    stubNet.setBatchSize(3);
-    stubNet.initialize();
+    if (isEmptyDir(stubNet.getDir())) {
+        stubNet.build();
+        stubNet.initialize();
+        stubNet.setBatchSize(3);
+    }
+    else{
+        stubNet.load();
+    }
     stubNet.printArchitecture();
 
     Segmentation3DNet gan("3DSegmentationGAN", &Gnet,&Dnet);
