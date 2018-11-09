@@ -19,7 +19,7 @@ void printUsage(char* argv0){
     cout<<argv0<<"<netDir> <imageAndLabelDir> [outputTestLabelsDir]"<<endl;
     cout<<"Where"<<endl;
     cout<<"netDir: the net parameters saved diretory"<<endl;
-    cout<<" the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
+    cout<<"the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directories. "<<endl;
     cout<<"outputTestLabelsDir is the directory for outputting test label files"<<endl;
     cout<<"Input parameter example: /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     }
     DataManager dataMgr(dataSetDir, outputLabelsDir);
 
-    SegmentGNet Gnet("Generative Network", netDir);
+    SegmentGNet Gnet("GenerativeNetwork", netDir);
     if (isEmptyDir(Gnet.getDir())) {
         Gnet.build();
         Gnet.initialize();
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     }
     Gnet.printArchitecture();
 
-    SegmentDNet Dnet("Discriminative Network", netDir);
+    SegmentDNet Dnet("DiscriminativeNetwork", netDir);
     if (isEmptyDir(Dnet.getDir())) {
         Dnet.build();
         Dnet.initialize();
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     }
     Dnet.printArchitecture();
 
-    StubNetForD stubNet("StubNetwork for Discriminative Network", netDir);
+    StubNetForD stubNet("StubNetworkForD", netDir);
     if (isEmptyDir(stubNet.getDir())) {
         stubNet.build();
         stubNet.initialize();
@@ -89,6 +89,8 @@ int main(int argc, char *argv[]) {
         stubNet.load();
     }
     stubNet.printArchitecture();
+
+    Gnet.save(); Dnet.save(); stubNet.save();
 
     Segmentation3DNet gan("3DSegmentationGAN", &Gnet,&Dnet);
     gan.setDataMgr(&dataMgr);
@@ -129,11 +131,13 @@ int main(int argc, char *argv[]) {
             printf("Slow  switch train D at %d of %d, in %d of %d, ", j,  epochsAlone, i, epochsSlowSwitch);
             printCurrentLocalTime();
         }
+        Dnet.save();
         for(int j=0; j<epochsAlone; ++j){
             gan.trainG();
             printf("Slow  switch train G at %d of %d, in %d of %d, ", j,  epochsAlone, i, epochsSlowSwitch);
             printCurrentLocalTime();
         }
+        Gnet.save();
 
         cout<<"Slow Switch Epoch: "<<i<<endl;
         printCurrentLocalTime();
