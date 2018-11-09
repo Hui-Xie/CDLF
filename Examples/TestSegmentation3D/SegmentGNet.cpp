@@ -18,11 +18,11 @@ SegmentGNet::~SegmentGNet(){
 // build method must assign the m_pInputXLayer, m_pGxLayer, m_pLossLayer
 void SegmentGNet::build(){
     // it is a good design if all numFilter is odd;
-    InputLayer* inputLayer01 = new InputLayer(1, "G_InputLayer01", {120,277, 277}); //output size: 120*277*277
+    InputLayer* inputLayer01 = new InputLayer(1, "G_InputLayer1", {120,277, 277}); //output size: 120*277*277
     addLayer(inputLayer01);
     m_pInputXLayer = inputLayer01;
 
-    NormalizationLayer* normAfterInput02 = new NormalizationLayer(5, "G_NormAfterInput02", inputLayer01);
+    NormalizationLayer* normAfterInput02 = new NormalizationLayer(5, "G_NormAfterInput5", inputLayer01);
     addLayer(normAfterInput02);
 
     ConvolutionLayer* conv30 = new ConvolutionLayer(30, "G_Conv30", normAfterInput02, {3,3, 3}, 3); //output size: 3*118*275*275
