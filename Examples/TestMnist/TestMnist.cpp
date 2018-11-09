@@ -8,8 +8,9 @@
 void printUsage(char* argv0){
     cout<<"Test 10 digits 0-9 Simultaneously in MNIST Dataset:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <netType>"<<endl;
-    cout<<"where, netType string may choose 2D or 4D, which will build different convolution networks."<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> "<<endl;
+    cout<<"for examples: "<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist"<<endl;
 }
 
 
@@ -17,7 +18,7 @@ int main(int argc, char *argv[]){
 
     printCurrentLocalTime();
     
-    if (4 != argc){
+    if (3 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
@@ -25,7 +26,6 @@ int main(int argc, char *argv[]){
 
     const string netDir = argv[1];
     const string mnistDir = argv[2];
-    const string netType = argv[3]; // 2D or 4D
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -58,16 +58,9 @@ int main(int argc, char *argv[]){
     //cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
     // Construct FeedForwardNet and Train, Test
-    MnistConvNet net("MnistConvNet", netDir, &mnist);
+    MnistConvNet net("MnistNet", netDir, &mnist);
     if (isEmptyDir(net.getDir())) {
-        if (netType == "2D") {
-            net.build2DConvolutionNet();
-        } else if (netType == "4D") {
-            net.build4DConvolutionNet();
-        } else {
-            cout << "Error: the netType parameter is incorrect. Program exit." << endl;
-            return -3;
-        }
+        net.build();
         net.initialize();
         net.setLearningRate(0.001);
         net.setLossTolerance(0.02);
@@ -76,6 +69,7 @@ int main(int argc, char *argv[]){
     else{
         net.load();
     }
+    net.save();
     net.printArchitecture();
 
 
@@ -83,10 +77,10 @@ int main(int argc, char *argv[]){
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
         net.train();
+        net.save();
         accuracy = net.test();
         cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
-     }
-    net.save();
+    }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
 }
