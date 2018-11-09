@@ -4,6 +4,16 @@
 
 #include "DAGNet.h"
 
+
+/* There is a known bug:
+ * When Conv2 is freed at the end of program, its m_pYTensor->m_data has heap corruption error: "free(): invalid next size (fast)".
+ * this error does not affect the normal running of program. I tried to debug it, but I can not debug it successfully.
+ * I am afraid that it is compiler's bug. I leave it as it is.
+ * ---------Hui Xie  Nov 09th, 2018
+ *
+ * */
+
+
 int main (int argc, char *argv[])
 {
     CPUAttr cpuAttr;

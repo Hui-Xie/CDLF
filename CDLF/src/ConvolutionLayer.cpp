@@ -7,7 +7,6 @@
 #include <thread>
 #include <ConvolutionLayer.h>
 
-
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
                                     const int numFilters, const int stride)
         : Layer(id, name, {}) {
