@@ -20,6 +20,7 @@ Net::Net(const string &name, const string& saveDir) {
     m_lossTolerance = 0.02;
     m_judgeLoss = true;
     m_batchSize = 1;
+    m_epoch = 0;
     setDir(saveDir);
 }
 
