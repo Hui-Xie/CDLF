@@ -20,21 +20,21 @@ void MnistConvNet::build(){
     InputLayer *inputLayer = new InputLayer(layerID++, "InputLayer", {28, 28}); //output size: 28*28
     addLayer(inputLayer);
 
-    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", getFinalLayer(),{3, 3}, 5, 1); //output size: 5*26*26
+    ConvolutionLayer *conv1 = new ConvolutionLayer(layerID++, "Conv1", getFinalLayer(),{3, 3}, 11, 1); //output size: 11*26*26
     addLayer(conv1);
     ReLU *reLU1 = new ReLU(layerID++, "ReLU1", getFinalLayer());
     addLayer(reLU1);
     NormalizationLayer *norm1 = new NormalizationLayer(layerID++, "Norm1", getFinalLayer());
     addLayer(norm1);
 
-    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", getFinalLayer(), {5,3,3},  5, 1);//output size: 5*24*24
+    ConvolutionLayer *conv2 = new ConvolutionLayer(layerID++, "Conv2", getFinalLayer(), {11,3,3},  7, 1);//output size: 7*24*24
     addLayer(conv2);
     ReLU *reLU2 = new ReLU(layerID++, "ReLU2", getFinalLayer());
     addLayer(reLU2);
     NormalizationLayer *norm2 = new NormalizationLayer(layerID++, "Norm2", getFinalLayer());
     addLayer(norm2);
 
-    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", getFinalLayer(), {5,3, 3},  7, 1);//output size: 7*22*22
+    ConvolutionLayer *conv3 = new ConvolutionLayer(layerID++, "Conv3", getFinalLayer(), {7,3, 3},  7, 1);//output size: 7*22*22
     addLayer(conv3);
     ReLU *reLU3 = new ReLU(layerID++, "ReLU3", getFinalLayer());
     addLayer(reLU3);
