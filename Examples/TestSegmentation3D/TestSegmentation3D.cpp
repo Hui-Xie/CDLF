@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     }
     Dnet.printArchitecture();
 
-    StubNetForD stubNet("StubNetworkForD", netDir);
+    StubNetForD stubNet("StubNetworkForDcd ", netDir);
     if (isEmptyDir(stubNet.getDir())) {
         stubNet.build();
         stubNet.initialize();

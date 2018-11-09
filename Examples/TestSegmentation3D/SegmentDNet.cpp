@@ -19,7 +19,7 @@ SegmentDNet::~SegmentDNet() {
 void SegmentDNet::build() {
     m_pInputXLayer = new InputLayer(1, "D_OriginalInputLayer01", {120, 277, 277});
     addLayer(m_pInputXLayer);
-    NormalizationLayer *normAfterInput04 = new NormalizationLayer(4, "D_NormAfterInput04", m_pInputXLayer);
+    NormalizationLayer *normAfterInput04 = new NormalizationLayer(6, "D_NormAfterInput04", m_pInputXLayer);
     addLayer(normAfterInput04);
     SubTensorLayer *subTensor10 = new SubTensorLayer(10, "D_SubTensor10", normAfterInput04, {6, 6, 6},
                                                      {108, 265, 265}); //output size: 108*265*265
@@ -33,10 +33,10 @@ void SegmentDNet::build() {
     addLayer(scale26);
 
 
-    m_pGTLayer = new InputLayer(0, "D_GroundTruthLayer0", {3, 108, 265, 265}); //output size: 3*108*265*265
+    m_pGTLayer = new InputLayer(2, "D_GroundTruthLayer0", {3, 108, 265, 265}); //output size: 3*108*265*265
     addLayer(m_pGTLayer);
 
-    m_pGxLayer = new InputLayer(2, "D_GxLayer02", {3, 108, 265, 265}); //output size: 3*108*265*265
+    m_pGxLayer = new InputLayer(3, "D_GxLayer02", {3, 108, 265, 265}); //output size: 3*108*265*265
     addLayer(m_pGxLayer);
 
     m_pMerger = new MergerLayer(30, "D_Merger30", {3, 108, 265, 265});//output size: 3*108*265*265

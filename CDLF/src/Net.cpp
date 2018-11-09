@@ -113,6 +113,11 @@ void Net::zeroParaGradient() {
 
 void Net::addLayer(Layer *layer) {
     if (nullptr == layer) return;
+    if (layer->m_id <= 0){
+        cout<<"Error: layerID = 0 reserves for nonexist layer."<<endl;
+        return;
+    }
+
     if (0 == m_layers.count(layer->m_id) && !layerExist(layer)) {
         m_layers[layer->m_id] = layer;
     } else {
