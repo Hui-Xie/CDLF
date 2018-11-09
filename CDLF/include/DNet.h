@@ -33,6 +33,12 @@ public:
 
     void setAlphaGroundTruth(bool alpha);
 
+    virtual void save();
+    virtual void load();
+
+    void saveDNetParameters();
+    void loadDNetParameters();
+
 };
 
 #endif //CDLF_FRAMEWORK_DNET_H

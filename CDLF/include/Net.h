@@ -77,8 +77,8 @@ public:
     void saveNetParameters();
     void loadNetParameters();
 
-    void save();
-    void load();
+    virtual void save();
+    virtual void load();
 
 protected:
     string m_name;

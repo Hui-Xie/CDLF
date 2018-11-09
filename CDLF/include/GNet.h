@@ -24,6 +24,11 @@ public:
     Layer* m_pGxLayer;
     CrossEntropyLoss* m_pLossLayer;
 
+    virtual void save();
+    virtual void load();
+
+    void saveGNetParameters();
+    void loadGNetParameters();
 };
 
 #endif //CDLF_FRAMEWORK_GNET_H
