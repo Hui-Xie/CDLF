@@ -116,30 +116,10 @@ void FCLayer::save(const string &netDir) {
     createDir(layerDir);
 
     filename= layerDir + "/W.csv";
-    pFile = fopen (filename.c_str(),"w");
-    if (nullptr == pFile){
-        printf("Error: can not open  %s  file  in writing.\n", filename.c_str());
-        return;
-    }
-    long N = m_pW->getLength();
-    for (int i=0; i<N; ++i){
-        fprintf(pFile, "%f,", m_pW->e(i));
-    }
-    fprintf(pFile,"\r\n");
-    fclose (pFile);
+    m_pW->save(filename);
 
     filename= layerDir + "/B.csv";
-    pFile = fopen (filename.c_str(),"w");
-    if (nullptr == pFile){
-        printf("Error: can not open  %s  file  in writing.\n", filename.c_str());
-        return;
-    }
-    N = m_pBTensor->getLength();
-    for (int i=0; i<N; ++i){
-        fprintf(pFile, "%f,", m_pBTensor->e(i));
-    }
-    fprintf(pFile,"\r\n");
-    fclose (pFile);
+    m_pBTensor->save(filename);
 }
 
 void FCLayer::load(const string &netDir) {
@@ -153,28 +133,10 @@ void FCLayer::load(const string &netDir) {
     }
     else{
         filename= layerDir + "/W.csv";
-        pFile = fopen (filename.c_str(),"r");
-        if (nullptr == pFile){
-            printf("Error: can not open  %s  file for reading.\n", filename.c_str());
-            return;
-        }
-        long N = m_pW->getLength();
-        for (int i=0; i<N; ++i){
-            fscanf(pFile, "%f,", &m_pW->e(i));
-        }
-        fclose (pFile);
+        m_pW->load(filename);
 
         filename= layerDir + "/B.csv";
-        pFile = fopen (filename.c_str(),"r");
-        if (nullptr == pFile){
-            printf("Error: can not open  %s  file for reading.\n", filename.c_str());
-            return;
-        }
-        N = m_pBTensor->getLength();
-        for (int i=0; i<N; ++i){
-            fscanf(pFile, "%f,", &m_pBTensor->e(i));
-        }
-        fclose (pFile);
+        m_pBTensor->load(filename);
     }
 }
 

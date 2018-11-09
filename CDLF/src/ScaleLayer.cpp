@@ -69,7 +69,7 @@ void ScaleLayer::save(const string &netDir) {
         printf("Error: can not open  %s  file  in writing.\n", filename.c_str());
         return;
     }
-    fprintf(pFile, "%f,", m_k);
+    fprintf(pFile, "%f ", m_k);
     fprintf(pFile,"\r\n");
     fclose (pFile);
 }
@@ -90,7 +90,7 @@ void ScaleLayer::load(const string &netDir) {
             printf("Error: can not open  %s  file for reading.\n", filename.c_str());
             return;
         }
-        fscanf(pFile, "%f,", &m_k);
+        fscanf(pFile, "%f ", &m_k);
         fclose (pFile);
     }
 }

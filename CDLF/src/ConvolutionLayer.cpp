@@ -872,18 +872,8 @@ void ConvolutionLayer::save(const string &netDir) {
 
     for (int i=0; i<m_numFilters; ++i){
         filename= layerDir + "/W"+to_string(i)+".csv";
-        pFile = fopen (filename.c_str(),"w");
-        if (nullptr == pFile){
-            printf("Error: can not open  %s  file  in writing.\n", filename.c_str());
-            return;
-        }
-        long N = m_pW[i]->getLength();
-        for (int k=0; k<N; ++k){
-            fprintf(pFile, "%f,", m_pW[i]->e(k));
-        }
-        fprintf(pFile,"\r\n");
-        fclose (pFile);
-    }
+        m_pW[i]->save(filename);
+     }
 }
 
 void ConvolutionLayer::load(const string &netDir) {
@@ -898,16 +888,7 @@ void ConvolutionLayer::load(const string &netDir) {
     else {
         for (int i = 0; i < m_numFilters; ++i) {
             filename = layerDir + "/W" + to_string(i) + ".csv";
-            pFile = fopen(filename.c_str(), "r");
-            if (nullptr == pFile) {
-                printf("Error: can not open  %s  file for reading.\n", filename.c_str());
-                return;
-            }
-            long N = m_pW[i]->getLength();
-            for (int k = 0; k < N; ++k) {
-                fscanf(pFile, "%f,", &m_pW[i]->e(k));
-            }
-            fclose(pFile);
+            m_pW[i]->load(filename);
         }
     }
 }
