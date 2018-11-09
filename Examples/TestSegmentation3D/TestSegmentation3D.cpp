@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
     }
     DataManager dataMgr(dataSetDir, outputLabelsDir);
 
-    SegmentGNet Gnet("GenerativeNetwork", netDir);
+    SegmentGNet Gnet("GNet", netDir);
     if (isEmptyDir(Gnet.getDir())) {
         Gnet.build();
         Gnet.initialize();
@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
     }
     Gnet.printArchitecture();
 
-    SegmentDNet Dnet("DiscriminativeNetwork", netDir);
+    SegmentDNet Dnet("DNet", netDir);
     if (isEmptyDir(Dnet.getDir())) {
         Dnet.build();
         Dnet.initialize();
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) {
     }
     Dnet.printArchitecture();
 
-    StubNetForD stubNet("StubNetworkForDcd ", netDir);
+    StubNetForD stubNet("StubNet", netDir);
     if (isEmptyDir(stubNet.getDir())) {
         stubNet.build();
         stubNet.initialize();
