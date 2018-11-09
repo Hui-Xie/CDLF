@@ -47,6 +47,8 @@ string getStemName(const string& filename);
 
 void printCurrentLocalTime();
 
+string getCurTimeStr();
+
 vector<long> dimsSpan(const vector<long> vec);
 
 string eraseAllSpaces(string str);

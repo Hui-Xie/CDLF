@@ -6,7 +6,7 @@
 #include <fstream>
 
 
-MNIST::MNIST(const string &mnistDir) {
+MNIST::MNIST(const string &mnistDir, bool onlyTestSet) {
     m_mnistDir = mnistDir;
     m_trainImageFile = m_mnistDir + "/train-images-idx3-ubyte";
     m_trainLabelFile = m_mnistDir + "/train-labels-idx1-ubyte";
@@ -24,6 +24,8 @@ MNIST::MNIST(const string &mnistDir) {
     m_pTrainLabelsPart = nullptr;
     m_pTestImagesPart = nullptr;
     m_pTestLabelsPart = nullptr;
+
+    m_bOnlyTestSet = onlyTestSet;
 }
 
 MNIST::~MNIST() {
@@ -164,11 +166,14 @@ int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *&pTensor) 
 }
 
 void MNIST::loadData() {
-    readIdxFile(m_trainImageFile, m_pTrainImages);
-    readIdxFile(m_trainLabelFile, m_pTrainLabels);
+    if (!m_bOnlyTestSet) {
+        readIdxFile(m_trainImageFile, m_pTrainImages);
+        readIdxFile(m_trainLabelFile, m_pTrainLabels);
+        cout << "Info: read " << m_pTrainImages->getDims()[0] << " training images. " << endl;
+    }
+
     readIdxFile(m_testImageFile, m_pTestImages);
     readIdxFile(m_testLabelFile, m_pTestLabels);
-    cout<<"Info: read "<<m_pTrainImages->getDims()[0] <<" training images. "<<endl;
     cout<<"Info: read "<<m_pTestImages->getDims()[0] <<" test images. "<<endl;
 }
 

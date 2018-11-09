@@ -10,7 +10,7 @@
 
 class MNIST {
 public:
-    MNIST(const string& mnistDir);
+    MNIST(const string& mnistDir, bool onlyTestSet = false);
     ~MNIST();
 
     Tensor<unsigned char> * m_pTrainImages;
@@ -39,6 +39,8 @@ private:
     string m_trainLabelFile;
     string m_testImageFile;
     string m_testLabelFile;
+
+    bool m_bOnlyTestSet;
 
     int readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor);
     long hexChar4ToLong(char *buff);

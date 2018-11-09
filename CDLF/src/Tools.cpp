@@ -7,7 +7,7 @@
 #include <ctime>
 #include <sstream>
 #include <cctype>
-
+#include <cstdio>
 
 bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
     if (vec1.size() != vec2.size()){
@@ -202,6 +202,15 @@ void printCurrentLocalTime(){
     time(&tt);
     tm TM = *localtime(&tt);
     printf("Current time: %4d-%02d-%02d %02d:%02d:%02d\n", 1900+TM.tm_year, TM.tm_mon+1, TM.tm_mday,TM.tm_hour, TM.tm_min,TM.tm_sec);
+}
+
+string getCurTimeStr(){
+    time_t tt;
+    time(&tt);
+    tm TM = *localtime(&tt);
+    char timeChar[14];
+    sprintf(timeChar, "%4d%02d%02d_%02d%02d", 1900+TM.tm_year, TM.tm_mon+1, TM.tm_mday,TM.tm_hour, TM.tm_min);
+    return string(timeChar);
 }
 
 
