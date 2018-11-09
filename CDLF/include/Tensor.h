@@ -6,6 +6,7 @@
 #define RL_NONCONVEX_TENSOR_H
 
 #include <vector>
+#include <string>
 using namespace std;
 
 // Column Vector is a Tensor({n,1}), and Tensor({n}) is incorrect expression;
@@ -83,6 +84,8 @@ public:
     long maxPosition();
     Tensor<unsigned char> getMaxPositionSubTensor();
 
+    void save(const string& fullFilename, bool matrix2D=false);
+    void load(const string& fullFilename, bool matrix2D=false);
 
     Tensor ln();//natural logarithm
     Tensor expon();//exponential

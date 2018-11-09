@@ -679,6 +679,58 @@ Tensor<unsigned char> Tensor<ValueType>::getMaxPositionSubTensor() {
     return subTensor;
 }
 
+template<class ValueType>
+void Tensor<ValueType>::save(const string& fullFilename, bool matrix2D){
+    FILE * pFile = nullptr;
+    pFile = fopen (fullFilename.c_str(),"w");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file for writing.\n", fullFilename.c_str());
+        return;
+    }
+    if (matrix2D && 2 == m_dims.size()){
+        for (int i= 0; i< m_dims[0]; ++i){
+            for (int j=0; j<m_dims[1]; ++j){
+                fprintf(pFile, "%f ", e(i,j));
+            }
+            fprintf(pFile, "\r\n");
+        }
+        fprintf(pFile, "\r\n");
+    }
+    else {
+        long N = getLength();
+        for (int i = 0; i < N; ++i) {
+            fprintf(pFile, "%f ", e(i));
+        }
+        fprintf(pFile, "\r\n");
+    }
+    fclose (pFile);
+}
+
+template<class ValueType>
+void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
+    FILE * pFile = nullptr;
+    pFile = fopen (fullFilename.c_str(),"r");
+    if (nullptr == pFile){
+        printf("Error: can not open  %s  file for reading.\n", fullFilename.c_str());
+        return;
+    }
+    if (matrix2D && 2 == m_dims.size()){
+        for (int i= 0; i< m_dims[0]; ++i){
+            for (int j=0; j<m_dims[1]; ++j){
+                fscanf(pFile, "%f ", &e(i,j));
+            }
+            fscanf(pFile, "%*c");
+        }
+    }
+    else {
+        long N = getLength();
+        for (int i = 0; i < N; ++i) {
+            fscanf(pFile, "%f ", &e(i));
+        }
+    }
+    fclose (pFile);
+}
+
 //natural logarithm
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::ln() {

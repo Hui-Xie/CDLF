@@ -65,7 +65,7 @@ int main(int argc, char *argv[]){
     mnist.displayImage(mnist.m_pTestImages, index);
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
-    
+
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
 }
