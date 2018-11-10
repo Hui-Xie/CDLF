@@ -111,7 +111,7 @@ int main(int argc, char *argv[]){
         if (bFoundAdversary){
             string advFile = to_string(label)+"-Ad"+ to_string(target)+".txt";
             advFile = advDataDir +"/"+ advFile;
-            net.m_inputTensor.save(originFile, true);
+            net.m_inputTensor.save(advFile, true);
             printf("After %d back propagation iterations, an adversarial file output at: %s\n", nCount, advFile.c_str());
         }
         else{
