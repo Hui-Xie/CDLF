@@ -80,7 +80,7 @@ void DNet::loadDNetParameters() {
     }
     ifs.close();
     if (string(name) != m_name ){
-        cout <<"Error: program find inconsistent GNet name."<<endl;
+        cout <<"Hint: program find inconsistent GNet name."<<endl;
     }
     m_pGTLayer = (InputLayer*) m_layers[gTLayerID];
     m_pGxLayer = (Layer*)m_layers[gxLayerID];

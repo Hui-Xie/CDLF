@@ -210,6 +210,16 @@ void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
     slice.printElements(true);
 }
 
+void MNIST::getTestImageAndLabel(const long index, Tensor<float>& image, int& label){
+    Tensor<unsigned char> slice = m_pTestImages->slice(index);
+    image.setDimsAndAllocateMem(slice.getDims());
+    long N = image.getLength();
+    for (long i=0; i< N; ++i){
+        image.e(i) = (float) slice.e(i);
+    }
+    label = m_pTestLabels->e(index);
+}
+
 
 
 

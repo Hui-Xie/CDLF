@@ -33,6 +33,8 @@ public:
     ValueType* getData() const;
     long getLength() const;
 
+    void setDimsAndAllocateMem(const vector<long>& dims);
+
     inline ValueType& e(const vector<long>& index)const;
     inline ValueType& e(long index) const;
     inline ValueType& e(long i, long j) const;

@@ -44,6 +44,17 @@ Tensor<ValueType>::Tensor(const vector<long> &dims) {
 }
 
 template<class ValueType>
+void Tensor<ValueType>::setDimsAndAllocateMem(const vector<long>& dims){
+    freeMem();
+    m_dims = dims;
+    if (1 == m_dims.size()) {
+        m_dims.push_back(1);
+    }
+    generateDimsSpan();
+    allocateMem();
+}
+
+template<class ValueType>
 Tensor<ValueType>::Tensor(const Tensor &other) {
     initializeMember();
     if (this != &other) {

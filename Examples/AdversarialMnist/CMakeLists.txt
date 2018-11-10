@@ -13,6 +13,6 @@ include_directories(${MNISTDir})
 set(MnistNetDir ../TestMnist)
 include_directories(${MnistNetDir})
 
-set(GenerateAdvMnistSRC GenerateAdvMnist.cpp ${MNISTDir}/MNIST.cpp ${MnistNetDir}/MnistConvNet.cpp)
+set(GenerateAdvMnistSRC GenerateAdvMnist.cpp ${MNISTDir}/MNIST.cpp ${MnistNetDir}/MnistConvNet.cpp AdverMnistNet.cpp AdverMnistNet.h)
 add_executable(GenerateAdvMnist ${GenerateAdvMnistSRC})
 target_link_libraries(GenerateAdvMnist ${CDLFLib} ${CUDA_LIBRARIES} pthread)

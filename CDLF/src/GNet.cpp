@@ -64,7 +64,7 @@ void GNet::loadGNetParameters() {
     }
     ifs.close();
     if (string(name) != m_name ){
-        cout <<"Error: program find inconsistent GNet name."<<endl;
+        cout <<"Hint: program find inconsistent GNet name."<<endl;
     }
     m_pInputXLayer = (InputLayer*) m_layers[inputXLayerID];
     m_pGxLayer = (Layer*)m_layers[gxLayerID];

@@ -32,6 +32,7 @@ public:
     void loadData();
     void tailorData();
     void displayImage(Tensor<unsigned char>* pImages, const long index);
+    void getTestImageAndLabel(const long index, Tensor<float>& image, int& label);
 
 private:
     string m_mnistDir;
