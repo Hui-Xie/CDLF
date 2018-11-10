@@ -56,9 +56,10 @@ int main(int argc, char *argv[]){
         return -2;
     }
     net.printArchitecture();
+    net.setLearningRate(10000);
 
     //create Adversarial data directory
-    advDataDir +="/"+ getCurTimeStr();
+    //advDataDir +="/"+ getCurTimeStr();  //todo: debug stage, No need it now.
     createDir(advDataDir);
 
     // choose an initial digit file and make sure it is predicted correctly
@@ -66,49 +67,59 @@ int main(int argc, char *argv[]){
     bool bPridictCorrect = false;
     Tensor<float> inputTensor;
     Tensor<float> groundTruth;
-    int correctLabel;
-    while (! bPridictCorrect){
+    int label; // correct label, which is different with target.
+    while (!bPridictCorrect){
         long index = rand() % 10000;
-        mnist.getTestImageAndLabel(index, inputTensor, correctLabel);
+        mnist.getTestImageAndLabel(index, inputTensor, label);
         net.m_inputTensor = inputTensor;
-        net.constructGroundTruth(correctLabel, groundTruth);
+        net.constructGroundTruth(label, groundTruth);
         net.m_groundTruth = groundTruth;
-        if (net.predict() == correctLabel){
+        if (net.predict() == label){
             bPridictCorrect = true;
         }
     }
-    string originFile = to_string(correctLabel)+".txt";
+    string originFile = to_string(label)+".txt";
     originFile = advDataDir +"/"+ originFile;
     inputTensor.save(originFile, true);
-    printf("Info: output original file: %s\n", originFile.c_str());
+    printf("Info: output original file: %s with label of %d. \n", originFile.c_str(), label);
 
     vector<int> targetVec= {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     for(vector<int>::iterator it= targetVec.begin(); it != targetVec.end(); ++it){
-        if (correctLabel == *it){
+        if (label == *it){
             targetVec.erase(it);
             break;
         }
     }
 
     for(int i=0; i< targetVec.size(); ++i){
-        bool bFoundAdvesary = false;
-        net.m_inputTensor = inputTensor;
-        net.constructGroundTruth(targetVec[i], groundTruth);
-        net.m_groundTruth = groundTruth;
-        int nIter = 0;
-        while(!bFoundAdvesary){
+        const int target = targetVec[i];
+        bool bFoundAdversary = false;
+        net.m_inputTensor = inputTensor;  // re-assign original input Tensor
+        net.constructGroundTruth(target, groundTruth);
+        net.m_groundTruth = groundTruth;  //targeted groundtruth, not the correct label.
+        int nCount = 0;
+        int MaxCount = 1000;
+        while(nCount < MaxCount){
             net.train();
-            nIter++;
-            if (net.predict() == targetVec[i]){
-                bFoundAdvesary = true;
+            ++nCount;
+            if (net.predict() == target){
+               bFoundAdversary = true;
+               break;
             }
         }
-        string advFile = to_string(correctLabel)+"-Ad"+ to_string(targetVec[i])+".txt";
-        advFile = advDataDir +"/"+ advFile;
-        net.m_inputTensor.save(originFile, true);
-        printf("After %d back propagation iterations, we find adversarial file: %s\n", nIter, advFile.c_str());
+
+        if (bFoundAdversary){
+            string advFile = to_string(label)+"-Ad"+ to_string(target)+".txt";
+            advFile = advDataDir +"/"+ advFile;
+            net.m_inputTensor.save(originFile, true);
+            printf("After %d back propagation iterations, an adversarial file output at: %s\n", nCount, advFile.c_str());
+        }
+        else{
+            printf("Infor: program can not find adversary for target %d, and original digit: %d\n", target, label);
+        }
+
     }
 
-    cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
+    cout<< "=========== End of Generating Adversary by a trained network"<<net.getName() <<" ============"<<endl;
     return 0;
 }

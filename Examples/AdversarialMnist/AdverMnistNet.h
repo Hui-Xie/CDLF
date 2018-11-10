@@ -27,6 +27,8 @@ public:
     Tensor<float> m_inputTensor;
     Tensor<float> m_groundTruth;
 
+    void trimInputTensor();
+
 };
 
 

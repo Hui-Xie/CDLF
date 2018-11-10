@@ -35,7 +35,10 @@ void AdverMnistNet::train() {
     lossLayer->setGroundTruth(m_groundTruth);
     forwardPropagate();
     backwardPropagate(false); //do not calculate the gradient of learning parameters
+    //cout<<"input layer's pdY:"<<endl;
+    //inputLayer->m_pdYTensor->print();
     m_inputTensor -= (*inputLayer->m_pdYTensor) * learningRate;
+    trimInputTensor();
 }
 
 
@@ -52,4 +55,17 @@ int AdverMnistNet::predict() {
     forwardPropagate();
     int predictValue = lossLayer->m_prevLayer->m_pYTensor->maxPosition();
     return predictValue;
+}
+
+void AdverMnistNet::trimInputTensor() {
+    int N = m_inputTensor.getLength();
+    for(int i=0; i<N; ++i){
+        if (m_inputTensor.e(i) < 0){
+            m_inputTensor.e(i) =0;
+        }
+        if (m_inputTensor.e(i) >255){
+            m_inputTensor.e(i) =255;
+        }
+    }
+
 }
