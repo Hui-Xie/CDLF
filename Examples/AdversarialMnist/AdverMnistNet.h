@@ -28,6 +28,7 @@ public:
     Tensor<float> m_groundTruth;
 
     void trimInputTensor();
+    void saveInputDY(const string filename);
 
 };
 

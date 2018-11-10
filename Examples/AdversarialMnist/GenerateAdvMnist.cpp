@@ -101,6 +101,11 @@ int main(int argc, char *argv[]){
         int MaxCount = 1000;
         while(nCount < MaxCount){
             net.train();
+            // generate gardient files for specific target
+            string gradientFile = to_string(label)+"-Ad"+ to_string(target)+"-G"+to_string(nCount)+".txt";
+            gradientFile = advDataDir +"/" + gradientFile;
+            net.saveInputDY(gradientFile);
+
             ++nCount;
             if (net.predict() == target){
                bFoundAdversary = true;

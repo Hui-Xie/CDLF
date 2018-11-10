@@ -69,3 +69,8 @@ void AdverMnistNet::trimInputTensor() {
     }
 
 }
+
+void AdverMnistNet::saveInputDY(const string filename) {
+    InputLayer *inputLayer = getInputLayer();
+    inputLayer->m_pdYTensor->save(filename, true);
+}
