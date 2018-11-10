@@ -718,6 +718,26 @@ void Tensor<ValueType>::save(const string& fullFilename, bool matrix2D){
 }
 
 template<class ValueType>
+void Tensor<ValueType>::print(){
+    if (2 == m_dims.size()){
+        for (int i= 0; i< m_dims[0]; ++i){
+            for (int j=0; j<m_dims[1]; ++j){
+                printf("%f ", e(i,j));
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+    else {
+        long N = getLength();
+        for (int i = 0; i < N; ++i) {
+            printf("%f ", e(i));
+        }
+        printf("\n");
+    }
+}
+
+template<class ValueType>
 void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
     FILE * pFile = nullptr;
     pFile = fopen (fullFilename.c_str(),"r");

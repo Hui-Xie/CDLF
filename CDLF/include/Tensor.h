@@ -88,6 +88,7 @@ public:
 
     void save(const string& fullFilename, bool matrix2D=false);
     void load(const string& fullFilename, bool matrix2D=false);
+    void print();
 
     Tensor ln();//natural logarithm
     Tensor expon();//exponential
