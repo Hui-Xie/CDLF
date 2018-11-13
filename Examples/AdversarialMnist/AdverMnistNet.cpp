@@ -31,14 +31,12 @@ void AdverMnistNet::train() {
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
     float learningRate = getLearningRate();
     zeroParaGradient();
-    inputLayer->setInputTensor(m_inputTensor);
+    inputLayer->setInputTensor(m_adversaryTensor);
     lossLayer->setGroundTruth(m_groundTruth);
     forwardPropagate();
-    backwardPropagate(false); //do not calculate the gradient of learning parameters
-    //cout<<"input layer's pdY:"<<endl;
-    //inputLayer->m_pdYTensor->print();
-    m_inputTensor -= (*inputLayer->m_pdYTensor) * learningRate;
-    trimInputTensor();
+    backwardPropagate(false); //do not calculate the gradient of learning parameters of network
+    m_adversaryTensor -= (*inputLayer->m_pdYTensor + (m_adversaryTensor- m_originTensor)*m_lambda) * learningRate;
+    trimAdversaryTensor();
 }
 
 
@@ -47,24 +45,24 @@ float AdverMnistNet::test() {
     return 0;
 }
 
-int AdverMnistNet::predict() {
+int AdverMnistNet::predict(const Tensor<float>& inputTensor) {
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
-    inputLayer->setInputTensor(m_inputTensor);
+    inputLayer->setInputTensor(inputTensor);
     lossLayer->setGroundTruth(m_groundTruth);
     forwardPropagate();
     int predictValue = lossLayer->m_prevLayer->m_pYTensor->maxPosition();
     return predictValue;
 }
 
-void AdverMnistNet::trimInputTensor() {
-    int N = m_inputTensor.getLength();
+void AdverMnistNet::trimAdversaryTensor() {
+    int N = m_adversaryTensor.getLength();
     for(int i=0; i<N; ++i){
-        if (m_inputTensor.e(i) < 0){
-            m_inputTensor.e(i) =0;
+        if (m_adversaryTensor.e(i) < 0){
+            m_adversaryTensor.e(i) =0;
         }
-        if (m_inputTensor.e(i) >255){
-            m_inputTensor.e(i) =255;
+        if (m_adversaryTensor.e(i) >255){
+            m_adversaryTensor.e(i) =255;
         }
     }
 
@@ -73,4 +71,8 @@ void AdverMnistNet::trimInputTensor() {
 void AdverMnistNet::saveInputDY(const string filename) {
     InputLayer *inputLayer = getInputLayer();
     inputLayer->m_pdYTensor->save(filename, true);
+}
+
+void AdverMnistNet::setLambda(float lambda) {
+   m_lambda = lambda;
 }

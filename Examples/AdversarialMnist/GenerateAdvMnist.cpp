@@ -57,6 +57,7 @@ int main(int argc, char *argv[]){
     }
     net.printArchitecture();
     net.setLearningRate(10000);
+    net.setLambda(0.000001);// lambda* lr ==1 means erase changes differing with origin Tensor.
 
     //create Adversarial data directory
     //advDataDir +="/"+ getCurTimeStr();  //todo: debug stage, No need it now.
@@ -64,20 +65,21 @@ int main(int argc, char *argv[]){
 
     // choose an initial digit file and make sure it is predicted correctly
     srand (time(NULL));
-    bool bPridictCorrect = false;
+    bool bPredictCorrect = false;
     Tensor<float> inputTensor;
     Tensor<float> groundTruth;
     int label; // correct label, which is different with target.
-    while (!bPridictCorrect){
+    while (!bPredictCorrect){
         long index = rand() % 10000;
         mnist.getTestImageAndLabel(index, inputTensor, label);
-        net.m_inputTensor = inputTensor;
         net.constructGroundTruth(label, groundTruth);
         net.m_groundTruth = groundTruth;
-        if (net.predict() == label){
-            bPridictCorrect = true;
+        if (net.predict(inputTensor) == label){
+            bPredictCorrect = true;
         }
     }
+    net.m_originTensor = inputTensor;
+
     string originFile = to_string(label)+".txt";
     originFile = advDataDir +"/"+ originFile;
     inputTensor.save(originFile, true);
@@ -94,7 +96,7 @@ int main(int argc, char *argv[]){
     for(int i=0; i< targetVec.size(); ++i){
         const int target = targetVec[i];
         bool bFoundAdversary = false;
-        net.m_inputTensor = inputTensor;  // re-assign original input Tensor
+        net.m_adversaryTensor = net.m_originTensor; // re-assign original input Tensor
         net.constructGroundTruth(target, groundTruth);
         net.m_groundTruth = groundTruth;  //targeted groundtruth, not the correct label.
         int nCount = 0;
@@ -107,7 +109,7 @@ int main(int argc, char *argv[]){
             net.saveInputDY(gradientFile);
 
             ++nCount;
-            if (net.predict() == target){
+            if (net.predict(net.m_adversaryTensor ) == target){
                bFoundAdversary = true;
                break;
             }
@@ -116,11 +118,11 @@ int main(int argc, char *argv[]){
         if (bFoundAdversary){
             string advFile = to_string(label)+"-Ad"+ to_string(target)+".txt";
             advFile = advDataDir +"/"+ advFile;
-            net.m_inputTensor.save(advFile, true);
+            net.m_adversaryTensor.save(advFile, true);
             printf("After %d back propagation iterations, an adversarial file output at: %s\n", nCount, advFile.c_str());
         }
         else{
-            printf("Infor: program can not find adversary for target %d, and original digit: %d\n", target, label);
+            printf("Infor: program can not find adversary for target %d, basing on original digit: %d\n", target, label);
         }
 
     }

@@ -22,12 +22,19 @@ public:
     virtual void train();
     virtual float test();
 
-    int predict();
+    int predict(const Tensor<float>& inputTensor);
 
-    Tensor<float> m_inputTensor;
+    Tensor<float> m_adversaryTensor;
     Tensor<float> m_groundTruth;
+    Tensor<float> m_originTensor;
 
-    void trimInputTensor();
+    // regulization coefficient Loss = Loss(f(x)) + 0.5*lambda*(x-x0)^2
+    // it addes backpropagation gardient lambda*(x-x0)
+    float m_lambda;
+
+    void setLambda(float lambda);
+
+    void trimAdversaryTensor();
     void saveInputDY(const string filename);
 
 };

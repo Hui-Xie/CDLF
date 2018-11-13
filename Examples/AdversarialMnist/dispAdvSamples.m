@@ -1,7 +1,7 @@
 % read origin and adversarial data files and display in camparison
 clear all;
 clc;
-label = 9;
+label = 8;
 advDir = '/home/hxie1/temp_advData';
 targetVec = [0,1,2,3,4,5,6,7,8,9];
 originfile = strcat(advDir, '/',num2str(label),'.txt'); %originFile
@@ -12,7 +12,11 @@ subplot(2,5,1); imshow(I); title(strcat('origin',32,num2str(label))); % 32 indic
 for i=1:9  % target index
    target = targetVec(i);
    targetFile = strcat(advDir, '/',num2str(label),'-Ad', num2str(target),'.txt');
-   targetA = dlmread(targetFile);
+   if exist(targetFile, 'file')== 2
+       targetA = dlmread(targetFile);
+   else
+       targetA = zeros(size(A));
+   end
    targetI = mat2gray(targetA, [0,255]);
    
    diffA = targetA - A;
