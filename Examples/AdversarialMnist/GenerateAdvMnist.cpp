@@ -30,6 +30,8 @@ int main(int argc, char *argv[]){
     const string mnistDir = argv[2];
     string advDataDir = argv[3];
 
+    bool bGenerateGradientFiles = false;
+
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
 
@@ -104,9 +106,11 @@ int main(int argc, char *argv[]){
         while(nCount < MaxCount){
             net.train();
             // generate gardient files for specific target
-            string gradientFile = to_string(label)+"-Ad"+ to_string(target)+"-G"+to_string(nCount)+".txt";
-            gradientFile = advDataDir +"/" + gradientFile;
-            net.saveInputDY(gradientFile);
+            if (bGenerateGradientFiles){
+                string gradientFile = to_string(label)+"-Ad"+ to_string(target)+"-G"+to_string(nCount)+".txt";
+                gradientFile = advDataDir +"/" + gradientFile;
+                net.saveInputDY(gradientFile);
+            }
 
             ++nCount;
             if (net.predict(net.m_adversaryTensor ) == target){
