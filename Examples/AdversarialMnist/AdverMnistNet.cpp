@@ -35,7 +35,8 @@ void AdverMnistNet::train() {
     lossLayer->setGroundTruth(m_groundTruth);
     forwardPropagate();
     backwardPropagate(false); //do not calculate the gradient of learning parameters of network
-    m_adversaryTensor -= (*inputLayer->m_pdYTensor + (m_adversaryTensor- m_originTensor)*m_lambda) * learningRate;
+    //m_adversaryTensor -= (*inputLayer->m_pdYTensor + (m_adversaryTensor- m_originTensor)*m_lambda) * learningRate;  // this method makes adversarial sample try to mimic the desired target.
+    m_adversaryTensor -= inputLayer->m_pdYTensor->sign()* learningRate;  // this methtod makes adversarial sample has many shade
     trimAdversaryTensor();
 }
 
