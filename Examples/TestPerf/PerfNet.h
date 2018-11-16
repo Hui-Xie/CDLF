@@ -8,10 +8,10 @@
 
 #include "CDLF.h"
 
-class ConvNet : public FeedForwardNet {
+class PerfNet : public FeedForwardNet {
 public:
-    ConvNet(const string& name, const string& saveDir);
-    ~ConvNet();
+    PerfNet(const string& name, const string& saveDir);
+    ~PerfNet();
 
     virtual void build();
     virtual void train();

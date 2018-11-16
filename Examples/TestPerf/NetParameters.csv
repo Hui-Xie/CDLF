@@ -1,0 +1,2 @@
+Name, LearningRate, BatchSize, Epoch, LossTolerance, JudgeLoss, 
+PerfNet,0.001,3,0,0.02,1, 
