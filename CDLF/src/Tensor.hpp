@@ -792,6 +792,15 @@ Tensor<ValueType> Tensor<ValueType>::expon(){
 
 }
 
+template<class ValueType>
+Tensor<ValueType> Tensor<ValueType>::sign(){
+    Tensor tensor(m_dims);
+    long N = getLength();
+    for (long i = 0; i < N; ++i) {
+        tensor.e(i) = e(i)>= 0 ? (e(i)>0? 1:0):-1;
+    }
+    return tensor;
+}
 
 //element-wise product
 
