@@ -22,11 +22,9 @@ public:
     int m_stride;
     int m_OneFilterN;
 
-
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
-
 
     bool checkFilterSize(const vector<long>& filterSize, Layer* prevLayer);
     void constructFiltersAndY();

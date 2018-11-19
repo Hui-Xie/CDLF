@@ -11,7 +11,7 @@
 ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, Layer *prevLayer,
                                              const vector<long> &filterSize, const int numFilters, const int stride):
                                              Layer(id, name, {}){
-
+   // the derived class will be responsible for tensorSize computation.
 }
 
 ConvolutionBasicLayer::~ConvolutionBasicLayer() {
