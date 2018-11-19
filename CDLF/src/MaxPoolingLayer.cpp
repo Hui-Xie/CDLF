@@ -130,9 +130,7 @@ void MaxPoolingLayer::forward() {
                                 Xc[5] = o * m_stride;
                                 X.subTensorFromTopLeft(Xc, pSubX);
                                 m_pYTensor->e(i, j, k, l, m, o) = pSubX->max();
-                                if (nullptr != pSubX){
-                                    delete pSubX;
-                                }
+
                             }
                         }
                     }
