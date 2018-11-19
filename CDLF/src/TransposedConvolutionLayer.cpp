@@ -104,7 +104,6 @@ void TransposedConvolutionLayer::forward() {
     if (2 == Nt - Df && 1 == f.size()) {
         for (long i = 0; i < m_tensorSize[Df + 0]; ++i) {
             Xc[f[0]] = i;
-
             pExtendX->subTensorFromTopLeft(Xc, pSubX);
             if (1 != m_numFilters) {
                 /*vector<std::thread> threadVec;
@@ -123,8 +122,6 @@ void TransposedConvolutionLayer::forward() {
                 for(int idxF = 0; idxF < m_numFilters; ++idxF){
                     m_pYTensor->e(idxF, i) = pSubX->conv(*m_pW[idxF]);
                 }
-
-
             } else {
                 m_pYTensor->e(i, 1) = pSubX->conv(*m_pW[0]);  // This maybe has problem.
             }
@@ -135,7 +132,6 @@ void TransposedConvolutionLayer::forward() {
             Xc[f[0]] = i;
             for (long j = 0; j < m_tensorSize[Df + 1]; ++j) {
                 Xc[f[1]] = j;
-
                 pExtendX->subTensorFromTopLeft(Xc, pSubX);
                 if (1 != m_numFilters) {
                     /*vector<std::thread> threadVec;
@@ -168,7 +164,6 @@ void TransposedConvolutionLayer::forward() {
                 Xc[f[1]] = j;
                 for (long k = 0; k < m_tensorSize[Df + 2]; ++k) {
                     Xc[f[2]] = k;
-
                     pExtendX->subTensorFromTopLeft(Xc, pSubX);
                     if (1 != m_numFilters) {
                         /*vector<std::thread> threadVec;
@@ -191,8 +186,6 @@ void TransposedConvolutionLayer::forward() {
                     } else {
                         m_pYTensor->e(i, j, k) = pSubX->conv(*m_pW[0]);
                     }
-
-
                 }
             }
         }
@@ -205,7 +198,6 @@ void TransposedConvolutionLayer::forward() {
                     Xc[f[2]] = k;
                     for (long l = 0; l < m_tensorSize[Df + 3]; ++l) {
                         Xc[f[3]] = l;
-
                         pExtendX->subTensorFromTopLeft(Xc, pSubX);
                         if (1 != m_numFilters) {
                             /*vector<std::thread> threadVec;
@@ -224,8 +216,6 @@ void TransposedConvolutionLayer::forward() {
                             for(int idxF = 0; idxF < m_numFilters; ++idxF){
                                 m_pYTensor->e(idxF, i,j, k, l) = pSubX->conv(*m_pW[idxF]);
                             }
-
-
                         } else {
                             m_pYTensor->e(i, j, k, l) = pSubX->conv(*m_pW[0]);
                         }
@@ -246,7 +236,6 @@ void TransposedConvolutionLayer::forward() {
                         Xc[f[3]] = l;
                         for (long m = 0; m < m_tensorSize[Df + 4]; ++m) {
                             Xc[f[4]] = m;
-
                             pExtendX->subTensorFromTopLeft(Xc, pSubX);
                             if (1 != m_numFilters) {
                                 /* vector<std::thread> threadVec;
@@ -265,12 +254,9 @@ void TransposedConvolutionLayer::forward() {
                                 for(int idxF = 0; idxF < m_numFilters; ++idxF){
                                     m_pYTensor->e(idxF, i,j, k, l,m) = pSubX->conv(*m_pW[idxF]);
                                 }
-
-
                             } else {
                                 m_pYTensor->e(i, j, k, l, m) = pSubX->conv(*m_pW[0]);
                             }
-
                         }
                     }
                 }
@@ -290,7 +276,6 @@ void TransposedConvolutionLayer::forward() {
                             Xc[f[4]] = m;
                             for (long n = 0; n < m_tensorSize[Df + 5]; ++n) {
                                 Xc[f[5]] = n;
-
                                 pExtendX->subTensorFromTopLeft(Xc, pSubX);
                                 if (1 != m_numFilters) {
                                     /*vector<std::thread> threadVec;
@@ -309,13 +294,9 @@ void TransposedConvolutionLayer::forward() {
                                     for(int idxF = 0; idxF < m_numFilters; ++idxF){
                                         m_pYTensor->e(idxF, i,j, k, l,m,n) = pSubX->conv(*m_pW[idxF]);
                                     }
-
-
                                 } else {
                                     m_pYTensor->e(i, j, k, l, m, n) = pSubX->conv(*m_pW[0]);
                                 }
-
-
                             }
                         }
                     }
@@ -332,7 +313,6 @@ void TransposedConvolutionLayer::forward() {
         pSubX = nullptr;
     }
 #endif
-
 
    if(nullptr != pExtendX){
         delete pExtendX;
@@ -427,7 +407,6 @@ void TransposedConvolutionLayer::backward(bool computeW) {
     } else {
         // single thread compute
         if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
-
         const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
         vector<long> expandDyDims = Xdims + m_filterSize - 1;
         Tensor<float>* pExpandDY = new Tensor<float>(expandDyDims);
@@ -582,12 +561,10 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
 
     long N = pdW->getLength();
     for (long i=0; i<N; ++i){
-
         pExtendX->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, 1);
         pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
-
-
     }
+
     if(nullptr != pSubX)
     {
         delete pSubX;
