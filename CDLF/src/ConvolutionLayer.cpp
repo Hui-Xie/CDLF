@@ -9,21 +9,12 @@
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
                                     const int numFilters, const int stride)
-        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride) {
-    if (checkFilterSize(filterSize, prevLayer)) {
-        m_type = "ConvolutionLayer";
-        m_stride = stride;
-        m_filterSize = filterSize;
-        m_numFilters = numFilters;
-        addPreviousLayer(prevLayer);
-        computeOneFiterN();
-        updateTensorSize();
-        constructFiltersAndY();
-    } else {
-        cout << "Error: can not construct Convolutional Layer as incorrect Filter Size." << name << endl;
-    }
-
-}
+        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride)
+{
+    m_type = "ConvolutionLayer";
+    updateTensorSize();
+    constructFiltersAndY();
+ }
 
 ConvolutionLayer::~ConvolutionLayer() {
     //the ConvoltuionBasicLayer is responsible for deleting memory

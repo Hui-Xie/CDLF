@@ -11,7 +11,16 @@
 ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, Layer *prevLayer,
                                              const vector<long> &filterSize, const int numFilters, const int stride):
                                              Layer(id, name, {}){
-   // the derived class will be responsible for tensorSize computation.
+    if (checkFilterSize(filterSize, prevLayer)) {
+        m_stride = stride;
+        m_filterSize = filterSize;
+        m_numFilters = numFilters;
+        addPreviousLayer(prevLayer);
+        computeOneFiterN();
+
+    } else {
+        cout << "Error: can not construct Convolutional Layer as incorrect Filter Size." << name << endl;
+    }
 }
 
 ConvolutionBasicLayer::~ConvolutionBasicLayer() {

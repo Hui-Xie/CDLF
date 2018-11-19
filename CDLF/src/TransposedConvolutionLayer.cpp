@@ -9,20 +9,11 @@
 
 TransposedConvolutionLayer::TransposedConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
                                    const int numFilters, const int stride)
-        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride) {
-    if (checkFilterSize(filterSize, prevLayer)) {
-        m_type = "TransposedConvolutionLayer";
-        m_stride = stride;
-        m_filterSize = filterSize;
-        m_numFilters = numFilters;
-        addPreviousLayer(prevLayer);
-        computeOneFiterN();
-        updateTensorSize();
-        constructFiltersAndY();
-    } else {
-        cout << "Error: can not construct Convolutional Layer as incorrect Filter Size." << name << endl;
-    }
-
+        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride)
+{
+    m_type = "TransposedConvolutionLayer";
+    updateTensorSize();
+    constructFiltersAndY();
 }
 
 TransposedConvolutionLayer::~TransposedConvolutionLayer() {
@@ -30,13 +21,12 @@ TransposedConvolutionLayer::~TransposedConvolutionLayer() {
 }
 
 
-
+// For transposed convolution layer: outputTensorSize = (InputTensorSize -1)*stride + filterSize;
 void TransposedConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
-        // ref formula: http://cs231n.github.io/convolutional-networks/
+        m_tensorSize[i] = (m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
     }
 
     if (1 != m_numFilters) {

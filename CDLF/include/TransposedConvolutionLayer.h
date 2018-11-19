@@ -18,6 +18,8 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW);
 
+    void updateTensorSize();
+
 private:
     void expandDyTensor(const Tensor<float>* pdY, Tensor<float>* pExpandDY);
     void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
@@ -26,7 +28,7 @@ private:
     // if pdx == nullptr, computeDx will use previousLayer->pdY;
     // if pdx !=  nullptr, computeX will use it to compute dx for one filter;
     void computeDX(const Tensor<float>* pExpandDY, const Tensor<float>* pW, Tensor<float>* pdX = nullptr);
-    void updateTensorSize();
+
 
 };
 
