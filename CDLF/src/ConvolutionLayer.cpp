@@ -3,13 +3,13 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #include "ConvolutionLayer.h"
-#include "statisTool.h"
 #include <thread>
+
 
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
                                     const int numFilters, const int stride)
-        : Layer(id, name, {}) {
+        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride) {
     if (checkFilterSize(filterSize, prevLayer)) {
         m_type = "ConvolutionLayer";
         m_stride = stride;
@@ -26,54 +26,10 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prev
 }
 
 ConvolutionLayer::~ConvolutionLayer() {
-    //delete Filter Space; the Y space  will delete by base class;
-    for (int i = 0; i < m_numFilters; ++i) {
-        if (nullptr != m_pW[i]) {
-            delete m_pW[i];
-            m_pW[i] = nullptr;
-        }
-        if (nullptr != m_pdW[i]) {
-            delete m_pdW[i];
-            m_pdW[i] = nullptr;
-        }
-    }
-    delete[] m_pW;
-    delete[] m_pdW;
+    //the ConvoltuionBasicLayer is responsible for deleting memory
 }
 
-// the filterSize in each dimension should be odd,
-// or if it is even, it must be same size of corresponding dimension of tensorSize of input X
-bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *prevLayer) {
-    int dimFilter = filterSize.size();
-    int dimX = prevLayer->m_tensorSize.size();
-    if (dimFilter == dimX) {
-        for (int i = 0; i < dimX; ++i) {
-            if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i]) {
-                cout << "Error: the filterSize in each dimension should be odd, "
-                        "or if it is even, it must be same size of corresponding dimension of tensorSize of input X."
-                     << endl;
-                return false;
-            }
-        }
-        return true;
-    } else {
-        cout << "Error: dimension of filter should be consistent with the output of the previous Layer." << endl;
-        return false;
-    }
-}
 
-void ConvolutionLayer::computeOneFiterN() {
-    int N = m_filterSize.size();
-    if (N > 0){
-        m_OneFilterN = 1;
-        for (int i = 0; i < N; ++i) {
-            m_OneFilterN *= m_filterSize[i];
-        }
-    }
-    else{
-        m_OneFilterN = 0;
-    }
-}
 
 void ConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
@@ -89,28 +45,7 @@ void ConvolutionLayer::updateTensorSize() {
     deleteOnes(m_tensorSize);
 }
 
-void ConvolutionLayer::constructFiltersAndY() {
-    m_pW = (Tensor<float> **) new void *[m_numFilters];
-    m_pdW = (Tensor<float> **) new void *[m_numFilters];
-    for (int i = 0; i < m_numFilters; ++i) {
-        m_pW[i] = new Tensor<float>(m_filterSize);
-        m_pdW[i] = new Tensor<float>(m_filterSize);
-    }
-    allocateYdYTensor();
-}
 
-
-void ConvolutionLayer::initialize(const string &initialMethod) {
-    for (int i = 0; i < m_numFilters; ++i) {
-        generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
-    }
-}
-
-void ConvolutionLayer::zeroParaGradient() {
-    for (int i = 0; i < m_numFilters; ++i) {
-        m_pdW[i]->zeroInitialize();
-    }
-}
 
 // Y = W*X
 void ConvolutionLayer::forward() {
@@ -514,13 +449,6 @@ void ConvolutionLayer::backward(bool computeW) {
     }
 }
 
-void ConvolutionLayer::updateParameters(const float lr, const string &method, const int batchSize) {
-    if ("sgd" == method) {
-        for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            *m_pW[idxF] -= *m_pdW[idxF] * (lr / batchSize);
-        }
-    }
-}
 
 
 void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor<float>* pExpandDY) {
@@ -857,44 +785,4 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
     else {
         cout << "Error: Dimension >7 does not support in ConvolutionLayer::computeDX." << endl;
     }
-}
-
-long ConvolutionLayer::getNumParameters(){
-    return m_pW[0]->getLength()*m_numFilters;
-}
-
-void ConvolutionLayer::save(const string &netDir) {
-    FILE * pFile = nullptr;
-    string filename = "";
-
-    string layerDir = netDir + "/" + to_string(m_id);
-    createDir(layerDir);
-
-    for (int i=0; i<m_numFilters; ++i){
-        filename= layerDir + "/W"+to_string(i)+".csv";
-        m_pW[i]->save(filename);
-     }
-}
-
-void ConvolutionLayer::load(const string &netDir) {
-    FILE *pFile = nullptr;
-    string filename = "";
-
-    string layerDir = netDir + "/" + to_string(m_id);
-    if (!dirExist(layerDir)) {
-        initialize("Xavier");
-        return;
-    }
-    else {
-        for (int i = 0; i < m_numFilters; ++i) {
-            filename = layerDir + "/W" + to_string(i) + ".csv";
-            m_pW[i]->load(filename);
-        }
-    }
-}
-
-void ConvolutionLayer::saveStructLine(FILE *pFile) {
-    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
-    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
-            vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, "{}");
 }
