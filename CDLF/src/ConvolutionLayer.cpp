@@ -582,99 +582,16 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
         dYDimsEx[f[i]] = dYDims[i];
     }
 
-    if (2 == Nf) {
-        for (int i = 0; i < dWDims[0]; ++i) {
-            for (int j = 0; j < dWDims[1]; ++j) {
-                Tensor<float>* pSubX = nullptr;
-                X.subTensorFromTopLeft({i * m_stride, j * m_stride}, dYDimsEx, pSubX, m_stride);
-                pdW->e(i, j) += pSubX->conv(*pdY); // + is for batch processing
-                if(nullptr != pSubX)
-                {
-                    delete pSubX;
-                    pSubX = nullptr;
-                }
-            }
+    long N = pdW->getLength();
+    for (long i=0; i<N; ++i){
+        Tensor<float>* pSubX = nullptr;
+        X.subTensorFromTopLeft(pdW->offset2Index(i) * m_stride, dYDimsEx, pSubX, m_stride);
+        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
+        if(nullptr != pSubX)
+        {
+            delete pSubX;
+            pSubX = nullptr;
         }
-    } else if (3 == Nf) {
-        for (int i = 0; i < dWDims[0]; ++i) {
-            for (int j = 0; j < dWDims[1]; ++j) {
-                for (int k = 0; k < dWDims[2]; ++k) {
-                    Tensor<float>* pSubX = nullptr;
-                    X.subTensorFromTopLeft({i * m_stride, j * m_stride, k * m_stride}, dYDimsEx, pSubX, m_stride);
-                    pdW->e(i, j, k) += pSubX->conv(*pdY);
-                    if(nullptr != pSubX)
-                    {
-                        delete pSubX;
-                        pSubX = nullptr;
-                    }
-                }
-            }
-        }
-    } else if (4 == Nf) {
-        for (int i = 0; i < dWDims[0]; ++i) {
-            for (int j = 0; j < dWDims[1]; ++j) {
-                for (int k = 0; k < dWDims[2]; ++k) {
-                    for (int l = 0; l < dWDims[3]; ++l) {
-                        Tensor<float>* pSubX = nullptr;
-                        X.subTensorFromTopLeft(
-                                {i * m_stride, j * m_stride, k * m_stride, l * m_stride}, dYDimsEx, pSubX,m_stride);
-                        pdW->e(i, j, k, l) += pSubX->conv(*pdY);
-                        if(nullptr != pSubX)
-                        {
-                            delete pSubX;
-                            pSubX = nullptr;
-                        }
-                    }
-                }
-            }
-        }
-    } else if (5 == Nf) {
-        for (int i = 0; i < dWDims[0]; ++i) {
-            for (int j = 0; j < dWDims[1]; ++j) {
-                for (int k = 0; k < dWDims[2]; ++k) {
-                    for (int l = 0; l < dWDims[3]; ++l) {
-                        for (int m = 0; m < dWDims[4]; ++m) {
-                            Tensor<float>* pSubX = nullptr;
-                            X.subTensorFromTopLeft(
-                                    {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m * m_stride}, dYDimsEx, pSubX,m_stride);
-                            pdW->e(i, j, k, l, m) += pSubX->conv(*pdY);
-                            if(nullptr != pSubX)
-                            {
-                                delete pSubX;
-                                pSubX = nullptr;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } else if (6 == Nf) {
-        for (int i = 0; i < dWDims[0]; ++i) {
-            for (int j = 0; j < dWDims[1]; ++j) {
-                for (int k = 0; k < dWDims[2]; ++k) {
-                    for (int l = 0; l < dWDims[3]; ++l) {
-                        for (int m = 0; m < dWDims[4]; ++m) {
-                            for (int n = 0; n < dWDims[5]; ++n) {
-                                Tensor<float>* pSubX = nullptr;
-                                X.subTensorFromTopLeft(
-                                        {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m * m_stride,
-                                         n * m_stride}, dYDimsEx,pSubX, m_stride);
-                                pdW->e(i, j, k, l, m, n) += pSubX->conv(*pdY);
-                                if(nullptr != pSubX)
-                                {
-                                    delete pSubX;
-                                    pSubX = nullptr;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    else {
-        cout << "Error: Dimension >6 does not support in ConvolutionLayer::computeDW" << endl;
     }
 }
 
