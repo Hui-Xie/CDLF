@@ -1,17 +1,18 @@
 //
-// Created by Hui Xie on 7/19/2018.
+// Created by Hui Xie on 11/19/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
-#include "ConvolutionLayer.h"
+//
+
+#include "TransposedConvolutionLayer.h"
 #include "statisTool.h"
 #include <thread>
 
-
-ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
-                                    const int numFilters, const int stride)
+TransposedConvolutionLayer::TransposedConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
+                                   const int numFilters, const int stride)
         : Layer(id, name, {}) {
     if (checkFilterSize(filterSize, prevLayer)) {
-        m_type = "ConvolutionLayer";
+        m_type = "TransposedConvolutionLayer";
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
@@ -25,7 +26,7 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prev
 
 }
 
-ConvolutionLayer::~ConvolutionLayer() {
+TransposedConvolutionLayer::~TransposedConvolutionLayer() {
     //delete Filter Space; the Y space  will delete by base class;
     for (int i = 0; i < m_numFilters; ++i) {
         if (nullptr != m_pW[i]) {
@@ -43,7 +44,7 @@ ConvolutionLayer::~ConvolutionLayer() {
 
 // the filterSize in each dimension should be odd,
 // or if it is even, it must be same size of corresponding dimension of tensorSize of input X
-bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *prevLayer) {
+bool TransposedConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *prevLayer) {
     int dimFilter = filterSize.size();
     int dimX = prevLayer->m_tensorSize.size();
     if (dimFilter == dimX) {
@@ -62,7 +63,7 @@ bool ConvolutionLayer::checkFilterSize(const vector<long> &filterSize, Layer *pr
     }
 }
 
-void ConvolutionLayer::computeOneFiterN() {
+void TransposedConvolutionLayer::computeOneFiterN() {
     int N = m_filterSize.size();
     if (N > 0){
         m_OneFilterN = 1;
@@ -75,7 +76,7 @@ void ConvolutionLayer::computeOneFiterN() {
     }
 }
 
-void ConvolutionLayer::updateTensorSize() {
+void TransposedConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
@@ -89,7 +90,7 @@ void ConvolutionLayer::updateTensorSize() {
     deleteOnes(m_tensorSize);
 }
 
-void ConvolutionLayer::constructFiltersAndY() {
+void TransposedConvolutionLayer::constructFiltersAndY() {
     m_pW = (Tensor<float> **) new void *[m_numFilters];
     m_pdW = (Tensor<float> **) new void *[m_numFilters];
     for (int i = 0; i < m_numFilters; ++i) {
@@ -100,20 +101,20 @@ void ConvolutionLayer::constructFiltersAndY() {
 }
 
 
-void ConvolutionLayer::initialize(const string &initialMethod) {
+void TransposedConvolutionLayer::initialize(const string &initialMethod) {
     for (int i = 0; i < m_numFilters; ++i) {
         generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
     }
 }
 
-void ConvolutionLayer::zeroParaGradient() {
+void TransposedConvolutionLayer::zeroParaGradient() {
     for (int i = 0; i < m_numFilters; ++i) {
         m_pdW[i]->zeroInitialize();
     }
 }
 
 // Y = W*X
-void ConvolutionLayer::forward() {
+void TransposedConvolutionLayer::forward() {
     const int Nt = m_tensorSize.size();
     const int Nf = m_filterSize.size();
     const int Df = (1 == m_numFilters) ? 0 : 1; //Feature dimension, if number of filter >1, it will add one feature dimension to output Y
@@ -327,18 +328,18 @@ void ConvolutionLayer::forward() {
                             Tensor<float>* pSubX = nullptr;
                             X.subTensorFromTopLeft(Xc, m_filterSize,pSubX);
                             if (1 != m_numFilters) {
-                               /* vector<std::thread> threadVec;
-                                for (int idxF = 0; idxF < m_numFilters; ++idxF){
-                                    threadVec.push_back(thread(
-                                            [this, pSubX, idxF, i, j, k, l, m](){
-                                                this->m_pYTensor->e(idxF, i, j, k, l, m) = pSubX->conv(*(this->m_pW[idxF]));
-                                            }
-                                    ));
-                                }
-
-                                for (int t = 0; t < threadVec.size(); ++t){
-                                    threadVec[t].join();
-                                }*/
+                                /* vector<std::thread> threadVec;
+                                 for (int idxF = 0; idxF < m_numFilters; ++idxF){
+                                     threadVec.push_back(thread(
+                                             [this, pSubX, idxF, i, j, k, l, m](){
+                                                 this->m_pYTensor->e(idxF, i, j, k, l, m) = pSubX->conv(*(this->m_pW[idxF]));
+                                             }
+                                     ));
+                                 }
+ 
+                                 for (int t = 0; t < threadVec.size(); ++t){
+                                     threadVec[t].join();
+                                 }*/
 
                                 for(int idxF = 0; idxF < m_numFilters; ++idxF){
                                     m_pYTensor->e(idxF, i,j, k, l,m) = pSubX->conv(*m_pW[idxF]);
@@ -417,7 +418,7 @@ void ConvolutionLayer::forward() {
 // dL/dW = dL/dY * dY/dW;
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
-void ConvolutionLayer::backward(bool computeW) {
+void TransposedConvolutionLayer::backward(bool computeW) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
 
@@ -447,9 +448,9 @@ void ConvolutionLayer::backward(bool computeW) {
         Tensor<float>** pdX = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float>** pExpandDY = (Tensor<float> **) new void *[m_numFilters];
         for (int i = 0; i < m_numFilters; ++i) {
-           pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
-           pdX[i]->zeroInitialize();  // this is a necessary step as computeDX use += operator
-           //pdY memory will be allocated in the extractLowerDTensor function
+            pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
+            pdX[i]->zeroInitialize();  // this is a necessary step as computeDX use += operator
+            //pdY memory will be allocated in the extractLowerDTensor function
             const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
             vector<long> expandDyDims = Xdims + m_filterSize - 1;
             pExpandDY[i] = new Tensor<float>(expandDyDims);
@@ -514,7 +515,7 @@ void ConvolutionLayer::backward(bool computeW) {
     }
 }
 
-void ConvolutionLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void TransposedConvolutionLayer::updateParameters(const float lr, const string &method, const int batchSize) {
     if ("sgd" == method) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             *m_pW[idxF] -= *m_pdW[idxF] * (lr / batchSize);
@@ -523,7 +524,7 @@ void ConvolutionLayer::updateParameters(const float lr, const string &method, co
 }
 
 
-void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor<float>* pExpandDY) {
+void TransposedConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor<float>* pExpandDY) {
     //freeExpandDy();
     //const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
     //vector<long> expandDyDims = Xdims + m_filterSize - 1;
@@ -645,7 +646,7 @@ void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor<float>* p
     }
 }
 
-void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
+void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dWDims = pdW->getDims();
     const int Nf = dWDims.size();
     Tensor<float> &X = *m_prevLayer->m_pYTensor;
@@ -744,12 +745,12 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     }
 
     else {
-        cout << "Error: Dimension >6 does not support in ConvolutionLayer::computeDW" << endl;
+        cout << "Error: Dimension >6 does not support in TransposedConvolutionLayer::computeDW" << endl;
     }
 }
 
 //Note: dx need to accumulate along filters
-void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float>* pdX) {
+void TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float>* pdX) {
     if (nullptr == pdX){
         pdX = m_prevLayer->m_pdYTensor;
     }
@@ -855,15 +856,15 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
         }
     }
     else {
-        cout << "Error: Dimension >7 does not support in ConvolutionLayer::computeDX." << endl;
+        cout << "Error: Dimension >7 does not support in TransposedConvolutionLayer::computeDX." << endl;
     }
 }
 
-long ConvolutionLayer::getNumParameters(){
+long TransposedConvolutionLayer::getNumParameters(){
     return m_pW[0]->getLength()*m_numFilters;
 }
 
-void ConvolutionLayer::save(const string &netDir) {
+void TransposedConvolutionLayer::save(const string &netDir) {
     FILE * pFile = nullptr;
     string filename = "";
 
@@ -873,10 +874,10 @@ void ConvolutionLayer::save(const string &netDir) {
     for (int i=0; i<m_numFilters; ++i){
         filename= layerDir + "/W"+to_string(i)+".csv";
         m_pW[i]->save(filename);
-     }
+    }
 }
 
-void ConvolutionLayer::load(const string &netDir) {
+void TransposedConvolutionLayer::load(const string &netDir) {
     FILE *pFile = nullptr;
     string filename = "";
 
@@ -893,7 +894,7 @@ void ConvolutionLayer::load(const string &netDir) {
     }
 }
 
-void ConvolutionLayer::saveStructLine(FILE *pFile) {
+void TransposedConvolutionLayer::saveStructLine(FILE *pFile) {
     //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, "{}");

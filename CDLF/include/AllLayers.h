@@ -10,6 +10,7 @@
 #include "BiasLayer.h"
 #include "BranchLayer.h"
 #include "ConvolutionLayer.h"
+#include "TransposedConvolutionLayer.h"
 #include "CrossEntropyLoss.h"
 #include "ExponentialLayer.h"
 #include "FCLayer.h"
