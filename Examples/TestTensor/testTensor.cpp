@@ -157,15 +157,6 @@ int main (int argc, char *argv[]) {
     cout <<"tensor20:"<<endl;
     tensor20.printElements();
 
-    cout<<"tensor21 = tensor20.subTensorFromCenter({2,3}, {5,5});"<<endl;
-    Tensor<float>* pTensor21 = nullptr;
-    tensor20.subTensorFromCenter({2,3}, {5,5}, pTensor21);
-    pTensor21->printElements();
-    if (nullptr != pTensor21){
-        delete pTensor21;
-    }
-
-
     cout <<"tensor20:"<<endl;
     tensor20.printElements();
     Tensor<float>* pTensor22 = nullptr;
@@ -179,8 +170,8 @@ int main (int argc, char *argv[]) {
     cout <<"tensor20:"<<endl;
     tensor20.printElements();
 
-    Tensor<float>* pTensor23;
-    tensor20.subTensorFromTopLeft({0,0},{3,3},pTensor23,2);
+    Tensor<float>* pTensor23 = new Tensor<float>({3,3});
+    tensor20.subTensorFromTopLeft({0,0},pTensor23,2);
     cout<<"tensor23: by te tensor20.subTensorFromTopLeft({0,0},{3,3},pTensor23,2):"<<endl;
     pTensor23->printElements();
     if (nullptr != pTensor23){

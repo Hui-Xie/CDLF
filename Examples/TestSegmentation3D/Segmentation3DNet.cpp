@@ -43,19 +43,19 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
             Tensor<unsigned char> *pLabel= nullptr;
             m_pDataMgr->readTrainLabelFile(index, pLabel);
             // cut original pLabel image to matched size
-            Tensor<unsigned char>* pCutLabel = nullptr;
+
             vector<long> cutTensorSize = m_pDNet->m_pGTLayer->m_pYTensor->getDims();
             cutTensorSize.erase(cutTensorSize.begin());
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
-                                         cutTensorSize, pCutLabel, 1);
+            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
+            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
             delete pLabel;
 
             Tensor<float>* pOneHotLabel= nullptr;
             m_pDataMgr->oneHotEncodeLabel(pCutLabel, pOneHotLabel, 3);
-            delete pCutLabel;
+            delete pCutLabel; pCutLabel = nullptr;
             m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
             m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
-            delete pOneHotLabel;
+            delete pOneHotLabel; pOneHotLabel = nullptr;
 
             // train G
             m_pDNet->setAlphaGroundTruth(true);
@@ -115,17 +115,18 @@ void Segmentation3DNet::trainG(){
             Tensor<unsigned char> *pLabel= nullptr;
             m_pDataMgr->readTrainLabelFile(index, pLabel);
             // cut original pLabel image to matched size
-            Tensor<unsigned char>* pCutLabel = nullptr;
+
             vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_prevLayer->m_pYTensor->getDims();
             cutTensorSize.erase(cutTensorSize.begin());
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
-                                         cutTensorSize, pCutLabel, 1);
+            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
+
+            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
             delete pLabel;
             Tensor<float>* pOneHotLabel= nullptr;
             m_pDataMgr->oneHotEncodeLabel(pCutLabel, pOneHotLabel, 3);
-            delete pCutLabel;
+            delete pCutLabel; pCutLabel = nullptr;
             m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
-            delete pOneHotLabel;
+            delete pOneHotLabel; pOneHotLabel = nullptr;
 
             forwardG();
             backwardG();
@@ -164,17 +165,17 @@ void Segmentation3DNet::trainD(){
             Tensor<unsigned char> *pLabel= nullptr;
             m_pDataMgr->readTrainLabelFile(index, pLabel);
             // cut original pLabel image to matched size
-            Tensor<unsigned char>* pCutLabel = nullptr;
+
             vector<long> cutTensorSize = m_pDNet->m_pGTLayer->m_pYTensor->getDims();
             cutTensorSize.erase(cutTensorSize.begin());
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
-                                         cutTensorSize, pCutLabel, 1);
+            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
+            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
             delete pLabel;
             Tensor<float>* pOneHotLabel= nullptr;
             m_pDataMgr->oneHotEncodeLabel(pCutLabel, pOneHotLabel, 3);
-            delete pCutLabel;
+            delete pCutLabel; pCutLabel = nullptr;
             m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
-            delete pOneHotLabel;
+            delete pOneHotLabel; pOneHotLabel = nullptr;
 
             // generative Gx
             forwardG();
@@ -221,11 +222,11 @@ float Segmentation3DNet::testG(bool outputFile){
         Tensor<unsigned char> *pLabel = nullptr;
         m_pDataMgr->readTestLabelFile(i, pLabel);
         // cut original pLabel image to matched size
-        Tensor<unsigned char>* pCutLabel = nullptr;
+
         vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_prevLayer->m_pYTensor->getDims();
         cutTensorSize.erase(cutTensorSize.begin());
-        pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
-                                     cutTensorSize, pCutLabel, 1);
+        Tensor<unsigned char>* pCutLabel = new  Tensor<unsigned char>(cutTensorSize);
+        pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
         delete pLabel;
 
         Tensor<float> *pOneHotLabel = nullptr;
@@ -276,11 +277,11 @@ void Segmentation3DNet::pretrainD() {
             Tensor<unsigned char> *pLabel= nullptr;
             m_pDataMgr->readTrainLabelFile(index, pLabel);
             // cut original pLabel image to matched size
-            Tensor<unsigned char>* pCutLabel = nullptr;
+
             vector<long> cutTensorSize = m_pDNet->m_pGTLayer->m_pYTensor->getDims();
             cutTensorSize.erase(cutTensorSize.begin());
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2,
-                                         cutTensorSize, pCutLabel, 1);
+            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
+            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
             delete pLabel;
             Tensor<float>* pOneHotLabel= nullptr;
             m_pDataMgr->oneHotEncodeLabel(pCutLabel, pOneHotLabel, 3);

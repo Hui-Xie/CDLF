@@ -854,73 +854,9 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims) {
 }
 
 template<class ValueType>
-void
-Tensor<ValueType>::subTensorFromCenter(const vector<long> &centralIndex, const vector<long> &span, Tensor *&pTensor,
-                                       const int stride) const {
-    pTensor = new Tensor<ValueType>(span);
-    int N = span.size();
-    vector<long> halfSpan = span / 2; //also the central voxel in the tensor(span), span must be odd in each element.
-
-    if (2 == N) {
-        for (int i = -halfSpan[0]; i <= halfSpan[0]; ++i) {
-            for (int j = -halfSpan[1]; j <= halfSpan[1]; ++j) {
-                pTensor->e(halfSpan[0] + i, halfSpan[1] + j) = e(centralIndex[0] + i * stride,
-                                                                 centralIndex[1] + j * stride);
-            }
-        }
-    } else if (3 == N) {
-        for (int i = -halfSpan[0]; i <= halfSpan[0]; ++i) {
-            for (int j = -halfSpan[1]; j <= halfSpan[1]; ++j) {
-                for (int k = -halfSpan[2]; k <= halfSpan[2]; ++k) {
-                    pTensor->e(halfSpan[0] + i, halfSpan[1] + j, halfSpan[2] + k)
-                            = e(centralIndex[0] + i * stride, centralIndex[1] + j * stride,
-                                centralIndex[2] + k * stride);
-                }
-            }
-        }
-    } else if (4 == N) {
-        for (int i = -halfSpan[0]; i <= halfSpan[0]; ++i) {
-            for (int j = -halfSpan[1]; j <= halfSpan[1]; ++j) {
-                for (int k = -halfSpan[2]; k <= halfSpan[2]; ++k) {
-                    for (int l = -halfSpan[3]; l <= halfSpan[3]; ++l) {
-                        pTensor->e(halfSpan[0] + i, halfSpan[1] + j, halfSpan[2] + k, halfSpan[3] + l)
-                                = e(centralIndex[0] + i * stride, centralIndex[1] + j * stride,
-                                    centralIndex[2] + k * stride, centralIndex[3] + l * stride);
-                    }
-                }
-            }
-        }
-    } else if (5 == N) {
-        for (int i = -halfSpan[0]; i <= halfSpan[0]; ++i) {
-            for (int j = -halfSpan[1]; j <= halfSpan[1]; ++j) {
-                for (int k = -halfSpan[2]; k <= halfSpan[2]; ++k) {
-                    for (int l = -halfSpan[3]; l <= halfSpan[3]; ++l) {
-                        for (int m = -halfSpan[4]; m <= halfSpan[4]; ++m) {
-                            pTensor->e(halfSpan[0] + i, halfSpan[1] + j, halfSpan[2] + k, halfSpan[3] + l,
-                                       halfSpan[4] + m)
-                                    = e(centralIndex[0] + i * stride, centralIndex[1] + j * stride,
-                                        centralIndex[2] + k * stride,
-                                        centralIndex[3] + l * stride, centralIndex[4] + m * stride);
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        cout << "Error: currently do not support 6 and higher dimension in tensor." << endl;
-    }
-
-}
-
-
-template<class ValueType>
-void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const vector<long> &span, Tensor *&pTensor,
-                                             const int stride) const {
-    int spanSize = span.size();
-    pTensor = new Tensor<ValueType>(span);
-
-
+void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor *pTensor, const int stride) const {
 #ifdef  Use_GPU
+    int spanSize = pTensor->m_tensorSize.size();
     const long N = pTensor->getLength();
     long* pTlIndex = nullptr;
     long* pTensorDimsSpan = nullptr;
@@ -939,48 +875,12 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const 
     cudaFree(pTensorDimsSpan);
     cudaFree(pSubDimsSpan);
 #else
-    if (2 == spanSize) {
-        for (int i = 0; i < span[0]; ++i) {
-            for (int j = 0; j < span[1]; ++j) {
-                pTensor->e(i, j) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride);
-            }
-        }
-    } else if (3 == spanSize) {
-        for (int i = 0; i < span[0]; ++i) {
-            for (int j = 0; j < span[1]; ++j) {
-                for (int k = 0; k < span[2]; ++k) {
-                    pTensor->e(i, j, k) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride, tlIndex[2] + k * stride);
-                }
-            }
-        }
-    } else if (4 == spanSize) {
-        for (int i = 0; i < span[0]; ++i) {
-            for (int j = 0; j < span[1]; ++j) {
-                for (int k = 0; k < span[2]; ++k) {
-                    for (int l = 0; l < span[3]; ++l) {
-                        pTensor->e(i, j, k, l) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride,
-                                                   tlIndex[2] + k * stride, tlIndex[3] + l * stride);
-                    }
-                }
-            }
-        }
-    } else if (5 == spanSize) {
-        for (int i = 0; i < span[0]; ++i) {
-            for (int j = 0; j < span[1]; ++j) {
-                for (int k = 0; k < span[2]; ++k) {
-                    for (int l = 0; l < span[3]; ++l) {
-                        for (int m = 0; m < span[4]; ++m) {
-                            pTensor->e(i, j, k, l) = e(tlIndex[0] + i * stride, tlIndex[1] + j * stride,
-                                                       tlIndex[2] + k * stride, tlIndex[3] + l * stride,
-                                                       tlIndex[4] + m * stride);
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        cout << "Error: currently do not support 6 and higher dimension in tensor." << endl;
+    long N = pTensor->getLength();
+    for (long i =0; i<N; ++i){
+        pTensor->e(i) = e(pTensor->offset2Index(i)*stride + tlIndex);
+
     }
+
 #endif
 
 }
