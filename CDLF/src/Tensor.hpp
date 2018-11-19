@@ -986,6 +986,24 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, const 
 }
 
 template<class ValueType>
+void Tensor<ValueType>::dilute(const vector<long>& paddingWidthVec, const int stride, Tensor* & pTensor) const{
+    const int dim = m_dims.size();
+    vector<long> newTensorSize(dim, 0);
+    for (int i=0; i< dim; ++i){
+        newTensorSize[i] = (m_dims[i]-1)* stride + 1 + paddingWidthVec[i]*2;
+    }
+    pTensor = new Tensor<ValueType>(newTensorSize);
+    pTensor->zeroInitialize();
+    long N = getLength();
+    for (long oldOffset=0; oldOffset<N; ++oldOffset){
+        vector<long> oldIndex = offset2Index(oldOffset);
+        vector<long> newIndex = oldIndex* stride+ paddingWidthVec;
+        long newOffset = pTensor->index2Offset(newIndex);
+        pTensor->e(newOffset) = e(oldOffset);
+    }
+}
+
+template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::column(const int index) {
     assert(2 == m_dims.size());
     vector<long> newDims;
