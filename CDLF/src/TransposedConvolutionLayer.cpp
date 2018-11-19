@@ -574,10 +574,11 @@ void TransposedConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dWDims = pdW->getDims();
     const int Nf = dWDims.size();
-    Tensor<float> &X = *m_prevLayer->m_pYTensor;
+    Tensor<float>* pExtendX = nullptr;
+    m_prevLayer->m_pYTensor->dilute(m_filterSize-1, m_stride, pExtendX);
     const vector<long> dYDims = pdY->getDims();
 
-    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
+    vector<long> f = nonZeroIndex(m_extendXTensorSize - m_filterSize);
     vector<long> dYDimsEx(Nf, 1); //Nf long integers with each value equal 1
     for (int i = 0; i < dYDims.size() && i < f.size(); ++i) {
         dYDimsEx[f[i]] = dYDims[i];
@@ -587,11 +588,12 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
         for (int i = 0; i < dWDims[0]; ++i) {
             for (int j = 0; j < dWDims[1]; ++j) {
                 Tensor<float>* pSubX = nullptr;
-                X.subTensorFromTopLeft({i * m_stride, j * m_stride}, dYDimsEx, pSubX, m_stride);
+                pExtendX->subTensorFromTopLeft({i, j}, dYDimsEx, pSubX, 1);
                 pdW->e(i, j) += pSubX->conv(*pdY); // + is for batch processing
                 if(nullptr != pSubX)
                 {
                     delete pSubX;
+                    pSubX = nullptr;
                 }
             }
         }
@@ -600,11 +602,12 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
             for (int j = 0; j < dWDims[1]; ++j) {
                 for (int k = 0; k < dWDims[2]; ++k) {
                     Tensor<float>* pSubX = nullptr;
-                    X.subTensorFromTopLeft({i * m_stride, j * m_stride, k * m_stride}, dYDimsEx, pSubX, m_stride);
+                    pExtendX->subTensorFromTopLeft({i, j, k}, dYDimsEx, pSubX, 1);
                     pdW->e(i, j, k) += pSubX->conv(*pdY);
                     if(nullptr != pSubX)
                     {
                         delete pSubX;
+                        pSubX = nullptr;
                     }
                 }
             }
@@ -615,12 +618,13 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
                 for (int k = 0; k < dWDims[2]; ++k) {
                     for (int l = 0; l < dWDims[3]; ++l) {
                         Tensor<float>* pSubX = nullptr;
-                        X.subTensorFromTopLeft(
-                                {i * m_stride, j * m_stride, k * m_stride, l * m_stride}, dYDimsEx, pSubX,m_stride);
+                        pExtendX->subTensorFromTopLeft(
+                                {i, j, k, l}, dYDimsEx, pSubX, 1);
                         pdW->e(i, j, k, l) += pSubX->conv(*pdY);
                         if(nullptr != pSubX)
                         {
                             delete pSubX;
+                            pSubX = nullptr;
                         }
                     }
                 }
@@ -633,12 +637,13 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
                     for (int l = 0; l < dWDims[3]; ++l) {
                         for (int m = 0; m < dWDims[4]; ++m) {
                             Tensor<float>* pSubX = nullptr;
-                            X.subTensorFromTopLeft(
-                                    {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m * m_stride}, dYDimsEx, pSubX,m_stride);
+                            pExtendX->subTensorFromTopLeft(
+                                    {i, j, k, l, m}, dYDimsEx, pSubX,1);
                             pdW->e(i, j, k, l, m) += pSubX->conv(*pdY);
                             if(nullptr != pSubX)
                             {
                                 delete pSubX;
+                                pSubX = nullptr;
                             }
                         }
                     }
@@ -653,13 +658,13 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
                         for (int m = 0; m < dWDims[4]; ++m) {
                             for (int n = 0; n < dWDims[5]; ++n) {
                                 Tensor<float>* pSubX = nullptr;
-                                X.subTensorFromTopLeft(
-                                        {i * m_stride, j * m_stride, k * m_stride, l * m_stride, m * m_stride,
-                                         n * m_stride}, dYDimsEx,pSubX, m_stride);
+                                pExtendX->subTensorFromTopLeft(
+                                        {i, j, k, l, m, n}, dYDimsEx,pSubX, 1);
                                 pdW->e(i, j, k, l, m, n) += pSubX->conv(*pdY);
                                 if(nullptr != pSubX)
                                 {
                                     delete pSubX;
+                                    pSubX = nullptr;
                                 }
                             }
                         }
@@ -671,6 +676,11 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
 
     else {
         cout << "Error: Dimension >6 does not support in TransposedConvolutionLayer::computeDW" << endl;
+    }
+
+    if (nullptr != pExtendX){
+        delete pExtendX;
+        pExtendX = nullptr;
     }
 }
 

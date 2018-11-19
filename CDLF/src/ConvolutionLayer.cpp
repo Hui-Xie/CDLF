@@ -126,6 +126,7 @@ void ConvolutionLayer::forward() {
             }
             if (nullptr != pSubX){
                 delete pSubX;
+                pSubX = nullptr;
             }
         }
     } else if (2 == Nt - Df && 2 == f.size()) {
@@ -158,6 +159,7 @@ void ConvolutionLayer::forward() {
                 }
                 if (nullptr != pSubX){
                     delete pSubX;
+                    pSubX = nullptr;
                 }
             }
         }
@@ -193,6 +195,7 @@ void ConvolutionLayer::forward() {
                     }
                     if (nullptr != pSubX){
                         delete pSubX;
+                        pSubX = nullptr;
                     }
 
                 }
@@ -233,6 +236,7 @@ void ConvolutionLayer::forward() {
                         }
                         if (nullptr != pSubX){
                             delete pSubX;
+                            pSubX = nullptr;
                         }
 
                     }
@@ -276,6 +280,7 @@ void ConvolutionLayer::forward() {
                             }
                             if (nullptr != pSubX){
                                 delete pSubX;
+                                pSubX = nullptr;
                             }
                         }
                     }
@@ -322,6 +327,7 @@ void ConvolutionLayer::forward() {
                                 }
                                 if (nullptr != pSubX){
                                     delete pSubX;
+                                    pSubX = nullptr;
                                 }
 
                             }
@@ -585,6 +591,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                 if(nullptr != pSubX)
                 {
                     delete pSubX;
+                    pSubX = nullptr;
                 }
             }
         }
@@ -598,6 +605,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                     if(nullptr != pSubX)
                     {
                         delete pSubX;
+                        pSubX = nullptr;
                     }
                 }
             }
@@ -614,6 +622,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                         if(nullptr != pSubX)
                         {
                             delete pSubX;
+                            pSubX = nullptr;
                         }
                     }
                 }
@@ -632,6 +641,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                             if(nullptr != pSubX)
                             {
                                 delete pSubX;
+                                pSubX = nullptr;
                             }
                         }
                     }
@@ -653,6 +663,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                                 if(nullptr != pSubX)
                                 {
                                     delete pSubX;
+                                    pSubX = nullptr;
                                 }
                             }
                         }
