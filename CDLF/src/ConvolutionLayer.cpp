@@ -363,9 +363,7 @@ void ConvolutionLayer::backward(bool computeW) {
            pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
            pdX[i]->zeroInitialize();  // this is a necessary step as computeDX use += operator
            //pdY memory will be allocated in the extractLowerDTensor function
-            const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-            vector<long> expandDyDims = Xdims + m_filterSize - 1;
-            pExpandDY[i] = new Tensor<float>(expandDyDims);
+           //pExpandDY memory will be allocated in the dilute method;
         }
 
         vector<std::thread> threadVec;
@@ -374,7 +372,7 @@ void ConvolutionLayer::backward(bool computeW) {
                     [this, idxF, pdY, pExpandDY, computeW, pdX](){
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        this->expandDyTensor(pdY[idxF], pExpandDY[idxF]);
+                        pdY[idxF]->dilute(pExpandDY[idxF], m_filterSize-1, m_stride);
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                     }
             ));
@@ -415,141 +413,20 @@ void ConvolutionLayer::backward(bool computeW) {
         if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
 
         const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
+
         vector<long> expandDyDims = Xdims + m_filterSize - 1;
-        Tensor<float>* pExpandDY = new Tensor<float>(expandDyDims);
-        expandDyTensor(m_pdYTensor, pExpandDY);
+        Tensor<float>* pExpandDY = nullptr;
+        m_pdYTensor->dilute(pExpandDY, m_filterSize-1, m_stride);
 
         computeDX(pExpandDY, m_pW[0]);
         if(nullptr != pExpandDY){
             delete pExpandDY;
+            pExpandDY = nullptr;
         }
 
     }
 }
 
-
-
-void ConvolutionLayer::expandDyTensor(const Tensor<float> *pdY, Tensor<float>* pExpandDY) {
-    //freeExpandDy();
-    //const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-    //vector<long> expandDyDims = Xdims + m_filterSize - 1;
-    //m_expandDy = new Tensor<float>(expandDyDims);
-    pExpandDY->zeroInitialize();
-    const Tensor<float> &dY = *pdY;
-    vector<long> dYTensorSize = pdY->getDims();
-
-    //copy DyTensor to expandDy, according to  m_stride
-    int Nt = pdY->getDims().size();  //dyTensor's size, it excludes feature dimension.
-    vector<long> Xs = m_filterSize - 1; //X starting coordinates for copying dy
-    vector<long> Xc = Xs;
-
-    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
-
-    if (2 == Nt && 1 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            pExpandDY->e(Xc) = dY(i, 0);
-        }
-    } else if (2 == Nt && 2 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < dYTensorSize[1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                pExpandDY->e(Xc) = dY(i, j);
-            }
-        }
-    } else if (3 == Nt && 3 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < dYTensorSize[1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < dYTensorSize[2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    pExpandDY->e(Xc) = dY(i, j, k);
-                }
-            }
-        }
-    } else if (4 == Nt && 4 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < dYTensorSize[1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < dYTensorSize[2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    for (long l = 0; l < dYTensorSize[3]; ++l) {
-                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        pExpandDY->e(Xc) = dY(i, j, k, l);
-                    }
-                }
-            }
-        }
-    } else if (5 == Nt && 5 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < dYTensorSize[1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < dYTensorSize[2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    for (long l = 0; l < dYTensorSize[3]; ++l) {
-                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        for (long m = 0; m < dYTensorSize[4]; ++m) {
-                            Xc[f[4]] = Xs[f[4]] + m * m_stride;
-                            pExpandDY->e(Xc) = dY(i, j, k, l, m);
-                        }
-                    }
-                }
-            }
-        }
-    }else if (6 == Nt && 6 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < dYTensorSize[1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < dYTensorSize[2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    for (long l = 0; l < dYTensorSize[3]; ++l) {
-                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        for (long m = 0; m < dYTensorSize[4]; ++m) {
-                            Xc[f[4]] = Xs[f[4]] + m * m_stride;
-                            for (long n = 0; n < dYTensorSize[5]; ++n) {
-                                Xc[f[5]] = Xs[f[5]] + n * m_stride;
-                                pExpandDY->e(Xc) = dY(i, j, k, l, m, n);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else if (7 == Nt && 7 == f.size()) {
-        for (long i = 0; i < dYTensorSize[0]; ++i) {
-            Xc[f[0]] = Xs[f[0]] + i * m_stride;
-            for (long j = 0; j < dYTensorSize[1]; ++j) {
-                Xc[f[1]] = Xs[f[1]] + j * m_stride;
-                for (long k = 0; k < dYTensorSize[2]; ++k) {
-                    Xc[f[2]] = Xs[f[2]] + k * m_stride;
-                    for (long l = 0; l < dYTensorSize[3]; ++l) {
-                        Xc[f[3]] = Xs[f[3]] + l * m_stride;
-                        for (long m = 0; m < dYTensorSize[4]; ++m) {
-                            Xc[f[4]] = Xs[f[4]] + m * m_stride;
-                            for (long n = 0; n < dYTensorSize[5]; ++n) {
-                                Xc[f[5]] = Xs[f[5]] + n * m_stride;
-                                for (long o = 0; o < dYTensorSize[6]; ++o) {
-                                    Xc[f[6]] = Xs[f[6]] + o * m_stride;
-                                    pExpandDY->e(Xc) = dY(i, j, k, l, m, n, o);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    else {
-        cout << "Error: dimension>7  does not support in convolution expandDyTensor." << endl;
-    }
-}
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const vector<long> dWDims = pdW->getDims();

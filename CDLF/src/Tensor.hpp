@@ -886,7 +886,7 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor
 }
 
 template<class ValueType>
-void Tensor<ValueType>::dilute(const vector<long>& paddingWidthVec, const int stride, Tensor* & pTensor) const{
+void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<long>& paddingWidthVec, const int stride) const{
     const int dim = m_dims.size();
     vector<long> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){

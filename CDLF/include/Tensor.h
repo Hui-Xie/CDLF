@@ -98,9 +98,11 @@ public:
     float  dotProduct(const Tensor& right);
     Tensor reshape(vector<long> newDims);
 
-    //before using subTensor* function, user must allocate the memory of pTensor;
+    //before using subTensor function, user must allocate the memory of pTensor;
     void subTensorFromTopLeft(const vector<long>& tlIndex, Tensor* pTensor, const int stride =1) const ;
-    void dilute(const vector<long>& paddingWidthVec, const int stride, Tensor* & pTensor) const;
+
+    //dilute function will automatic allocate memory for pTensor
+    void dilute(Tensor* & pTensor, const vector<long>& paddingWidthVec, const int stride) const;
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);

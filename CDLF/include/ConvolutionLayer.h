@@ -35,7 +35,6 @@ public:
     void updateTensorSize();
 
 private:
-    void expandDyTensor(const Tensor<float>* pdY, Tensor<float>* pExpandDY);
     void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
 
     //Note: dx need to accumulate along filters
