@@ -864,6 +864,7 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims) {
 
 template<class ValueType>
 void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor *pTensor, const int stride) const {
+    assert(pTensor->getDims().size() == tlIndex.size());
 #ifdef  Use_GPU
     int spanSize = pTensor->m_tensorSize.size();
     const long N = pTensor->getLength();

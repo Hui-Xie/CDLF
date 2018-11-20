@@ -31,13 +31,11 @@ void TransposedConvolutionLayer::updateTensorSize() {
         m_tensorSize[i] = (m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
         m_extendXTensorSize.push_back(m_tensorSize[i] + m_filterSize[i] -1) ;
     }
-    m_tensorSizeBeforeCollapse = m_tensorSize;
     m_extendXStride = 1;
-
-
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
     }
+    m_tensorSizeBeforeCollapse = m_tensorSize;
     deleteOnes(m_tensorSize);
 }
 
