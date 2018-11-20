@@ -454,101 +454,18 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
     if (nullptr == pdX){
         pdX = m_prevLayer->m_pdYTensor;
     }
-    const vector<long> dXdims = pdX->getDims();
-    const int N = dXdims.size();
+
     Tensor<float>* pSubExpandDy = new Tensor<float>(m_filterSize);
-    if (2 == N) {
-        for (long i = 0; i < dXdims[0]; ++i) {
-            for (long j = 0; j < dXdims[1]; ++j) {
 
-                pExpandDY->subTensorFromTopLeft({i, j},  pSubExpandDy,1);
-                pdX->e(i, j) += pSubExpandDy->flip().conv(*pW);
-
-            }
-        }
-    } else if (3 == N) {
-        for (long i = 0; i < dXdims[0]; ++i) {
-            for (long j = 0; j < dXdims[1]; ++j) {
-                for (long k = 0; k < dXdims[2]; ++k) {
-
-                    pExpandDY->subTensorFromTopLeft({i, j, k}, pSubExpandDy, 1);
-                    pdX->e(i, j, k) += pSubExpandDy->flip().conv(*pW);
-
-                }
-            }
-        }
-    } else if (4 == N) {
-        for (long i = 0; i < dXdims[0]; ++i) {
-            for (long j = 0; j < dXdims[1]; ++j) {
-                for (long k = 0; k < dXdims[2]; ++k) {
-                    for (long l = 0; l < dXdims[3]; ++l) {
-
-                        pExpandDY->subTensorFromTopLeft({i, j, k, l}, pSubExpandDy,1);
-                        pdX->e(i, j, k, l) += pSubExpandDy->flip().conv(*pW);
-
-                    }
-                }
-            }
-        }
-    } else if (5 == N) {
-        for (long i = 0; i < dXdims[0]; ++i) {
-            for (long j = 0; j < dXdims[1]; ++j) {
-                for (long k = 0; k < dXdims[2]; ++k) {
-                    for (long l = 0; l < dXdims[3]; ++l) {
-                        for (long m = 0; m < dXdims[4]; ++m) {
-
-                            pExpandDY->subTensorFromTopLeft({i, j, k, l, m},  pSubExpandDy, 1);
-                            pdX->e(i, j, k, l, m) += pSubExpandDy->flip().conv(*pW);
-
-                        }
-                    }
-                }
-            }
-        }
-    } else if (6 == N) {
-        for (long i = 0; i < dXdims[0]; ++i) {
-            for (long j = 0; j < dXdims[1]; ++j) {
-                for (long k = 0; k < dXdims[2]; ++k) {
-                    for (long l = 0; l < dXdims[3]; ++l) {
-                        for (long m = 0; m < dXdims[4]; ++m) {
-                            for (long n = 0; n < dXdims[5]; ++n) {
-
-                                pExpandDY->subTensorFromTopLeft({i, j, k, l, m, n}, pSubExpandDy, 1);
-                                pdX->e(i, j, k, l, m, n) += pSubExpandDy->flip().conv(*pW);
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    long N = pdX->getLength();
+    for(long i=0; i< N; ++i){
+        vector<long> index = pdX->offset2Index(i);
+        pExpandDY->subTensorFromTopLeft(index, pSubExpandDy,1);
+        pdX->e(index) += pSubExpandDy->flip().conv(*pW);
     }
-    else if (7 == N) {
-        for (long i = 0; i < dXdims[0]; ++i) {
-            for (long j = 0; j < dXdims[1]; ++j) {
-                for (long k = 0; k < dXdims[2]; ++k) {
-                    for (long l = 0; l < dXdims[3]; ++l) {
-                        for (long m = 0; m < dXdims[4]; ++m) {
-                            for (long n = 0; n < dXdims[5]; ++n) {
-                                for (long o = 0; o < dXdims[6]; ++o) {
 
-                                    pExpandDY->subTensorFromTopLeft({i, j, k, l, m, n, o},  pSubExpandDy, 1);
-                                    pdX->e(i, j, k, l, m, n, o) += pSubExpandDy->flip().conv(*pW);
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    else {
-        cout << "Error: Dimension >7 does not support in ConvolutionLayer::computeDX." << endl;
-    }
     if (nullptr != pSubExpandDy){
         delete pSubExpandDy;
         pSubExpandDy = nullptr;
     }
-
 }

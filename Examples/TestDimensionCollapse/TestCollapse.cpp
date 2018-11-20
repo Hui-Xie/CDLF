@@ -29,11 +29,12 @@ int main (int argc, char *argv[])
         net.setLearningRate(0.001);
         net.setLossTolerance(0.02);
         net.setBatchSize(20);
-        net.printArchitecture();
     }
     else{
         net.load();
     }
+    net.printArchitecture();
+
     //  run network
     net.train();
     net.test();
