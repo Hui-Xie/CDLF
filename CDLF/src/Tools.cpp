@@ -214,7 +214,7 @@ string getCurTimeStr(){
 }
 
 
-vector<long> dimsSpan(const vector<long> vec){
+vector<long> genDimsSpan(const vector<long> vec){
     vector<long> dimsSpan;
     dimsSpan.clear();
     int N = vec.size();

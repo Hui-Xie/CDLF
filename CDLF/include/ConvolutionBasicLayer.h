@@ -21,6 +21,7 @@ public:
     vector<long> m_filterSize;
     int m_stride;
     int m_OneFilterN;
+    vector<long> m_tensorSizeBeforeCollapse;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();

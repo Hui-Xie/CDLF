@@ -102,7 +102,7 @@ public:
     void subTensorFromTopLeft(const vector<long>& tlIndex, Tensor* pTensor, const int stride =1) const ;
 
     //dilute function will automatic allocate memory for pTensor
-    void dilute(Tensor* & pTensor, const vector<long>& paddingWidthVec, const int stride) const;
+    void dilute(Tensor* & pTensor, const vector<long>& tensorSizeBeforeCollapse, const vector<long>& paddingWidthVec, const int stride) const;
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);
@@ -116,6 +116,7 @@ public:
     Tensor& flip();
 
     inline vector<long> offset2Index(const long offset) const;
+    inline vector<long> offset2Index(const vector<long>& dimsSpan, const long offset) const;
 
 
 private:
@@ -128,6 +129,7 @@ private:
     void freeMem();
     void generateDimsSpan();
     inline long index2Offset(const vector<long>& index) const;
+    inline long index2Offset(const vector<long>& dimsSpan, const vector<long>& index) const;
 
     void copyDataTo(Tensor* pTensor, const long offset, const long length);
 

@@ -31,7 +31,9 @@ void TransposedConvolutionLayer::updateTensorSize() {
         m_tensorSize[i] = (m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
         m_extendXTensorSize.push_back(m_tensorSize[i] + m_filterSize[i] -1) ;
     }
+    m_tensorSizeBeforeCollapse = m_tensorSize;
     m_extendXStride = 1;
+
 
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
@@ -48,7 +50,7 @@ void TransposedConvolutionLayer::forward() {
 
     vector<long> f = nonZeroIndex(m_extendXTensorSize - m_filterSize);
     Tensor<float>* pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_filterSize-1, m_stride);
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_tensorSizeBeforeCollapse,  m_filterSize-1, m_stride);
 
 #ifdef Use_GPU //need to modify for TransposedConvolutionLayer
     long N = length(m_tensorSize)/m_numFilters;
@@ -366,7 +368,7 @@ void TransposedConvolutionLayer::backward(bool computeW) {
                     [this, idxF, pdY, pExpandDY, computeW, pdX](){
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        pdY[idxF]->dilute(pExpandDY[idxF], m_filterSize-1, 1);
+                        pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize-1, 1);
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                     }
             ));
@@ -406,7 +408,7 @@ void TransposedConvolutionLayer::backward(bool computeW) {
         // single thread compute
         if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
         Tensor<float>* pExpandDY = nullptr;
-        m_pdYTensor->dilute(pExpandDY, m_filterSize-1, 1);
+        m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize-1, 1);
         computeDX(pExpandDY, m_pW[0]);
         if(nullptr != pExpandDY){
             delete pExpandDY;
@@ -420,7 +422,7 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
     const vector<long> dWDims = pdW->getDims();
     const int Nf = dWDims.size();
     Tensor<float>* pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_filterSize-1, m_stride);
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_tensorSizeBeforeCollapse, m_filterSize-1, m_stride);
     const vector<long> dYDims = pdY->getDims();
 
     vector<long> f = nonZeroIndex(m_extendXTensorSize - m_filterSize);

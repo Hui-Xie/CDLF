@@ -182,30 +182,39 @@ long Tensor<ValueType>::getLength() const {
 
 template<class ValueType>
 void Tensor<ValueType>::generateDimsSpan() {
-    m_dimsSpan = dimsSpan(m_dims);
+    m_dimsSpan = genDimsSpan(m_dims);
 }
 
 template<class ValueType>
 long Tensor<ValueType>::index2Offset(const vector<long> &index) const {
+    return index2Offset(m_dimsSpan, index);
+}
+
+template<class ValueType>
+long Tensor<ValueType>::index2Offset(const vector<long>& dimsSpan, const vector<long>& index) const{
     int N = index.size();
     long offset = 0;
     for (int i = 0; i < N; ++i) {
-        offset += index[i] * m_dimsSpan[i];
+        offset += index[i] * dimsSpan[i];
     }
     return offset;
 }
 
 template<class ValueType>
 vector<long> Tensor<ValueType>::offset2Index(const long offset) const {
-    int dim = getDims().size();
+    return offset2Index(m_dimsSpan, offset);
+}
+
+template<class ValueType>
+vector<long> Tensor<ValueType>::offset2Index(const vector<long>& dimsSpan, const long offset) const{
+    int dim = dimsSpan.size();
     vector<long> index(dim, 0);
     long n = offset;
     for (int i = 0; i < dim; ++i) {
-        index[i] = n / m_dimsSpan[i];
-        n -= index[i] * m_dimsSpan[i];
+        index[i] = n / dimsSpan[i];
+        n -= index[i] * dimsSpan[i];
     }
     return index;
-
 }
 
 template<class ValueType>
@@ -886,17 +895,20 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor
 }
 
 template<class ValueType>
-void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<long>& paddingWidthVec, const int stride) const{
-    const int dim = m_dims.size();
+void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<long>& tensorSizeBeforeCollapse, const vector<long>& paddingWidthVec, const int stride) const{
+    assert(tensorSizeBeforeCollapse.size() == paddingWidthVec.size());
+    assert(length(tensorSizeBeforeCollapse) == length(m_dims));
+    const int dim = tensorSizeBeforeCollapse.size();
     vector<long> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
-        newTensorSize[i] = (m_dims[i]-1)* stride + 1 + paddingWidthVec[i]*2;
+        newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + 1 + paddingWidthVec[i]*2;
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();
     long N = getLength();
+    vector<long> dimsSpanBeforeCollapse = genDimsSpan(tensorSizeBeforeCollapse);
     for (long oldOffset=0; oldOffset<N; ++oldOffset){
-        vector<long> oldIndex = offset2Index(oldOffset);
+        vector<long> oldIndex = offset2Index(dimsSpanBeforeCollapse, oldOffset);
         vector<long> newIndex = oldIndex* stride+ paddingWidthVec;
         long newOffset = pTensor->index2Offset(newIndex);
         pTensor->e(newOffset) = e(oldOffset);

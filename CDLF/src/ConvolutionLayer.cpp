@@ -29,6 +29,7 @@ void ConvolutionLayer::updateTensorSize() {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
+    m_tensorSizeBeforeCollapse = m_tensorSize;
 
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
@@ -372,7 +373,7 @@ void ConvolutionLayer::backward(bool computeW) {
                     [this, idxF, pdY, pExpandDY, computeW, pdX](){
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        pdY[idxF]->dilute(pExpandDY[idxF], m_filterSize-1, m_stride);
+                        pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize-1, m_stride);
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                     }
             ));
@@ -412,7 +413,7 @@ void ConvolutionLayer::backward(bool computeW) {
         // single thread compute
         if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
         Tensor<float>* pExpandDY = nullptr;
-        m_pdYTensor->dilute(pExpandDY, m_filterSize-1, m_stride);
+        m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize-1, m_stride);
         computeDX(pExpandDY, m_pW[0]);
         if(nullptr != pExpandDY){
             delete pExpandDY;
