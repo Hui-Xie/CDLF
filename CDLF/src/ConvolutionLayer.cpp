@@ -411,13 +411,8 @@ void ConvolutionLayer::backward(bool computeW) {
     } else {
         // single thread compute
         if (computeW)  computeDW(m_pdYTensor, m_pdW[0]);
-
-        const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-
-        vector<long> expandDyDims = Xdims + m_filterSize - 1;
         Tensor<float>* pExpandDY = nullptr;
         m_pdYTensor->dilute(pExpandDY, m_filterSize-1, m_stride);
-
         computeDX(pExpandDY, m_pW[0]);
         if(nullptr != pExpandDY){
             delete pExpandDY;
