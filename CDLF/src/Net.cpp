@@ -189,10 +189,12 @@ void Net::printArchitecture() {
         }
         if ("ConvolutionLayer" == iter->second->m_type) {
             cout << "FilterSize = " << vector2Str(((ConvolutionLayer *) iter->second)->m_filterSize) << "; "
-                 << "NumOfFilter = " << ((ConvolutionLayer *) iter->second)->m_numFilters << "; ";
+                 << "NumOfFilter = " << ((ConvolutionLayer *) iter->second)->m_numFilters << "; "
+                 << "Stride = "<<((ConvolutionLayer *) iter->second)->m_stride << "; ";
         }
         if ("MaxPoolingLayer" == iter->second->m_type) {
-            cout << "FilterSize = " << vector2Str(((MaxPoolingLayer *) iter->second)->m_filterSize) << "; ";
+            cout << "FilterSize = " << vector2Str(((MaxPoolingLayer *) iter->second)->m_filterSize) << "; "
+            << "Stride = "<<((ConvolutionLayer *) iter->second)->m_stride << "; ";
         }
         cout << "OutputSize = " << vector2Str(iter->second->m_tensorSize) << "; " << endl;
     }
