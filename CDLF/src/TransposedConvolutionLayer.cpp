@@ -24,9 +24,10 @@ TransposedConvolutionLayer::~TransposedConvolutionLayer() {
 
 // For transposed convolution layer: outputTensorSize = (InputTensorSize -1)*stride + filterSize;
 void TransposedConvolutionLayer::updateTensorSize() {
-    const int dim = m_prevLayer->m_tensorSize.size();
+    m_tensorSize = m_prevLayer->m_tensorSize;
+    const int dim = m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_prevLayer->m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
+        m_tensorSize[i] = (m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
     }
     m_tensorSizeBeforeCollapse = m_tensorSize;
     if (1 != m_numFilters) {
