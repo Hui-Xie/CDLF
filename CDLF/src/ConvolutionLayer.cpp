@@ -29,10 +29,10 @@ void ConvolutionLayer::updateTensorSize() {
         m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
+    m_tensorSizeBeforeCollapse = m_tensorSize;
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
     }
-    m_tensorSizeBeforeCollapse = m_tensorSize;
     deleteOnes(m_tensorSize);
 }
 
@@ -98,9 +98,6 @@ void ConvolutionLayer::forward() {
 #else
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
-    if (1 != m_numFilters){
-        dimsSpanBeforeCollpase.erase(dimsSpanBeforeCollpase.begin());
-    }
     Tensor<float> *pSubX = new Tensor<float>(m_filterSize);
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (long i = 0; i < N; ++i) {
@@ -136,15 +133,13 @@ void ConvolutionLayer::backward(bool computeW) {
            //pdY memory will be allocated in the extractLowerDTensor function
            //pExpandDY memory will be allocated in the dilute method;
         }
-        vector<long> tensorSizeFor1Filter = m_tensorSizeBeforeCollapse;
-        tensorSizeFor1Filter.erase(tensorSizeFor1Filter.begin());
         vector<std::thread> threadVec;
         for (int idxF = 0; idxF < m_numFilters; ++idxF){
             threadVec.push_back(thread(
-                    [this, idxF, pdY, pExpandDY, computeW, pdX, &tensorSizeFor1Filter](){
+                    [this, idxF, pdY, pExpandDY, computeW, pdX](){
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        pdY[idxF]->dilute(pExpandDY[idxF], tensorSizeFor1Filter, m_filterSize-1, m_stride);
+                        pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize-1, m_stride);
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                     }
             ));
@@ -196,11 +191,7 @@ void ConvolutionLayer::backward(bool computeW) {
 
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
-    vector<long> tensorSizeFor1Filter = m_tensorSizeBeforeCollapse;
-    if (1 != m_numFilters){
-        tensorSizeFor1Filter.erase(tensorSizeFor1Filter.begin());
-    }
-    Tensor<float>* pSubX = new Tensor<float>(tensorSizeFor1Filter);
+    Tensor<float>* pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
     long N = pdW->getLength();
     for (long i=0; i<N; ++i){
         m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i) * m_stride, pSubX, m_stride);

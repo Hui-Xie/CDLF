@@ -21,7 +21,7 @@ public:
     vector<long> m_filterSize;
     int m_stride;
     int m_OneFilterN;
-    vector<long> m_tensorSizeBeforeCollapse;
+    vector<long> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
