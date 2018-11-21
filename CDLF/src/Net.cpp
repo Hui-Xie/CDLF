@@ -300,6 +300,9 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         else if ("ConvolutionLayer" == s.m_type) {
            pLayer = new ConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, s.m_stride);
         }
+        else if ("TransposedConvolutionLayer" == s.m_type) {
+            pLayer = new TransposedConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, s.m_stride);
+        }
         else if ("BranchLayer" == s.m_type) {
            pLayer = new BranchLayer(s.m_id, s.m_name, pPreLayer);
         }
