@@ -902,7 +902,8 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<long>& tensorSize
     const int dim = tensorSizeBeforeCollapse.size();
     vector<long> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
-        newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + 1 + paddingWidthVec[i]*2;
+        newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + 2 + paddingWidthVec[i]*2;
+        // in above, "+2 " is to make sure the inputSize =even still get correct diluted Tensor
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();
