@@ -23,10 +23,9 @@ ConvolutionLayer::~ConvolutionLayer() {
 
 
 void ConvolutionLayer::updateTensorSize() {
-    m_tensorSize = m_prevLayer->m_tensorSize;
-    const int dim = m_tensorSize.size();
+    const int dim = m_prevLayer->m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
+        m_tensorSize[i] = (m_prevLayer->m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
     m_tensorSizeBeforeCollapse = m_tensorSize;

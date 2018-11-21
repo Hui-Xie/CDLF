@@ -18,19 +18,17 @@ TransposedConvolutionLayer::TransposedConvolutionLayer(const int id, const strin
 
 TransposedConvolutionLayer::~TransposedConvolutionLayer() {
     //the basic class is responsible for deleting memory
+    //null
 }
 
 
 // For transposed convolution layer: outputTensorSize = (InputTensorSize -1)*stride + filterSize;
 void TransposedConvolutionLayer::updateTensorSize() {
-    m_tensorSize = m_prevLayer->m_tensorSize;
-    const int dim = m_tensorSize.size();
+    const int dim = m_prevLayer->m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
-        m_extendXTensorSize.push_back(m_tensorSize[i] + m_filterSize[i] -1) ;
+        m_tensorSize[i] = (m_prevLayer->m_tensorSize[i] - 1) * m_stride + m_filterSize[i];
     }
     m_tensorSizeBeforeCollapse = m_tensorSize;
-    m_extendXStride = 1;
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
     }
@@ -92,8 +90,7 @@ void TransposedConvolutionLayer::forward() {
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float>* pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_tensorSizeBeforeCollapse,  m_filterSize-1, m_stride);
-
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(),  m_filterSize-1, m_stride);
     Tensor<float> *pSubX = new Tensor<float>(m_filterSize);
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (long i = 0; i < N; ++i) {
@@ -192,13 +189,12 @@ void TransposedConvolutionLayer::backward(bool computeW) {
 
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     Tensor<float>* pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_tensorSizeBeforeCollapse, m_filterSize-1, m_stride);
-
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize-1, m_stride);
     Tensor<float>* pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
     long N = pdW->getLength();
     for (long i=0; i<N; ++i){
         pExtendX->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, 1);
-        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing  // maybe need flip?
+        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
     }
 
     if(nullptr != pSubX)
@@ -224,7 +220,7 @@ void TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const
         vector<long> index = pdX->offset2Index(i);
         index = index*m_stride; // convert to coordinate of extendDY
         pExpandDY->subTensorFromTopLeft(index, pSubExpandDy,1);
-        pdX->e(i) += pSubExpandDy->flip().conv(*pW); //? do I need flip?
+        pdX->e(i) += pSubExpandDy->flip().conv(*pW);
     }
     if (nullptr != pSubExpandDy){
         delete pSubExpandDy;

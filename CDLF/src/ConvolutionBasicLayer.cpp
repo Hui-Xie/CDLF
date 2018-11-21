@@ -12,6 +12,7 @@ ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, L
                                              const vector<long> &filterSize, const int numFilters, const int stride):
                                              Layer(id, name, {}){
     if (checkFilterSize(filterSize, prevLayer)) {
+        m_type = "ConvolutionBasicLayer";
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
