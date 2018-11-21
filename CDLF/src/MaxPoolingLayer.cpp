@@ -49,241 +49,33 @@ void MaxPoolingLayer::zeroParaGradient() {
 
 // Y_i = max(X_i) in filterSize range
 void MaxPoolingLayer::forward() {
-    const int N = m_filterSize.size();
-    Tensor<float> &X = *m_prevLayer->m_pYTensor;
+    const long N = length(m_tensorSize);
     Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
-    if (2 == N) {
-        vector<long> Xc = {0, 0}; // start point
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                X.subTensorFromTopLeft(Xc, pSubX);
-                m_pYTensor->e(i, j) = pSubX->max();
-
-            }
-        }
-    } else if (3 == N) {
-        vector<long> Xc = {0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    X.subTensorFromTopLeft(Xc, pSubX);
-                    m_pYTensor->e(i, j, k) = pSubX->max();
-
-                }
-            }
-        }
-    } else if (4 == N) {
-        vector<long> Xc = {0, 0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = l * m_stride;
-                        X.subTensorFromTopLeft(Xc, pSubX);
-                        m_pYTensor->e(i, j, k, l) = pSubX->max();
-
-                    }
-                }
-            }
-        }
-    } else if (5 == N) {
-        vector<long> Xc = {0, 0, 0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = l * m_stride;
-                        for (long m = 0; m < m_tensorSize[4]; ++m) {
-                            Xc[4] = m * m_stride;
-                            X.subTensorFromTopLeft(Xc, pSubX);
-                            m_pYTensor->e(i, j, k, l, m) = pSubX->max();
-
-                        }
-                    }
-                }
-            }
-        }
-    } else if (6 == N) {
-        vector<long> Xc = {0, 0, 0, 0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = l * m_stride;
-                        for (long m = 0; m < m_tensorSize[4]; ++m) {
-                            Xc[4] = m * m_stride;
-                            for (long o = 0; o < m_tensorSize[4]; ++o) {
-                                Xc[5] = o * m_stride;
-                                X.subTensorFromTopLeft(Xc, pSubX);
-                                m_pYTensor->e(i, j, k, l, m, o) = pSubX->max();
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } else {
-        cout << "Error: dimension>6  does not support in MaxPooling Layer forward." << endl;
+    for (long i=0; i< N; ++i){
+        vector<long> index = m_pYTensor->offset2Index(i);
+        m_prevLayer->m_pYTensor->subTensorFromTopLeft(index*m_stride, pSubX);
+        m_pYTensor->e(i) = pSubX->max();
     }
     if (nullptr != pSubX){
         delete pSubX;
         pSubX = nullptr;
     }
-
 }
 
 // Y_i = max(X_i) in filterSize range
 // dL/dX_i = dL/dY * 1 when Xi = max; 0 otherwise;
 void MaxPoolingLayer::backward(bool computeW) {
-    Tensor<float> &dLdy = *m_pdYTensor;
-    const int N = m_filterSize.size();
-    Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
-    Tensor<float> &X = *(m_prevLayer->m_pYTensor);
+    const long N = length(m_tensorSize);
     Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
-    if (2 == N) {
-        vector<long> Xc = {0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-
-                X.subTensorFromTopLeft(Xc, pSubX);
-                const float maxValue = pSubX->max();
-                for (long ii = 0; ii < m_filterSize[0]; ++ii)
-                    for (long jj = 0; jj < m_filterSize[1]; ++jj)
-                        if (maxValue == X(Xc[0] + ii, Xc[1] + jj)) dX(Xc[0] + ii, Xc[1] + jj) += dLdy(i, j);
-
-            }
-        }
-    } else if (3 == N) {
-        vector<long> Xc = {0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    X.subTensorFromTopLeft(Xc, pSubX);
-                    const float maxValue = pSubX->max();
-                    for (long ii = 0; ii < m_filterSize[0]; ++ii)
-                        for (long jj = 0; jj < m_filterSize[1]; ++jj)
-                            for (long kk = 0; kk < m_filterSize[2]; ++kk)
-                                if (maxValue == X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk))
-                                    dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk) += dLdy(i, j, k);
-
-                }
-            }
-        }
-    } else if (4 == N) {
-        vector<long> Xc = {0, 0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = l * m_stride;
-
-                        X.subTensorFromTopLeft(Xc, pSubX);
-                        const float maxValue = pSubX->max();
-                        for (long ii = 0; ii < m_filterSize[0]; ++ii)
-                            for (long jj = 0; jj < m_filterSize[1]; ++jj)
-                                for (long kk = 0; kk < m_filterSize[2]; ++kk)
-                                    for (long ll = 0; ll < m_filterSize[3]; ++ll)
-                                        if (maxValue == X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll))
-                                            dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll) += dLdy(i, j, k, l);
-
-                    }
-                }
-            }
-        }
-    } else if (5 == N) {
-        vector<long> Xc = {0, 0, 0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = l * m_stride;
-                        for (long m = 0; m < m_tensorSize[4]; ++m) {
-                            Xc[4] = m * m_stride;
-
-                            X.subTensorFromTopLeft(Xc, pSubX);
-                            const float maxValue = pSubX->max();
-                            for (long ii = 0; ii < m_filterSize[0]; ++ii)
-                                for (long jj = 0; jj < m_filterSize[1]; ++jj)
-                                    for (long kk = 0; kk < m_filterSize[2]; ++kk)
-                                        for (long ll = 0; ll < m_filterSize[3]; ++ll)
-                                            for (long mm = 0; mm < m_filterSize[4]; ++mm)
-                                                if (maxValue ==
-                                                    X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll, Xc[4] + mm))
-                                                    dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll,
-                                                       Xc[4] + mm) += dLdy(i, j, k, l, m);
-
-                        }
-                    }
-                }
-            }
-        }
-    }  else if (6 == N) {
-        vector<long> Xc = {0, 0, 0, 0, 0, 0};
-        for (long i = 0; i < m_tensorSize[0]; ++i) {
-            Xc[0] = i * m_stride;
-            for (long j = 0; j < m_tensorSize[1]; ++j) {
-                Xc[1] = j * m_stride;
-                for (long k = 0; k < m_tensorSize[2]; ++k) {
-                    Xc[2] = k * m_stride;
-                    for (long l = 0; l < m_tensorSize[3]; ++l) {
-                        Xc[3] = l * m_stride;
-                        for (long m = 0; m < m_tensorSize[4]; ++m) {
-                            Xc[4] = m * m_stride;
-                            for (long o = 0; o < m_tensorSize[5]; ++o) {
-                                Xc[5] = o * m_stride;
-
-                                X.subTensorFromTopLeft(Xc, pSubX);
-                                const float maxValue = pSubX->max();
-                                for (long ii = 0; ii < m_filterSize[0]; ++ii)
-                                    for (long jj = 0; jj < m_filterSize[1]; ++jj)
-                                        for (long kk = 0; kk < m_filterSize[2]; ++kk)
-                                            for (long ll = 0; ll < m_filterSize[3]; ++ll)
-                                                for (long mm = 0; mm < m_filterSize[4]; ++mm)
-                                                    for (long oo = 0; oo < m_filterSize[5]; ++oo)
-                                                    if (maxValue ==
-                                                        X(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll, Xc[4] + mm, Xc[5]+oo))
-                                                        dX(Xc[0] + ii, Xc[1] + jj, Xc[2] + kk, Xc[3] + ll,
-                                                           Xc[4] + mm, Xc[5]+oo ) += dLdy(i, j, k, l, m, o);
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    for (long i=0; i< N; ++i){
+        vector<long> index = m_pdYTensor->offset2Index(i);
+        vector<long> indexX = index*m_stride;
+        m_prevLayer->m_pYTensor->subTensorFromTopLeft(indexX, pSubX);
+        const long maxPos = pSubX->maxPosition();
+        vector<long> maxIndex = pSubX->offset2Index(maxPos);
+        m_prevLayer->m_pdYTensor->e(indexX + maxIndex) += m_pdYTensor->e(i);
     }
-    else {
-        cout << "Error: dimension>6  does not support in MaxPooling Layer backward." << endl;
-    }
-
-    if (nullptr != pSubX)
-    {
+    if (nullptr != pSubX){
         delete pSubX;
         pSubX = nullptr;
     }
