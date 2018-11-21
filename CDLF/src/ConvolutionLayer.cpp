@@ -125,27 +125,6 @@ void ConvolutionLayer::forward() {
 void ConvolutionLayer::backward(bool computeW) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
-
-        /*//================== single thread computation =======================
-        const vector<long> Xdims = m_prevLayer->m_pYTensor->getDims();
-        vector<long> expandDyDims = Xdims + m_filterSize - 1;
-        Tensor<float>* pExpandDY = new Tensor<float>(expandDyDims);
-        for (int idxF = 0; idxF < m_numFilters; ++idxF) {  //index of Filter
-            Tensor<float> *pdY = nullptr;
-            m_pdYTensor->extractLowerDTensor(idxF, pdY);
-            if (computeW) computeDW(pdY, m_pdW[idxF]);
-
-            expandDyTensor(pdY, pExpandDY);
-            computeDX(pExpandDY, m_pW[idxF]);//Note: dx need to accumulate along filters
-
-            if(nullptr != pdY){
-                delete pdY;
-            }
-        }
-        if(nullptr != pExpandDY){
-            delete pExpandDY;
-        }*/
-
         // ==================multithread computation=======================
         // allocate pdX and pdY along the filters
         Tensor<float>** pdY = (Tensor<float> **) new void *[m_numFilters];
@@ -217,21 +196,14 @@ void ConvolutionLayer::backward(bool computeW) {
 
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
-    const vector<long> dWDims = pdW->getDims();
-    const int Nf = dWDims.size();
-    Tensor<float> &X = *m_prevLayer->m_pYTensor;
-    const vector<long> dYDims = pdY->getDims();
-
-    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
-    vector<long> dYDimsEx(Nf, 1); //Nf long integers with each value equal 1
-    for (int i = 0; i < dYDims.size() && i < f.size(); ++i) {
-        dYDimsEx[f[i]] = dYDims[i];
+    vector<long> tensorSizeFor1Filter = m_tensorSizeBeforeCollapse;
+    if (1 != m_numFilters){
+        tensorSizeFor1Filter.erase(tensorSizeFor1Filter.begin());
     }
-
+    Tensor<float>* pSubX = new Tensor<float>(tensorSizeFor1Filter);
     long N = pdW->getLength();
-    Tensor<float>* pSubX = new Tensor<float>(dYDimsEx);
     for (long i=0; i<N; ++i){
-        X.subTensorFromTopLeft(pdW->offset2Index(i) * m_stride, pSubX, m_stride);
+        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i) * m_stride, pSubX, m_stride);
         pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
     }
     if(nullptr != pSubX)
@@ -246,14 +218,12 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
     if (nullptr == pdX){
         pdX = m_prevLayer->m_pdYTensor;
     }
-
     Tensor<float>* pSubExpandDy = new Tensor<float>(m_filterSize);
-
     long N = pdX->getLength();
     for(long i=0; i< N; ++i){
         vector<long> index = pdX->offset2Index(i);
         pExpandDY->subTensorFromTopLeft(index, pSubExpandDy,1);
-        pdX->e(index) += pSubExpandDy->flip().conv(*pW);
+        pdX->e(i) += pSubExpandDy->flip().conv(*pW);
     }
 
     if (nullptr != pSubExpandDy){
