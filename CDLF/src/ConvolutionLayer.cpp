@@ -152,15 +152,10 @@ void ConvolutionLayer::backward(bool computeW) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, pdX]() {
-                        //if (20 == m_id && 0 ==idxF) cout<<"==============before extractLowerDTensor finishes "<<getCurTimeStr()<<endl;
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
-                        //if (20 == m_id && 0 ==idxF) cout<<"==============extractLowerDTensor finishes "<<getCurTimeStr()<<endl;
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        //if (20 == m_id && 0 ==idxF) cout<<"==============computeDW finishes "<<getCurTimeStr()<<endl;
                         pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-                        //if (20 == m_id && 0 ==idxF) cout<<"==============dilute finishes "<<getCurTimeStr()<<endl;
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
-                        //if (20 == m_id && 0 ==idxF) cout<<"==============computeDX finishes "<<getCurTimeStr()<<endl;
                     }
             ));
         }
@@ -231,7 +226,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
     long N = pdX->getLength();
 
     // compute proper number of threads
-    int nThread = (CPUAttr::m_numCPUCore * 10 - m_numFilters - 1) / m_numFilters;
+    int nThread = (CPUAttr::m_numCPUCore * 30 - m_numFilters - 1) / m_numFilters;
     if (nThread < 10) {
         nThread = 10;
     }
