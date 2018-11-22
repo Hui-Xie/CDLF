@@ -90,22 +90,36 @@ void TransposedConvolutionLayer::forward() {
 #else
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
-    Tensor<float>* pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(),  m_filterSize-1, m_stride);
-    Tensor<float> *pSubX = new Tensor<float>(m_filterSize);
+    Tensor<float> *pExtendX = nullptr;
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
+    Tensor<float> **pSubX = (Tensor<float> **) new void *[m_numFilters];
+
+    vector<std::thread> threadVec;
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-        for (long i = 0; i < N; ++i) {
-            vector<long> index = m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i);
-            pExtendX->subTensorFromTopLeft(index * m_stride, pSubX);
-            m_pYTensor->e(i + idxF * N) = pSubX->conv(*m_pW[idxF]);
-        }
+        threadVec.push_back(thread(
+                [this, idxF, pSubX, N, &dimsSpanBeforeCollpase, pExtendX]() {
+                    pSubX[idxF] = new Tensor<float>(m_filterSize);
+                    for (long i = 0; i < N; ++i) {
+                        vector<long> index = m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i);
+                        pExtendX->subTensorFromTopLeft(index * m_stride, pSubX[idxF]);
+                        m_pYTensor->e(i + idxF * N) = pSubX[idxF]->conv(*m_pW[idxF]);
+                    }
+                    if (nullptr != pSubX[idxF]) {
+                        delete pSubX[idxF];
+                        pSubX[idxF] = nullptr;
+                    }
+                }
+        ));
     }
-    if (nullptr != pSubX) {
-        delete pSubX;
-        pSubX = nullptr;
+    for (int t = 0; t < threadVec.size(); ++t) {
+        threadVec[t].join();
     }
 
-    if(nullptr != pExtendX){
+    if (nullptr != pSubX) {
+        delete[] pSubX;
+        pSubX = nullptr;
+    }
+    if (nullptr != pExtendX) {
         delete pExtendX;
         pExtendX = nullptr;
     }
