@@ -888,9 +888,7 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor
     long N = pTensor->getLength();
     for (long i =0; i<N; ++i){
         pTensor->e(i) = e(pTensor->offset2Index(i)*stride + tlIndex);
-
     }
-
 #endif
 
 }
@@ -994,16 +992,19 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
 template<class ValueType>
 float Tensor<ValueType>::conv(const Tensor &right) {
     assert(sameLength(m_dims, right.getDims()));
-    Tensor tensor(m_dims);
-    long N = getLength();
 #ifdef Use_GPU
+    Tensor tensor(m_dims);
     cudaTensorHadamard(m_data, right.m_data, tensor.m_data, N);
-#else
-    for (long i = 0; i < N; ++i) {
-        tensor.e(i) = e(i) * right.e(i);
-    }
-#endif
     return tensor.sum();
+#else
+    float sum = 0.0;
+    long N = getLength();
+    for (long i = 0; i < N; ++i) {
+        sum += e(i) * right.e(i);
+    }
+    return sum;
+#endif
+
 }
 
 template<class ValueType>
