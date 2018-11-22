@@ -102,8 +102,7 @@ void ConvolutionLayer::forward() {
                 [this, idxF, pSubX, N, &dimsSpanBeforeCollpase]() {
                     pSubX[idxF] = new Tensor<float>(m_filterSize);
                     for (long i = 0; i < N; ++i) {
-                        vector<long> index = m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i);
-                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(index * m_stride, pSubX[idxF]);
+                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, pSubX[idxF]);
                         m_pYTensor->e(i + idxF * N) = pSubX[idxF]->conv(*m_pW[idxF]);
                     }
                     if (nullptr != pSubX[idxF]) {
@@ -151,8 +150,7 @@ void ConvolutionLayer::backward(bool computeW) {
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
                         pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
-                                        pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                     }
             ));
         }
@@ -202,7 +200,7 @@ void ConvolutionLayer::backward(bool computeW) {
 
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
-    long N = pdW->getLength();
+    const long N = pdW->getLength();
     // compute proper number of threads
     int nThread = (CPUAttr::m_numCPUCore * 30 - m_numFilters - 1) / m_numFilters;
     if (nThread < 1) {
@@ -245,7 +243,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
     if (nullptr == pdX) {
         pdX = m_prevLayer->m_pdYTensor;
     }
-    long N = pdX->getLength();
+    const long N = pdX->getLength();
 
     // compute proper number of threads
     int nThread = (CPUAttr::m_numCPUCore * 30 - m_numFilters - 1) / m_numFilters;
@@ -264,8 +262,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
                 [this, t, range, pExpandDY, pSubExpandDy, pdX, N, pW]() {
                     pSubExpandDy[t] = new Tensor<float>(m_filterSize);
                     for (long i = range * t; i < range * (t + 1) && i < N; ++i) {
-                        vector<long> index = pdX->offset2Index(i);
-                        pExpandDY->subTensorFromTopLeft(index, pSubExpandDy[t], 1);
+                        pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), pSubExpandDy[t], 1);
                         pdX->e(i) += pSubExpandDy[t]->flip().conv(*pW);
                     }
                     if (nullptr != pSubExpandDy[t]) {
