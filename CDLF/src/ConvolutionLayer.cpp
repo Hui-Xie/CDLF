@@ -263,7 +263,7 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
                     pSubExpandDy[t] = new Tensor<float>(m_filterSize);
                     for (long i = range * t; i < range * (t + 1) && i < N; ++i) {
                         pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), pSubExpandDy[t], 1);
-                        pdX->e(i) += pSubExpandDy[t]->flip().conv(*pW);
+                        pdX->e(i) += pSubExpandDy[t]->flipConv(*pW);
                     }
                     if (nullptr != pSubExpandDy[t]) {
                         delete pSubExpandDy[t];

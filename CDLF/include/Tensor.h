@@ -114,6 +114,7 @@ public:
 
     float conv(const Tensor& right); //convolution or cross-correlation
     Tensor& flip();
+    float flipConv(const Tensor& right);
 
     inline vector<long> offset2Index(const long offset) const;
     inline vector<long> offset2Index(const vector<long>& dimsSpan, const long offset) const;

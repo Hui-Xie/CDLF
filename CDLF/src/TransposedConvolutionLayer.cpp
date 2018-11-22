@@ -277,7 +277,7 @@ TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tens
                         vector<long> index = pdX->offset2Index(i);
                         index = index * m_stride; // convert to coordinate of extendDY
                         pExpandDY->subTensorFromTopLeft(index, pSubExpandDy[t], 1);
-                        pdX->e(i) += pSubExpandDy[t]->flip().conv(*pW);
+                        pdX->e(i) += pSubExpandDy[t]->flipConv(*pW);
                     }
                     if (nullptr != pSubExpandDy[t]) {
                         delete pSubExpandDy[t];

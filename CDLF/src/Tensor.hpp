@@ -1008,6 +1008,17 @@ float Tensor<ValueType>::conv(const Tensor &right) {
 }
 
 template<class ValueType>
+float Tensor<ValueType>::flipConv(const Tensor& right){
+    assert(sameLength(m_dims, right.getDims()));
+    float sum = 0.0;
+    long N = getLength();
+    for (long i = 0; i < N; ++i) {
+        sum += e(N-i-1) * right.e(i);
+    }
+    return sum;
+}
+
+template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::flip() {
     long N = getLength();
 #ifdef Use_GPU
