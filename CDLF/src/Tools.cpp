@@ -208,8 +208,8 @@ string getCurTimeStr(){
     time_t tt;
     time(&tt);
     tm TM = *localtime(&tt);
-    char timeChar[14];
-    sprintf(timeChar, "%4d%02d%02d_%02d%02d", 1900+TM.tm_year, TM.tm_mon+1, TM.tm_mday,TM.tm_hour, TM.tm_min);
+    char timeChar[20];
+    sprintf(timeChar, "%4d%02d%02d_%02d:%02d:%02d", 1900+TM.tm_year, TM.tm_mon+1, TM.tm_mday,TM.tm_hour, TM.tm_min, TM.tm_sec);
     return string(timeChar);
 }
 

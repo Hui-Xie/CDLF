@@ -152,11 +152,15 @@ void ConvolutionLayer::backward(bool computeW) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, pdX]() {
+                        //if (20 == m_id && 0 ==idxF) cout<<"==============before extractLowerDTensor finishes "<<getCurTimeStr()<<endl;
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
+                        //if (20 == m_id && 0 ==idxF) cout<<"==============extractLowerDTensor finishes "<<getCurTimeStr()<<endl;
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
+                        //if (20 == m_id && 0 ==idxF) cout<<"==============computeDW finishes "<<getCurTimeStr()<<endl;
                         pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
-                                        pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                        //if (20 == m_id && 0 ==idxF) cout<<"==============dilute finishes "<<getCurTimeStr()<<endl;
+                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                        //if (20 == m_id && 0 ==idxF) cout<<"==============computeDX finishes "<<getCurTimeStr()<<endl;
                     }
             ));
         }
@@ -220,20 +224,46 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
 }
 
 //Note: dx need to accumulate along filters
-void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float>* pdX) {
-    if (nullptr == pdX){
+void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float> *pdX) {
+    if (nullptr == pdX) {
         pdX = m_prevLayer->m_pdYTensor;
     }
-    Tensor<float>* pSubExpandDy = new Tensor<float>(m_filterSize);
     long N = pdX->getLength();
-    for(long i=0; i< N; ++i){
-        vector<long> index = pdX->offset2Index(i);
-        pExpandDY->subTensorFromTopLeft(index, pSubExpandDy,1);
-        pdX->e(i) += pSubExpandDy->flip().conv(*pW);
-    }
 
-    if (nullptr != pSubExpandDy){
-        delete pSubExpandDy;
+    // compute proper number of threads
+    int nThread = (CPUAttr::m_numCPUCore * 10 - m_numFilters - 1) / m_numFilters;
+    if (nThread < 10) {
+        nThread = 10;
+    }
+    if (nThread > N) {
+        nThread = N;
+    }
+    Tensor<float> **pSubExpandDy = (Tensor<float> **) new void *[nThread];
+    long range =(N + nThread -1)/nThread;
+
+    vector<std::thread> threadVec;
+    for (int t = 0; t < nThread; ++t) {
+        threadVec.push_back(thread(
+                [this, t, range, pExpandDY, pSubExpandDy,pdX, N, pW]() {
+                    pSubExpandDy[t] = new Tensor<float>(m_filterSize);
+                    for (long i = range*t; i<range*(t+1) && i < N ; ++i) {
+                        vector<long> index = pdX->offset2Index(i);
+                        pExpandDY->subTensorFromTopLeft(index, pSubExpandDy[t], 1);
+                        pdX->e(i) += pSubExpandDy[t]->flip().conv(*pW);
+                    }
+                    if (nullptr != pSubExpandDy[t]) {
+                        delete pSubExpandDy[t];
+                        pSubExpandDy[t] = nullptr;
+                    }
+                }
+        ));
+
+    }
+    for (int t = 0; t < threadVec.size(); ++t) {
+        threadVec[t].join();
+    }
+    if (nullptr != pSubExpandDy) {
+        delete[] pSubExpandDy;
         pSubExpandDy = nullptr;
     }
 }
