@@ -131,6 +131,27 @@ void ConvolutionLayer::forward() {
 void ConvolutionLayer::backward(bool computeW) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
+        //==============Single Thread computation==========================
+        // single thread is a little slower than multithread, but save memory.
+        /*
+        for (int idxF = 0; idxF < m_numFilters; ++idxF){
+            Tensor<float>* pdY = nullptr;
+            m_pdYTensor->extractLowerDTensor(idxF, pdY);
+            if (computeW) computeDW(pdY, m_pdW[idxF]);
+            Tensor<float> *pExpandDY = nullptr;
+            pdY->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
+            computeDX(pExpandDY, m_pW[idxF]);
+            if (nullptr != pExpandDY) {
+                delete pExpandDY;
+                pExpandDY = nullptr;
+            }
+            if (nullptr != pdY) {
+                delete pdY;
+                pdY = nullptr;
+            }
+        }
+       */
+
         // ==================multithread computation=======================
         // allocate pdX and pdY along the filters
         Tensor<float> **pdY = (Tensor<float> **) new void *[m_numFilters];
@@ -147,10 +168,15 @@ void ConvolutionLayer::backward(bool computeW) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, pdX]() {
+                        //if (20 == m_id && 0 == idxF ) cout<<"================before extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
+                        //if (20 == m_id && 0 == idxF ) cout<<"================after extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
+                        //if (20 == m_id && 0 == idxF ) cout<<"================after computeDW at "<<getCurTimeStr()<<endl;
                         pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
+                        //if (20 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                        //if (20 == m_id && 0 == idxF ) cout<<"================after computeDX at "<<getCurTimeStr()<<endl;
                     }
             ));
         }
@@ -183,7 +209,6 @@ void ConvolutionLayer::backward(bool computeW) {
         delete[] pdX;
         delete[] pdY;
         delete[] pExpandDY;
-
     } else {
         // single thread compute
         if (computeW) computeDW(m_pdYTensor, m_pdW[0]);
@@ -218,7 +243,7 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
                 [this, t, range, pSubX, N, pdW, pdY]() {
                     pSubX[t] = new Tensor<float>(m_tensorSizeBeforeCollapse);
                     for (long i = range * t; i < range * (t + 1) && i < N; ++i) {
-                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i) * m_stride, pSubX[t],m_stride);
+                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), pSubX[t],m_stride);
                         pdW->e(i) += pSubX[t]->conv(*pdY); // + is for batch processing
                     }
                     if (nullptr != pSubX[t]) {
