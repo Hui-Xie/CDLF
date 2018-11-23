@@ -101,9 +101,10 @@ void ConvolutionLayer::forward() {
         threadVec.push_back(thread(
                 [this, idxF, pSubX, N, &dimsSpanBeforeCollpase]() {
                     pSubX[idxF] = new Tensor<float>(m_filterSize);
+                    long offseti = idxF*N;
                     for (long i = 0; i < N; ++i) {
                         m_prevLayer->m_pYTensor->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, pSubX[idxF]);
-                        m_pYTensor->e(i + idxF * N) = pSubX[idxF]->conv(*m_pW[idxF]);
+                        m_pYTensor->e(offseti++) = pSubX[idxF]->conv(*m_pW[idxF]);
                     }
                     if (nullptr != pSubX[idxF]) {
                         delete pSubX[idxF];
