@@ -46,11 +46,21 @@ void FeedForwardNet::backwardPropagate(bool computeW) {
     }
     for (map<int, Layer *>::reverse_iterator rit = m_layers.rbegin(); rit != m_layers.rend(); ++rit) {
         if (rit->second->m_id > m_unlearningLayerID) {
-            rit->second->backward(computeW);
+            rit->second->backward(computeW, true);
 #ifdef Dev_Debug
             printf("<== Backward layer of  %s, finished at ", rit->second->m_name.c_str());
             printCurrentLocalTime();
 #endif
+        }
+        else if (rit->second->m_id == m_unlearningLayerID){
+            rit->second->backward(computeW, false);
+#ifdef Dev_Debug
+            printf("<== Backward layer of  %s, finished at ", rit->second->m_name.c_str());
+            printCurrentLocalTime();
+#endif
+        }
+        else{
+            continue;
         }
     }
 }

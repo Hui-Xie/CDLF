@@ -39,11 +39,13 @@ void ScaleLayer::forward(){
  * dL/dk = (dL/dy)' * x, where y and x are 1D vector form,prime symbol means transpose.
  *
  * */
-void ScaleLayer::backward(bool computeW){
+void ScaleLayer::backward(bool computeW, bool computeX){
     if (computeW) {
         m_dk += m_pdYTensor->dotProduct(*m_prevLayer->m_pYTensor);
     }
-    *(m_prevLayer->m_pdYTensor) += *m_pdYTensor * m_k;
+    if (computeX){
+       *(m_prevLayer->m_pdYTensor) += *m_pdYTensor * m_k;
+    }
 }
 
 void ScaleLayer::updateParameters(const float lr, const string& method, const int batchSize){

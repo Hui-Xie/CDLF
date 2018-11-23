@@ -24,7 +24,7 @@ public:
 
     virtual void forward();
 
-    virtual void backward(bool computeW);
+    virtual void backward(bool computeW, bool computeX = true);
 
     virtual void updateParameters(const float lr, const string &method, const int batchSize = 1);
     virtual  long getNumParameters();

@@ -29,7 +29,7 @@ float LossLayer::getLoss(){
 void LossLayer::forward(){
     lossCompute();
 }
-void LossLayer::backward(bool computeW){
+void LossLayer::backward(bool computeW, bool computeX){
     gradientCompute();
 }
 void LossLayer::initialize(const string& initialMethod){

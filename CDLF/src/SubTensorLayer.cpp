@@ -43,12 +43,14 @@ void SubTensorLayer::forward(){
     }
 }
 
-void SubTensorLayer::backward(bool computeW){
-    Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
-    long N = dY.getLength();
-    for(long i=0; i< N; ++i){
-        dX.e(m_start+ dY.offset2Index(i)) += dY.e(i);
+void SubTensorLayer::backward(bool computeW, bool computeX){
+    if (computeX){
+        Tensor<float>& dY = *m_pdYTensor;
+        Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
+        long N = dY.getLength();
+        for(long i=0; i< N; ++i){
+            dX.e(m_start+ dY.offset2Index(i)) += dY.e(i);
+        }
     }
 }
 

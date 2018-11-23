@@ -36,12 +36,14 @@ void NormalizationLayer::forward(){
     Y = (X-mean)/(sigma+m_epsilon);
 
 }
-void NormalizationLayer::backward(bool computeW){
-    Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
-    Tensor<float>& X =  *(m_prevLayer->m_pYTensor);
-    float sigma = sqrt(X.variance());
-    dX += dY/(sigma+m_epsilon);
+void NormalizationLayer::backward(bool computeW, bool computeX){
+    if(computeX){
+        Tensor<float>& dY = *m_pdYTensor;
+        Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
+        Tensor<float>& X =  *(m_prevLayer->m_pYTensor);
+        float sigma = sqrt(X.variance());
+        dX += dY/(sigma+m_epsilon);
+    }
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null

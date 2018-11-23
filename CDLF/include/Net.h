@@ -92,7 +92,10 @@ protected:
     // check whether layer pointer and name are duplicated
     bool layerExist(const Layer* layer);
     string m_directory;
-    int m_unlearningLayerID;// layer with layerID <= m_unlearningLayerID will not learn.
+
+    // layer with layerID < m_unlearningLayerID will not learn;
+    // layer with layerID = m_unlearningLayerID will not compute dx of its previous layer
+    int m_unlearningLayerID;
 
     void readLayesStruct(vector<struct LayerStruct>& layersStructVec);
     void createLayers(const vector<struct LayerStruct>& layersStructVec);

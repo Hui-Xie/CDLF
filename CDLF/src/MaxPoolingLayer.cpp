@@ -64,20 +64,22 @@ void MaxPoolingLayer::forward() {
 
 // Y_i = max(X_i) in filterSize range
 // dL/dX_i = dL/dY * 1 when Xi = max; 0 otherwise;
-void MaxPoolingLayer::backward(bool computeW) {
-    const long N = length(m_tensorSize);
-    Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
-    for (long i=0; i< N; ++i){
-        vector<long> index = m_pdYTensor->offset2Index(i);
-        vector<long> indexX = index*m_stride;
-        m_prevLayer->m_pYTensor->subTensorFromTopLeft(indexX, pSubX);
-        const long maxPos = pSubX->maxPosition();
-        vector<long> maxIndex = pSubX->offset2Index(maxPos);
-        m_prevLayer->m_pdYTensor->e(indexX + maxIndex) += m_pdYTensor->e(i);
-    }
-    if (nullptr != pSubX){
-        delete pSubX;
-        pSubX = nullptr;
+void MaxPoolingLayer::backward(bool computeW, bool computeX) {
+    if (computeX){
+        const long N = length(m_tensorSize);
+        Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
+        for (long i=0; i< N; ++i){
+            vector<long> index = m_pdYTensor->offset2Index(i);
+            vector<long> indexX = index*m_stride;
+            m_prevLayer->m_pYTensor->subTensorFromTopLeft(indexX, pSubX);
+            const long maxPos = pSubX->maxPosition();
+            vector<long> maxIndex = pSubX->offset2Index(maxPos);
+            m_prevLayer->m_pdYTensor->e(indexX + maxIndex) += m_pdYTensor->e(i);
+        }
+        if (nullptr != pSubX){
+            delete pSubX;
+            pSubX = nullptr;
+        }
     }
 }
 

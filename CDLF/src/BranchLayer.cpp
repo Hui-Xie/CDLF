@@ -29,9 +29,11 @@ void BranchLayer::forward(){
     *m_pYTensor = *(m_prevLayer->m_pYTensor);
 }
 
-void BranchLayer::backward(bool computeW){
+void BranchLayer::backward(bool computeW, bool computeX){
     // m_pdYTensor has been initialize to zero
-    *(m_prevLayer->m_pdYTensor) += *(m_pdYTensor);
+    if (computeX){
+        *(m_prevLayer->m_pdYTensor) += *(m_pdYTensor);
+    }
 }
 
 void BranchLayer::updateParameters(const float lr, const string& method, const int batchSize){

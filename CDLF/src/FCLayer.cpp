@@ -74,13 +74,15 @@ void FCLayer::forward() {
 //  dL/dW = dL/dy * dy/dW = dL/dy * x'
 //  dL/db = dL/dy * dy/db = dL/dy
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
-void FCLayer::backward(bool computeW) {
+void FCLayer::backward(bool computeW, bool computeX) {
     Tensor<float> &dLdy = *m_pdYTensor;
     if (computeW){
         *m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
         *m_pdBTensor += dLdy;
     }
-    *(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;
+    if (computeX){
+        *(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;
+    }
 }
 
 void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {

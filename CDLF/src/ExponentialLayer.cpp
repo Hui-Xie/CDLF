@@ -28,13 +28,14 @@ void ExponentialLayer::forward(){
     long N = Y.getLength();
     Y = X.expon();
 }
-void ExponentialLayer::backward(bool computeW){
-    Tensor<float>& dY = *m_pdYTensor;
-    Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
-    Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = dY.getLength();
-    dX += dY.hadamard(X.expon());
-
+void ExponentialLayer::backward(bool computeW, bool computeX){
+    if (computeX){
+        Tensor<float>& dY = *m_pdYTensor;
+        Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
+        Tensor<float>& X = *m_prevLayer->m_pYTensor;
+        long N = dY.getLength();
+        dX += dY.hadamard(X.expon());
+    }
 }
 void ExponentialLayer::initialize(const string& initialMethod){
     //null

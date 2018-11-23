@@ -137,7 +137,7 @@ void ConvolutionLayer::forward() {
 // dL/dW = dL/dY * dY/dW;
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
-void ConvolutionLayer::backward(bool computeW) {
+void ConvolutionLayer::backward(bool computeW, bool computeX) {
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         //==============Single Thread computation==========================
@@ -149,7 +149,7 @@ void ConvolutionLayer::backward(bool computeW) {
             if (computeW) computeDW(pdY, m_pdW[idxF]);
             Tensor<float> *pExpandDY = nullptr;
             pdY->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-            computeDX(pExpandDY, m_pW[idxF]);
+            computeX(pExpandDY, m_pW[idxF]);
             if (nullptr != pExpandDY) {
                 delete pExpandDY;
                 pExpandDY = nullptr;
@@ -168,7 +168,7 @@ void ConvolutionLayer::backward(bool computeW) {
         Tensor<float> **pExpandDY = (Tensor<float> **) new void *[m_numFilters];
         for (int i = 0; i < m_numFilters; ++i) {
             pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
-            pdX[i]->zeroInitialize();  // this is a necessary step as computeDX use += operator
+            pdX[i]->zeroInitialize();  // this is a necessary step as computeX use += operator
             //pdY memory will be allocated in the extractLowerDTensor function
             //pExpandDY memory will be allocated in the dilute method;
         }
@@ -176,17 +176,20 @@ void ConvolutionLayer::backward(bool computeW) {
         vector<std::thread> threadVec;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             threadVec.push_back(thread(
-                    [this, idxF, pdY, pExpandDY, computeW, pdX]() {
+                    [this, idxF, pdY, pExpandDY, computeW, computeX, pdX]() {
                         //if (120 == m_id && 0 == idxF ) cout<<"================before extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         //if (120 == m_id && 0 == idxF ) cout<<"================after extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
                         //if (120 == m_id && 0 == idxF ) cout<<"================after computeDW at "<<getCurTimeStr()<<endl;
-                        pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-                        //if (120 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
-                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
-                                        pdX[idxF]); //as pdX needs to accumulate, pass pointer
-                        //if (120 == m_id && 0 == idxF ) cout<<"================after computeDX at "<<getCurTimeStr()<<endl;
+                        if (computeX){
+                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
+                            //if (120 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
+                            this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
+                                            pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                            //if (120 == m_id && 0 == idxF ) cout<<"================after computeX at "<<getCurTimeStr()<<endl;
+                        }
+
                     }
             ));
         }

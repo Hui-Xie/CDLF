@@ -31,7 +31,7 @@ public:
 
 
     virtual  void forward();
-    virtual  void backward(bool computeW);
+    virtual  void backward(bool computeW, bool computeX = true);
     void updateTensorSize();
 
 private:
