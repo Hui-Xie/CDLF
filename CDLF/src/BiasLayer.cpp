@@ -57,7 +57,7 @@ void BiasLayer::updateParameters(const float lr, const string& method, const int
 }
 
 long BiasLayer::getNumParameters(){
-    return m_pBTensor->getLength();
+     return m_pBTensor->getLength();
 }
 
 void BiasLayer::save(const string &netDir) {

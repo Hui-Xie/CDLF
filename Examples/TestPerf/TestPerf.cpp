@@ -29,6 +29,7 @@ int main (int argc, char *argv[])
     else{
         net.load();
     }
+    net.setUnlearningLayerID(24);
     net.printArchitecture();
 
     //  run network
