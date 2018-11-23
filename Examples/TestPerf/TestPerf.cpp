@@ -17,7 +17,7 @@ int main (int argc, char *argv[])
 #endif
 
 
-    PerfNet net("PerfNet", "/home/hxie1/temp_netParameters");
+    PerfNet net("PerfNet", "/Users/hxie1/temp_netParameters");
 
     if (isEmptyDir(net.getDir())) {
         net.build();
