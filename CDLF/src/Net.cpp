@@ -22,6 +22,7 @@ Net::Net(const string &name, const string& saveDir) {
     m_batchSize = 1;
     m_epoch = 0;
     setDir(saveDir);
+    m_unlearningLayerID = 0;
 }
 
 Net::~Net() {
@@ -66,6 +67,10 @@ void Net::setDir(const string dir) {
     m_directory = netDir;
 }
 
+void Net::setUnlearningLayerID(const int id){
+    m_unlearningLayerID = id;
+}
+
 string Net::getName() {
     return m_name;
 }
@@ -94,6 +99,10 @@ string Net::getDir() {
     return m_directory;
 }
 
+int Net::getUnlearningLayerID(){
+    return m_unlearningLayerID;
+}
+
 map<int, Layer *> Net::getLayersMap() {
     return m_layers;
 }
@@ -101,7 +110,9 @@ map<int, Layer *> Net::getLayersMap() {
 long Net::getNumParameters() {
     long num = 0;
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        num += iter->second->getNumParameters();
+        if (iter->second->m_id > m_unlearningLayerID){
+            num += iter->second->getNumParameters();
+        }
     }
     return num;
 }

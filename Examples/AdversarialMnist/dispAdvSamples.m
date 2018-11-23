@@ -1,7 +1,7 @@
 % read origin and adversarial data files and display in camparison
 clear all;
 clc;
-label = 1;
+label = 2;
 advDir = '/home/hxie1/temp_advData';
 targetVec = [0,1,2,3,4,5,6,7,8,9];
 originfile = strcat(advDir, '/',num2str(label),'.txt'); %originFile

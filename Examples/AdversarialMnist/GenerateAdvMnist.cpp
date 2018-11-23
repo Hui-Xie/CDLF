@@ -58,7 +58,7 @@ int main(int argc, char *argv[]){
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(1);
+    net.setLearningRate(10000);
     net.setLambda(0.000001);// lambda* lr ==1 means erase changes differing with origin Tensor.
 
     //create Adversarial data directory

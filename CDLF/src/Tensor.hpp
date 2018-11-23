@@ -990,7 +990,7 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
 
 //convolution or cross-correlation
 template<class ValueType>
-float Tensor<ValueType>::conv(const Tensor &right) {
+float Tensor<ValueType>::conv(const Tensor &right) const {
     assert(sameLength(m_dims, right.getDims()));
 #ifdef Use_GPU
     Tensor tensor(m_dims);
@@ -1008,7 +1008,7 @@ float Tensor<ValueType>::conv(const Tensor &right) {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::flipConv(const Tensor& right){
+float Tensor<ValueType>::flipConv(const Tensor& right) const{
     assert(sameLength(m_dims, right.getDims()));
     float sum = 0.0;
     long N = getLength();

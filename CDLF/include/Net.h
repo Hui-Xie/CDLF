@@ -38,7 +38,7 @@ public:
     void setBatchSize(const int batchSize);
     void setEpoch(const long epoch);
     void setDir(const string dir);
-
+    void setUnlearningLayerID(const int id);
 
     string getName();
 
@@ -49,6 +49,7 @@ public:
     long getEpoch();
     map<int, Layer*> getLayersMap();
     string getDir();
+    int getUnlearningLayerID();
 
     long getNumParameters();
 
@@ -91,6 +92,7 @@ protected:
     // check whether layer pointer and name are duplicated
     bool layerExist(const Layer* layer);
     string m_directory;
+    int m_unlearningLayerID;// layer with layerID <= m_unlearningLayerID will not learn.
 
     void readLayesStruct(vector<struct LayerStruct>& layersStructVec);
     void createLayers(const vector<struct LayerStruct>& layersStructVec);
