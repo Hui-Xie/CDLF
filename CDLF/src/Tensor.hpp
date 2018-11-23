@@ -10,6 +10,7 @@
 #include <cmath> //for pow() and exp
 #include <iomanip>      // std::setw
 #include "CPUAttr.h"
+#include <thread>
 
 #ifdef Use_GPU
   #include <cuda_runtime.h>
@@ -24,6 +25,7 @@ void Tensor<ValueType>::initializeMember() {
     m_data = nullptr;
     m_dims.clear();
     m_dimsSpan.clear();
+    m_NRange = 500000;
 }
 
 template<class ValueType>
@@ -997,23 +999,76 @@ float Tensor<ValueType>::conv(const Tensor &right) const {
     cudaTensorHadamard(m_data, right.m_data, tensor.m_data, N);
     return tensor.sum();
 #else
+    const long N = getLength();
     float sum = 0.0;
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
-        sum += e(i) * right.e(i);
+    int nThread = 1;
+    if (N > m_NRange) {
+        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
     }
+    if (1 == nThread) {
+        for (long i = 0; i < N; ++i) {
+            sum += e(i) * right.e(i);
+        }
+    }
+    else {
+        float *partSum = new float[nThread];
+        vector<std::thread> threadVec;
+        for (int t = 0; t < nThread; ++t) {
+            threadVec.push_back(thread([this, N, partSum, t, &right]() {
+                                           partSum[t] = 0;
+                                           for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                                               partSum[t] += e(i) * right.e(i);
+                                           }
+                                       }
+            ));
+        }
+        for (int t = 0; t < threadVec.size(); ++t) {
+            threadVec[t].join();
+        }
+        for (int i=0; i< nThread; ++i){
+            sum += partSum[i];
+        }
+        delete[] partSum;
+    }
+
     return sum;
 #endif
 
 }
 
 template<class ValueType>
-float Tensor<ValueType>::flipConv(const Tensor& right) const{
+float Tensor<ValueType>::flipConv(const Tensor &right) const {
     assert(sameLength(m_dims, right.getDims()));
     float sum = 0.0;
     long N = getLength();
-    for (long i = 0; i < N; ++i) {
-        sum += e(N-i-1) * right.e(i);
+    int nThread = 1;
+    if (N > m_NRange) {
+        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
+    }
+    if (1 == nThread) {
+        for (long i = 0; i < N; ++i) {
+            sum += e(N - i - 1) * right.e(i);
+        }
+    }
+    else {
+        float *partSum = new float[nThread];
+        vector<std::thread> threadVec;
+        for (int t = 0; t < nThread; ++t) {
+            threadVec.push_back(thread([this, N, partSum, t, &right]() {
+                                           partSum[t] = 0;
+                                           for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                                               partSum[t] += e(N-i-1) * right.e(i);
+                                           }
+                                       }
+            ));
+        }
+        for (int t = 0; t < threadVec.size(); ++t) {
+            threadVec[t].join();
+        }
+        for (int i=0; i< nThread; ++i){
+            sum += partSum[i];
+        }
+        delete[] partSum;
     }
     return sum;
 }

@@ -214,37 +214,17 @@ void TransposedConvolutionLayer::backward(bool computeW) {
 
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const long N = pdW->getLength();
-    // compute proper number of threads
-    int nThread = 1;
-    if (N > m_NRange){
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
-    }
-    Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread];
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
+    Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
 
-    vector<std::thread> threadVec;
-    for (int t = 0; t < nThread; ++t) {
-        threadVec.push_back(thread(
-                [this, t, pSubX, N, pdY, pdW, pExtendX]() {
-                    pSubX[t] = new Tensor<float>(m_tensorSizeBeforeCollapse);
-                    for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
-                        pExtendX->subTensorFromTopLeft(pdW->offset2Index(i), pSubX[t], 1);
-                        pdW->e(i) += pSubX[t]->conv(*pdY); // + is for batch processing
-                    }
-                    if (nullptr != pSubX[t]) {
-                        delete pSubX[t];
-                        pSubX[t] = nullptr;
-                    }
-                }
-        ));
-    }
-    for (int t = 0; t < threadVec.size(); ++t) {
-        threadVec[t].join();
+    for (long i = 0; i < N; ++i) {
+        pExtendX->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, 1);
+        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
     }
 
     if (nullptr != pSubX) {
-        delete[] pSubX;
+        delete pSubX;
         pSubX = nullptr;
     }
 

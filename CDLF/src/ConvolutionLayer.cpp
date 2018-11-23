@@ -177,16 +177,16 @@ void ConvolutionLayer::backward(bool computeW) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, pdX]() {
-                        //if (20 == m_id && 0 == idxF ) cout<<"================before extractLowerDTensor at "<<getCurTimeStr()<<endl;
+                        if (120 == m_id && 0 == idxF ) cout<<"================before extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
-                        //if (20 == m_id && 0 == idxF ) cout<<"================after extractLowerDTensor at "<<getCurTimeStr()<<endl;
+                        if (120 == m_id && 0 == idxF ) cout<<"================after extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        //if (20 == m_id && 0 == idxF ) cout<<"================after computeDW at "<<getCurTimeStr()<<endl;
+                        if (120 == m_id && 0 == idxF ) cout<<"================after computeDW at "<<getCurTimeStr()<<endl;
                         pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-                        //if (20 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
+                        if (120 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
                         this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
                                         pdX[idxF]); //as pdX needs to accumulate, pass pointer
-                        //if (20 == m_id && 0 == idxF ) cout<<"================after computeDX at "<<getCurTimeStr()<<endl;
+                        if (120 == m_id && 0 == idxF ) cout<<"================after computeDX at "<<getCurTimeStr()<<endl;
                     }
             ));
         }
@@ -235,37 +235,14 @@ void ConvolutionLayer::backward(bool computeW) {
 
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
-    const long N = pdW->getLength();
-    // compute proper number of threads
-    int nThread = 1;
-    if (N > m_NRange){
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
+    const long N = pdW->getLength();  // the N of DW is small, it does not need thread.
+    Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
+    for (long i = 0; i < N; ++i) {
+        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, m_stride);
+        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
     }
-
-    Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread];
-
-    vector<std::thread> threadVec;
-    for (int t = 0; t < nThread; ++t) {
-        threadVec.push_back(thread(
-                [this, t, pSubX, N, pdW, pdY]() {
-                    pSubX[t] = new Tensor<float>(m_tensorSizeBeforeCollapse);
-                    for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
-                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), pSubX[t], m_stride);
-                        pdW->e(i) += pSubX[t]->conv(*pdY); // + is for batch processing
-                    }
-                    if (nullptr != pSubX[t]) {
-                        delete pSubX[t];
-                        pSubX[t] = nullptr;
-                    }
-                }
-        ));
-    }
-    for (int t = 0; t < threadVec.size(); ++t) {
-        threadVec[t].join();
-    }
-
     if (nullptr != pSubX) {
-        delete[] pSubX;
+        delete pSubX;
         pSubX = nullptr;
     }
 }
