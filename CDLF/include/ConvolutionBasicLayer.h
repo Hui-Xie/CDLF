@@ -38,6 +38,9 @@ public:
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
 
+protected:
+    int m_NRange;  //N range for a thread to compute
+
 };
 
 

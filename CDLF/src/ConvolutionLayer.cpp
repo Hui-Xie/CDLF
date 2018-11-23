@@ -94,24 +94,32 @@ void ConvolutionLayer::forward() {
 #else
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
-    Tensor<float> **pSubX = (Tensor<float> **) new void *[m_numFilters];
+    int nThread = 1;
+    if (N > m_NRange) {
+        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
+    }
+    Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread * m_numFilters];
 
     vector<std::thread> threadVec;
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-        threadVec.push_back(thread(
-                [this, idxF, pSubX, N, &dimsSpanBeforeCollpase]() {
-                    pSubX[idxF] = new Tensor<float>(m_filterSize);
-                    long offseti = idxF*N;
-                    for (long i = 0; i < N; ++i) {
-                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, pSubX[idxF]);
-                        m_pYTensor->e(offseti++) = pSubX[idxF]->conv(*m_pW[idxF]);
+        for (int t = 0; t < nThread; ++t) {  // th indicates thread
+            threadVec.push_back(thread(
+                    [this, idxF, t, nThread, pSubX, N, &dimsSpanBeforeCollpase]() {
+                        const int th = t+idxF*nThread; // thread index
+                        pSubX[th] = new Tensor<float>(m_filterSize);
+                        long offseti = idxF * N;
+                        for (long i = m_NRange*t; i<m_NRange*(t+1) && i < N; ++i) {
+                            m_prevLayer->m_pYTensor->subTensorFromTopLeft(
+                                    m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, pSubX[th]);
+                            m_pYTensor->e(offseti+i) = pSubX[th]->conv(*m_pW[idxF]);
+                        }
+                        if (nullptr != pSubX[th]) {
+                            delete pSubX[th];
+                            pSubX[th] = nullptr;
+                        }
                     }
-                    if (nullptr != pSubX[idxF]) {
-                        delete pSubX[idxF];
-                        pSubX[idxF] = nullptr;
-                    }
-                }
-        ));
+            ));
+        }
     }
     for (int t = 0; t < threadVec.size(); ++t) {
         threadVec[t].join();
@@ -176,7 +184,8 @@ void ConvolutionLayer::backward(bool computeW) {
                         //if (20 == m_id && 0 == idxF ) cout<<"================after computeDW at "<<getCurTimeStr()<<endl;
                         pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
                         //if (20 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
-                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                        this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
+                                        pdX[idxF]); //as pdX needs to accumulate, pass pointer
                         //if (20 == m_id && 0 == idxF ) cout<<"================after computeDX at "<<getCurTimeStr()<<endl;
                     }
             ));
@@ -228,23 +237,20 @@ void ConvolutionLayer::backward(bool computeW) {
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const long N = pdW->getLength();
     // compute proper number of threads
-    int nThread = (CPUAttr::m_numCPUCore * 30 - m_numFilters - 1) / m_numFilters;
-    if (nThread < 1) {
-        nThread = 1;
+    int nThread = 1;
+    if (N > m_NRange){
+        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
     }
-    if (nThread > N) {
-        nThread = N;
-    }
+
     Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread];
-    const long range = (N + nThread - 1) / nThread;
 
     vector<std::thread> threadVec;
     for (int t = 0; t < nThread; ++t) {
         threadVec.push_back(thread(
-                [this, t, range, pSubX, N, pdW, pdY]() {
+                [this, t, pSubX, N, pdW, pdY]() {
                     pSubX[t] = new Tensor<float>(m_tensorSizeBeforeCollapse);
-                    for (long i = range * t; i < range * (t + 1) && i < N; ++i) {
-                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), pSubX[t],m_stride);
+                    for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), pSubX[t], m_stride);
                         pdW->e(i) += pSubX[t]->conv(*pdY); // + is for batch processing
                     }
                     if (nullptr != pSubX[t]) {
@@ -270,24 +276,19 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
         pdX = m_prevLayer->m_pdYTensor;
     }
     const long N = pdX->getLength();
+    int nThread = 1;
+    if (N > m_NRange){
+        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
+    }
 
-    // compute proper number of threads
-    int nThread = (CPUAttr::m_numCPUCore * 30 - m_numFilters - 1) / m_numFilters;
-    if (nThread < 10) {
-        nThread = 10;
-    }
-    if (nThread > N) {
-        nThread = N;
-    }
     Tensor<float> **pSubExpandDy = (Tensor<float> **) new void *[nThread];
-    const long range = (N + nThread - 1) / nThread;
 
     vector<std::thread> threadVec;
     for (int t = 0; t < nThread; ++t) {
         threadVec.push_back(thread(
-                [this, t, range, pExpandDY, pSubExpandDy, pdX, N, pW]() {
+                [this, t, pExpandDY, pSubExpandDy, pdX, N, pW]() {
                     pSubExpandDy[t] = new Tensor<float>(m_filterSize);
-                    for (long i = range * t; i < range * (t + 1) && i < N; ++i) {
+                    for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
                         pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), pSubExpandDy[t], 1);
                         pdX->e(i) += pW->flipConv(*pSubExpandDy[t]);
                     }
