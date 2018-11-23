@@ -26,6 +26,7 @@ public:
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
+    virtual  void printStruct(const int layerIndex);
 };
 
 #endif //RL_NONCONVEX_IDENTITYLAYER_H

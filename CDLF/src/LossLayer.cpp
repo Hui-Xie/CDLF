@@ -79,4 +79,9 @@ void LossLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
 
+void LossLayer::printStruct(const int layerIndex) {
+    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s; \n",
+           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str());
+}
+
 

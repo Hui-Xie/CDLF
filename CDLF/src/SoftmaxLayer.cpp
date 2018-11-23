@@ -95,3 +95,8 @@ void SoftmaxLayer::saveStructLine(FILE *pFile) {
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
+
+void SoftmaxLayer::printStruct(const int layerIndex) {
+    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s, OutputSize=%s; \n",
+           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
+}

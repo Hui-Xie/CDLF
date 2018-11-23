@@ -103,3 +103,15 @@ void MergerLayer::saveStructLine(FILE *pFile) {
     fprintf(pFile, "%d, %s, %s, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), prevLayersStr.c_str(),
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
+
+void MergerLayer::printStruct(const int layerIndex) {
+    int size = m_prevLayers.size();
+    string branchList = "{";
+    for (list<Layer*> ::const_iterator it = m_prevLayers.begin(); it!= m_prevLayers.end(); ++it){
+        branchList += (*it)->m_name + " ";
+    }
+    branchList += "}";
+
+    printf("Layer%03d, Name=%s: (%s, id=%d): PreviousBranchList=%s, OutputSize=%s; \n",
+           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  branchList.c_str(), vector2Str(m_tensorSize).c_str());
+}

@@ -103,4 +103,9 @@ void MaxPoolingLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), 0, m_stride, "{}");
 }
 
+void MaxPoolingLayer::printStruct(const int layerIndex) {
+    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s, FilterSize=%s, NumOfFilter=1, Stide=%d, OutputSize=%s; \n",
+           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), m_stride, vector2Str(m_tensorSize).c_str());
+}
+
 

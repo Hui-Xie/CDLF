@@ -33,6 +33,7 @@ public:
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
+    virtual  void printStruct(const int layerIndex);
 
 private:
     bool isLayerInList(const Layer* layer);

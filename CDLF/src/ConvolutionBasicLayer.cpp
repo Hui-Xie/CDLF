@@ -4,6 +4,8 @@
 
 //
 
+#include <ConvolutionBasicLayer.h>
+
 #include "ConvolutionBasicLayer.h"
 #include "statisTool.h"
 
@@ -146,4 +148,9 @@ void ConvolutionBasicLayer::saveStructLine(FILE *pFile) {
     //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, "{}");
+}
+
+void ConvolutionBasicLayer::printStruct(const int layerIndex) {
+    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s, FilterSize=%s, NumOfFilter=%d, Stide=%d, OutputSize=%s; \n",
+            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, vector2Str(m_tensorSize).c_str());
 }

@@ -30,6 +30,7 @@ public:
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
 
+
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();

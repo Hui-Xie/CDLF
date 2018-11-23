@@ -190,28 +190,13 @@ void Net::printLayersDY() {
 
 void Net::printArchitecture() {
     cout << endl << "========== Network Architecture of " << m_name << " =============" << endl;
-    cout << "======================================================" << endl;
+    cout << "===========================================================" << endl;
     int i = 1;
-    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        cout << "Layer_" << i++ << " (" << iter->second->m_type << ", id=" << std::to_string(iter->second->m_id)
-             << "): " << iter->second->m_name << " : ";
-        if (nullptr != iter->second->m_prevLayer) {
-            cout << "PreviousLayer = " << iter->second->m_prevLayer->m_name << "; ";
-        }
-        if ("ConvolutionLayer" == iter->second->m_type) {
-            cout << "FilterSize = " << vector2Str(((ConvolutionLayer *) iter->second)->m_filterSize) << "; "
-                 << "NumOfFilter = " << ((ConvolutionLayer *) iter->second)->m_numFilters << "; "
-                 << "Stride = "<<((ConvolutionLayer *) iter->second)->m_stride << "; ";
-        }
-        if ("MaxPoolingLayer" == iter->second->m_type) {
-            cout << "FilterSize = " << vector2Str(((MaxPoolingLayer *) iter->second)->m_filterSize) << "; "
-            << "Stride = "<<((ConvolutionLayer *) iter->second)->m_stride << "; ";
-        }
-        cout << "OutputSize = " << vector2Str(iter->second->m_tensorSize) << "; " << endl;
+    for (map<int, Layer *>::const_iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->printStruct(i++);
     }
-
-    cout << "This network has total " << getNumParameters() << " learning parameters. " << endl;
-    cout << "=========== End of Network Architecture ==============" << endl;
+    cout << "Total learning parameters: " << getNumParameters() << endl;
+    cout << "=========== End of Network Architecture ==================" << endl;
 }
 
 bool Net::layerExist(const Layer *layer) {

@@ -62,3 +62,14 @@ void BranchLayer::saveStructLine(FILE *pFile) {
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
+
+void BranchLayer::printStruct(const int layerIndex) {
+    int size = m_nextLayers.size();
+    string branchList = "{";
+    for (list<Layer*> ::const_iterator it = m_nextLayers.begin(); it!= m_nextLayers.end(); ++it){
+        branchList += (*it)->m_name + " ";
+    }
+    branchList += "}";
+    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s, BranchList=%s , OutputSize=%s; \n",
+           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), branchList.c_str(), vector2Str(m_tensorSize).c_str());
+}
