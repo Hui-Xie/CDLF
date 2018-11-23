@@ -171,6 +171,8 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
             pdX[i]->zeroInitialize();  // this is a necessary step as computeX use += operator
             //pdY memory will be allocated in the extractLowerDTensor function
             //pExpandDY memory will be allocated in the dilute method;
+            pdY[i] = nullptr;
+            pExpandDY[i] = nullptr;
         }
 
         vector<std::thread> threadVec;
