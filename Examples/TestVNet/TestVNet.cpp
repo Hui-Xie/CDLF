@@ -31,6 +31,7 @@ int main (int argc, char *argv[])
     }
     net.setUnlearningLayerID(10);
     net.printArchitecture();
+    net.save();
 
     //  run network
     net.train();
