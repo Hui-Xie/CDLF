@@ -163,16 +163,14 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
 
         // ==================multithread computation=======================
         // allocate pdX and pdY along the filters
-        Tensor<float> **pdY = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float> **pdX = (Tensor<float> **) new void *[m_numFilters];
+        Tensor<float> **pdY = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float> **pExpandDY = (Tensor<float> **) new void *[m_numFilters];
         for (int i = 0; i < m_numFilters; ++i) {
             pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
             pdX[i]->zeroInitialize();  // this is a necessary step as computeX use += operator
-            //pdY memory will be allocated in the extractLowerDTensor function
-            //pExpandDY memory will be allocated in the dilute method;
-            pdY[i] = nullptr;
-            pExpandDY[i] = nullptr;
+            pdY[i] = nullptr; //pdY memory will be allocated in the extractLowerDTensor function
+            pExpandDY[i] = nullptr; //pExpandDY memory will be allocated in the dilute method;
         }
 
         vector<std::thread> threadVec;
@@ -187,8 +185,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
                         if (computeX){
                             pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
                             //if (120 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
-                            this->computeDX(pExpandDY[idxF], this->m_pW[idxF],
-                                            pdX[idxF]); //as pdX needs to accumulate, pass pointer
+                            this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                             //if (120 == m_id && 0 == idxF ) cout<<"================after computeX at "<<getCurTimeStr()<<endl;
                         }
 

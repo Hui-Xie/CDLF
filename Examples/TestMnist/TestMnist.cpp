@@ -71,6 +71,7 @@ int main(int argc, char *argv[]){
     }
     net.save();
     net.printArchitecture();
+    net.setUnlearningLayerID(2);
 
 
     long epoch= 2000;
