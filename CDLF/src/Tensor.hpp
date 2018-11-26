@@ -216,6 +216,7 @@ vector<long> Tensor<ValueType>::offset2Index(const vector<long>& dimsSpan, const
         index[i] = n / dimsSpan[i];
         n -= index[i] * dimsSpan[i];
     }
+    assert(0 == n);
     return index;
 }
 
