@@ -215,15 +215,10 @@ string getCurTimeStr(){
 
 
 vector<long> genDimsSpan(const vector<long> vec){
-    vector<long> dimsSpan;
-    dimsSpan.clear();
-    int N = vec.size();
-    for (int i = 0; i < N; ++i) {
-        long span = 1;
-        for (int j = i + 1; j < N; ++j) {
-            span *= vec[j];
-        }
-        dimsSpan.push_back(span);
+    const int N = vec.size();
+    vector<long> dimsSpan(N, 1);
+    for (int i= N-2; i>=0; --i){
+        dimsSpan[i] = vec[i+1]*dimsSpan[i+1];
     }
     return dimsSpan;
 }
