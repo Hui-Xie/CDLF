@@ -174,6 +174,15 @@ int main (int argc, char *argv[]) {
     tensor20.subTensorFromTopLeft({0,0},pTensor23,2);
     cout<<"tensor23: by te tensor20.subTensorFromTopLeft({0,0},{3,3},pTensor23,2):"<<endl;
     pTensor23->printElements();
+
+    cout <<"tensor20:"<<endl;
+    tensor20.printElements();
+    tensor20.subTensorFromTopLeft(1,pTensor23,2);
+    cout<<"tensor23: by te tensor20.subTensorFromTopLeft(1,pTensor23,2):"<<endl;
+    pTensor23->printElements();
+
+
+
     if (nullptr != pTensor23){
         delete pTensor23;
     }

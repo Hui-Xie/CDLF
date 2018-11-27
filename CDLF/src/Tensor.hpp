@@ -215,6 +215,7 @@ vector<long> Tensor<ValueType>::offset2Index(const vector<long>& dimsSpan, const
     for (int i = 0; i < dim; ++i) {
         index[i] = n / dimsSpan[i];
         n -= index[i] * dimsSpan[i];
+        if (0 == n) break;
     }
     assert(0 == n);
     return index;
@@ -894,6 +895,45 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor
     }
 #endif
 
+}
+
+template<class ValueType>
+void Tensor<ValueType>::subTensorFromTopLeft(const long  offset, Tensor* pTensor, const int stride) const {
+    vector<long> dims = pTensor->getDims();
+    const int dim = dims.size();
+    size_t  elementLen = sizeof(ValueType);
+    size_t  rowLen = dims[dim-1]*elementLen;
+
+    ValueType* dstOffset = pTensor->m_data;
+    ValueType* srcOffset = m_data+offset;
+    vector<long> index(dim, 0);
+    int p = dim-2;
+    while (index[0] != dims[0]) {
+        long dstNum = 0;
+        long srcNum = 0;
+        for (int i=0; i< dim-1; ++i){
+            dstNum += pTensor->m_dimsSpan[i]*index[i];
+            srcNum += m_dimsSpan[i]*index[i]*stride;
+        }
+        if (1 == stride){
+            memcpy(dstOffset+dstNum, srcOffset+srcNum, rowLen);
+        }
+        else{
+            for (int i=0; i< dims[dim-1]; ++i){
+                memcpy(dstOffset+dstNum+i, srcOffset+srcNum+i*stride, elementLen);
+            }
+        }
+
+        index[p]++;
+        while(index[p]==dims[p] && p >0) {
+            index[p]=0;
+            index[--p]++;
+            if (index[p] != dims[p]) {
+                p=dim-2;
+                break;
+            }
+        }
+    }
 }
 
 template<class ValueType>

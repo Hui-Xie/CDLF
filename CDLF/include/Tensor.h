@@ -100,6 +100,7 @@ public:
 
     //before using subTensor function, user must allocate the memory of pTensor;
     void subTensorFromTopLeft(const vector<long>& tlIndex, Tensor* pTensor, const int stride =1) const ;
+    void subTensorFromTopLeft(const long  offset, Tensor* pTensor, const int stride =1) const ;
 
     //dilute function will automatic allocate memory for pTensor
     void dilute(Tensor* & pTensor, const vector<long>& tensorSizeBeforeCollapse, const vector<long>& paddingWidthVec, const int stride) const;
