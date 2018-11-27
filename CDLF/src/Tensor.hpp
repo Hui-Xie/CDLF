@@ -889,10 +889,13 @@ void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor
     cudaFree(pTensorDimsSpan);
     cudaFree(pSubDimsSpan);
 #else
-    long N = pTensor->getLength();
+    /*long N = pTensor->getLength();
     for (long i =0; i<N; ++i){
         pTensor->e(i) = e(pTensor->offset2Index(i)*stride + tlIndex);
-    }
+    }*/
+
+    subTensorFromTopLeft(index2Offset(tlIndex), pTensor, stride);
+
 #endif
 
 }
