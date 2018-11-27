@@ -45,7 +45,7 @@ void TransposedConvolutionLayer::forward() {
     long NFilter = length(m_filterSize);
 
 
-    vector<long> filterDimsSpan = dimsSpan(m_filterSize);
+    vector<long> filterDimsSpan = genDimsSpan(m_filterSize);
     vector<long> yDimsSpan;
     yDimsSpan = m_pYTensor->getDimsSpan();
     if (1 != m_numFilters){
@@ -56,6 +56,10 @@ void TransposedConvolutionLayer::forward() {
     long* pYDimsSpan = nullptr;
     long* pFilterDimsSpan = nullptr;
     long* pNonZeroIndex = nullptr;
+    Tensor<float>& X = *m_prevLayer->m_pYTensor;
+    const int Nf = m_filterSize.size();
+    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
+
     cudaMallocManaged((long**) &pXDimsSpan, X.getDims().size()* sizeof(long));
     cudaMallocManaged((long**) &pYDimsSpan, yDimsSpan.size() * sizeof(long));
     cudaMallocManaged((long**) &pFilterDimsSpan, Nf * sizeof(long));

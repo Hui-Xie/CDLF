@@ -49,7 +49,7 @@ void ConvolutionLayer::forward() {
     long NFilter = length(m_filterSize);
 
 
-    vector<long> filterDimsSpan = dimsSpan(m_filterSize);
+    vector<long> filterDimsSpan = genDimsSpan(m_filterSize);
     vector<long> yDimsSpan;
     yDimsSpan = m_pYTensor->getDimsSpan();
     if (1 == Df){
