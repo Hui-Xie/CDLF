@@ -25,6 +25,7 @@
 #include "SigmoidLayer.h"
 #include "SoftmaxLayer.h"
 #include "SubTensorLayer.h"
+#include "PaddingLayer.h"
 #include "VectorizationLayer.h"
 
 #include "LossConvexExample1.h"
