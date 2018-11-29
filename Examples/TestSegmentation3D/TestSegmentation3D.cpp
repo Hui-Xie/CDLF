@@ -64,6 +64,7 @@ int main(int argc, char *argv[]) {
     } else {
         Gnet.load();
     }
+    Gnet.setUnlearningLayerID(30);
     Gnet.printArchitecture();
 
     SegmentDNet Dnet("DNet", netDir);
@@ -77,7 +78,9 @@ int main(int argc, char *argv[]) {
     else{
         Dnet.load();
     }
+    Dnet.setUnlearningLayerID(20);
     Dnet.printArchitecture();
+
 
     StubNetForD stubNet("StubNet", netDir);
     if (isEmptyDir(stubNet.getDir())) {
@@ -88,6 +91,7 @@ int main(int argc, char *argv[]) {
     else{
         stubNet.load();
     }
+    stubNet.setUnlearningLayerID(20);
     stubNet.printArchitecture();
 
     Gnet.save(); Dnet.save(); stubNet.save();
