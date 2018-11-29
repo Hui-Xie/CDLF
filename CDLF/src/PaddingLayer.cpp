@@ -19,7 +19,6 @@ PaddingLayer::PaddingLayer(const int id, const string &name, Layer *prevLayer, c
         }
     }
     m_start = (m_tensorSize - m_prevLayer->m_tensorSize)/2;
-    m_pYTensor->zeroInitialize();
 }
 
 PaddingLayer::~PaddingLayer(){
