@@ -308,6 +308,9 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         else if ("CrossEntropyLoss" == s.m_type) {
            pLayer = new CrossEntropyLoss(s.m_id, s.m_name, pPreLayer);
         }
+        else if ("SquareLoss" == s.m_type) {
+            pLayer = new SquareLoss(s.m_id, s.m_name, pPreLayer);
+        }
         else if ("ExponentialLayer" == s.m_type) {
            pLayer = new ExponentialLayer(s.m_id, s.m_name, pPreLayer);
         }
