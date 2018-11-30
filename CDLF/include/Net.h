@@ -22,7 +22,7 @@ struct LayerStruct{
     vector<long> m_outputTensorSize;
     vector<long> m_filterSize;
     int m_numFilter;
-    int m_stride;  // or k in sigmoid
+    float m_stride;  // or k in sigmoid, lambda in SquareLoss
     vector<long> m_startPosition;
 };
 
