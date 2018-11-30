@@ -17,7 +17,7 @@
 
 class SquareLoss  : public LossLayer {
 public:
-    SquareLoss(const int id, const string& name,  Layer *prevLayer, float lambda = 1);
+    SquareLoss(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
     ~SquareLoss();
     virtual void  printGroundTruth();
 
