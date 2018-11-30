@@ -73,8 +73,6 @@ public:
     Tensor& operator*= (const float factor);
     Tensor& operator/= (const float divisor);
 
-
-    void printElements(bool fixWidth = false);
     void zeroInitialize();
     void uniformInitialize(const ValueType x);
 
@@ -88,7 +86,7 @@ public:
 
     void save(const string& fullFilename, bool matrix2D=false);
     void load(const string& fullFilename, bool matrix2D=false);
-    void print();
+    void print(bool fixWidth = false);
 
     Tensor ln();//natural logarithm
     Tensor expon();//exponential

@@ -581,30 +581,7 @@ Tensor<ValueType> &Tensor<ValueType>::operator/=(const float divisor) {
     return *this;
 }
 
-template<class ValueType>
-void Tensor<ValueType>::printElements(bool fixWidth) {
-    if (2 == m_dims.size()) {
-        for (int i = 0; i < m_dims[0]; ++i) {
-            for (int j = 0; j < m_dims[1]; ++j) {
-                if (fixWidth) {
-                    cout << setw(3) << (int) e({i, j});
-                } else {
-                    cout << (float) e({i, j}) << "   ";
-                }
-            }
-            cout << endl;
-        }
-    } else if (1 == m_dims.size()) {
-        long N = getLength();
-        for (long i = 0; i < N; ++i) {
-            cout << (float) e(i) << "     ";
-        }
-        cout << endl;
-    } else {
-        cout << "Sorry. TensorDimSize >2 can not print." << endl;
-        return;
-    }
-}
+
 
 template<class ValueType>
 float Tensor<ValueType>::sum() {
@@ -731,11 +708,15 @@ void Tensor<ValueType>::save(const string& fullFilename, bool matrix2D){
 }
 
 template<class ValueType>
-void Tensor<ValueType>::print(){
+void Tensor<ValueType>::print(bool fixWidth){
     if (2 == m_dims.size()){
         for (int i= 0; i< m_dims[0]; ++i){
             for (int j=0; j<m_dims[1]; ++j){
-                printf("%f ", e(i,j));
+                if (fixWidth){
+                    printf("%3d", int(e(i,j)));
+                }else{
+                    printf("%f ", e(i,j));
+                }
             }
             printf("\n");
         }

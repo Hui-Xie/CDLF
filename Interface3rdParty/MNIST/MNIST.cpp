@@ -207,7 +207,7 @@ void MNIST::tailorData(){
 
 void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
     Tensor<unsigned char> slice = pImages->slice(index);
-    slice.printElements(true);
+    slice.print(true);
 }
 
 void MNIST::getTestImageAndLabel(const long index, Tensor<float>& image, int& label){

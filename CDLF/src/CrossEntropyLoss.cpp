@@ -54,7 +54,7 @@ void CrossEntropyLoss::gradientCompute() {
 
 void  CrossEntropyLoss::printGroundTruth() {
     cout << "For this specific Loss function, Ground Truth is: ";
-    m_pGroundTruth->printElements(false);
+    m_pGroundTruth->print();
 }
 
 bool CrossEntropyLoss::predictSuccessInColVec(){

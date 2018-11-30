@@ -94,16 +94,16 @@ void FCLayer::updateParameters(const float lr, const string &method, const int b
 
 void FCLayer::printWandBVector() {
     cout << "LayerType: " << m_type << "; MatrixSize " << m_m << "*" << m_n << "; W: " << endl;
-    m_pW->printElements();
+    m_pW->print();
     cout << "B-transpose:" << endl;
-    m_pBTensor->transpose().printElements();
+    m_pBTensor->transpose().print();
 }
 
 void FCLayer::printdWanddBVector() {
     cout << "LayerType: " << m_type << "; MatrixSize " << m_m << "*" << m_n << "; dW: " << endl;
-    m_pdW->printElements();
+    m_pdW->print();
     cout << "dB-transpose:" << endl;
-    m_pdBTensor->transpose().printElements();
+    m_pdBTensor->transpose().print();
 }
 
 long FCLayer::getNumParameters(){

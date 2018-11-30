@@ -75,12 +75,12 @@ string Layer::getAttribute(){
 
 void Layer::printY(){
     cout<<"LayerType: "<<m_type <<"; LayerTensorSize: "<<vector2Str(m_tensorSize)<<"; Y: "<<endl;;
-    m_pYTensor->printElements();
+    m_pYTensor->print();
 }
 
 void Layer::printDY(){
     cout<<"LayerType: "<<m_type <<"; LayerTensorSize: "<<vector2Str(m_tensorSize)<<"; dY: "<<endl;
-    m_pdYTensor->printElements();
+    m_pdYTensor->print();
 }
 
 /*
