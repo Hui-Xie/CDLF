@@ -17,6 +17,8 @@ SegmentDNet::~SegmentDNet() {
 
 // build method must assign m_pGTLayer, m_pGxLayer, m_pInputXLayer, m_pMerger, m_pLossLayer;
 void SegmentDNet::build() {
+    // Net uses load method to construct, this build  implement is obsolete.
+
     m_pInputXLayer = new InputLayer(1, "D_InputLayer1", {120, 277, 277});
     addLayer(m_pInputXLayer);
     NormalizationLayer *normAfterInput04 = new NormalizationLayer(6, "D_NormAfterInput6", m_pInputXLayer);

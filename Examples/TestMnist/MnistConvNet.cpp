@@ -77,11 +77,7 @@ void MnistConvNet::train(){
     long NTrain = maxIteration;
     int batchSize = getBatchSize();
     float learningRate = getLearningRate();
-    long numBatch = maxIteration / batchSize;
-    if (0 != maxIteration % batchSize) {
-        numBatch += 1;
-    }
-
+    long numBatch = (maxIteration + batchSize -1) / batchSize;
     long nIter = 0;
     long nBatch = 0;
     //random reshuffle data samples

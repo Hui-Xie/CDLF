@@ -18,10 +18,7 @@ Segmentation3DNet::~Segmentation3DNet(){
 void Segmentation3DNet::quicklySwitchTrainG_D(){
     const long N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pGNet->getBatchSize();
-    long numBatch = N / batchSize;
-    if (0 != N % batchSize) {
-        numBatch += 1;
-    }
+    long numBatch = (N + batchSize -1)  / batchSize;
 
     long nIter = 0;
     long batch = 0;
@@ -88,10 +85,7 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
 void Segmentation3DNet::trainG(){
     const long N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pGNet->getBatchSize();
-    long numBatch = N / batchSize;
-    if (0 != N % batchSize) {
-        numBatch += 1;
-    }
+    long numBatch = (N + batchSize -1) / batchSize;
 
     long nIter = 0;
     long batch = 0;
@@ -141,11 +135,7 @@ void Segmentation3DNet::trainG(){
 void Segmentation3DNet::trainD(){
     const long N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pGNet->getBatchSize();
-    long numBatch = N / batchSize;
-    if (0 != N % batchSize) {
-        numBatch += 1;
-    }
-
+    long numBatch = (N + batchSize -1)/ batchSize;
     long nIter = 0;
     long batch = 0;
     vector<long> randSeq = generateRandomSequence(N);
@@ -254,10 +244,7 @@ float Segmentation3DNet::testG(bool outputFile){
 void Segmentation3DNet::pretrainD() {
     const long N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pStubNet->getBatchSize();
-    long numBatch = N / batchSize;
-    if (0 != N % batchSize) {
-        numBatch += 1;
-    }
+    long numBatch = (N + batchSize -1)/ batchSize;
 
     long nIter = 0;
     long batch = 0;

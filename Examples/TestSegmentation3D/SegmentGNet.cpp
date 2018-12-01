@@ -17,6 +17,7 @@ SegmentGNet::~SegmentGNet(){
 
 // build method must assign the m_pInputXLayer, m_pGxLayer, m_pLossLayer
 void SegmentGNet::build(){
+    // Net uses load method to construct, this build  implement is obsolete.
     // it is a good design if all numFilter is odd;
     InputLayer* inputLayer01 = new InputLayer(1, "G_InputLayer1", {120,277, 277}); //output size: 120*277*277
     addLayer(inputLayer01);

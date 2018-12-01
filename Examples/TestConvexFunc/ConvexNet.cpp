@@ -50,10 +50,7 @@ void ConvexNet::train() {
     long maxIteration = 1000;
     int batchSize = getBatchSize();
     float lr = getLearningRate();
-    long numBatch = maxIteration / batchSize;
-    if (0 != maxIteration % batchSize) {
-        numBatch += 1;
-    }
+    long numBatch = (maxIteration + batchSize -1)/ batchSize;
 
     long nBatch = 0;
     while (nBatch < numBatch) {

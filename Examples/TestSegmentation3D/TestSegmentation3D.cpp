@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     else{
         Dnet.load();
     }
-    Dnet.setUnlearningLayerID(20);
+    Dnet.setUnlearningLayerID(9);
     Dnet.printArchitecture();
 
 

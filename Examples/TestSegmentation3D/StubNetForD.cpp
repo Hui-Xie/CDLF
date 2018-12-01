@@ -19,6 +19,8 @@ StubNetForD::~StubNetForD(){
 }
 
 void StubNetForD::build(){
+    // Net uses load method to construct, this build  implement is obsolete.
+
     InputLayer* inputLayer01 = new InputLayer(1, "S_InputLayer01", {3,108,265,265});
     addLayer(inputLayer01);
 
