@@ -876,7 +876,7 @@ float Tensor<ValueType>::conv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
     const long N = getLength();
     if (nThreads > N) {
-        nThreads = 1;
+        nThreads = N;
     }
     float sum = 0.0;
 
@@ -915,7 +915,7 @@ float Tensor<ValueType>::flipConv(const Tensor &right, int nThreads) const {
     float sum = 0.0;
     long N = getLength();
     if (nThreads > N) {
-        nThreads = 1;
+        nThreads = N;
     }
     const long NRange = (N + nThreads -1)/nThreads;
     if (1 == nThreads) {
