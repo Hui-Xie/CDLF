@@ -101,6 +101,8 @@ int main(int argc, char *argv[]) {
     gan.setStubNet(&stubNet);
     gan.setStubLayer(stubNet.getFinalLayer());
 
+    /*
+     *
     // pretrain DNet
     cout<<"Info: start pretrain D at ";
     printCurrentLocalTime();
@@ -111,7 +113,7 @@ int main(int argc, char *argv[]) {
         printCurrentLocalTime();
     }
     Dnet.save();
-
+*/
     // train G, D: quick alternative train
     cout<<"Info: start quick switch to train G and D at ";
     printCurrentLocalTime();
@@ -123,7 +125,7 @@ int main(int argc, char *argv[]) {
     }
     Gnet.save(); Dnet.save();
 
-
+/*
 
     // train G, D: slowly alternative train
     cout<<"Info: start slow switch to train G and D at ";
@@ -157,6 +159,8 @@ int main(int argc, char *argv[]) {
         printCurrentLocalTime();
 
     }
+
+    */
     cout<< "=========== End of Test:  "<<gan.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;

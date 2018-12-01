@@ -58,7 +58,7 @@ void GNet::loadGNetParameters() {
             if (lineChar[i] == ',') lineChar[i] = ' ';
         }
         int nFills = sscanf(lineChar, "%s  %d  %d  %d  \r\n", name, &inputXLayerID, &gxLayerID, &lossLayerID);
-        if (6 != nFills) {
+        if (4 != nFills) {
             cout << "Error: sscanf GnetParameter in loadGNetParameters." << endl;
         }
     }
