@@ -96,10 +96,8 @@ void TransposedConvolutionLayer::forward() {
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
-    int nThread = 1;
-    if (N > m_NRange){
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
-    }
+    int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
+    const long NRange = (N +nThread -1)/nThread;
 
     Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread*m_numFilters];
 
@@ -107,11 +105,11 @@ void TransposedConvolutionLayer::forward() {
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t= 0; t< nThread; ++t){  // th indicates thread
             threadVec.push_back(thread(
-                    [this, idxF, t, nThread, pSubX, N, &dimsSpanBeforeCollpase, pExtendX]() {
+                    [this, idxF, t, nThread, pSubX, N, &dimsSpanBeforeCollpase, pExtendX, NRange]() {
                         const int th = t+idxF*nThread; // thread index
                         pSubX[th] = new Tensor<float>(m_filterSize);
                         long offseti = idxF*N;
-                        for (long i = m_NRange*t; i<m_NRange*(t+1) && i < N; ++i) {
+                        for (long i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             pExtendX->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i), pSubX[th]);
                             m_pYTensor->e(offseti+i) = pSubX[th]->conv(*m_pW[idxF]);
                         }
@@ -246,18 +244,16 @@ TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tens
         pdX = m_prevLayer->m_pdYTensor;
     }
     const long N = pdX->getLength();
-    int nThread = 1;
-    if (N > m_NRange){
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
-    }
+    int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
+    const long NRange = (N +nThread -1)/nThread;
 
     Tensor<float> **pSubExpandDy = (Tensor<float> **) new void *[nThread];
     vector<std::thread> threadVec;
     for (int t = 0; t < nThread; ++t) {
         threadVec.push_back(thread(
-                [this, t, pExpandDY, pSubExpandDy, pdX, N, pW]() {
+                [this, t, pExpandDY, pSubExpandDy, pdX, N, pW, NRange]() {
                     pSubExpandDy[t] = new Tensor<float>(m_filterSize);
-                    for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                    for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                         vector<long> index = pdX->offset2Index(i);
                         index = index * m_stride; // convert to coordinate of extendDY
                         pExpandDY->subTensorFromTopLeft(index, pSubExpandDy[t], 1);

@@ -94,21 +94,19 @@ void ConvolutionLayer::forward() {
 #else
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
-    int nThread = 1;
-    if (N > m_NRange) {
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
-    }
+    int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
+    const long NRange = (N +nThread -1)/nThread;
     Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread * m_numFilters];
 
     vector<std::thread> threadVec;
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t = 0; t < nThread; ++t) {  // th indicates thread
             threadVec.push_back(thread(
-                    [this, idxF, t, nThread, pSubX, N, &dimsSpanBeforeCollpase]() {
+                    [this, idxF, t, nThread, pSubX, N, &dimsSpanBeforeCollpase, NRange]() {
                         const int th = t+idxF*nThread; // thread index
                         pSubX[th] = new Tensor<float>(m_filterSize);
                         long offseti = idxF * N;
-                        for (long i = m_NRange*t; i<m_NRange*(t+1) && i < N; ++i) {
+                        for (long i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             m_prevLayer->m_pYTensor->subTensorFromTopLeft(
                                     m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, pSubX[th]);
                             m_pYTensor->e(offseti+i) = pSubX[th]->conv(*m_pW[idxF]);
@@ -138,9 +136,6 @@ void ConvolutionLayer::forward() {
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(bool computeW, bool computeX) {
-    if (m_name == "G_Con40" ) cout <<"G_Con40 start backward at: "<<getCurTimeStr()<<endl;
-
-
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         //==============Single Thread computation==========================
@@ -230,8 +225,6 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         }
 
     }
-
-    if (m_name == "G_Con40" ) cout <<"G_Con40 end backward at : "<<getCurTimeStr()<<endl;
 }
 
 
@@ -254,19 +247,16 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
         pdX = m_prevLayer->m_pdYTensor;
     }
     const long N = pdX->getLength();
-    int nThread = 1;
-    if (N > m_NRange){
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
-    }
-
+    int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
+    const long NRange = (N +nThread -1)/nThread;
     Tensor<float> **pSubExpandDy = (Tensor<float> **) new void *[nThread];
 
     vector<std::thread> threadVec;
     for (int t = 0; t < nThread; ++t) {
         threadVec.push_back(thread(
-                [this, t, pExpandDY, pSubExpandDy, pdX, N, pW]() {
+                [this, t, pExpandDY, pSubExpandDy, pdX, N, pW, NRange]() {
                     pSubExpandDy[t] = new Tensor<float>(m_filterSize);
-                    for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                    for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                         pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), pSubExpandDy[t], 1);
                         pdX->e(i) += pW->flipConv(*pSubExpandDy[t]);
                     }

@@ -40,7 +40,7 @@ public:
     virtual  void printStruct(const int layerIndex);
 
 protected:
-    int m_NRange;  //N range for a thread to compute
+    //int m_NRange;  //N range for a thread to compute
 
 };
 
