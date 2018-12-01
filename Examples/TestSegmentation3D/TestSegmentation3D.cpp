@@ -22,7 +22,7 @@ void printUsage(char* argv0){
     cout<<"the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directories. "<<endl;
     cout<<"outputTestLabelsDir is the directory for outputting test label files"<<endl;
-    cout<<"Input parameter example: /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
+    cout<<"Input parameter example: /Users/hxie1/temp_netParameters /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     gan.setStubLayer(stubNet.getFinalLayer());
 
     // pretrain DNet
-    cout<<"Info: start pretrain D "<<endl;
+    cout<<"Info: start pretrain D at ";
     printCurrentLocalTime();
     int epochsPretrainD = 5; //100;
     for (int i=0; i< epochsPretrainD; ++i){
@@ -110,11 +110,11 @@ int main(int argc, char *argv[]) {
         printf("Pre-train D at %d of %d, ", i, epochsPretrainD);
         printCurrentLocalTime();
     }
-    Gnet.save(); Dnet.save(); stubNet.save();
+    Dnet.save();
 
 
     // train G, D: quick alternative train
-    cout<<"Info: start quick switch to train G and D "<<endl;
+    cout<<"Info: start quick switch to train G and D at ";
     printCurrentLocalTime();
     int epochsQuickSwitch = 10; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
@@ -122,10 +122,10 @@ int main(int argc, char *argv[]) {
         printf("Quick switch train G_D at %d of %d, ", i,  epochsQuickSwitch);
         printCurrentLocalTime();
     }
-    Gnet.save(); Dnet.save(); stubNet.save();
+    Gnet.save(); Dnet.save();
 
     // train G, D: slowly alternative train
-    cout<<"Info: start slow switch to train G and D "<<endl;
+    cout<<"Info: start slow switch to train G and D at ";
     printCurrentLocalTime();
     int epochsSlowSwitch = 10;//100;
     int epochsAlone = 5;// 20;
@@ -156,7 +156,6 @@ int main(int argc, char *argv[]) {
         printCurrentLocalTime();
 
     }
-    Gnet.save(); Dnet.save(); stubNet.save();
     cout<< "=========== End of Test:  "<<gan.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;
