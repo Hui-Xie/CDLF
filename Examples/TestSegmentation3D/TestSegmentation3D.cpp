@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
     // pretrain DNet
     cout<<"Info: start pretrain D at ";
     printCurrentLocalTime();
-    int epochsPretrainD = 5; //100;
+    int epochsPretrainD = 1; //100;
     for (int i=0; i< epochsPretrainD; ++i){
         gan.pretrainD();
         printf("Pre-train D at %d of %d, ", i, epochsPretrainD);
@@ -112,11 +112,10 @@ int main(int argc, char *argv[]) {
     }
     Dnet.save();
 
-
     // train G, D: quick alternative train
     cout<<"Info: start quick switch to train G and D at ";
     printCurrentLocalTime();
-    int epochsQuickSwitch = 10; //100;
+    int epochsQuickSwitch = 1; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
         printf("Quick switch train G_D at %d of %d, ", i,  epochsQuickSwitch);
@@ -124,11 +123,13 @@ int main(int argc, char *argv[]) {
     }
     Gnet.save(); Dnet.save();
 
+
+
     // train G, D: slowly alternative train
     cout<<"Info: start slow switch to train G and D at ";
     printCurrentLocalTime();
-    int epochsSlowSwitch = 10;//100;
-    int epochsAlone = 5;// 20;
+    int epochsSlowSwitch = 1;//100;
+    int epochsAlone = 1;// 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
         for(int j=0; j< epochsAlone; ++j){
             gan.trainD();
