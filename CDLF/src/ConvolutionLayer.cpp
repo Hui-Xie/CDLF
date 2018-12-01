@@ -36,62 +36,6 @@ void ConvolutionLayer::updateTensorSize() {
 
 // Y = W*X
 void ConvolutionLayer::forward() {
-
-#ifdef Use_GPU
-    const int Nt = m_tensorSize.size();
-    const int Nf = m_filterSize.size();
-    const int Df = (1 == m_numFilters) ? 0 : 1; //Feature dimension, if number of filter >1, it will add one feature dimension to output Y
-
-    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
-    Tensor<float> &X = *m_prevLayer->m_pYTensor;
-
-    long N = length(m_tensorSize)/m_numFilters;
-    long NFilter = length(m_filterSize);
-
-
-    vector<long> filterDimsSpan = genDimsSpan(m_filterSize);
-    vector<long> yDimsSpan;
-    yDimsSpan = m_pYTensor->getDimsSpan();
-    if (1 == Df){
-        yDimsSpan.erase(yDimsSpan.begin());
-    }
-
-    long* pXDimsSpan = nullptr;
-    long* pYDimsSpan = nullptr;
-    long* pFilterDimsSpan = nullptr;
-    long* pNonZeroIndex = nullptr;
-    cudaMallocManaged((long**) &pXDimsSpan, X.getDims().size()* sizeof(long));
-    cudaMallocManaged((long**) &pYDimsSpan, yDimsSpan.size() * sizeof(long));
-    cudaMallocManaged((long**) &pFilterDimsSpan, Nf * sizeof(long));
-    cudaMallocManaged((long**) &pNonZeroIndex, f.size() * sizeof(long));
-    cudaDeviceSynchronize();
-
-    for(int i=0; i<Nf;++i){
-        pXDimsSpan[i] = X.getDimsSpan()[i];
-        pFilterDimsSpan[i] = filterDimsSpan[i];
-    }
-
-    for(int i=0; i<f.size();++i){
-        pYDimsSpan[i] = yDimsSpan[i];
-        pNonZeroIndex[i] = f[i];
-    }
-    //N =1000 is the upper bound for GPU ;
-    size_t deviceHeapSize;
-    cudaDeviceGetLimit ( &deviceHeapSize, cudaLimitMallocHeapSize);
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, deviceHeapSize*1024);
-    cudaPrintError();
-
-
-    for (int idxF=0; idxF<m_numFilters; ++idxF){
-        cudaConvLayerForward(X.getData(),pXDimsSpan, m_pW[idxF]->getData(), pFilterDimsSpan, Nf, NFilter,
-                             m_stride, m_pYTensor->getData()+idxF*N*sizeof(float), pYDimsSpan, pNonZeroIndex, yDimsSpan.size(), N);
-    }
-    cudaFree(pXDimsSpan);
-    cudaFree(pYDimsSpan);
-    cudaFree(pFilterDimsSpan);
-    cudaFree(pNonZeroIndex);
-
-#else
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
@@ -126,9 +70,6 @@ void ConvolutionLayer::forward() {
         delete[] pSubX;
         pSubX = nullptr;
     }
-#endif
-
-
 }
 
 // Y =W*X

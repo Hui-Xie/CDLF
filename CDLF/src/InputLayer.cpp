@@ -48,13 +48,9 @@ void InputLayer::setInputTensor(const Tensor<float>& inputTensor){
 void InputLayer::setInputTensor(const Tensor<unsigned char> &inputTensor) {
     if (m_tensorSize == inputTensor.getDims()) {
         long N = m_pYTensor->getLength();
-#ifdef Use_GPU
-        cudaElementCopy(inputTensor.getData(), m_pYTensor->getData(), N);
-#else
         for (long i=0; i<N; ++i){
             m_pYTensor->e(i) = (float) inputTensor.e(i);
         }
-#endif
     } else {
         cout << "Error: setInputTensor(const Tensor<unsigned char>& inputTensor) has different tensorSize." << endl;
     }

@@ -9,6 +9,7 @@
 #include "cuda_runtime.h"
 #include "GPUAttr.h"
 
+/*
 void cudaSigmoidDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const int k, const long N){
     deviceSigmoidDerivative<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(pX, pdY, pdX, k, N);
     cudaDeviceSynchronize();
@@ -60,3 +61,4 @@ void cudaConvLayerForward(const float* pA, const long* pADimsSpan, const float* 
                          (pA,pADimsSpan,pF,pFDimsSpan, filterSize, NFilter, stride, pC, pCDimsSpan,pNonZeroIndex,CDimsSize, N);
     cudaDeviceSynchronize();
 }
+*/

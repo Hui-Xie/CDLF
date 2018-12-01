@@ -39,59 +39,6 @@ void TransposedConvolutionLayer::updateTensorSize() {
 
 // Y = W*X
 void TransposedConvolutionLayer::forward() {
-
-#ifdef Use_GPU //need to modify for TransposedConvolutionLayer
-    long N = length(m_tensorSize)/m_numFilters;
-    long NFilter = length(m_filterSize);
-
-
-    vector<long> filterDimsSpan = genDimsSpan(m_filterSize);
-    vector<long> yDimsSpan;
-    yDimsSpan = m_pYTensor->getDimsSpan();
-    if (1 != m_numFilters){
-        yDimsSpan.erase(yDimsSpan.begin());
-    }
-
-    long* pXDimsSpan = nullptr;
-    long* pYDimsSpan = nullptr;
-    long* pFilterDimsSpan = nullptr;
-    long* pNonZeroIndex = nullptr;
-    Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    const int Nf = m_filterSize.size();
-    vector<long> f = nonZeroIndex(m_prevLayer->m_tensorSize - m_filterSize);
-
-    cudaMallocManaged((long**) &pXDimsSpan, X.getDims().size()* sizeof(long));
-    cudaMallocManaged((long**) &pYDimsSpan, yDimsSpan.size() * sizeof(long));
-    cudaMallocManaged((long**) &pFilterDimsSpan, Nf * sizeof(long));
-    cudaMallocManaged((long**) &pNonZeroIndex, f.size() * sizeof(long));
-    cudaDeviceSynchronize();
-
-    for(int i=0; i<Nf;++i){
-        pXDimsSpan[i] = X.getDimsSpan()[i];
-        pFilterDimsSpan[i] = filterDimsSpan[i];
-    }
-
-    for(int i=0; i<f.size();++i){
-        pYDimsSpan[i] = yDimsSpan[i];
-        pNonZeroIndex[i] = f[i];
-    }
-    //N =1000 is the upper bound for GPU ;
-    size_t deviceHeapSize;
-    cudaDeviceGetLimit ( &deviceHeapSize, cudaLimitMallocHeapSize);
-    cudaDeviceSetLimit(cudaLimitMallocHeapSize, deviceHeapSize*1024);
-    cudaPrintError();
-
-
-    for (int idxF=0; idxF<m_numFilters; ++idxF){
-        cudaConvLayerForward(X.getData(),pXDimsSpan, m_pW[idxF]->getData(), pFilterDimsSpan, Nf, NFilter,
-                             m_stride, m_pYTensor->getData()+idxF*N*sizeof(float), pYDimsSpan, pNonZeroIndex, yDimsSpan.size(), N);
-    }
-    cudaFree(pXDimsSpan);
-    cudaFree(pYDimsSpan);
-    cudaFree(pFilterDimsSpan);
-    cudaFree(pNonZeroIndex);
-
-#else
     long N = length(m_tensorSize) / m_numFilters;
     vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
@@ -134,9 +81,6 @@ void TransposedConvolutionLayer::forward() {
         delete pExtendX;
         pExtendX = nullptr;
     }
-#endif
-
-
 }
 
 // Y =W*X

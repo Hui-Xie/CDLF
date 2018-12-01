@@ -29,9 +29,6 @@ void SoftmaxLayer::forward(){
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int nSoftmax = m_pYTensor->getDims()[0];// a vector's dimension to execute softmax
     const long N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
-#ifdef Use_GPU
-    cudaSoftmax(X.getData(), Y.getData(), nSoftmax, N);
-#else
     for (long j=0; j<N; ++j){
         float sumExpX = 1e-8;
         for (int i=0; i< nSoftmax; ++i){
@@ -41,8 +38,6 @@ void SoftmaxLayer::forward(){
             Y(i*N+j) = exp(X(i*N+j))/sumExpX;
         }
     }
-#endif
-
 }
 
 void SoftmaxLayer::backward(bool computeW, bool computeX){
@@ -52,9 +47,6 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int nSoftmax = m_pdYTensor->getDims()[0];// a vector's dimension to execute softmax
     const long N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
-#ifdef  Use_GPU
-    cudaSoftmaxDerivative(X.getData(),dY.getData(),dX.getData(),nSoftmax, N);
-#else
     for (long j=0; j<N; ++j){
         float sumExpX = 1e-8;
         for (int i=0; i< nSoftmax; ++i){
@@ -73,7 +65,6 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
         }
 
     }
-#endif
 }
 void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //Null

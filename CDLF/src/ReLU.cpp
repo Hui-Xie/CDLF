@@ -23,14 +23,10 @@ void ReLU::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     long N = Y.getLength();
-#ifdef Use_GPU
-    cudaRelu(X.getData(),Y.getData(),N);
-#else
     for (long i=0; i< N; ++i){
        if (X.e(i) >= 0 ) Y.e(i) = X.e(i);
        else Y.e(i) = 0;
     }
-#endif
 }
 void ReLU::backward(bool computeW, bool computeX){
     if (computeX){
@@ -38,14 +34,10 @@ void ReLU::backward(bool computeW, bool computeX){
         Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
         Tensor<float>& X = *m_prevLayer->m_pYTensor;
         long N = dY.getLength();
-#ifdef Use_GPU
-        cudaReluDerivative(X.getData(),dY.getData(),dX.getData(),N);
-#else
         for(long i=0; i< N; ++i){
             if (X.e(i) >= 0) dX.e(i) += dY.e(i);
             // all dX.e(i) = 0 in zeroDYTensor() method.
         }
-#endif
     }
 }
 void ReLU::initialize(const string& initialMethod){

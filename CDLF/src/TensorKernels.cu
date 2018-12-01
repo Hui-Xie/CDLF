@@ -8,6 +8,7 @@
 
 //i: thread index
 
+/*
 __global__ void deviceInitialize(float *pData, const long N, const float value) {
     long i = threadIdx.x + blockIdx.x * blockDim.x;//i: thread index
     while (i < N){
@@ -213,3 +214,5 @@ __global__ void deviceSubTensorFromTopLeft(const unsigned char * pA,const long* 
         t += blockDim.x*gridDim.x;
     }
 }
+
+*/

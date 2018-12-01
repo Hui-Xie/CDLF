@@ -8,6 +8,7 @@
 #include "TensorKernels.h"
 #include <stdio.h>  //# for printf debug
 
+/*
 __global__ void deviceSigmoidDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const int k, const long N){
     long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
     while (i < N){
@@ -162,3 +163,5 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
     }
 
 }
+
+*/

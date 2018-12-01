@@ -10,7 +10,7 @@
 using namespace std;
 
 
-
+/*
 void cudaInitialize(float* m_data, const long N, const float value){
     deviceInitialize<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock>>>(m_data, N, value);
     cudaDeviceSynchronize();
@@ -111,3 +111,4 @@ void cudaSubTensorFromTopLeft(const unsigned char * pA,const long* pTensorDimsSp
     deviceSubTensorFromTopLeft<<<GPUAttr::m_blocksPerGrid, GPUAttr::m_maxThreadsPerBlock, spanSize*sizeof(long)>>>(pA, pTensorDimsSpan, pTlIndex, pSubDimsSpan, spanSize, stride, pC,N);
     cudaDeviceSynchronize();
 }
+*/
