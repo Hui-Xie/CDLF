@@ -115,6 +115,14 @@ bool operator<= (const vector<long>& left, const vector<long>& right){
     return true;
 }
 
+bool operator!= (const vector<long>& left, const vector<long>& right){
+    return !sameVector(left, right);
+}
+
+bool operator== (const vector<long>& left, const vector<long>& right){
+    return sameVector(left, right);
+}
+
 // delete 1 in the tensorSize when dim >2
 void deleteOnes(vector<long>& vec){
     for (vector<long>::iterator it = vec.begin(); it!=vec.end();++it){

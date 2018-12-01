@@ -29,6 +29,9 @@ public:
     StubNetForD* m_pStubNet;
     DataManager* m_pDataMgr;
 
+private:
+    void setOneHotLabel(const bool bTrainSet, const int numLabels, const long indexImage, LossLayer* lossLayer, InputLayer* inputLayer);
+
 
 };
 

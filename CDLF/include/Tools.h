@@ -31,6 +31,10 @@ vector<long> operator/ (const vector<long>& left, const int divisor);
 
 bool operator<= (const vector<long>& left, const vector<long>& right);
 
+bool operator!= (const vector<long>& left, const vector<long>& right);
+
+bool operator== (const vector<long>& left, const vector<long>& right);
+
 void deleteOnes(vector<long>& vec);
 
 vector<long> nonZeroIndex(const vector<long>& vec);

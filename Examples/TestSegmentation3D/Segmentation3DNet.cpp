@@ -22,6 +22,7 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
     long nIter = 0;
     long batch = 0;
     vector<long> randSeq = generateRandomSequence(N);
+    bool bTrainSet = true;
     while (batch < numBatch) {
         m_pGNet->zeroParaGradient();
         m_pDNet->zeroParaGradient();
@@ -36,24 +37,7 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
             m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
             delete pImage;
 
-            Tensor<unsigned char> *pLabel= nullptr;
-            m_pDataMgr->readTrainLabelFile(index, pLabel);
-
-            // cut original pLabel image to matched size, if network input has different size with data
-            /*
-             * vector<long> cutTensorSize = m_pDNet->m_pGTLayer->m_pYTensor->getDims();
-            cutTensorSize.erase(cutTensorSize.begin());
-            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
-            delete pLabel;
-            */
-
-            Tensor<float>* pOneHotLabel= nullptr;
-            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3); // if different size, use pCutLabel
-            delete pLabel;                                          //delete pCutLabel; pCutLabel = nullptr;
-            m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
-            m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
-            delete pOneHotLabel; pOneHotLabel = nullptr;
+            setOneHotLabel(bTrainSet, 3, index, m_pGNet->m_pLossLayer, m_pDNet->m_pGTLayer);
 
             // train G
             m_pDNet->setAlphaGroundTruth(true);
@@ -91,6 +75,7 @@ void Segmentation3DNet::trainG(){
     long nIter = 0;
     long batch = 0;
     vector<long> randSeq = generateRandomSequence(N);
+    bool bTrainSet = true;
 
     m_pDNet->setAlphaGroundTruth(true);
     switchDtoGx();
@@ -107,23 +92,7 @@ void Segmentation3DNet::trainG(){
             m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
             delete pImage;
 
-            Tensor<unsigned char> *pLabel= nullptr;
-            m_pDataMgr->readTrainLabelFile(index, pLabel);
-
-            // cut original pLabel image to matched size, if network input has different size with data
-            /*
-            vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_prevLayer->m_pYTensor->getDims();
-            cutTensorSize.erase(cutTensorSize.begin());
-            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
-            delete pLabel;
-            */
-
-            Tensor<float>* pOneHotLabel= nullptr;
-            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);  // if different size, use pCutLabel
-            delete pLabel;                                          // delete pCutLabel; pCutLabel = nullptr;
-            m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
-            delete pOneHotLabel; pOneHotLabel = nullptr;
+            setOneHotLabel(bTrainSet, 3, index, m_pGNet->m_pLossLayer, nullptr);
 
             forwardG();
             backwardG();
@@ -142,6 +111,7 @@ void Segmentation3DNet::trainD(){
     long nIter = 0;
     long batch = 0;
     vector<long> randSeq = generateRandomSequence(N);
+    bool bTrainSet = true;
     while (batch < numBatch) {
         m_pDNet->zeroParaGradient();
         int i = 0;
@@ -155,23 +125,7 @@ void Segmentation3DNet::trainD(){
             m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
             delete pImage;
 
-            Tensor<unsigned char> *pLabel= nullptr;
-            m_pDataMgr->readTrainLabelFile(index, pLabel);
-
-            // cut original pLabel image to matched size, if network input has different size with data
-            /*
-            vector<long> cutTensorSize = m_pDNet->m_pGTLayer->m_pYTensor->getDims();
-            cutTensorSize.erase(cutTensorSize.begin());
-            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
-            delete pLabel;
-            */
-
-            Tensor<float>* pOneHotLabel= nullptr;
-            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3);// if different size, use pCutLabel
-            delete pLabel;                                            //delete pCutLabel; pCutLabel = nullptr;
-            m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
-            delete pOneHotLabel; pOneHotLabel = nullptr;
+            setOneHotLabel(bTrainSet, 3, index, nullptr, m_pDNet->m_pGTLayer);
 
             // generative Gx
             forwardG();
@@ -206,7 +160,7 @@ float Segmentation3DNet::testG(bool outputFile){
             mkdir(m_pDataMgr->m_outputLabelsDir.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
         }
     }
-
+    bool bTrainSet = false;
     const long N = m_pDataMgr->m_NTestFile;
     Tensor<float> dice({N,1});
     for (long i = 0; i <  N; ++i) {
@@ -215,24 +169,7 @@ float Segmentation3DNet::testG(bool outputFile){
         m_pGNet->m_pInputXLayer->setInputTensor(*pImage);
         delete pImage;
 
-        Tensor<unsigned char> *pLabel = nullptr;
-        m_pDataMgr->readTestLabelFile(i, pLabel);
-
-
-        // cut original pLabel image to matched size, if network input has different size with data
-        /*
-        vector<long> cutTensorSize = m_pGNet->m_pLossLayer->m_prevLayer->m_pYTensor->getDims();
-        cutTensorSize.erase(cutTensorSize.begin());
-        Tensor<unsigned char>* pCutLabel = new  Tensor<unsigned char>(cutTensorSize);
-        pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
-        delete pLabel;
-        */
-
-        Tensor<float> *pOneHotLabel = nullptr;
-        m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3); // if different size, use pCutLabel
-        delete pLabel;                                            //delete pCutLabel;
-        m_pGNet->m_pLossLayer->setGroundTruth(*pOneHotLabel);
-        delete pOneHotLabel;
+        setOneHotLabel(bTrainSet, 3, i, m_pGNet->m_pLossLayer, nullptr);
 
         m_pGNet->forwardPropagate();
         dice.e(i) = m_pGNet->m_pLossLayer->diceCoefficient();
@@ -258,6 +195,7 @@ void Segmentation3DNet::pretrainD() {
     long nIter = 0;
     long batch = 0;
     vector<long> randSeq = generateRandomSequence(N);
+    bool bTrainSet = true;
     while (batch < numBatch) {
         m_pDNet->zeroParaGradient();
         int i = 0;
@@ -270,23 +208,7 @@ void Segmentation3DNet::pretrainD() {
             m_pDNet->m_pInputXLayer->setInputTensor(*pImage);
             delete pImage;
 
-            Tensor<unsigned char> *pLabel= nullptr;
-            m_pDataMgr->readTrainLabelFile(index, pLabel);
-
-            // cut original pLabel image to matched size, if network input has different size with data
-            /*
-            vector<long> cutTensorSize = m_pDNet->m_pGTLayer->m_pYTensor->getDims();
-            cutTensorSize.erase(cutTensorSize.begin());
-            Tensor<unsigned char>* pCutLabel = new Tensor<unsigned char>(cutTensorSize);
-            pLabel->subTensorFromTopLeft((pLabel->getDims()- cutTensorSize)/2, pCutLabel, 1);
-            delete pLabel;
-            */
-
-            Tensor<float>* pOneHotLabel= nullptr;
-            m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, 3); // if different size, use pCutLabel
-            delete pLabel;                                            //delete pCutLabel;
-            m_pDNet->m_pGTLayer->setInputTensor(*pOneHotLabel);
-            delete pOneHotLabel;
+            setOneHotLabel(bTrainSet, 3, i, nullptr, m_pDNet->m_pGTLayer);
 
             m_pDNet->setAlphaGroundTruth(true);
             switchDtoGT();
@@ -316,4 +238,44 @@ void Segmentation3DNet::setDataMgr(DataManager* pDataMgr){
 
 void Segmentation3DNet::setStubNet(StubNetForD* pStubNet){
     m_pStubNet = pStubNet;
+}
+
+void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels, const long indexImage,
+                                       LossLayer *lossLayer, InputLayer *inputLayer) {
+    Tensor<unsigned char> *pLabel = nullptr;
+    if (bTrainSet) {
+        m_pDataMgr->readTrainLabelFile(indexImage, pLabel);
+    } else {
+        m_pDataMgr->readTestLabelFile(indexImage, pLabel);
+    }
+
+    vector<long> cutTensorSize; //lossLayer and inputLayer should have same Tensor size
+    if (nullptr != lossLayer){
+        cutTensorSize = lossLayer->m_pGroundTruth->getDims();
+    }
+    if (nullptr != inputLayer){
+        cutTensorSize = inputLayer->m_pYTensor->getDims();
+    }
+    cutTensorSize.erase(cutTensorSize.begin());
+
+    Tensor<unsigned char> *pCutLabel = nullptr;
+    if (cutTensorSize != pLabel->getDims()) {
+        pCutLabel = new Tensor<unsigned char>(cutTensorSize);
+        pLabel->subTensorFromTopLeft((pLabel->getDims() - cutTensorSize) / 2, pCutLabel, 1);
+        delete pLabel; pLabel = nullptr;
+    } else {
+        pCutLabel = pLabel;
+    }
+
+    Tensor<float> *pOneHotLabel = nullptr;
+    m_pDataMgr->oneHotEncodeLabel(pCutLabel, pOneHotLabel, numLabels);
+    delete pCutLabel; pCutLabel = nullptr;
+
+    if (nullptr != lossLayer){
+        lossLayer->setGroundTruth(*pOneHotLabel);
+    }
+    if (nullptr != inputLayer){
+        inputLayer->setInputTensor(*pOneHotLabel);
+    }
+    delete pOneHotLabel; pOneHotLabel = nullptr;
 }
