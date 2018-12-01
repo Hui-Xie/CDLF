@@ -18,7 +18,7 @@ ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, L
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
-        m_NRange = 60000;
+        m_NRange = 2000000;
         addPreviousLayer(prevLayer);
         computeOneFiterN();
 

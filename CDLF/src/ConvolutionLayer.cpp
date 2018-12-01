@@ -138,6 +138,9 @@ void ConvolutionLayer::forward() {
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(bool computeW, bool computeX) {
+    if (m_name == "G_Con40" ) cout <<"G_Con40 start backward at: "<<getCurTimeStr()<<endl;
+
+
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         //==============Single Thread computation==========================
@@ -177,18 +180,12 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, computeX, pdX]() {
-                        //if (120 == m_id && 0 == idxF ) cout<<"================before extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
-                        //if (120 == m_id && 0 == idxF ) cout<<"================after extractLowerDTensor at "<<getCurTimeStr()<<endl;
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
-                        //if (120 == m_id && 0 == idxF ) cout<<"================after computeDW at "<<getCurTimeStr()<<endl;
                         if (computeX){
                             pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
-                            //if (120 == m_id && 0 == idxF ) cout<<"================after dilute at "<<getCurTimeStr()<<endl;
                             this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
-                            //if (120 == m_id && 0 == idxF ) cout<<"================after computeX at "<<getCurTimeStr()<<endl;
                         }
-
                     }
             ));
         }
@@ -233,6 +230,8 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         }
 
     }
+
+    if (m_name == "G_Con40" ) cout <<"G_Con40 end backward at : "<<getCurTimeStr()<<endl;
 }
 
 
