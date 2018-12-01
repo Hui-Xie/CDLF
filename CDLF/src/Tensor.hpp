@@ -25,7 +25,6 @@ void Tensor<ValueType>::initializeMember() {
     m_data = nullptr;
     m_dims.clear();
     m_dimsSpan.clear();
-    m_NRange = 500000;
 }
 
 template<class ValueType>
@@ -873,26 +872,27 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
 
 //convolution or cross-correlation
 template<class ValueType>
-float Tensor<ValueType>::conv(const Tensor &right) const {
+float Tensor<ValueType>::conv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
     const long N = getLength();
-    float sum = 0.0;
-    int nThread = 1;
-    if (N > m_NRange) {
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
+    if (nThreads > N) {
+        nThreads = 1;
     }
-    if (1 == nThread) {
+    float sum = 0.0;
+
+    const long NRange = (N + nThreads -1)/nThreads;
+    if (1 == nThreads) {
         for (long i = 0; i < N; ++i) {
             sum += e(i) * right.e(i);
         }
     }
     else {
-        float *partSum = new float[nThread];
+        float *partSum = new float[nThreads];
         vector<std::thread> threadVec;
-        for (int t = 0; t < nThread; ++t) {
-            threadVec.push_back(thread([this, N, partSum, t, &right]() {
+        for (int t = 0; t < nThreads; ++t) {
+            threadVec.push_back(thread([this, N, partSum, t, &right, NRange]() {
                                            partSum[t] = 0;
-                                           for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                                           for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                                                partSum[t] += e(i) * right.e(i);
                                            }
                                        }
@@ -901,7 +901,7 @@ float Tensor<ValueType>::conv(const Tensor &right) const {
         for (int t = 0; t < threadVec.size(); ++t) {
             threadVec[t].join();
         }
-        for (int i=0; i< nThread; ++i){
+        for (int i=0; i< nThreads; ++i){
             sum += partSum[i];
         }
         delete[] partSum;
@@ -910,26 +910,26 @@ float Tensor<ValueType>::conv(const Tensor &right) const {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::flipConv(const Tensor &right) const {
+float Tensor<ValueType>::flipConv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
     float sum = 0.0;
     long N = getLength();
-    int nThread = 1;
-    if (N > m_NRange) {
-        nThread = (N + m_NRange - 1) / m_NRange; // number of threads for one filter
+    if (nThreads > N) {
+        nThreads = 1;
     }
-    if (1 == nThread) {
+    const long NRange = (N + nThreads -1)/nThreads;
+    if (1 == nThreads) {
         for (long i = 0; i < N; ++i) {
             sum += e(N - i - 1) * right.e(i);
         }
     }
     else {
-        float *partSum = new float[nThread];
+        float *partSum = new float[nThreads];
         vector<std::thread> threadVec;
-        for (int t = 0; t < nThread; ++t) {
-            threadVec.push_back(thread([this, N, partSum, t, &right]() {
+        for (int t = 0; t < nThreads; ++t) {
+            threadVec.push_back(thread([this, N, partSum, t, &right, NRange]() {
                                            partSum[t] = 0;
-                                           for (long i = m_NRange * t; i < m_NRange * (t + 1) && i < N; ++i) {
+                                           for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                                                partSum[t] += e(N-i-1) * right.e(i);
                                            }
                                        }
@@ -938,7 +938,7 @@ float Tensor<ValueType>::flipConv(const Tensor &right) const {
         for (int t = 0; t < threadVec.size(); ++t) {
             threadVec[t].join();
         }
-        for (int i=0; i< nThread; ++i){
+        for (int i=0; i< nThreads; ++i){
             sum += partSum[i];
         }
         delete[] partSum;

@@ -111,9 +111,9 @@ public:
     void fourDVolume(const int index, Tensor* & pTensor);
     void extractLowerDTensor(const int index, Tensor* & pTensor);
 
-    float conv(const Tensor& right) const; //convolution or cross-correlation
+    float conv(const Tensor& right, int nThreads=1) const; //convolution or cross-correlation
     Tensor& flip();
-    float flipConv(const Tensor& right) const;
+    float flipConv(const Tensor& right, int nThreads=1) const;
 
     inline vector<long> offset2Index(const long offset) const;
     inline vector<long> offset2Index(const vector<long>& dimsSpan, const long offset) const;
@@ -123,7 +123,6 @@ private:
     vector<long> m_dims;
     vector<long> m_dimsSpan; //express change of index leads how many data storage span.
     ValueType* m_data; //all data are stored in column major. Namely, the the index of 0th dimension varies most slowly
-    long m_NRange;
 
     void initializeMember();
     void allocateMem();

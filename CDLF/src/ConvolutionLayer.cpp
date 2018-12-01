@@ -172,9 +172,10 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const long N = pdW->getLength();  // the N of DW is small, it does not need thread.
     Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
+    const int nThreads = (CPUAttr::m_numCPUCore + m_numFilters - 1)/m_numFilters;
     for (long i = 0; i < N; ++i) {
         m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, m_stride);
-        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
+        pdW->e(i) += pSubX->conv(*pdY, nThreads); // + is for batch processing
     }
     if (nullptr != pSubX) {
         delete pSubX;

@@ -164,10 +164,10 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
     Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
-
+    const int nThreads = (CPUAttr::m_numCPUCore + m_numFilters - 1)/m_numFilters;
     for (long i = 0; i < N; ++i) {
         pExtendX->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, 1);
-        pdW->e(i) += pSubX->conv(*pdY); // + is for batch processing
+        pdW->e(i) += pSubX->conv(*pdY, nThreads); // + is for batch processing
     }
 
     if (nullptr != pSubX) {
