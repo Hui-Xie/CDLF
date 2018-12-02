@@ -101,23 +101,21 @@ int main(int argc, char *argv[]) {
     gan.setStubNet(&stubNet);
     gan.setStubLayer(stubNet.getFinalLayer());
 
-    /*
-     *
     // pretrain DNet
     cout<<"Info: start pretrain D at ";
     printCurrentLocalTime();
-    int epochsPretrainD = 1; //100;
+    int epochsPretrainD = 10; //100;
     for (int i=0; i< epochsPretrainD; ++i){
         gan.pretrainD();
         printf("Pre-train D at %d of %d, ", i, epochsPretrainD);
         printCurrentLocalTime();
     }
     Dnet.save();
-*/
+
     // train G, D: quick alternative train
     cout<<"Info: start quick switch to train G and D at ";
     printCurrentLocalTime();
-    int epochsQuickSwitch = 1; //100;
+    int epochsQuickSwitch = 100; //100;
     for (int i=0; i<epochsQuickSwitch; ++i){
         gan.quicklySwitchTrainG_D();
         printf("Quick switch train G_D at %d of %d, ", i,  epochsQuickSwitch);
@@ -125,13 +123,11 @@ int main(int argc, char *argv[]) {
     }
     Gnet.save(); Dnet.save();
 
-/*
-
     // train G, D: slowly alternative train
     cout<<"Info: start slow switch to train G and D at ";
     printCurrentLocalTime();
-    int epochsSlowSwitch = 1;//100;
-    int epochsAlone = 1;// 20;
+    int epochsSlowSwitch = 100;//100;
+    int epochsAlone = 20;// 20;
     for (int i=0; i< epochsSlowSwitch; ++i){
         for(int j=0; j< epochsAlone; ++j){
             gan.trainD();
@@ -160,7 +156,6 @@ int main(int argc, char *argv[]) {
 
     }
 
-    */
     cout<< "=========== End of Test:  "<<gan.getName() <<" ============"<<endl;
     printCurrentLocalTime();
     return 0;

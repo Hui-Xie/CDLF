@@ -6,7 +6,7 @@
 using namespace std;
 
 string cmdPath = "/Users/hxie1/temp_release/Examples/TestMnist/TestMnist";
-string cmdPara = "/Users/hxie1/Projects/mnist 2D";
+string cmdPara = "/Users/hxie1/temp_netParameters  /Users/hxie1/Projects/mnist";
 
 
 void printUsage(char* argv0){
@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
                           + " -q " + queue + " "
-                          + " -l " + gpuResouce+ " "
+                          //+ " -l " + gpuResouce+ " "
                           + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";

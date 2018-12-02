@@ -8,8 +8,7 @@
 using namespace std;
 
 string cmdPath = "/Users/hxie1/temp_release/Examples/TestSegmentation3D/TestSegmentation3D";
-string cmdPara = "/Users/hxie1/msd/Task07_Pancreas/CDLFData   /Users/hxie1/temp_3DGANOuput";
-
+string cmdPara = "/Users/hxie1/temp_netParameters  /Users/hxie1/msd/Task07_Pancreas/CDLFData  /Users/hxie1/temp_3DGANOuput";
 
 void printUsage(char* argv0){
     cout<<"Test 3DSegGAN in HPC"<<endl;
