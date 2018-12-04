@@ -875,18 +875,15 @@ template<class ValueType>
 float Tensor<ValueType>::conv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
     const long N = getLength();
-    if (nThreads > N) {
-        nThreads = N;
-    }
+    nThreads = (N < 1000)? 1 : nThreads;
     float sum = 0.0;
-
-    const long NRange = (N + nThreads -1)/nThreads;
     if (1 == nThreads) {
         for (long i = 0; i < N; ++i) {
             sum += e(i) * right.e(i);
         }
     }
     else {
+        const long NRange = (N + nThreads -1)/nThreads;
         float *partSum = new float[nThreads];
         vector<std::thread> threadVec;
         for (int t = 0; t < nThreads; ++t) {
@@ -912,18 +909,16 @@ float Tensor<ValueType>::conv(const Tensor &right, int nThreads) const {
 template<class ValueType>
 float Tensor<ValueType>::flipConv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
-    float sum = 0.0;
     long N = getLength();
-    if (nThreads > N) {
-        nThreads = N;
-    }
-    const long NRange = (N + nThreads -1)/nThreads;
+    nThreads = (N < 1000)? 1 : nThreads;
+    float sum = 0.0;
     if (1 == nThreads) {
         for (long i = 0; i < N; ++i) {
             sum += e(N - i - 1) * right.e(i);
         }
     }
     else {
+        const long NRange = (N + nThreads -1)/nThreads;
         float *partSum = new float[nThreads];
         vector<std::thread> threadVec;
         for (int t = 0; t < nThreads; ++t) {
