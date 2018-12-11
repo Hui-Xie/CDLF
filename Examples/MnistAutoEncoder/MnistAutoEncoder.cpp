@@ -67,3 +67,14 @@ float MnistAutoEncoder::test(){
     }
     return  squareLoss / Ntest;
 }
+
+void MnistAutoEncoder::autoEncode(const Tensor<float>& inputImage, int& predictLabel, Tensor<float>& reconstructImage){
+    InputLayer *inputLayer = getInputLayer();
+    FCLayer* predictLayer = (FCLayer*)getLayer(18); // the FC2 layer.
+    SquareLoss *lossLayer = (SquareLoss *) getFinalLayer();
+    inputLayer->setInputTensor(inputImage);
+    lossLayer->setGroundTruth(inputImage);
+    forwardPropagate();
+    predictLabel = predictLayer->m_pYTensor->maxPosition();
+    reconstructImage = *lossLayer->m_prevLayer->m_pYTensor;
+}

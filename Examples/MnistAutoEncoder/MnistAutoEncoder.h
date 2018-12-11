@@ -23,6 +23,8 @@ public:
     virtual void train();
     virtual float test();
 
+    void autoEncode(const Tensor<float>& inputImage, int& predictLabel, Tensor<float>& reconstructImage);
+
 };
 
 

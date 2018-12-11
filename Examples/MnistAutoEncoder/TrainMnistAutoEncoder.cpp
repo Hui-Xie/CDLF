@@ -4,9 +4,7 @@
 
 //
 
-#include "MNIST.h"
 #include "MnistAutoEncoder.h"
-#include <cstdio>
 
 void printUsage(char* argv0){
     cout<<"Train MNIST Dataset AutoEncoder:"<<endl;
