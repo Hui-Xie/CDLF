@@ -10,9 +10,6 @@ message("*************************************")
 set (MNISTDir ../../Interface3rdParty/MNIST)
 include_directories(${MNISTDir})
 
-set(MnistNetDir ../TestMnist)
-include_directories(${MnistNetDir})
-
-set(GenerateAdvMnistSRC GenerateAdvMnist.cpp ${MNISTDir}/MNIST.cpp AdverMnistNet.cpp)
-add_executable(GenerateAdvMnist ${GenerateAdvMnistSRC})
-target_link_libraries(GenerateAdvMnist ${CDLFLib} ${CUDA_LIBRARIES} pthread)
+set(TestMnistAutoEncoderSRC TestMnistAutoEncoder.cpp ${MNISTDir}/MNIST.cpp MnistAutoEncoder.cpp)
+add_executable(TestMnistAutoEncoder ${TestMnistAutoEncoderSRC})
+target_link_libraries(TestMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES} pthread)
