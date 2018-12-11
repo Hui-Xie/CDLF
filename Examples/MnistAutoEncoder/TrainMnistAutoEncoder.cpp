@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
     //Load MnistAutoEncoder Net
     MnistAutoEncoder net("MnistAutoEncoder", netDir, &mnist);
     if (!isEmptyDir(net.getDir())) {
-        net.load();  //at Dec 11th,2018, the trained G net has an accuracy of 97.1%
+        net.load();  //at Dec 11th,2018, the trained G net has an accuracy of 97.11%
     }
     else{
         cout<<"Error: program can not load a trained Mnist net."<<endl;
