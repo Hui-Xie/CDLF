@@ -9,11 +9,11 @@
 #include <cstdio>
 
 void printUsage(char* argv0){
-    cout<<"MNIST Dataset AutoEncoder:"<<endl;
+    cout<<"Train MNIST Dataset AutoEncoder:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir>  <fullPathAdvData>"<<endl;
-    cout<<"for examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist  /home/hxie1/temp_advData"<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> "<<endl;
+    cout<<"For examples: "<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist "<<endl;
 }
 
 
