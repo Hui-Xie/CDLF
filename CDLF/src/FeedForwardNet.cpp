@@ -68,6 +68,8 @@ void FeedForwardNet::backwardPropagate(bool computeW) {
 void FeedForwardNet::sgd(const float lr, const int batchSize) {
     if (0 == batchSize) return;
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->updateParameters(lr, "sgd", batchSize);
+        if (iter->second->m_id >= m_unlearningLayerID) {
+            iter->second->updateParameters(lr, "sgd", batchSize);
+        }
     }
 }

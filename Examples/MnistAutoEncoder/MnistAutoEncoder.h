@@ -17,8 +17,6 @@ public:
     MnistAutoEncoder(const string& name, const string& saveDir, MNIST* pMnistData);
     ~MnistAutoEncoder();
 
-    Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
-
     MNIST* m_pMnistData;
 
     virtual void build();

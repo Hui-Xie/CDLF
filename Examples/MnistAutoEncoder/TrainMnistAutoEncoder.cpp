@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     MNIST mnist(mnistDir, onlyTestSet);
     mnist.loadData();
 
-    //Load Mnist Net
+    //Load MnistAutoEncoder Net
     MnistAutoEncoder net("MnistAutoEncoder", netDir, &mnist);
     if (!isEmptyDir(net.getDir())) {
         net.load();  //at Dec 11th,2018, the trained G net has an accuracy of 97.1%
@@ -57,13 +57,13 @@ int main(int argc, char *argv[]){
     net.setLearningRate(0.001);
     net.setUnlearningLayerID(30);  // 18 is the FC2 behind the Softmax of original G net.
 
-    long epoch= 2000;
-    float accuracy = 0;
+    long epoch= 4000;
+    float squareLoss = 0.0;
     for (long i=0; i<epoch; ++i){
         net.train();
         net.save();
-        accuracy = net.test();
-        cout<<"Epoch_"<<i<<": "<<" accuracy = "<<accuracy<<endl;
+        squareLoss = net.test();
+        cout<<"Epoch_"<<i<<": "<<" average squareLoss for each image = "<< squareLoss <<endl;
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;

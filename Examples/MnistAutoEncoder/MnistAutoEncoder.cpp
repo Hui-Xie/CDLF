@@ -22,13 +22,13 @@ void MnistAutoEncoder::build() {
 
 void MnistAutoEncoder::train() {
     InputLayer *inputLayer = getInputLayer();
-    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
+    SquareLoss *lossLayer = (SquareLoss *) getFinalLayer();
 
-    long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
-    long NTrain = maxIteration;
-    int batchSize = getBatchSize();
-    float learningRate = getLearningRate();
-    long numBatch = (maxIteration + batchSize -1) / batchSize;
+    const long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
+    const long NTrain = maxIteration;
+    const int batchSize = getBatchSize();
+    const float learningRate = getLearningRate();
+    const long numBatch = (maxIteration + batchSize -1) / batchSize;
     long nIter = 0;
     long nBatch = 0;
     //random reshuffle data samples
@@ -37,8 +37,9 @@ void MnistAutoEncoder::train() {
         zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
-            inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
-            lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
+            Tensor<unsigned  char> inputImage = m_pMnistData->m_pTrainImages->slice(randSeq[nIter]);
+            inputLayer->setInputTensor(inputImage);
+            lossLayer->setGroundTruth(inputImage);
             forwardPropagate();
             backwardPropagate(true);
             ++nIter;
@@ -52,25 +53,17 @@ void MnistAutoEncoder::train() {
 
 float MnistAutoEncoder::test(){
     InputLayer *inputLayer = getInputLayer();
-    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
+    SquareLoss *lossLayer = (SquareLoss *) getFinalLayer();
     long n = 0;
-    long nSuccess = 0;
     const long Ntest = m_pMnistData->m_pTestLabels->getLength();
+    float squareLoss = 0.0;
     while (n < Ntest) {
-        inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
-        lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
+        Tensor<unsigned  char> inputImage = m_pMnistData->m_pTrainImages->slice(n);
+        inputLayer->setInputTensor(inputImage);
+        lossLayer->setGroundTruth(inputImage);
         forwardPropagate();
-        if (lossLayer->predictSuccessInColVec()) ++nSuccess;
+        squareLoss += lossLayer->getLoss();
         ++n;
     }
-    cout<<"Info: nSuccess = "<<nSuccess<<" in "<<Ntest<<" test samples."<<endl;
-    return  nSuccess * 1.0 / Ntest;
-}
-
-//construct a 2*1 one-hot vector
-Tensor<float> MnistAutoEncoder::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
-    Tensor<float> tensor({10, 1});
-    tensor.zeroInitialize();
-    tensor.e(pLabels->e(index)) = 1;
-    return tensor;
+    return  squareLoss / Ntest;
 }
