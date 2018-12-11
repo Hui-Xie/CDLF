@@ -6,19 +6,14 @@
 
 #include "MnistAutoEncoder.h"
 
-MnistAutoEncoder::MnistAutoEncoder(const string &name, const string &saveDir) : FeedForwardNet(name, saveDir) {
-
+MnistAutoEncoder::MnistAutoEncoder(const string &name, const string &saveDir,  MNIST* pMnistData) : FeedForwardNet(name, saveDir) {
+  m_pMnistData = pMnistData;
 }
 
 MnistAutoEncoder::~MnistAutoEncoder() {
 
 }
 
-void MnistAutoEncoder::constructGroundTruth(const int labelValue, Tensor<float> &groundTruth) {
-    groundTruth.setDimsAndAllocateMem({10, 1});
-    groundTruth.zeroInitialize();
-    groundTruth.e(labelValue) = 1;
-}
 
 void MnistAutoEncoder::build() {
    //null
@@ -28,51 +23,54 @@ void MnistAutoEncoder::build() {
 void MnistAutoEncoder::train() {
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
+
+    long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
+    long NTrain = maxIteration;
+    int batchSize = getBatchSize();
     float learningRate = getLearningRate();
-    zeroParaGradient();
-    inputLayer->setInputTensor(m_adversaryTensor);
-    lossLayer->setGroundTruth(m_groundTruth);
-    forwardPropagate();
-    backwardPropagate(false); //do not calculate the gradient of learning parameters of network
-    m_adversaryTensor -= (*inputLayer->m_pdYTensor + (m_adversaryTensor- m_originTensor)*m_lambda) * learningRate;  // this method makes adversarial sample try to mimic the desired target.
-    //m_adversaryTensor -= inputLayer->m_pdYTensor->sign()* learningRate;  // this methtod makes adversarial sample has many shade
-    trimAdversaryTensor();
+    long numBatch = (maxIteration + batchSize -1) / batchSize;
+    long nIter = 0;
+    long nBatch = 0;
+    //random reshuffle data samples
+    vector<long> randSeq = generateRandomSequence(NTrain);
+    while (nBatch < numBatch) {
+        zeroParaGradient();
+        int i = 0;
+        for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
+            inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
+            lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
+            forwardPropagate();
+            backwardPropagate(true);
+            ++nIter;
+        }
+        sgd(learningRate, i);
+        ++nBatch;
+    }
 }
 
 
-float MnistAutoEncoder::test() {
-    //null
-    return 0;
-}
 
-int MnistAutoEncoder::predict(const Tensor<float>& inputTensor) {
+float MnistAutoEncoder::test(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
-    inputLayer->setInputTensor(inputTensor);
-    lossLayer->setGroundTruth(m_groundTruth);
-    forwardPropagate();
-    int predictValue = lossLayer->m_prevLayer->m_pYTensor->maxPosition();
-    return predictValue;
-}
-
-void MnistAutoEncoder::trimAdversaryTensor() {
-    int N = m_adversaryTensor.getLength();
-    for(int i=0; i<N; ++i){
-        if (m_adversaryTensor.e(i) < 0){
-            m_adversaryTensor.e(i) =0;
-        }
-        if (m_adversaryTensor.e(i) >255){
-            m_adversaryTensor.e(i) =255;
-        }
+    long n = 0;
+    long nSuccess = 0;
+    const long Ntest = m_pMnistData->m_pTestLabels->getLength();
+    while (n < Ntest) {
+        inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
+        lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
+        forwardPropagate();
+        if (lossLayer->predictSuccessInColVec()) ++nSuccess;
+        ++n;
     }
-
+    cout<<"Info: nSuccess = "<<nSuccess<<" in "<<Ntest<<" test samples."<<endl;
+    return  nSuccess * 1.0 / Ntest;
 }
 
-void MnistAutoEncoder::saveInputDY(const string filename) {
-    InputLayer *inputLayer = getInputLayer();
-    inputLayer->m_pdYTensor->save(filename, true);
-}
-
-void MnistAutoEncoder::setLambda(float lambda) {
-   m_lambda = lambda;
+//construct a 2*1 one-hot vector
+Tensor<float> MnistAutoEncoder::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
+    Tensor<float> tensor({10, 1});
+    tensor.zeroInitialize();
+    tensor.e(pLabels->e(index)) = 1;
+    return tensor;
 }

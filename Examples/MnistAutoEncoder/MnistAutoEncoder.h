@@ -9,33 +9,21 @@
 
 
 #include <CDLF.h>
+#include "MNIST.h"
 
 
 class MnistAutoEncoder: public FeedForwardNet {
 public:
-    MnistAutoEncoder(const string& name, const string& saveDir);
+    MnistAutoEncoder(const string& name, const string& saveDir, MNIST* pMnistData);
     ~MnistAutoEncoder();
 
-    void constructGroundTruth(const int labelValue, Tensor<float>& groundTruth);
+    Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
+
+    MNIST* m_pMnistData;
 
     virtual void build();
     virtual void train();
     virtual float test();
-
-    int predict(const Tensor<float>& inputTensor);
-
-    Tensor<float> m_adversaryTensor;
-    Tensor<float> m_groundTruth;
-    Tensor<float> m_originTensor;
-
-    // regulization coefficient Loss = Loss(f(x)) + 0.5*lambda*(x-x0)^2
-    // it addes backpropagation gardient lambda*(x-x0)
-    float m_lambda;
-
-    void setLambda(float lambda);
-
-    void trimAdversaryTensor();
-    void saveInputDY(const string filename);
 
 };
 
