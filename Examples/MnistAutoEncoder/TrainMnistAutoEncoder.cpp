@@ -1,15 +1,15 @@
 //
-// Created by Hui Xie on 11/9/18.
+// Created by Hui Xie on 12/11/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 //
 
 #include "MNIST.h"
-#include "AdverMnistNet.h"
+#include "MnistAutoEncoder.h"
 #include <cstdio>
 
 void printUsage(char* argv0){
-    cout<<"Generate Advesarial Samples for MNIST Dataset:"<<endl;
+    cout<<"MNIST Dataset AutoEncoder:"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfMnistDataDir>  <fullPathAdvData>"<<endl;
     cout<<"for examples: "<<endl;
@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
     mnist.loadData();
 
     //Load Mnist Net
-    AdverMnistNet net("MnistNet", netDir);
+    MnistAutoEncoder net("MnistNet", netDir);
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }
