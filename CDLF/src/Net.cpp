@@ -342,6 +342,9 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         else if ("VectorizationLayer" == s.m_type) {
            pLayer = new VectorizationLayer(s.m_id, s.m_name, pPreLayer);
         }
+        else if ("ReshapeLayer" == s.m_type) {
+            pLayer = new ReshapeLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize);
+        }
         else if ("LossConvexExample2" == s.m_type) {
            pLayer = new LossConvexExample2(s.m_id, s.m_name, pPreLayer);
         }

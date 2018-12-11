@@ -28,6 +28,7 @@
 #include "SubTensorLayer.h"
 #include "PaddingLayer.h"
 #include "VectorizationLayer.h"
+#include "ReshapeLayer.h"
 
 #include "LossConvexExample1.h"
 #include "LossConvexExample2.h"

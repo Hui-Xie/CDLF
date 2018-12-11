@@ -19,7 +19,7 @@ void printUsage(char* argv0){
 
 int main(int argc, char *argv[]){
     printCurrentLocalTime();
-    if (4 != argc){
+    if (3 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
@@ -27,9 +27,6 @@ int main(int argc, char *argv[]){
 
     const string netDir = argv[1];
     const string mnistDir = argv[2];
-    string advDataDir = argv[3];
-
-    bool bGenerateGradientFiles = false;
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -43,26 +40,22 @@ int main(int argc, char *argv[]){
 #endif
 
     // Load MNIST Data
-    bool onlyTestSet = true;
+    bool onlyTestSet = false;
     MNIST mnist(mnistDir, onlyTestSet);
     mnist.loadData();
 
     //Load Mnist Net
-    MnistAutoEncoder net("MnistNet", netDir);
+    MnistAutoEncoder net("MnistAutoEncoder", netDir);
     if (!isEmptyDir(net.getDir())) {
-        net.load();
+        net.load();  //at Dec 11th,2018, the trained G net has an accuracy of 97.1%
     }
     else{
-        cout<<"Error: program can not load trained Mnist net."<<endl;
+        cout<<"Error: program can not load a trained Mnist net."<<endl;
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(10000);
-    net.setLambda(0.000001);// lambda* lr ==1 means erase changes differing with origin Tensor.
-
-    //create Adversarial data directory
-    //advDataDir +="/"+ getCurTimeStr();  //todo: debug stage, No need it now.
-    createDir(advDataDir);
+    net.setLearningRate(0.001);
+    net.setUnlearningLayerID(20);  // 18 is the FC2 behind the Softmax of original G net.
 
     // choose an initial digit file and make sure it is predicted correctly
     srand (time(NULL));
