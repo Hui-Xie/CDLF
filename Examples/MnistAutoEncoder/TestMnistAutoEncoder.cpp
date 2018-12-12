@@ -17,7 +17,8 @@ void printUsage(char* argv0){
 
 int main(int argc, char *argv[]){
     printCurrentLocalTime();
-    if (4 != argc){
+    srand (time(NULL));
+    if (5 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
@@ -61,16 +62,17 @@ int main(int argc, char *argv[]){
     Tensor<float>  reconstrutImage;
     int  label;
     int  predictLabel;
-    cout << "Hint: output file format: \n Tindex-RrealLabel.txt, Tindex-PpredictLabel.txt, e.g. T32-R4.txt, T32-P7.txt"<<endl;
+    cout << "Hint: output file format: \n Tindex-IrealLabel.txt, Tindex-RpredictLabel.txt, e.g. T32-R4.txt, T32-P7.txt"<<endl;
     for (int i=0; i<nImages; ++i){
         long index = rand() % 10000;
         mnist.getTestImageAndLabel(index, inputImage, label);
         net.autoEncode(inputImage, predictLabel, reconstrutImage);
-        string filename = outputDir +"/" + "T" + to_string(i)+ "-R"+ to_string(label) +".txt";
+        string filename = outputDir +"/" + "T" + to_string(i)+ "-I"+ to_string(label) +".txt";
         inputImage.save(filename, true);
-        filename = outputDir +"/" + "T" + to_string(i)+ "-P"+ to_string(predictLabel) +".txt";
+        filename = outputDir +"/" + "T" + to_string(i)+ "-R"+ to_string(predictLabel) +".txt";
         reconstrutImage.save(filename,true);
     }
+    cout << "input files and reconstruction files output at " <<outputDir<<endl;
     cout<< "=========== finished AutoEncoder's image reconstruction ============"<<endl;
     return 0;
 }
