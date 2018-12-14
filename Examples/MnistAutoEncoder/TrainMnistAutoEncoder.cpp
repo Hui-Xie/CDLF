@@ -45,14 +45,14 @@ int main(int argc, char *argv[]){
     //Load MnistAutoEncoder Net
     MnistAutoEncoder net("MnistAutoEncoder", netDir, &mnist);
     if (!isEmptyDir(net.getDir())) {
-        net.load();  //at Dec 11th,2018, the trained G net has an accuracy of 97.11%
+        net.load();  //at Dec 13th,2018, the trained MnistNet has an accuracy of 97.18%
     }
     else{
         cout<<"Error: program can not load a trained Mnist net."<<endl;
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(10);
+    net.setLearningRate(0.1);
     net.setUnlearningLayerID(30);  // 18 is the FC2 behind the Softmax of original G net.
 
     long epoch= 5000;
