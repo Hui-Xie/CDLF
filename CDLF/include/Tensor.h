@@ -81,6 +81,7 @@ public:
     float variance();
     float max();
     float min();
+    void getMinMax(ValueType& min, ValueType& max);
     int maxPosition();
     Tensor<unsigned char> getMaxPositionSubTensor();
 

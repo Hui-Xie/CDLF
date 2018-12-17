@@ -537,6 +537,17 @@ float Tensor<ValueType>::min() {
 }
 
 template<class ValueType>
+void Tensor<ValueType>::getMinMax(ValueType& min, ValueType& max){
+    int N = getLength();
+    min = e(0);
+    max = e(0);
+    for (int i = 1; i < N; ++i) {
+        if (e(i) < min) min = e(i);
+        if (e(i) > max) max = e(i);
+    }
+}
+
+template<class ValueType>
 int Tensor<ValueType>::maxPosition() {
     int N = getLength();
     ValueType maxValue = e(0);
