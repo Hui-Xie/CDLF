@@ -374,7 +374,13 @@ void Net::loadLayersStruct() {
 
 void Net::saveLayersParameters() {
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->save(m_directory);
+        const string layerDir = m_directory + "/" + to_string(iter->second->m_id);
+        if (iter->second->m_id < m_unlearningLayerID && dirExist(layerDir)){
+            continue;
+        }
+        else{
+            iter->second->save(m_directory);
+        }
     }
 }
 
