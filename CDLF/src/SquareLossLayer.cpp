@@ -4,25 +4,23 @@
 
 //
 
-#include <SquareLoss.h>
+#include <SquareLossLayer.h>
 
-#include "SquareLoss.h"
-
-SquareLoss::SquareLoss(const int id, const string &name, Layer *prevLayer, float lambda) : LossLayer(id, name, prevLayer) {
-    m_type = "SquareLoss";
+SquareLossLayer::SquareLossLayer(const int id, const string &name, Layer *prevLayer, float lambda) : LossLayer(id, name, prevLayer) {
+    m_type = "SquareLossLayer";
     m_lambda = lambda;
 }
 
-SquareLoss::~SquareLoss() {
+SquareLossLayer::~SquareLossLayer() {
    //null;
 }
 
-void SquareLoss::printGroundTruth() {
+void SquareLossLayer::printGroundTruth() {
    m_pGroundTruth->print();
 }
 
 // L= lambda*0.5*\sum (x_i- g_i)^2
-float SquareLoss::lossCompute() {
+float SquareLossLayer::lossCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     const long N = X.getLength();
     float loss = 0;
@@ -34,7 +32,7 @@ float SquareLoss::lossCompute() {
  }
 
 //dL/dx = (x_i-g_i)*lambda
-void SquareLoss::gradientCompute() {
+void SquareLossLayer::gradientCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dX = *(m_prevLayer->m_pdYTensor);
     const long N = X.getLength();
@@ -43,13 +41,13 @@ void SquareLoss::gradientCompute() {
     }
 }
 
-void SquareLoss::saveStructLine(FILE *pFile) {
+void SquareLossLayer::saveStructLine(FILE *pFile) {
     //const string tableHead= "ID, Type, Name, previousLayerIDs, outputTensorSize, filterSize, numFilter, FilterStride, startPosition, \r\n";
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %f, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), "{}", 0, m_lambda, "{}");
 }
 
-void SquareLoss::printStruct(const int layerIndex) {
+void SquareLossLayer::printStruct(const int layerIndex) {
     printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s; Lambda=%f; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_lambda);
 }

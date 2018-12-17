@@ -15,10 +15,10 @@
  *       lambda is super parameter as weight for square loss
  * */
 
-class SquareLoss  : public LossLayer {
+class SquareLossLayer  : public LossLayer {
 public:
-    SquareLoss(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
-    ~SquareLoss();
+    SquareLossLayer(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
+    ~SquareLossLayer();
     virtual void  printGroundTruth();
 
     float m_lambda;
