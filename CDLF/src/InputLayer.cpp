@@ -75,6 +75,6 @@ void InputLayer::saveStructLine(FILE *pFile) {
 }
 
 void InputLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s: (%s, id=%d): OutputSize=%s; \n",
+    printf("Layer%03d, Name=%s, Type=%s, id=%d, OutputSize=%s; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  vector2Str(m_tensorSize).c_str());
 }

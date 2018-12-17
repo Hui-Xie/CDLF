@@ -114,6 +114,6 @@ void MergerLayer::printStruct(const int layerIndex) {
     }
     branchList += "}";
 
-    printf("Layer%03d, Name=%s: (%s, id=%d): PreviousBranchList=%s, OutputSize=%s; \n",
+    printf("Layer%03d, Name=%s, Type=%s, id=%d, PreviousBranchList=%s, OutputSize=%s; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  branchList.c_str(), vector2Str(m_tensorSize).c_str());
 }

@@ -80,7 +80,7 @@ void LossLayer::saveStructLine(FILE *pFile) {
 }
 
 void LossLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s; \n",
+    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str());
 }
 

@@ -50,6 +50,6 @@ void SquareLoss::saveStructLine(FILE *pFile) {
 }
 
 void SquareLoss::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s; Lambda=%f; \n",
+    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s; Lambda=%f; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_lambda);
 }

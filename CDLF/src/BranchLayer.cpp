@@ -72,6 +72,6 @@ void BranchLayer::printStruct(const int layerIndex) {
         branchList += (*it)->m_name + " ";
     }
     branchList += "}";
-    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s, BranchList=%s , OutputSize=%s; \n",
+    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, BranchList=%s , OutputSize=%s; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), branchList.c_str(), vector2Str(m_tensorSize).c_str());
 }

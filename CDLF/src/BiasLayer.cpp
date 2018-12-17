@@ -96,6 +96,6 @@ void BiasLayer::saveStructLine(FILE *pFile) {
 }
 
 void BiasLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s: (%s, id=%d): PrevLayer=%s, OutputSize=%s; \n",
+    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, OutputSize=%s; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
 }

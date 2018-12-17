@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
     net.setUnlearningLayerID(2);
 
 
-    long epoch= 5000;
+    long epoch= 15000;
     float accuracy = 0;
     for (long i=0; i<epoch; ++i){
         net.train();
