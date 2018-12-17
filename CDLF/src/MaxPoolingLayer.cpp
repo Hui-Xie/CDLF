@@ -7,7 +7,7 @@
 #include "MaxPoolingLayer.h"
 
 
-MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, Layer *prevLayer, const vector<long> &filterSize,
+MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, Layer *prevLayer, const vector<int> &filterSize,
                                   const int stride)
         : Layer(id, name, {}) {
 
@@ -49,10 +49,10 @@ void MaxPoolingLayer::zeroParaGradient() {
 
 // Y_i = max(X_i) in filterSize range
 void MaxPoolingLayer::forward() {
-    const long N = length(m_tensorSize);
+    const int N = length(m_tensorSize);
     Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
-    for (long i=0; i< N; ++i){
-        vector<long> index = m_pYTensor->offset2Index(i);
+    for (int i=0; i< N; ++i){
+        vector<int> index = m_pYTensor->offset2Index(i);
         m_prevLayer->m_pYTensor->subTensorFromTopLeft(index*m_stride, pSubX);
         m_pYTensor->e(i) = pSubX->max();
     }
@@ -66,14 +66,14 @@ void MaxPoolingLayer::forward() {
 // dL/dX_i = dL/dY * 1 when Xi = max; 0 otherwise;
 void MaxPoolingLayer::backward(bool computeW, bool computeX) {
     if (computeX){
-        const long N = length(m_tensorSize);
+        const int N = length(m_tensorSize);
         Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
-        for (long i=0; i< N; ++i){
-            vector<long> index = m_pdYTensor->offset2Index(i);
-            vector<long> indexX = index*m_stride;
+        for (int i=0; i< N; ++i){
+            vector<int> index = m_pdYTensor->offset2Index(i);
+            vector<int> indexX = index*m_stride;
             m_prevLayer->m_pYTensor->subTensorFromTopLeft(indexX, pSubX);
-            const long maxPos = pSubX->maxPosition();
-            vector<long> maxIndex = pSubX->offset2Index(maxPos);
+            const int maxPos = pSubX->maxPosition();
+            vector<int> maxIndex = pSubX->offset2Index(maxPos);
             m_prevLayer->m_pdYTensor->e(indexX + maxIndex) += m_pdYTensor->e(i);
         }
         if (nullptr != pSubX){
@@ -87,7 +87,7 @@ void MaxPoolingLayer::updateParameters(const float lr, const string &method, con
     //null
 }
 
-long  MaxPoolingLayer::getNumParameters(){
+int  MaxPoolingLayer::getNumParameters(){
     return 0;
 }
 

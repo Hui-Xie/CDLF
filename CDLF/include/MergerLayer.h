@@ -15,7 +15,7 @@
 
 class MergerLayer : public Layer {
 public:
-    MergerLayer(const int id, const string& name, const vector<long>& tensorSize);
+    MergerLayer(const int id, const string& name, const vector<int>& tensorSize);
     ~MergerLayer();
 
     list<Layer*> m_prevLayers;
@@ -28,7 +28,7 @@ public:
 
     virtual void addPreviousLayer(Layer* prevLayer);
     void delPreviousLayer(Layer* prevLayer);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

@@ -23,8 +23,8 @@ SigmoidLayer::~SigmoidLayer(){
 void SigmoidLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = Y.getLength();
-    for (long i=0; i< N; ++i){
+    int N = Y.getLength();
+    for (int i=0; i< N; ++i){
         float exp_x = exp(-X.e(i));
         Y.e(i) = m_k/(1+exp_x);
     }
@@ -34,17 +34,17 @@ void SigmoidLayer::backward(bool computeW, bool computeX){
         Tensor<float>& Y = *m_pYTensor;
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
-        long N = dY.getLength();
+        int N = dY.getLength();
 
         // use method: dL/dx = dL/dY * dY/dx = dL/dY *k * exp(x)/(1 +exp(x))^2
         /*Tensor<float>& X = *m_prevLayer->m_pYTensor;
-        for(long i=0; i< N; ++i){
+        for(int i=0; i< N; ++i){
             float  expx = exp(X.e(i));
             dX.e(i) += dY.e(i)*m_k*expx/pow(1+expx,2);
         }*/
 
         //use method:dL/dx = dL/dY * dY/dx = dL/dy *Y*(1- Y/k);
-        for(long i=0; i< N; ++i){
+        for(int i=0; i< N; ++i){
             dX.e(i) = dY.e(i)*Y.e(i)*(1-Y.e(i)/m_k);
         }
     }
@@ -61,7 +61,7 @@ void SigmoidLayer::updateParameters(const float lr, const string& method, const 
     //null
 }
 
-long  SigmoidLayer::getNumParameters(){
+int  SigmoidLayer::getNumParameters(){
     return 0;
 }
 

@@ -43,7 +43,7 @@ void ConvCudaNet::train(){
     Tensor<float> gt({198,248,298});
     generateGaussian(&gt,0,1);
 
-    long i=0;
+    int i=0;
     while (i< iBatch){
         zeroParaGradient();
         for(int j=0; j<batchSize; ++j){

@@ -64,7 +64,7 @@ int main(int argc, char *argv[]){
     int  predictLabel;
     cout << "Hint: output file format: \n Tindex-IrealLabel.txt, Tindex-RpredictLabel.txt, e.g. T32-R4.txt, T32-P7.txt"<<endl;
     for (int i=0; i<nImages; ++i){
-        long index = rand() % 10000;
+        int index = rand() % 10000;
         mnist.getTestImageAndLabel(index, inputImage, label);
         net.autoEncode(inputImage, predictLabel, reconstrutImage);
         string filename = outputDir +"/" + "T" + to_string(i)+ "-I"+ to_string(label) +".txt";

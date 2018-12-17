@@ -15,7 +15,7 @@ public:
 
     static  int m_numSMs;
     static  int m_maxThreadsPerBlock;
-    static  long m_blocksPerGrid;
+    static  int m_blocksPerGrid;
     static  int m_numDevices;
 
     void getGPUAttr();

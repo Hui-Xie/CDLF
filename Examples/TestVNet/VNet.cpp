@@ -29,7 +29,7 @@ void VNet::train(){
     int batchSize = getBatchSize();
     int iBatch = 30;
 
-    long i=0;
+    int i=0;
     while (i< iBatch){
         zeroParaGradient();
         for(int j=0; j<batchSize; ++j){

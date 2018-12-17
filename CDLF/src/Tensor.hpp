@@ -34,7 +34,7 @@ Tensor<ValueType>::Tensor() {
 
 
 template<class ValueType>
-Tensor<ValueType>::Tensor(const vector<long> &dims) {
+Tensor<ValueType>::Tensor(const vector<int> &dims) {
     initializeMember();
     m_dims = dims;
     if (1 == m_dims.size()) {
@@ -45,7 +45,7 @@ Tensor<ValueType>::Tensor(const vector<long> &dims) {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::setDimsAndAllocateMem(const vector<long>& dims){
+void Tensor<ValueType>::setDimsAndAllocateMem(const vector<int>& dims){
     freeMem();
     m_dims = dims;
     if (1 == m_dims.size()) {
@@ -82,16 +82,16 @@ void Tensor<ValueType>::freeMem() {
 
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize() {
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) = 0;
     }
 }
 
 template<class ValueType>
 void Tensor<ValueType>::uniformInitialize(const ValueType x) {
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) = x;
     }
 }
@@ -104,7 +104,7 @@ Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor &other) {
         m_dims = other.getDims();
         generateDimsSpan();
         allocateMem();
-        long length = other.getLength();
+        int length = other.getLength();
         if (length > 0) {
         memcpy(m_data, other.getData(), length * sizeof(ValueType));
         }
@@ -118,7 +118,7 @@ Tensor<ValueType>::~Tensor() {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::copyDataFrom(void *buff, const long numBytes) {
+void Tensor<ValueType>::copyDataFrom(void *buff, const int numBytes) {
     if (numBytes > getLength() * sizeof(ValueType)) {
         cout << "Error: numBytes of Tensor::copyDataFrom is bigger than data space." << endl;
         return;
@@ -128,12 +128,12 @@ void Tensor<ValueType>::copyDataFrom(void *buff, const long numBytes) {
 }
 
 template<class ValueType>
-vector<long> Tensor<ValueType>::getDims() const {
+vector<int> Tensor<ValueType>::getDims() const {
     return m_dims;
 }
 
 template<class ValueType>
-vector<long> Tensor<ValueType>::getDimsSpan() const{
+vector<int> Tensor<ValueType>::getDimsSpan() const{
     return m_dimsSpan;
 }
 
@@ -143,7 +143,7 @@ ValueType *Tensor<ValueType>::getData() const {
 }
 
 template<class ValueType>
-long Tensor<ValueType>::getLength() const {
+int Tensor<ValueType>::getLength() const {
     return length(m_dims);
 }
 
@@ -154,14 +154,14 @@ void Tensor<ValueType>::generateDimsSpan() {
 }
 
 template<class ValueType>
-long Tensor<ValueType>::index2Offset(const vector<long> &index) const {
+int Tensor<ValueType>::index2Offset(const vector<int> &index) const {
     return index2Offset(m_dimsSpan, index);
 }
 
 template<class ValueType>
-long Tensor<ValueType>::index2Offset(const vector<long>& dimsSpan, const vector<long>& index) const{
+int Tensor<ValueType>::index2Offset(const vector<int>& dimsSpan, const vector<int>& index) const{
     int N = index.size();
-    long offset = 0;
+    int offset = 0;
     for (int i = 0; i < N; ++i) {
         offset += index[i] * dimsSpan[i];
     }
@@ -169,15 +169,15 @@ long Tensor<ValueType>::index2Offset(const vector<long>& dimsSpan, const vector<
 }
 
 template<class ValueType>
-vector<long> Tensor<ValueType>::offset2Index(const long offset) const {
+vector<int> Tensor<ValueType>::offset2Index(const int offset) const {
     return offset2Index(m_dimsSpan, offset);
 }
 
 template<class ValueType>
-vector<long> Tensor<ValueType>::offset2Index(const vector<long>& dimsSpan, const long offset) const{
+vector<int> Tensor<ValueType>::offset2Index(const vector<int>& dimsSpan, const int offset) const{
     int dim = dimsSpan.size();
-    vector<long> index(dim, 0);
-    long n = offset;
+    vector<int> index(dim, 0);
+    int n = offset;
     for (int i = 0; i < dim; ++i) {
         index[i] = n / dimsSpan[i];
         n -= index[i] * dimsSpan[i];
@@ -188,102 +188,102 @@ vector<long> Tensor<ValueType>::offset2Index(const vector<long>& dimsSpan, const
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(const vector<long> &index) const {
+ValueType &Tensor<ValueType>::e(const vector<int> &index) const {
     assert(index.size() == m_dims.size());
     return m_data[index2Offset(index)];
 }
 
 template<class ValueType>
-void Tensor<ValueType>::copyDataTo(Tensor *pTensor, const long offset, const long length) {
+void Tensor<ValueType>::copyDataTo(Tensor *pTensor, const int offset, const int length) {
     memcpy(pTensor->m_data, m_data + offset, length * sizeof(ValueType));
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long index) const {
+ValueType &Tensor<ValueType>::e(int index) const {
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long i, long j) const {
+ValueType &Tensor<ValueType>::e(int i, int j) const {
     assert(2 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long i, long j, long k) const {
+ValueType &Tensor<ValueType>::e(int i, int j, int k) const {
     assert(3 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long i, long j, long k, long l) const {
+ValueType &Tensor<ValueType>::e(int i, int j, int k, int l) const {
     assert(4 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long i, long j, long k, long l, long m) const {
+ValueType &Tensor<ValueType>::e(int i, int j, int k, int l, int m) const {
     assert(5 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3] + m * m_dimsSpan[4]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long i, long j, long k, long l, long m, long n) const {
+ValueType &Tensor<ValueType>::e(int i, int j, int k, int l, int m, int n) const {
     assert(6 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3] + m * m_dimsSpan[4] +
                   n * m_dimsSpan[5]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::e(long i, long j, long k, long l, long m, long n, long o) const {
+ValueType &Tensor<ValueType>::e(int i, int j, int k, int l, int m, int n, int o) const {
     assert(7 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3] + m * m_dimsSpan[4] +
                   n * m_dimsSpan[5] + o * m_dimsSpan[6]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator[](long index) const {
+ValueType &Tensor<ValueType>::operator[](int index) const {
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long index) const {
+ValueType &Tensor<ValueType>::operator()(int index) const {
     return m_data[index];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long i, long j) const {
+ValueType &Tensor<ValueType>::operator()(int i, int j) const {
     assert(2 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long i, long j, long k) const {
+ValueType &Tensor<ValueType>::operator()(int i, int j, int k) const {
     assert(3 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long i, long j, long k, long l) const {
+ValueType &Tensor<ValueType>::operator()(int i, int j, int k, int l) const {
     assert(4 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long i, long j, long k, long l, long m) const {
+ValueType &Tensor<ValueType>::operator()(int i, int j, int k, int l, int m) const {
     assert(5 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3] + m * m_dimsSpan[4]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long i, long j, long k, long l, long m, long n) const {
+ValueType &Tensor<ValueType>::operator()(int i, int j, int k, int l, int m, int n) const {
     assert(6 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3] + m * m_dimsSpan[4] +
                   n * m_dimsSpan[5]];
 }
 
 template<class ValueType>
-ValueType &Tensor<ValueType>::operator()(long i, long j, long k, long l, long m, long n, long o) const {
+ValueType &Tensor<ValueType>::operator()(int i, int j, int k, int l, int m, int n, int o) const {
     assert(7 == m_dims.size());
     return m_data[i * m_dimsSpan[0] + j * m_dimsSpan[1] + k * m_dimsSpan[2] + l * m_dimsSpan[3] + m * m_dimsSpan[4] +
                   n * m_dimsSpan[5] + o * m_dimsSpan[6]];
@@ -292,12 +292,12 @@ ValueType &Tensor<ValueType>::operator()(long i, long j, long k, long l, long m,
 // transpose operation only supports 2D matrix
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::transpose() {
-    vector<long> newDims = reverseVector(m_dims);
+    vector<int> newDims = reverseVector(m_dims);
     Tensor tensor(newDims);
     int dim = m_dims.size();
     assert(dim == 2);
-    for (long i = 0; i < newDims[0]; ++i) {
-        for (long j = 0; j < newDims[1]; ++j) {
+    for (int i = 0; i < newDims[0]; ++i) {
+        for (int j = 0; j < newDims[1]; ++j) {
             tensor.e({i, j}) = e({j, i});
         }
     }
@@ -309,7 +309,7 @@ Tensor<ValueType> Tensor<ValueType>::transpose() {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator*(const Tensor<ValueType> &other) {
     int thisDim = m_dims.size();
-    vector<long> otherDims = other.getDims();
+    vector<int> otherDims = other.getDims();
     int otherDim = otherDims.size();
     if (m_dims[thisDim - 1] != otherDims[0]) {
         cout << "Error: Tensor product has un-matching dimension." << endl;
@@ -317,12 +317,12 @@ Tensor<ValueType> Tensor<ValueType>::operator*(const Tensor<ValueType> &other) {
     }
 
     if (2 == thisDim && 2 == otherDim) {
-        vector<long> newDims{m_dims[0], otherDims[1]};
+        vector<int> newDims{m_dims[0], otherDims[1]};
         Tensor tensor(newDims);
-        for (long i = 0; i < newDims[0]; ++i) {
-            for (long j = 0; j < newDims[1]; ++j) {
+        for (int i = 0; i < newDims[0]; ++i) {
+            for (int j = 0; j < newDims[1]; ++j) {
                 ValueType value = 0;
-                for (long k = 0; k < m_dims[1]; ++k) {
+                for (int k = 0; k < m_dims[1]; ++k) {
                     value += e({i, k}) * other.e({k, j});
                 }
                 tensor.e({i, j}) = value;
@@ -339,8 +339,8 @@ Tensor<ValueType> Tensor<ValueType>::operator*(const Tensor<ValueType> &other) {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator+(const float other) {
     Tensor tensor(m_dims);
-    long N = tensor.getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = tensor.getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) + other;
     }
     return tensor;
@@ -349,8 +349,8 @@ Tensor<ValueType> Tensor<ValueType>::operator+(const float other) {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator-(const float other) {
     Tensor tensor(m_dims);
-    long N = tensor.getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = tensor.getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) - other;
     }
     return tensor;
@@ -359,8 +359,8 @@ Tensor<ValueType> Tensor<ValueType>::operator-(const float other) {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator*(const float factor) {
     Tensor tensor(m_dims);
-    long N = tensor.getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = tensor.getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) * factor;
     }
     return tensor;
@@ -371,8 +371,8 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator+(const Tensor<ValueType> &other) {
     assert(sameVector(m_dims, other.getDims()));
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) + other.e(i);
     }
     return tensor;
@@ -383,8 +383,8 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::operator-(const Tensor<ValueType> &other) {
     assert(sameVector(m_dims, other.getDims()));
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) - other.e(i);
     }
     return tensor;
@@ -397,8 +397,8 @@ Tensor<ValueType> Tensor<ValueType>::operator/(const float divisor) {
     }
 
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) / divisor;
     }
     return tensor;
@@ -407,8 +407,8 @@ Tensor<ValueType> Tensor<ValueType>::operator/(const float divisor) {
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator+=(const Tensor &right) {
     assert(sameVector(m_dims, right.getDims()));
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) += right.e(i);
     }
     return *this;
@@ -417,8 +417,8 @@ Tensor<ValueType> &Tensor<ValueType>::operator+=(const Tensor &right) {
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator-=(const Tensor &right) {
     assert(sameVector(m_dims, right.getDims()));
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) -= right.e(i);
     }
     return *this;
@@ -430,8 +430,8 @@ bool Tensor<ValueType>::operator==(const Tensor &right) {
     else {
         if (!sameVector(getDims(), right.getDims())) return false;
         else {
-            long N = getLength();
-            for (long i = 0; i < N; ++i) {
+            int N = getLength();
+            for (int i = 0; i < N; ++i) {
                 if (e(i) != right.e(i)) return false;
             }
             return true;
@@ -446,8 +446,8 @@ bool Tensor<ValueType>::operator!=(const Tensor &right) {
 
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator+=(const float right) {
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) += right;
     }
     return *this;
@@ -455,8 +455,8 @@ Tensor<ValueType> &Tensor<ValueType>::operator+=(const float right) {
 
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator-=(const float right) {
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) -= right;
     }
     return *this;
@@ -464,8 +464,8 @@ Tensor<ValueType> &Tensor<ValueType>::operator-=(const float right) {
 
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator*=(const float factor) {
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         e(i) *= factor;
     }
     return *this;
@@ -474,8 +474,8 @@ Tensor<ValueType> &Tensor<ValueType>::operator*=(const float factor) {
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::operator/=(const float divisor) {
     if (0 != divisor) {
-        long N = getLength();
-        for (long i = 0; i < N; ++i) {
+        int N = getLength();
+        for (int i = 0; i < N; ++i) {
             e(i) /= divisor;
         }
     }
@@ -486,10 +486,10 @@ Tensor<ValueType> &Tensor<ValueType>::operator/=(const float divisor) {
 
 template<class ValueType>
 float Tensor<ValueType>::sum() {
-    long N = getLength();
+    int N = getLength();
     float sum = 0;
     //todo: sum use GPU will implement in the future, which will speed up from N to log(N)
-    for (long i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i) {
         sum += e(i);
     }
     return sum;
@@ -497,7 +497,7 @@ float Tensor<ValueType>::sum() {
 
 template<class ValueType>
 float Tensor<ValueType>::average() {
-    long N = getLength();
+    int N = getLength();
     if (0 == N) return 0;
     else {
         return sum() / N;
@@ -507,10 +507,10 @@ float Tensor<ValueType>::average() {
 template<class ValueType>
 float Tensor<ValueType>::variance() {
     float mu = average();
-    long N = getLength();
+    int N = getLength();
     if (1 == N || 0 == N) return 0;
     float sum = 0;
-    for (long i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i) {
         sum += pow((e(i) - mu), 2);
     }
     return sum / (N - 1); // population variance
@@ -518,9 +518,9 @@ float Tensor<ValueType>::variance() {
 
 template<class ValueType>
 float Tensor<ValueType>::max() {
-    long N = getLength();
+    int N = getLength();
     float maxValue = (float) e(0);
-    for (long i = 1; i < N; ++i) {
+    for (int i = 1; i < N; ++i) {
         if (e(i) > maxValue) maxValue = e(i);
     }
     return maxValue;
@@ -528,20 +528,20 @@ float Tensor<ValueType>::max() {
 
 template<class ValueType>
 float Tensor<ValueType>::min() {
-    long N = getLength();
+    int N = getLength();
     float minValue = (float) e(0);
-    for (long i = 1; i < N; ++i) {
+    for (int i = 1; i < N; ++i) {
         if (e(i) < minValue) minValue = (float) e(i);
     }
     return minValue;
 }
 
 template<class ValueType>
-long Tensor<ValueType>::maxPosition() {
-    long N = getLength();
+int Tensor<ValueType>::maxPosition() {
+    int N = getLength();
     ValueType maxValue = e(0);
-    long maxPos = 0;
-    for (long i = 1; i < N; ++i) {
+    int maxPos = 0;
+    for (int i = 1; i < N; ++i) {
         if (e(i) > maxValue) {
             maxValue = e(i);
             maxPos = i;
@@ -556,12 +556,12 @@ long Tensor<ValueType>::maxPosition() {
  * */
 template<class ValueType>
 Tensor<unsigned char> Tensor<ValueType>::getMaxPositionSubTensor() {
-    vector<long> subTensorDims = m_dims;
+    vector<int> subTensorDims = m_dims;
     subTensorDims.erase(subTensorDims.begin());
     Tensor<unsigned char> subTensor(subTensorDims);
     int compareN = m_dims[0];
-    long N = subTensor.getLength();
-    for (long j = 0; j < N; ++j) {
+    int N = subTensor.getLength();
+    for (int j = 0; j < N; ++j) {
         int maxIndex = 0;
         int maxValue = e(j);
         for (int i = 1; i < compareN; ++i) {
@@ -593,7 +593,7 @@ void Tensor<ValueType>::save(const string& fullFilename, bool matrix2D){
         fprintf(pFile, "\r\n");
     }
     else {
-        long N = getLength();
+        int N = getLength();
         for (int i = 0; i < N; ++i) {
             fprintf(pFile, "%f ", e(i));
         }
@@ -618,7 +618,7 @@ void Tensor<ValueType>::print(bool fixWidth){
         printf("\n");
     }
     else {
-        long N = getLength();
+        int N = getLength();
         for (int i = 0; i < N; ++i) {
             printf("%f ", e(i));
         }
@@ -643,7 +643,7 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
         }
     }
     else {
-        long N = getLength();
+        int N = getLength();
         for (int i = 0; i < N; ++i) {
             fscanf(pFile, "%f ", &e(i));
         }
@@ -655,8 +655,8 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::ln() {
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = log(e(i));
     }
     return tensor;
@@ -665,8 +665,8 @@ Tensor<ValueType> Tensor<ValueType>::ln() {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::expon(){
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = exp(e(i));
     }
     return tensor;
@@ -676,8 +676,8 @@ Tensor<ValueType> Tensor<ValueType>::expon(){
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::sign(){
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i)>= 0 ? (e(i)>0? 1:0):-1;
     }
     return tensor;
@@ -689,8 +689,8 @@ template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::hadamard(const Tensor &right) {
     assert(sameVector(m_dims, right.m_dims));
     Tensor tensor(m_dims);
-    long N = getLength();
-    for (long i = 0; i < N; ++i) {
+    int N = getLength();
+    for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) * right.e(i);
     }
     return tensor;
@@ -713,9 +713,9 @@ Tensor<ValueType> Tensor<ValueType>::vectorize() {
 }
 
 template<class ValueType>
-Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims) {
+Tensor<ValueType> Tensor<ValueType>::reshape(vector<int> newDims) {
     int dim = newDims.size();
-    long newN = 1;
+    int newN = 1;
     for (int i = 0; i < dim; ++i) {
         newN *= newDims[i];
     }
@@ -731,25 +731,25 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<long> newDims) {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::subTensorFromTopLeft(const vector<long> &tlIndex, Tensor *pTensor, const int stride) const {
+void Tensor<ValueType>::subTensorFromTopLeft(const vector<int> &tlIndex, Tensor *pTensor, const int stride) const {
     assert(pTensor->getDims().size() == tlIndex.size());
     subTensorFromTopLeft(index2Offset(tlIndex), pTensor, stride);
 }
 
 template<class ValueType>
-void Tensor<ValueType>::subTensorFromTopLeft(const long  offset, Tensor* pTensor, const int stride) const {
-    vector<long> dims = pTensor->getDims();
+void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor, const int stride) const {
+    vector<int> dims = pTensor->getDims();
     const int dim = dims.size();
     size_t  elementLen = sizeof(ValueType);
     size_t  rowLen = dims[dim-1]*elementLen;
 
     ValueType* dstOffset = pTensor->m_data;
     ValueType* srcOffset = m_data+offset;
-    vector<long> index(dim, 0);
+    vector<int> index(dim, 0);
     int p = dim-2;
     while (index[0] != dims[0]) {
-        long dstNum = 0;
-        long srcNum = 0;
+        int dstNum = 0;
+        int srcNum = 0;
         for (int i=0; i< dim-1; ++i){
             dstNum += pTensor->m_dimsSpan[i]*index[i];
             srcNum += m_dimsSpan[i]*index[i]*stride;
@@ -776,23 +776,23 @@ void Tensor<ValueType>::subTensorFromTopLeft(const long  offset, Tensor* pTensor
 }
 
 template<class ValueType>
-void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<long>& tensorSizeBeforeCollapse, const vector<long>& paddingWidthVec, const int stride) const{
+void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& paddingWidthVec, const int stride) const{
     assert(tensorSizeBeforeCollapse.size() == paddingWidthVec.size());
     assert(length(tensorSizeBeforeCollapse) == length(m_dims));
     const int dim = tensorSizeBeforeCollapse.size();
-    vector<long> newTensorSize(dim, 0);
+    vector<int> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
         newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + 2 + paddingWidthVec[i]*2;
         // in above, "+2 " is to make sure the inputSize =even still get correct diluted Tensor
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();
-    long N = getLength();
-    vector<long> dimsSpanBeforeCollapse = genDimsSpan(tensorSizeBeforeCollapse);
-    for (long oldOffset=0; oldOffset<N; ++oldOffset){
-        vector<long> oldIndex = offset2Index(dimsSpanBeforeCollapse, oldOffset);
-        vector<long> newIndex = oldIndex* stride+ paddingWidthVec;
-        long newOffset = pTensor->index2Offset(newIndex);
+    int N = getLength();
+    vector<int> dimsSpanBeforeCollapse = genDimsSpan(tensorSizeBeforeCollapse);
+    for (int oldOffset=0; oldOffset<N; ++oldOffset){
+        vector<int> oldIndex = offset2Index(dimsSpanBeforeCollapse, oldOffset);
+        vector<int> newIndex = oldIndex* stride+ paddingWidthVec;
+        int newOffset = pTensor->index2Offset(newIndex);
         pTensor->e(newOffset) = e(oldOffset);
     }
 }
@@ -800,7 +800,7 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<long>& tensorSize
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::column(const int index) {
     assert(2 == m_dims.size());
-    vector<long> newDims;
+    vector<int> newDims;
     newDims.push_back(m_dims[0]);
     newDims.push_back(1);
     Tensor<ValueType> tensor(newDims);
@@ -813,7 +813,7 @@ Tensor<ValueType> Tensor<ValueType>::column(const int index) {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::row(const int index) {
     assert(2 == m_dims.size());
-    vector<long> newDims;
+    vector<int> newDims;
     newDims.push_back(1);
     newDims.push_back(m_dims[1]);
     Tensor<ValueType> tensor(newDims);
@@ -824,11 +824,11 @@ Tensor<ValueType> Tensor<ValueType>::row(const int index) {
 template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::slice(const int index) {
     assert(3 == m_dims.size());
-    vector<long> newDims;
+    vector<int> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     Tensor<ValueType> tensor(newDims);
-    long N = tensor.getLength();
+    int N = tensor.getLength();
     copyDataTo(&tensor, index * N, N);
     return tensor;
 }
@@ -836,11 +836,11 @@ Tensor<ValueType> Tensor<ValueType>::slice(const int index) {
 template<class ValueType>
 void Tensor<ValueType>::volume(const int index, Tensor *&pTensor) {
     assert(4 == m_dims.size());
-    vector<long> newDims;
+    vector<int> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     pTensor = new Tensor<ValueType>(newDims);
-    long N = pTensor->getLength();
+    int N = pTensor->getLength();
     copyDataTo(pTensor, index * N, N);
 
 }
@@ -848,24 +848,24 @@ void Tensor<ValueType>::volume(const int index, Tensor *&pTensor) {
 template<class ValueType>
 void Tensor<ValueType>::fourDVolume(const int index, Tensor *&pTensor) {
     assert(5 == m_dims.size());
-    vector<long> newDims;
+    vector<int> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     pTensor = new Tensor<ValueType>(newDims);
-    long N = pTensor->getLength();
+    int N = pTensor->getLength();
     copyDataTo(pTensor, index * N, N);
 }
 
 template<class ValueType>
 void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
-    vector<long> newDims;
+    vector<int> newDims;
     newDims = m_dims;
     newDims.erase(newDims.begin());
     if (1 == newDims.size()) {
         newDims.insert(newDims.begin(), 1);
     }
     pTensor = new Tensor<ValueType>(newDims);
-    long N = pTensor->getLength();
+    int N = pTensor->getLength();
     copyDataTo(pTensor, index * N, N);
 }
 
@@ -874,22 +874,22 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
 template<class ValueType>
 float Tensor<ValueType>::conv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
-    const long N = getLength();
+    const int N = getLength();
     nThreads = (N < 1000)? 1 : nThreads;
     float sum = 0.0;
     if (1 == nThreads) {
-        for (long i = 0; i < N; ++i) {
+        for (int i = 0; i < N; ++i) {
             sum += e(i) * right.e(i);
         }
     }
     else {
-        const long NRange = (N + nThreads -1)/nThreads;
+        const int NRange = (N + nThreads -1)/nThreads;
         float *partSum = new float[nThreads];
         vector<std::thread> threadVec;
         for (int t = 0; t < nThreads; ++t) {
             threadVec.push_back(thread([this, N, partSum, t, &right, NRange]() {
                                            partSum[t] = 0;
-                                           for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
+                                           for (int i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                                                partSum[t] += e(i) * right.e(i);
                                            }
                                        }
@@ -909,22 +909,22 @@ float Tensor<ValueType>::conv(const Tensor &right, int nThreads) const {
 template<class ValueType>
 float Tensor<ValueType>::flipConv(const Tensor &right, int nThreads) const {
     assert(sameLength(m_dims, right.getDims()));
-    long N = getLength();
+    int N = getLength();
     nThreads = (N < 1000)? 1 : nThreads;
     float sum = 0.0;
     if (1 == nThreads) {
-        for (long i = 0; i < N; ++i) {
+        for (int i = 0; i < N; ++i) {
             sum += e(N - i - 1) * right.e(i);
         }
     }
     else {
-        const long NRange = (N + nThreads -1)/nThreads;
+        const int NRange = (N + nThreads -1)/nThreads;
         float *partSum = new float[nThreads];
         vector<std::thread> threadVec;
         for (int t = 0; t < nThreads; ++t) {
             threadVec.push_back(thread([this, N, partSum, t, &right, NRange]() {
                                            partSum[t] = 0;
-                                           for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
+                                           for (int i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                                                partSum[t] += e(N-i-1) * right.e(i);
                                            }
                                        }
@@ -943,8 +943,8 @@ float Tensor<ValueType>::flipConv(const Tensor &right, int nThreads) const {
 
 template<class ValueType>
 Tensor<ValueType> &Tensor<ValueType>::flip() {
-    long N = getLength();
-    long M = N / 2;
+    int N = getLength();
+    int M = N / 2;
     ValueType temp = 0;
     for (int i = 0; i < M; ++i) {
         temp = e(i);

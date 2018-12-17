@@ -8,7 +8,7 @@
 #include <thread>
 
 TransposedConvolutionLayer::TransposedConvolutionLayer(const int id, const string &name, Layer *prevLayer,
-                                                       const vector<long> &filterSize,
+                                                       const vector<int> &filterSize,
                                                        const int numFilters, const int stride)
         : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride) {
     m_type = "TransposedConvolutionLayer";
@@ -39,12 +39,12 @@ void TransposedConvolutionLayer::updateTensorSize() {
 
 // Y = W*X
 void TransposedConvolutionLayer::forward() {
-    long N = length(m_tensorSize) / m_numFilters;
-    vector<long> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
+    int N = length(m_tensorSize) / m_numFilters;
+    vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
     int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
-    const long NRange = (N +nThread -1)/nThread;
+    const int NRange = (N +nThread -1)/nThread;
 
     Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread*m_numFilters];
 
@@ -55,8 +55,8 @@ void TransposedConvolutionLayer::forward() {
                     [this, idxF, t, nThread, pSubX, N, &dimsSpanBeforeCollpase, pExtendX, NRange]() {
                         const int th = t+idxF*nThread; // thread index
                         pSubX[th] = new Tensor<float>(m_filterSize);
-                        long offseti = idxF*N;
-                        for (long i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
+                        int offseti = idxF*N;
+                        for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             pExtendX->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i), pSubX[th]);
                             m_pYTensor->e(offseti+i) = pSubX[th]->conv(*m_pW[idxF]);
                         }
@@ -160,12 +160,12 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
 
 
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
-    const long N = pdW->getLength();
+    const int N = pdW->getLength();
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
     Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
     const int nThreads = (CPUAttr::m_numCPUCore + m_numFilters - 1)/m_numFilters;
-    for (long i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i) {
         pExtendX->subTensorFromTopLeft(pdW->offset2Index(i), pSubX, 1);
         pdW->e(i) += pSubX->conv(*pdY, nThreads); // + is for batch processing
     }
@@ -187,9 +187,9 @@ TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tens
     if (nullptr == pdX) {
         pdX = m_prevLayer->m_pdYTensor;
     }
-    const long N = pdX->getLength();
+    const int N = pdX->getLength();
     int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
-    const long NRange = (N +nThread -1)/nThread;
+    const int NRange = (N +nThread -1)/nThread;
 
     Tensor<float> **pSubExpandDy = (Tensor<float> **) new void *[nThread];
     vector<std::thread> threadVec;
@@ -197,8 +197,8 @@ TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tens
         threadVec.push_back(thread(
                 [this, t, pExpandDY, pSubExpandDy, pdX, N, pW, NRange]() {
                     pSubExpandDy[t] = new Tensor<float>(m_filterSize);
-                    for (long i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
-                        vector<long> index = pdX->offset2Index(i);
+                    for (int i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
+                        vector<int> index = pdX->offset2Index(i);
                         index = index * m_stride; // convert to coordinate of extendDY
                         pExpandDY->subTensorFromTopLeft(index, pSubExpandDy[t], 1);
                         pdX->e(i) += pW->flipConv(*pSubExpandDy[t]);

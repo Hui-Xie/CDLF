@@ -19,14 +19,14 @@ void printUsage() {
 
 }
 
-int convertCommaStrToVector(const string commaStr, std::vector<long> &widthVector) {
+int convertCommaStrToVector(const string commaStr, std::vector<int> &widthVector) {
     string widthStr = commaStr;
     int NChar = widthStr.length();
     for (int i = 0; i < NChar; ++i) {
         if (',' == widthStr.at(i)) widthStr.at(i) = ' ';
     }
     std::stringstream iss(widthStr, ios_base::in);
-    long number;
+    int number;
     while (iss >> number) {
         widthVector.push_back(number);
     }
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
     string stringLayersWidth = string(argv[1]);
-    vector<long> layerWidthVector;
+    vector<int> layerWidthVector;
     int result = convertCommaStrToVector(stringLayersWidth, layerWidthVector);
     if (0 != result) {
         cout << "Layer width string has error. Exit." << endl;

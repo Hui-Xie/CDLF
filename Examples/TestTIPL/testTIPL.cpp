@@ -48,11 +48,11 @@ int main(int argc, char *argv[]){
     }
 
     //change value of pImage,
-    vector<long> tensorSize = pImage->getDims();
-    vector<long> halfTensorSize = tensorSize /2;
-    for(long i=halfTensorSize[0]-20;i<halfTensorSize[0]+20;++i)
-        for(long j=halfTensorSize[1]-20; j<halfTensorSize[1]+20;++j)
-            for(long k=halfTensorSize[2]-20;k<halfTensorSize[2]+20;++k){
+    vector<int> tensorSize = pImage->getDims();
+    vector<int> halfTensorSize = tensorSize /2;
+    for(int i=halfTensorSize[0]-20;i<halfTensorSize[0]+20;++i)
+        for(int j=halfTensorSize[1]-20; j<halfTensorSize[1]+20;++j)
+            for(int k=halfTensorSize[2]-20;k<halfTensorSize[2]+20;++k){
                 pImage->e(i,j,k) = 0;  //dig a hole in the middle of brain.
             }
 

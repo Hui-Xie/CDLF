@@ -20,37 +20,37 @@ template<class ValueType>
 class Tensor {
 public:
     Tensor();
-    Tensor(const vector<long>& dims);
+    Tensor(const vector<int>& dims);
     Tensor(const Tensor& other);
     Tensor& operator= (const Tensor& other);
     ~Tensor();
 
-    void copyDataFrom(void* buff, const long numBytes);
+    void copyDataFrom(void* buff, const int numBytes);
 
 
-    vector<long> getDims() const;
-    vector<long> getDimsSpan() const;
+    vector<int> getDims() const;
+    vector<int> getDimsSpan() const;
     ValueType* getData() const;
-    long getLength() const;
+    int getLength() const;
 
-    void setDimsAndAllocateMem(const vector<long>& dims);
+    void setDimsAndAllocateMem(const vector<int>& dims);
 
-    inline ValueType& e(const vector<long>& index)const;
-    inline ValueType& e(long index) const;
-    inline ValueType& e(long i, long j) const;
-    inline ValueType& e(long i, long j, long k) const;
-    inline ValueType& e(long i, long j, long k, long l)const;
-    inline ValueType& e(long i, long j, long k, long l, long m)const;
-    inline ValueType& e(long i, long j, long k, long l, long m, long n)const;
-    inline ValueType& e(long i, long j, long k, long l, long m, long n, long o)const;
-    inline ValueType& operator[] (long index) const;
-    inline ValueType& operator() (long index) const;
-    inline ValueType& operator() (long i, long j) const;
-    inline ValueType& operator() (long i, long j, long k) const;
-    inline ValueType& operator() (long i, long j, long k, long l) const;
-    inline ValueType& operator() (long i, long j, long k, long l, long m) const;
-    inline ValueType& operator() (long i, long j, long k, long l, long m, long n) const;
-    inline ValueType& operator() (long i, long j, long k, long l, long m, long n, long o) const;
+    inline ValueType& e(const vector<int>& index)const;
+    inline ValueType& e(int index) const;
+    inline ValueType& e(int i, int j) const;
+    inline ValueType& e(int i, int j, int k) const;
+    inline ValueType& e(int i, int j, int k, int l)const;
+    inline ValueType& e(int i, int j, int k, int l, int m)const;
+    inline ValueType& e(int i, int j, int k, int l, int m, int n)const;
+    inline ValueType& e(int i, int j, int k, int l, int m, int n, int o)const;
+    inline ValueType& operator[] (int index) const;
+    inline ValueType& operator() (int index) const;
+    inline ValueType& operator() (int i, int j) const;
+    inline ValueType& operator() (int i, int j, int k) const;
+    inline ValueType& operator() (int i, int j, int k, int l) const;
+    inline ValueType& operator() (int i, int j, int k, int l, int m) const;
+    inline ValueType& operator() (int i, int j, int k, int l, int m, int n) const;
+    inline ValueType& operator() (int i, int j, int k, int l, int m, int n, int o) const;
     Tensor transpose();
 
 
@@ -81,7 +81,7 @@ public:
     float variance();
     float max();
     float min();
-    long maxPosition();
+    int maxPosition();
     Tensor<unsigned char> getMaxPositionSubTensor();
 
     void save(const string& fullFilename, bool matrix2D=false);
@@ -94,14 +94,14 @@ public:
     Tensor hadamard(const Tensor& right); //element-wise product
     Tensor vectorize();
     float  dotProduct(const Tensor& right);
-    Tensor reshape(vector<long> newDims);
+    Tensor reshape(vector<int> newDims);
 
     //before using subTensor function, user must allocate the memory of pTensor;
-    void subTensorFromTopLeft(const vector<long>& tlIndex, Tensor* pTensor, const int stride =1) const ;
-    void subTensorFromTopLeft(const long  offset, Tensor* pTensor, const int stride =1) const ;
+    void subTensorFromTopLeft(const vector<int>& tlIndex, Tensor* pTensor, const int stride =1) const ;
+    void subTensorFromTopLeft(const int  offset, Tensor* pTensor, const int stride =1) const ;
 
     //dilute function will automatic allocate memory for pTensor
-    void dilute(Tensor* & pTensor, const vector<long>& tensorSizeBeforeCollapse, const vector<long>& paddingWidthVec, const int stride) const;
+    void dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& paddingWidthVec, const int stride) const;
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);
@@ -115,23 +115,23 @@ public:
     Tensor& flip();
     float flipConv(const Tensor& right, int nThreads=1) const;
 
-    inline vector<long> offset2Index(const long offset) const;
-    inline vector<long> offset2Index(const vector<long>& dimsSpan, const long offset) const;
+    inline vector<int> offset2Index(const int offset) const;
+    inline vector<int> offset2Index(const vector<int>& dimsSpan, const int offset) const;
 
 
 private:
-    vector<long> m_dims;
-    vector<long> m_dimsSpan; //express change of index leads how many data storage span.
+    vector<int> m_dims;
+    vector<int> m_dimsSpan; //express change of index leads how many data storage span.
     ValueType* m_data; //all data are stored in column major. Namely, the the index of 0th dimension varies most slowly
 
     void initializeMember();
     void allocateMem();
     void freeMem();
     void generateDimsSpan();
-    inline long index2Offset(const vector<long>& index) const;
-    inline long index2Offset(const vector<long>& dimsSpan, const vector<long>& index) const;
+    inline int index2Offset(const vector<int>& index) const;
+    inline int index2Offset(const vector<int>& dimsSpan, const vector<int>& index) const;
 
-    void copyDataTo(Tensor* pTensor, const long offset, const long length);
+    void copyDataTo(Tensor* pTensor, const int offset, const int length);
 
 };
 

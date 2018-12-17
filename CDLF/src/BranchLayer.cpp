@@ -46,7 +46,7 @@ void BranchLayer::addNextLayer(Layer* nextLayer){
     }
 }
 
-long BranchLayer::getNumParameters(){
+int BranchLayer::getNumParameters(){
     return 0;
 
 }

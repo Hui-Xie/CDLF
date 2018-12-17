@@ -5,7 +5,7 @@
 #include <ReshapeLayer.h>
 
 
-ReshapeLayer::ReshapeLayer(const int id, const string& name,Layer* prevLayer, const vector<long>& outputSize)
+ReshapeLayer::ReshapeLayer(const int id, const string& name,Layer* prevLayer, const vector<int>& outputSize)
         : Layer(id,name, outputSize){
     m_type = "ReshapeLayer";
     addPreviousLayer(prevLayer);
@@ -22,7 +22,7 @@ ReshapeLayer::~ReshapeLayer(){
 void ReshapeLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    const long N = X.getLength();
+    const int N = X.getLength();
     Y.copyDataFrom(X.getData(), N*sizeof(float));
 }
 void ReshapeLayer::backward(bool computeW, bool computeX){
@@ -44,7 +44,7 @@ void ReshapeLayer::updateParameters(const float lr, const string& method, const 
     //null
 }
 
-long  ReshapeLayer::getNumParameters(){
+int  ReshapeLayer::getNumParameters(){
     return 0;
 }
 

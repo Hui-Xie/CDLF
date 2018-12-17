@@ -11,7 +11,7 @@
 
 class TransposedConvolutionLayer : public ConvolutionBasicLayer {
 public:
-    TransposedConvolutionLayer(const int id, const string& name, Layer* prevLayer, const vector<long>& filterSize,
+    TransposedConvolutionLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize,
                      const int numFilters, const int stride);
     ~TransposedConvolutionLayer();
 

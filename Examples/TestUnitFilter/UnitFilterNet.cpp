@@ -28,15 +28,15 @@ void UnitFilterNet::build(){
 }
 
 void UnitFilterNet::train(){
-    long nIter = 0;
+    int nIter = 0;
     InputLayer* inputLayer = (InputLayer*)getInputLayer();
     LossLayer* lossLayer = (LossLayer* ) getFinalLayer();
-    long maxIteration = 1000;
+    int maxIteration = 1000;
     int batchSize = getBatchSize();
     float lr = getLearningRate();
-    long numBatch =  (maxIteration + batchSize -1 )/ batchSize;
+    int numBatch =  (maxIteration + batchSize -1 )/ batchSize;
 
-    long nBatch = 0;
+    int nBatch = 0;
     while(nBatch < numBatch)
     {
         if (getJudgeLoss() && lossLayer->getLoss()< getLossTolerance()){

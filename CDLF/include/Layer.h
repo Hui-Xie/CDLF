@@ -21,7 +21,7 @@ using namespace std;
 
 class Layer {
 public:
-    Layer(const int id, const string& name, const vector<long>& tensorSize);
+    Layer(const int id, const string& name, const vector<int>& tensorSize);
     ~Layer();
 
     int m_id; // id >0, 0 means null;
@@ -31,7 +31,7 @@ public:
     string m_attribute; //Some supplement information for layer type
 
     Layer*  m_prevLayer;
-    vector<long>  m_tensorSize;
+    vector<int>  m_tensorSize;
     Tensor<float>* m_pYTensor;             //the output of this layer
     Tensor<float>* m_pdYTensor;          //dL/dy,where L is Loss
 
@@ -42,7 +42,7 @@ public:
     virtual  void forward()=0;
     virtual  void backward(bool computeW, bool computeX = true)=0;
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1) = 0;
-    virtual  long getNumParameters() = 0; // return the number of learning parameters
+    virtual  int getNumParameters() = 0; // return the number of learning parameters
 
     // save and load methods are only for learning parameters
     virtual  void save(const string& netDir)=0;

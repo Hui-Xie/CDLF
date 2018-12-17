@@ -14,7 +14,7 @@ using namespace std;
 // where y and b is m-D vector, y is output vector;
 //       x is n-D input vector
 //       W is m*n dimensional matrix
-FCLayer::FCLayer(const int id, const string &name,  Layer *prevLayer, const long outputWidth)
+FCLayer::FCLayer(const int id, const string &name,  Layer *prevLayer, const int outputWidth)
 : Layer(id, name,{outputWidth,1})
 {
     m_type = "FCLayer";
@@ -49,7 +49,7 @@ FCLayer::~FCLayer() {
 void FCLayer::initialize(const string &initialMethod) {
     if ("Xavier" == initialMethod) {
         xavierInitialize(m_pW);
-        long nRow = m_pBTensor->getDims()[0];
+        int nRow = m_pBTensor->getDims()[0];
         const float sigmaB = 1.0 / nRow;
         generateGaussian(m_pBTensor, 0, sigmaB);
     } else {
@@ -106,7 +106,7 @@ void FCLayer::printdWanddBVector() {
     m_pdBTensor->transpose().print();
 }
 
-long FCLayer::getNumParameters(){
+int FCLayer::getNumParameters(){
     return m_pW->getLength() + m_pBTensor->getLength();
 }
 

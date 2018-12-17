@@ -37,7 +37,7 @@ void IdentityLayer::updateParameters(const float lr, const string& method, const
     //null
 }
 
-long IdentityLayer::getNumParameters(){
+int IdentityLayer::getNumParameters(){
     return 0;
 }
 

@@ -25,7 +25,7 @@ ExponentialLayer::~ExponentialLayer(){
 void ExponentialLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = Y.getLength();
+    int N = Y.getLength();
     Y = X.expon();
 }
 void ExponentialLayer::backward(bool computeW, bool computeX){
@@ -33,7 +33,7 @@ void ExponentialLayer::backward(bool computeW, bool computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
         Tensor<float>& X = *m_prevLayer->m_pYTensor;
-        long N = dY.getLength();
+        int N = dY.getLength();
         dX += dY.hadamard(X.expon());
     }
 }
@@ -49,7 +49,7 @@ void ExponentialLayer::updateParameters(const float lr, const string& method, co
     //null
 }
 
-long ExponentialLayer::getNumParameters(){
+int ExponentialLayer::getNumParameters(){
     return 0;
 }
 

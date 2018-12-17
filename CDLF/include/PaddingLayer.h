@@ -12,7 +12,7 @@
 class PaddingLayer : public Layer {
 public:
 
-    PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<long>& tensorSize);
+    PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& tensorSize);
 
     ~PaddingLayer();
 
@@ -25,7 +25,7 @@ public:
     virtual void backward(bool computeW, bool computeX = true);
 
     virtual void updateParameters(const float lr, const string &method, const int batchSize = 1);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
@@ -33,7 +33,7 @@ public:
     virtual  void printStruct(const int layerIndex);
 
 private:
-    vector<long> m_start;
+    vector<int> m_start;
 
 };
 

@@ -16,12 +16,12 @@ Segmentation3DNet::~Segmentation3DNet(){
 }
 
 void Segmentation3DNet::quicklySwitchTrainG_D(){
-    const long N = m_pDataMgr->m_NTrainFile;
+    const int N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pGNet->getBatchSize();
-    long numBatch = (N + batchSize -1)  / batchSize;
-    long nIter = 0;
-    long batch = 0;
-    vector<long> randSeq = generateRandomSequence(N);
+    int numBatch = (N + batchSize -1)  / batchSize;
+    int nIter = 0;
+    int batch = 0;
+    vector<int> randSeq = generateRandomSequence(N);
     bool bTrainSet = true;
     while (batch < numBatch) {
         m_pGNet->zeroParaGradient();
@@ -29,7 +29,7 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
         int i = 0;
         int ignoreGx = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
-            long index = randSeq[nIter];
+            int index = randSeq[nIter];
 
             Tensor<float> *pImage= nullptr;
             m_pDataMgr->readTrainImageFile(index, pImage);
@@ -68,13 +68,13 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
 }
 
 void Segmentation3DNet::trainG(){
-    const long N = m_pDataMgr->m_NTrainFile;
+    const int N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pGNet->getBatchSize();
-    long numBatch = (N + batchSize -1) / batchSize;
+    int numBatch = (N + batchSize -1) / batchSize;
 
-    long nIter = 0;
-    long batch = 0;
-    vector<long> randSeq = generateRandomSequence(N);
+    int nIter = 0;
+    int batch = 0;
+    vector<int> randSeq = generateRandomSequence(N);
     bool bTrainSet = true;
 
     m_pDNet->setAlphaGroundTruth(true);
@@ -84,7 +84,7 @@ void Segmentation3DNet::trainG(){
         m_pGNet->zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
-            long index = randSeq[nIter];
+            int index = randSeq[nIter];
 
             Tensor<float> *pImage= nullptr;
             m_pDataMgr->readTrainImageFile(index, pImage);
@@ -105,19 +105,19 @@ void Segmentation3DNet::trainG(){
 }
 
 void Segmentation3DNet::trainD(){
-    const long N = m_pDataMgr->m_NTrainFile;
+    const int N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pGNet->getBatchSize();
-    long numBatch = (N + batchSize -1)/ batchSize;
-    long nIter = 0;
-    long batch = 0;
-    vector<long> randSeq = generateRandomSequence(N);
+    int numBatch = (N + batchSize -1)/ batchSize;
+    int nIter = 0;
+    int batch = 0;
+    vector<int> randSeq = generateRandomSequence(N);
     bool bTrainSet = true;
     while (batch < numBatch) {
         m_pDNet->zeroParaGradient();
         int i = 0;
         int ignoreGx = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
-            long index = randSeq[nIter];
+            int index = randSeq[nIter];
 
             Tensor<float> *pImage= nullptr;
             m_pDataMgr->readTrainImageFile(index, pImage);
@@ -161,9 +161,9 @@ float Segmentation3DNet::testG(bool outputFile){
         }
     }
     bool bTrainSet = false;
-    const long N = m_pDataMgr->m_NTestFile;
+    const int N = m_pDataMgr->m_NTestFile;
     Tensor<float> dice({N,1});
-    for (long i = 0; i <  N; ++i) {
+    for (int i = 0; i <  N; ++i) {
         Tensor<float> *pImage = nullptr;
         m_pDataMgr->readTestImageFile(i, pImage);
         m_pGNet->m_pInputXLayer->setInputTensor(*pImage);
@@ -188,20 +188,20 @@ float Segmentation3DNet::testG(bool outputFile){
 
 // pretrain an epoch for D
 void Segmentation3DNet::pretrainD() {
-    const long N = m_pDataMgr->m_NTrainFile;
+    const int N = m_pDataMgr->m_NTrainFile;
     const int batchSize = m_pStubNet->getBatchSize();
-    long numBatch = (N + batchSize -1)/ batchSize;
+    int numBatch = (N + batchSize -1)/ batchSize;
 
-    long nIter = 0;
-    long batch = 0;
-    vector<long> randSeq = generateRandomSequence(N);
+    int nIter = 0;
+    int batch = 0;
+    vector<int> randSeq = generateRandomSequence(N);
     bool bTrainSet = true;
     while (batch < numBatch) {
         m_pDNet->zeroParaGradient();
         int i = 0;
         int ignoreStub = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
-            long index = randSeq[nIter];
+            int index = randSeq[nIter];
 
             Tensor<float> *pImage= nullptr;
             m_pDataMgr->readTrainImageFile(index, pImage);
@@ -240,7 +240,7 @@ void Segmentation3DNet::setStubNet(StubNetForD* pStubNet){
     m_pStubNet = pStubNet;
 }
 
-void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels, const long indexImage,
+void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels, const int indexImage,
                                        LossLayer *lossLayer, InputLayer *inputLayer) {
     Tensor<unsigned char> *pLabel = nullptr;
     if (bTrainSet) {
@@ -249,7 +249,7 @@ void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels
         m_pDataMgr->readTestLabelFile(indexImage, pLabel);
     }
 
-    vector<long> cutTensorSize; //lossLayer and inputLayer should have same Tensor size
+    vector<int> cutTensorSize; //lossLayer and inputLayer should have same Tensor size
     if (nullptr != lossLayer){
         cutTensorSize = lossLayer->m_prevLayer->m_pYTensor->getDims();
     }

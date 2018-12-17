@@ -7,7 +7,7 @@
 #include "SubTensorLayer.h"
 
 
-SubTensorLayer::SubTensorLayer(const int id, const string &name, Layer *prevLayer, const vector<long>& start, const vector<long>& span)
+SubTensorLayer::SubTensorLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& start, const vector<int>& span)
                :Layer(id,name, span)
 {
     m_type = "SubTensorLayer";
@@ -37,8 +37,8 @@ void SubTensorLayer::zeroParaGradient(){
 void SubTensorLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = Y.getLength();
-    for (long i=0; i< N; ++i){
+    int N = Y.getLength();
+    for (int i=0; i< N; ++i){
         Y.e(i) = X.e(m_start+ Y.offset2Index(i));
     }
 }
@@ -47,8 +47,8 @@ void SubTensorLayer::backward(bool computeW, bool computeX){
     if (computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
-        long N = dY.getLength();
-        for(long i=0; i< N; ++i){
+        int N = dY.getLength();
+        for(int i=0; i< N; ++i){
             dX.e(m_start+ dY.offset2Index(i)) += dY.e(i);
         }
     }
@@ -59,7 +59,7 @@ void SubTensorLayer::updateParameters(const float lr, const string& method, cons
 }
 
 
-long  SubTensorLayer::getNumParameters(){
+int  SubTensorLayer::getNumParameters(){
     return 0;
 }
 

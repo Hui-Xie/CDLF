@@ -7,7 +7,7 @@
 #include "PaddingLayer.h"
 
 
-PaddingLayer::PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<long>& tensorSize)
+PaddingLayer::PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& tensorSize)
         :Layer(id,name, tensorSize)
 {
     m_type = "PaddingLayer";
@@ -36,8 +36,8 @@ void PaddingLayer::zeroParaGradient(){
 void PaddingLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = X.getLength();
-    for (long i=0; i< N; ++i){
+    int N = X.getLength();
+    for (int i=0; i< N; ++i){
         Y.e(m_start+ X.offset2Index(i)) = X.e(i);
     }
 }
@@ -46,8 +46,8 @@ void PaddingLayer::backward(bool computeW, bool computeX){
     if (computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
-        long N = dX.getLength();
-        for(long i=0; i< N; ++i){
+        int N = dX.getLength();
+        for(int i=0; i< N; ++i){
             dX.e(i) += dY.e(m_start+ dX.offset2Index(i));
         }
     }
@@ -58,7 +58,7 @@ void PaddingLayer::updateParameters(const float lr, const string& method, const 
 }
 
 
-long  PaddingLayer::getNumParameters(){
+int  PaddingLayer::getNumParameters(){
     return 0;
 }
 

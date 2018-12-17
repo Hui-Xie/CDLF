@@ -14,7 +14,7 @@
 class SubTensorLayer : public Layer {
 public:
 
-    SubTensorLayer(const int id, const string &name, Layer *prevLayer, const vector<long>& start, const vector<long>& span);
+    SubTensorLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& start, const vector<int>& span);
 
     ~SubTensorLayer();
 
@@ -27,7 +27,7 @@ public:
     virtual void backward(bool computeW, bool computeX = true);
 
     virtual void updateParameters(const float lr, const string &method, const int batchSize = 1);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
@@ -35,8 +35,8 @@ public:
     virtual  void printStruct(const int layerIndex);
 
 private:
-    vector<long> m_start;
-    vector<long> m_span;
+    vector<int> m_start;
+    vector<int> m_span;
 
 };
 

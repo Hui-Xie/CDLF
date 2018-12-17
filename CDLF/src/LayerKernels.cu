@@ -9,8 +9,8 @@
 #include <stdio.h>  //# for printf debug
 
 /*
-__global__ void deviceSigmoidDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const int k, const long N){
-    long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
+__global__ void deviceSigmoidDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const int k, const int N){
+    int i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
     while (i < N){
         float  expx = exp(pX[i]);
         pdX[i] += pdY[i]*k*expx/pow(1+expx,2);
@@ -18,8 +18,8 @@ __global__ void deviceSigmoidDerivative(const float* __restrict__  pX, const flo
     }
 }
 
-__global__ void deviceSigmoid(const float* __restrict__  pX, float* pY, const int k, const long N){
-    long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
+__global__ void deviceSigmoid(const float* __restrict__  pX, float* pY, const int k, const int N){
+    int i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
     while (i < N){
         float exp_x = exp(-pX[i]);
         pY[i] = k/(1+exp_x);
@@ -29,8 +29,8 @@ __global__ void deviceSigmoid(const float* __restrict__  pX, float* pY, const in
 }
 
 
-__global__ void deviceCrossEntropyGradient(const float* __restrict__  pX, const float* __restrict__  pGTX, float* pdX, const float epsilon, const long N){
-    long i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
+__global__ void deviceCrossEntropyGradient(const float* __restrict__  pX, const float* __restrict__  pGTX, float* pdX, const float epsilon, const int N){
+    int i = threadIdx.x + blockIdx.x * blockDim.x; //i: thread index
     while (i < N){
         if (0 != pX[i]){
             pdX[i] -= pGTX[i]/pX[i];
@@ -44,8 +44,8 @@ __global__ void deviceCrossEntropyGradient(const float* __restrict__  pX, const 
 
 
 //C = A where A and C has different value type
-__global__ void deviceElementCopy(const unsigned char* __restrict__  pA,float* pC, const long N){
-    long i = threadIdx.x + blockIdx.x * blockDim.x;
+__global__ void deviceElementCopy(const unsigned char* __restrict__  pA,float* pC, const int N){
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
     while (i < N){
         pC[i] = (float)pA[i];
         i += blockDim.x*gridDim.x;
@@ -53,8 +53,8 @@ __global__ void deviceElementCopy(const unsigned char* __restrict__  pA,float* p
 }
 
 //C = A if A>=0; C =0 else
-__global__ void deviceRelu(const float* __restrict__  pA,float* pC, const long N){
-    long i = threadIdx.x + blockIdx.x * blockDim.x;
+__global__ void deviceRelu(const float* __restrict__  pA,float* pC, const int N){
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
     while (i < N){
         if (pA[i]>0){
             pC[i] = pA[i];
@@ -67,8 +67,8 @@ __global__ void deviceRelu(const float* __restrict__  pA,float* pC, const long N
 }
 
 // dL/dx = dL/dy * dy/dx = dL/dy if X>=0; 0 if X < 0
-__global__ void deviceReluDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const long N){
-    long i = threadIdx.x + blockIdx.x * blockDim.x;
+__global__ void deviceReluDerivative(const float* __restrict__  pX, const float* __restrict__  pdY, float* pdX, const int N){
+    int i = threadIdx.x + blockIdx.x * blockDim.x;
     while (i < N){
         if (pX[i]>= 0){
             pdX[i] = pdY[i];
@@ -81,8 +81,8 @@ __global__ void deviceReluDerivative(const float* __restrict__  pX, const float*
 
 }
 
-__global__ void deviceSoftmax(const float* __restrict__  pX, float* pY, const int nSoftmax, const long N){
-    long j = threadIdx.x + blockIdx.x * blockDim.x; // j is thread index
+__global__ void deviceSoftmax(const float* __restrict__  pX, float* pY, const int nSoftmax, const int N){
+    int j = threadIdx.x + blockIdx.x * blockDim.x; // j is thread index
     while (j < N){
         float sumExpX = 1e-8;;
         for (int i=0; i< nSoftmax; ++i){
@@ -95,8 +95,8 @@ __global__ void deviceSoftmax(const float* __restrict__  pX, float* pY, const in
     }
 }
 
-__global__ void deviceSoftmaxDerivative(const float* __restrict__  pX,const float* __restrict__  pdY, float* pdX, const int nSoftmax, const long N){
-    long j = threadIdx.x + blockIdx.x * blockDim.x; // j is thread index
+__global__ void deviceSoftmaxDerivative(const float* __restrict__  pX,const float* __restrict__  pdY, float* pdX, const int nSoftmax, const int N){
+    int j = threadIdx.x + blockIdx.x * blockDim.x; // j is thread index
     while (j < N){
         float sumExpX = 1e-8;
         for (int i=0; i< nSoftmax; ++i){
@@ -119,16 +119,16 @@ __global__ void deviceSoftmaxDerivative(const float* __restrict__  pX,const floa
 }
 
 //C = A*F in convolution
-__global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, const float* pF, const long* pFDimsSpan, const int filterSize, const long NFilter,
-                                       const int stride, float* pC, const long* pCDimsSpan, const long* pNonZeroIndex, const int CDimsSize, const long N){
-    long t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
+__global__ void deviceConvLayerForward(const float* pA, const int* pADimsSpan, const float* pF, const int* pFDimsSpan, const int filterSize, const int NFilter,
+                                       const int stride, float* pC, const int* pCDimsSpan, const int* pNonZeroIndex, const int CDimsSize, const int N){
+    int t = threadIdx.x + blockIdx.x * blockDim.x; //t indicates thread index
     while (t < N){
         //generate C index;
-        extern __shared__ long sharedMem[];//byteLengthSharedMem=CDimsSize*sizeof(long)+ filterSize*sizeof(long);
-        long* pCIndex= sharedMem;
-        long* pAIndex = (long*) &pCIndex[CDimsSize]; //// all pointers of shared memory does not need to delete.
+        extern __shared__ int sharedMem[];//byteLengthSharedMem=CDimsSize*sizeof(int)+ filterSize*sizeof(int);
+        int* pCIndex= sharedMem;
+        int* pAIndex = (int*) &pCIndex[CDimsSize]; //// all pointers of shared memory does not need to delete.
 
-        long n = t;
+        int n = t;
         for (int i = 0; i <CDimsSize; ++i) {
             pCIndex[i] = n / pCDimsSpan[i];
             n -= pCIndex[i] * pCDimsSpan[i];
@@ -145,13 +145,13 @@ __global__ void deviceConvLayerForward(const float* pA, const long* pADimsSpan, 
         float* pSubA=  new float[NFilter];
         float* pHadamard = new float[NFilter];
 
-        deviceSubTensorFromTopLeft<<<1, NFilter, filterSize*sizeof(long)>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
+        deviceSubTensorFromTopLeft<<<1, NFilter, filterSize*sizeof(int)>>>(pA, pADimsSpan, pAIndex, pFDimsSpan, filterSize, 1, pSubA, NFilter);
         //__syncthreads();
 
         deviceTensorHadamard<<<1, NFilter>>>(pSubA, pF, pHadamard, NFilter);
         //__syncthreads();
         float sum =0;
-        for(long i=0; i<NFilter; ++i){
+        for(int i=0; i<NFilter; ++i){
             sum += pHadamard[i];
         }
         pC[t] = sum;

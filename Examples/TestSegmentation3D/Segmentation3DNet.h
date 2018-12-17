@@ -30,7 +30,7 @@ public:
     DataManager* m_pDataMgr;
 
 private:
-    void setOneHotLabel(const bool bTrainSet, const int numLabels, const long indexImage, LossLayer* lossLayer, InputLayer* inputLayer);
+    void setOneHotLabel(const bool bTrainSet, const int numLabels, const int indexImage, LossLayer* lossLayer, InputLayer* inputLayer);
 
 
 };

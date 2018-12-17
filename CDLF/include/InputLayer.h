@@ -11,7 +11,7 @@
 
 class InputLayer : public Layer{
 public:
-    InputLayer(const int id, const string& name,const vector<long>& tensorSize);
+    InputLayer(const int id, const string& name,const vector<int>& tensorSize);
     ~InputLayer();
 
     virtual  void initialize(const string& initialMethod);
@@ -21,7 +21,7 @@ public:
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
     void setInputTensor(const Tensor<float>& inputTensor);
     void setInputTensor(const Tensor<unsigned char>& inputTensor);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

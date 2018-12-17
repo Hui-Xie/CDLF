@@ -8,7 +8,7 @@
 #include "statisTool.h"
 #include "Tools.h"
 
-InputLayer::InputLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize){
+InputLayer::InputLayer(const int id, const string& name, const vector<int>& tensorSize): Layer(id, name, tensorSize){
     m_type = "InputLayer";
 
 }
@@ -47,8 +47,8 @@ void InputLayer::setInputTensor(const Tensor<float>& inputTensor){
 
 void InputLayer::setInputTensor(const Tensor<unsigned char> &inputTensor) {
     if (m_tensorSize == inputTensor.getDims()) {
-        long N = m_pYTensor->getLength();
-        for (long i=0; i<N; ++i){
+        int N = m_pYTensor->getLength();
+        for (int i=0; i<N; ++i){
             m_pYTensor->e(i) = (float) inputTensor.e(i);
         }
     } else {
@@ -57,7 +57,7 @@ void InputLayer::setInputTensor(const Tensor<unsigned char> &inputTensor) {
 
 }
 
-long InputLayer::getNumParameters() {
+int InputLayer::getNumParameters() {
     return 0;
 }
 

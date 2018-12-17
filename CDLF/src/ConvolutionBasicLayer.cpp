@@ -11,7 +11,7 @@
 
 
 ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, Layer *prevLayer,
-                                             const vector<long> &filterSize, const int numFilters, const int stride):
+                                             const vector<int> &filterSize, const int numFilters, const int stride):
                                              Layer(id, name, {}){
     if (checkFilterSize(filterSize, prevLayer)) {
         m_type = "ConvolutionBasicLayer";
@@ -45,7 +45,7 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
 
 // the filterSize in each dimension should be odd,
 // or if it is even, it must be same size of corresponding dimension of tensorSize of input X
-bool ConvolutionBasicLayer::checkFilterSize(const vector<long> &filterSize, Layer *prevLayer) {
+bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, Layer *prevLayer) {
     int dimFilter = filterSize.size();
     int dimX = prevLayer->m_tensorSize.size();
     if (dimFilter == dimX) {
@@ -110,7 +110,7 @@ void ConvolutionBasicLayer::updateParameters(const float lr, const string &metho
 }
 
 
-long ConvolutionBasicLayer::getNumParameters(){
+int ConvolutionBasicLayer::getNumParameters(){
     return m_pW[0]->getLength()*m_numFilters;
 }
 

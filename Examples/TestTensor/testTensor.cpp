@@ -135,10 +135,10 @@ int main (int argc, char *argv[]) {
     tensor1.print();
 
     cout<<"Test operator + "<<endl;
-    vector<long> aVector={1,2,3,4,5};
+    vector<int> aVector={1,2,3,4,5};
     cout<<"Original Vector:";
     printVector(aVector);
-    vector<long> bVector = aVector+2;
+    vector<int> bVector = aVector+2;
     cout<<" bVector = aVector+2; "<<endl;
     printVector(bVector);
 

@@ -6,7 +6,7 @@
 
 #include "MergerLayer.h"
 
-MergerLayer::MergerLayer(const int id, const string& name, const vector<long>& tensorSize): Layer(id, name, tensorSize)
+MergerLayer::MergerLayer(const int id, const string& name, const vector<int>& tensorSize): Layer(id, name, tensorSize)
 {
     m_type = "MergerLayer";
 }
@@ -81,7 +81,7 @@ void MergerLayer::delLayerFromList(const Layer* layer){
     }
 }
 
-long  MergerLayer::getNumParameters(){
+int  MergerLayer::getNumParameters(){
     return 0;
 }
 

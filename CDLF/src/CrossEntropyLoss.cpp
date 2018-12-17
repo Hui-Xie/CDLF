@@ -35,9 +35,9 @@ void CrossEntropyLoss::gradientCompute() {
     //symbol deduced formula to compute gradient to prevLayer->m_pdYTensor
     Tensor<float> &X = *(m_prevLayer->m_pYTensor);
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
-    long N = dX.getLength();
+    int N = dX.getLength();
     const float epsilon = 0.0001;
-    for (long i = 0; i < N; ++i) {
+    for (int i = 0; i < N; ++i) {
         if (0 != X.e(i)){
             dX[i] -= m_pGroundTruth->e(i)/X.e(i);
         }
@@ -69,13 +69,13 @@ float CrossEntropyLoss::diceCoefficient(){
     Tensor<float> &GT = *m_pGroundTruth;
     Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
     Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
-    const long N = predictMaxPosTensor.getLength();
+    const int N = predictMaxPosTensor.getLength();
     if (N != GTMaxPosTensor.getLength()){
         cout <<"Error: predicting Tensor has a different dimension with groundtruth"<<endl;
         return -1;
     }
-    long nSuccess = 0;
-    for (long i=0; i< N; ++i)
+    int nSuccess = 0;
+    for (int i=0; i< N; ++i)
     {
         if (predictMaxPosTensor(i) == GTMaxPosTensor(i)){
             ++nSuccess;
@@ -85,7 +85,7 @@ float CrossEntropyLoss::diceCoefficient(){
 
 }
 
-long CrossEntropyLoss::getNumParameters(){
+int CrossEntropyLoss::getNumParameters(){
     return 0;
 }
 

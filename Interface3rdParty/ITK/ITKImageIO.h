@@ -23,8 +23,8 @@ public:
     using ImageType = itk::Image< VoxelType, Dimension >;
 
     void readFile(const string & filename, Tensor<VoxelType>*& pTensor);
-    void writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<long>& offset, const string & filename);
-    void writeFileWithLessInputDim(const Tensor<VoxelType>* pTensor, const vector<long>& offset, const string & filename);
+    void writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset, const string & filename);
+    void writeFileWithLessInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset, const string & filename);
 
 private:
     typename ImageType::PointType m_origin;

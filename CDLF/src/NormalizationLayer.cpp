@@ -49,7 +49,7 @@ void NormalizationLayer::updateParameters(const float lr, const string& method, 
     //null
 }
 
-long  NormalizationLayer::getNumParameters(){
+int  NormalizationLayer::getNumParameters(){
     return 0;
 }
 

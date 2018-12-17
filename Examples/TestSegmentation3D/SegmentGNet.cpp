@@ -33,7 +33,7 @@ void SegmentGNet::build(){
     NormalizationLayer* norm34 = new NormalizationLayer(34, "G_Norm34", reLU32);
     addLayer(norm34);
 
-    BiasLayer* bias40 = new BiasLayer(40, "G_Bias40", norm34); //output size: 3*118*275*275
+    LinearLayer* bias40 = new LinearLayer(40, "G_Bias40", norm34); //output size: 3*118*275*275
     addLayer(bias40);
 
     BranchLayer* branch50 = new BranchLayer(50, "G_Branch50", bias40); //output size: 3*118*275*275
@@ -95,7 +95,7 @@ void SegmentGNet::build(){
     merger130->addPreviousLayer(norm104);
     merger130->addPreviousLayer(norm114);
 
-    BiasLayer* bias140 = new BiasLayer(140, "G_Bias140", merger130); // output size: 3*108*265*265
+    LinearLayer* bias140 = new LinearLayer(140, "G_Bias140", merger130); // output size: 3*108*265*265
     addLayer(bias140);
 
     SoftmaxLayer* softmax150 = new SoftmaxLayer(150, "G_Softmax150",bias140); //output size: 3*108*265*265

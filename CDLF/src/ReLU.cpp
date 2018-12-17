@@ -22,8 +22,8 @@ ReLU::~ReLU(){
 void ReLU::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    long N = Y.getLength();
-    for (long i=0; i< N; ++i){
+    int N = Y.getLength();
+    for (int i=0; i< N; ++i){
        if (X.e(i) >= 0 ) Y.e(i) = X.e(i);
        else Y.e(i) = 0;
     }
@@ -33,8 +33,8 @@ void ReLU::backward(bool computeW, bool computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
         Tensor<float>& X = *m_prevLayer->m_pYTensor;
-        long N = dY.getLength();
-        for(long i=0; i< N; ++i){
+        int N = dY.getLength();
+        for(int i=0; i< N; ++i){
             if (X.e(i) >= 0) dX.e(i) += dY.e(i);
             // all dX.e(i) = 0 in zeroDYTensor() method.
         }
@@ -52,7 +52,7 @@ void ReLU::updateParameters(const float lr, const string& method, const int batc
     //null
 }
 
-long  ReLU::getNumParameters(){
+int  ReLU::getNumParameters(){
     return 0;
 }
 

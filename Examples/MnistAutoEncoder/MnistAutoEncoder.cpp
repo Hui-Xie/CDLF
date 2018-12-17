@@ -24,15 +24,15 @@ void MnistAutoEncoder::train() {
     InputLayer *inputLayer = getInputLayer();
     SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
 
-    const long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
-    const long NTrain = maxIteration;
+    const int maxIteration =m_pMnistData->m_pTrainLabels->getLength();
+    const int NTrain = maxIteration;
     const int batchSize = getBatchSize();
     const float learningRate = getLearningRate();
-    const long numBatch = (maxIteration + batchSize -1) / batchSize;
-    long nIter = 0;
-    long nBatch = 0;
+    const int numBatch = (maxIteration + batchSize -1) / batchSize;
+    int nIter = 0;
+    int nBatch = 0;
     //random reshuffle data samples
-    vector<long> randSeq = generateRandomSequence(NTrain);
+    vector<int> randSeq = generateRandomSequence(NTrain);
     while (nBatch < numBatch) {
         zeroParaGradient();
         int i = 0;
@@ -54,8 +54,8 @@ void MnistAutoEncoder::train() {
 float MnistAutoEncoder::test(){
     InputLayer *inputLayer = getInputLayer();
     SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
-    long n = 0;
-    const long Ntest = m_pMnistData->m_pTestLabels->getLength();
+    int n = 0;
+    const int Ntest = m_pMnistData->m_pTestLabels->getLength();
     float squareLoss = 0.0;
     while (n < Ntest) {
         Tensor<unsigned  char> inputImage = m_pMnistData->m_pTrainImages->slice(n);

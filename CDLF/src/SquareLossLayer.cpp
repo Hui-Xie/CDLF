@@ -24,9 +24,9 @@ void SquareLossLayer::printGroundTruth() {
 // L= lambda*0.5*\sum (x_i- g_i)^2
 float SquareLossLayer::lossCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
-    const long N = X.getLength();
+    const int N = X.getLength();
     float loss = 0.0;
-    for (long i=0; i<N; ++i){
+    for (int i=0; i<N; ++i){
         loss += pow(X.e(i) - m_pGroundTruth->e(i), 2);
     }
     m_loss = loss*0.5*m_lambda;
@@ -37,8 +37,8 @@ float SquareLossLayer::lossCompute() {
 void SquareLossLayer::gradientCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dX = *(m_prevLayer->m_pdYTensor);
-    const long N = X.getLength();
-    for (long i=0; i<N; ++i){
+    const int N = X.getLength();
+    for (int i=0; i<N; ++i){
        dX[i] += (X.e(i) - m_pGroundTruth->e(i))*m_lambda;
     }
 }

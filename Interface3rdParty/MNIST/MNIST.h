@@ -31,8 +31,8 @@ public:
 
     void loadData();
     void tailorData();
-    void displayImage(Tensor<unsigned char>* pImages, const long index);
-    void getTestImageAndLabel(const long index, Tensor<float>& image, int& label);
+    void displayImage(Tensor<unsigned char>* pImages, const int index);
+    void getTestImageAndLabel(const int index, Tensor<float>& image, int& label);
 
 private:
     string m_mnistDir;
@@ -44,7 +44,7 @@ private:
     bool m_bOnlyTestSet;
 
     int readIdxFile(const string &fileName, Tensor<unsigned char>* &pTensor);
-    long hexChar4ToLong(char *buff);
+    int hexChar4ToLong(char *buff);
     bool isDigitInVector(const unsigned char digit);
     void extractPart(const Tensor<unsigned char> * pWholeImages,  const Tensor<unsigned char> * pWholeLabels,
                              Tensor<unsigned char> * pPartImages,  Tensor<unsigned char> *  pPartLabels);

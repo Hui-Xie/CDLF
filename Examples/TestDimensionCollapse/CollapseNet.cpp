@@ -48,7 +48,7 @@ void CollapseNet::train(){
     int batchSize = getBatchSize();
     int iBatch = 10;
 
-    long i=0;
+    int i=0;
     while (i< iBatch){
         zeroParaGradient();
         for(int j=0; j<batchSize; ++j){

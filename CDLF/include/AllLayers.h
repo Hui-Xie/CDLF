@@ -7,7 +7,7 @@
 #ifndef CDLF_FRAMEWORK_ALLLAYERS_H
 #define CDLF_FRAMEWORK_ALLLAYERS_H
 #include "Layer.h"
-#include "BiasLayer.h"
+#include "LinearLayer.h"
 #include "BranchLayer.h"
 #include "ConvolutionLayer.h"
 #include "TransposedConvolutionLayer.h"
@@ -22,7 +22,6 @@
 #include "MergerLayer.h"
 #include "NormalizationLayer.h"
 #include "ReLU.h"
-#include "ScaleLayer.h"
 #include "SigmoidLayer.h"
 #include "SoftmaxLayer.h"
 #include "SubTensorLayer.h"

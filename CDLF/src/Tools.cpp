@@ -9,7 +9,7 @@
 #include <cctype>
 #include <cstdio>
 
-bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
+bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
     if (vec1.size() != vec2.size()){
         return false;
     }
@@ -22,10 +22,10 @@ bool sameVector(const vector<long>& vec1, const vector<long>& vec2){
     }
 }
 
-long length(const vector<long>& vec){
+int length(const vector<int>& vec){
     int dim = vec.size();
     if (dim >0){
-        long length=vec[0];
+        int length=vec[0];
         for(int i =1; i< dim; ++i){
             length *= vec[i];
         }
@@ -36,51 +36,51 @@ long length(const vector<long>& vec){
     }
 }
 
-bool sameLength(const vector<long>& vec1, const vector<long>& vec2){
+bool sameLength(const vector<int>& vec1, const vector<int>& vec2){
     return (length(vec1) == length(vec2));
 }
 
-vector<long> reverseVector(const vector<long>& src){
+vector<int> reverseVector(const vector<int>& src){
     int size = src.size();
-    vector<long> target;
+    vector<int> target;
     for(int i = size-1; i>=0; --i){
         target.push_back(src[i]);
     }
     return target;
 }
 
-vector<long> operator+ (const vector<long>& left, const int offset){
+vector<int> operator+ (const vector<int>& left, const int offset){
     const int N = left.size();
-    vector<long> result(left);
+    vector<int> result(left);
     for (int i=0; i<N;++i){
         result[i] += offset;
     }
     return result;
 }
 
-vector<long> operator+ (const vector<long>& left, const vector<long>& right){
+vector<int> operator+ (const vector<int>& left, const vector<int>& right){
     assert(left.size() == right.size());
     const int N = left.size();
-    vector<long> result(left);
+    vector<int> result(left);
     for (int i=0; i<N;++i){
         result[i] += right[i];
     }
     return result;
 }
 
-vector<long> operator- (const vector<long>& left, const vector<long>& right){
+vector<int> operator- (const vector<int>& left, const vector<int>& right){
     assert(left.size() == right.size());
     const int N = left.size();
-    vector<long> result(left);
+    vector<int> result(left);
     for (int i=0; i<N;++i){
         result[i] -= right[i];
     }
     return result;
 }
 
-vector<long> operator- (const vector<long> &minuend, const int subtrahend) {
+vector<int> operator- (const vector<int> &minuend, const int subtrahend) {
     const int N = minuend.size();
-    vector<long> result(minuend);
+    vector<int> result(minuend);
     for (int i=0; i<N;++i){
         result[i] -= subtrahend;
     }
@@ -88,25 +88,25 @@ vector<long> operator- (const vector<long> &minuend, const int subtrahend) {
 }
 
 
-vector<long> operator* (const vector<long>& left, const int factor){
+vector<int> operator* (const vector<int>& left, const int factor){
     const int N = left.size();
-    vector<long> result(left);
+    vector<int> result(left);
     for (int i=0; i<N;++i){
         result[i] *= factor;
     }
     return result;
 }
 
-vector<long> operator/ (const vector<long>& left, const int divisor){
+vector<int> operator/ (const vector<int>& left, const int divisor){
     const int N = left.size();
-    vector<long> result = left;
+    vector<int> result = left;
     for (int i=0; i<N;++i){
         result[i] /= divisor;
     }
     return result;
 }
 
-bool operator<= (const vector<long>& left, const vector<long>& right){
+bool operator<= (const vector<int>& left, const vector<int>& right){
     assert(left.size() == right.size());
     const int N = left.size();
     for (int i=0; i<N;++i){
@@ -115,17 +115,17 @@ bool operator<= (const vector<long>& left, const vector<long>& right){
     return true;
 }
 
-bool operator!= (const vector<long>& left, const vector<long>& right){
+bool operator!= (const vector<int>& left, const vector<int>& right){
     return !sameVector(left, right);
 }
 
-bool operator== (const vector<long>& left, const vector<long>& right){
+bool operator== (const vector<int>& left, const vector<int>& right){
     return sameVector(left, right);
 }
 
 // delete 1 in the tensorSize when dim >2
-void deleteOnes(vector<long>& vec){
-    for (vector<long>::iterator it = vec.begin(); it!=vec.end();++it){
+void deleteOnes(vector<int>& vec){
+    for (vector<int>::iterator it = vec.begin(); it!=vec.end();++it){
         if (1 == *it && vec.size() >2){
             it = vec.erase(it);
             --it;
@@ -133,8 +133,8 @@ void deleteOnes(vector<long>& vec){
     }
 }
 
-vector<long> nonZeroIndex(const vector<long>& vec){
-    vector<long> result;
+vector<int> nonZeroIndex(const vector<int>& vec){
+    vector<int> result;
     const int N = vec.size();
     for (int i=0; i<N; ++i){
         if (0 != vec[i]) result.push_back(i);
@@ -142,7 +142,7 @@ vector<long> nonZeroIndex(const vector<long>& vec){
     return result;
 }
 
-void printVector(const vector<long>& vec){
+void printVector(const vector<int>& vec){
     int N = vec.size();
     for (int i=0; i< N; ++i){
         std::cout<<vec[i]<<" ";
@@ -151,7 +151,7 @@ void printVector(const vector<long>& vec){
 
 }
 
-string vector2Str(const vector<long>& vec){
+string vector2Str(const vector<int>& vec){
     int N= vec.size();
     string result ="{";
     for (int i=0;i< N; ++i){
@@ -166,33 +166,33 @@ string vector2Str(const vector<long>& vec){
     return result;
 }
 
-vector<long> str2Vector(const string& str){
+vector<int> str2Vector(const string& str){
     string tempStr = str;
     int N = tempStr.size();
     for (int i=0; i<N; ++i){
         if (!isdigit(tempStr[i])) tempStr[i] = ' ';
     }
-    vector<long> vec;
+    vector<int> vec;
     stringstream stream(tempStr);
-    long num;
+    int num;
     while (stream >> num){
         vec.push_back(num);
     }
     return vec;
 }
 
-vector<long> generateRandomSequence(const long range) {
-    vector<long> sequence;
+vector<int> generateRandomSequence(const int range) {
+    vector<int> sequence;
     sequence.reserve(range);
-    for (long i = 0; i < range; ++i) {
+    for (int i = 0; i < range; ++i) {
        sequence.push_back(i);
     }
-    long M = range/2;
+    int M = range/2;
     srand (time(NULL));
-    for (long i= 0; i<M; ++i){
-        long r1 = rand() % range;
-        long r2 = rand() % range;
-        long temp = sequence[r1];
+    for (int i= 0; i<M; ++i){
+        int r1 = rand() % range;
+        int r2 = rand() % range;
+        int temp = sequence[r1];
         sequence[r1] = sequence[r2];
         sequence[r2] = temp;
     }
@@ -222,9 +222,9 @@ string getCurTimeStr(){
 }
 
 
-vector<long> genDimsSpan(const vector<long> vec){
+vector<int> genDimsSpan(const vector<int> vec){
     const int N = vec.size();
-    vector<long> dimsSpan(N, 1);
+    vector<int> dimsSpan(N, 1);
     for (int i= N-2; i>=0; --i){
         dimsSpan[i] = vec[i+1]*dimsSpan[i+1];
     }

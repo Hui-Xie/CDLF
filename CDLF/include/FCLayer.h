@@ -15,11 +15,11 @@
 //       W is m*n dimensional matrix
 class FCLayer :  public Layer{
 public:
-     FCLayer(const int id, const string& name, Layer* prevLayer, const long outputWidth);
+     FCLayer(const int id, const string& name, Layer* prevLayer, const int outputWidth);
     ~FCLayer();
 
-    long m_m; //output width
-    long m_n; //input width
+    int m_m; //output width
+    int m_n; //input width
     Tensor<float>*  m_pW;
     Tensor<float>*  m_pBTensor;
     Tensor<float>*  m_pdW;
@@ -34,7 +34,7 @@ public:
 
     void printWandBVector();
     void printdWanddBVector();
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

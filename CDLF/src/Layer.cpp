@@ -7,7 +7,7 @@
 #include "Tools.h"
 using namespace std;
 
-Layer::Layer(const int id, const string& name, const vector<long>& tensorSize){
+Layer::Layer(const int id, const string& name, const vector<int>& tensorSize){
     if (id > 0){
         m_id = id;
     }
@@ -87,7 +87,7 @@ void Layer::printDY(){
 void Layer::printVector(Tensor<float>* vector){
     Tensor<float>& Y =   *vector;
     cout<<"( ";
-    for (long i=0; i< m_tensorSize; ++i){
+    for (int i=0; i< m_tensorSize; ++i){
         if (i != m_tensorSize-1 ) cout<<Y[i]<<", ";
         else cout<<Y[i];
     }

@@ -31,7 +31,7 @@ void SegmentDNet::build() {
     addLayer(conv20);
     NormalizationLayer *norm24 = new NormalizationLayer(24, "D_Norm24", conv20);
     addLayer(norm24);
-    ScaleLayer *scale26 = new ScaleLayer(26, "D_Scale26", norm24);
+    LinearLayer *scale26 = new LinearLayer(26, "D_Scale26", norm24);
     addLayer(scale26);
 
 

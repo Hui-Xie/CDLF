@@ -24,10 +24,10 @@ int main(int argc, char *argv[]) {
 
     vector<string> fileVector;
     getFileVector(inputDir, fileVector);
-    const long numFiles = fileVector.size();
+    const int numFiles = fileVector.size();
     cout<<"Totally read "<<numFiles <<" files in "<<inputDir<<endl;
 
-    for(long i=0; i<numFiles; ++i){
+    for(int i=0; i<numFiles; ++i){
         // notes: all command paramaeters have a space at front and at tail
         string jobName = "X" + to_string(i);
         string qsubStrBasic = string(" qsub -b y -cwd ")

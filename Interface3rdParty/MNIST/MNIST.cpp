@@ -77,8 +77,8 @@ void MNIST::deletePartDataSet(){
     }
 }
 
-long MNIST::hexChar4ToLong(char *buff) {
-    long temp = 0;
+int MNIST::hexChar4ToLong(char *buff) {
+    int temp = 0;
     for (int i = 0; i < 4; ++i) {
         temp += ((unsigned char) buff[i]) * pow(16, (3 - i) * 2);
     }
@@ -95,10 +95,10 @@ bool MNIST::isDigitInVector(const unsigned char digit){
 
 void MNIST::extractPart(const Tensor<unsigned char> * pWholeImages,  const Tensor<unsigned char> * pWholeLabels,
                  Tensor<unsigned char> * pPartImages,  Tensor<unsigned char> *  pPartLabels){
-    long N = pWholeLabels->getLength();
-    long NPart = 0;
-    long imageSize = 28*28*sizeof(unsigned char);
-    for(long i=0; i<N; ++i){
+    int N = pWholeLabels->getLength();
+    int NPart = 0;
+    int imageSize = 28*28*sizeof(unsigned char);
+    for(int i=0; i<N; ++i){
         if (isDigitInVector(pWholeLabels->e(i))) {
             pPartLabels->e(NPart) = pWholeLabels->e(i);
             memcpy(pPartImages->getData()+NPart*imageSize, pWholeImages->getData()+i*imageSize, imageSize );
@@ -116,9 +116,9 @@ int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *&pTensor) 
         return 1;
     }
 
-    long numImages = 0;
-    long rows = 0;
-    long cols = 0;
+    int numImages = 0;
+    int rows = 0;
+    int cols = 0;
     bool isImage = true; //False is a Label file
 
     //read magic number and dimension
@@ -155,7 +155,7 @@ int MNIST::readIdxFile(const string &fileName, Tensor<unsigned char> *&pTensor) 
     } else {
         pTensor = new Tensor<unsigned char>({numImages, 1});
     }
-    long numBytes = pTensor->getLength() * sizeof(unsigned char);
+    int numBytes = pTensor->getLength() * sizeof(unsigned char);
     char *buff = new char[numBytes];
     ifs.read(buff, numBytes);
     pTensor->copyDataFrom(buff, numBytes);
@@ -179,9 +179,9 @@ void MNIST::loadData() {
 
 void MNIST::tailorData(){
     //get the total number of part train dataset
-    long N = m_pTrainLabels->getLength();
-    long NTrainPart = 0;
-    for (long i=0;i<N;++i){
+    int N = m_pTrainLabels->getLength();
+    int NTrainPart = 0;
+    for (int i=0;i<N;++i){
         if (isDigitInVector(m_pTrainLabels->e(i))){
             ++NTrainPart;
         }
@@ -193,8 +193,8 @@ void MNIST::tailorData(){
 
     //get the total number of part test dataset
     N = m_pTestLabels->getLength();
-    long NTestPart = 0;
-    for (long i=0;i<N;++i){
+    int NTestPart = 0;
+    for (int i=0;i<N;++i){
         if (isDigitInVector(m_pTestLabels->e(i))){
             ++NTestPart;
         }
@@ -205,16 +205,16 @@ void MNIST::tailorData(){
     extractPart(m_pTestImages,m_pTestLabels,m_pTestImagesPart, m_pTestLabelsPart);
 }
 
-void MNIST::displayImage(Tensor<unsigned char> *pImages, const long index) {
+void MNIST::displayImage(Tensor<unsigned char> *pImages, const int index) {
     Tensor<unsigned char> slice = pImages->slice(index);
     slice.print(true);
 }
 
-void MNIST::getTestImageAndLabel(const long index, Tensor<float>& image, int& label){
+void MNIST::getTestImageAndLabel(const int index, Tensor<float>& image, int& label){
     Tensor<unsigned char> slice = m_pTestImages->slice(index);
     image.setDimsAndAllocateMem(slice.getDims());
-    long N = image.getLength();
-    for (long i=0; i< N; ++i){
+    int N = image.getLength();
+    for (int i=0; i< N; ++i){
         image.e(i) = (float) slice.e(i);
     }
     label = m_pTestLabels->e(index);

@@ -24,7 +24,7 @@ public:
     bool predictSuccessInColVec();
     float diceCoefficient();
 
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

@@ -51,7 +51,7 @@ void Net::setBatchSize(const int batchSize) {
     m_batchSize = batchSize;
 }
 
-void Net::setEpoch(const long epoch) {
+void Net::setEpoch(const int epoch) {
     m_epoch = epoch;
 }
 
@@ -91,7 +91,7 @@ int Net::getBatchSize() {
     return m_batchSize;
 }
 
-long Net::getEpoch() {
+int Net::getEpoch() {
     return m_epoch;
 }
 
@@ -107,8 +107,8 @@ map<int, Layer *> Net::getLayersMap() {
     return m_layers;
 }
 
-long Net::getNumParameters() {
-    long num = 0;
+int Net::getNumParameters() {
+    int num = 0;
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id > m_unlearningLayerID){
             num += iter->second->getNumParameters();
@@ -165,7 +165,7 @@ void Net::initialize() {
 
 void Net::printIteration(LossLayer *lossLayer, const int nIter) {
     cout << "Iteration: " << nIter << "  " << "Output Result: " << endl;
-    long N = lossLayer->m_prevLayer->m_pYTensor->getLength();
+    int N = lossLayer->m_prevLayer->m_pYTensor->getLength();
     lossLayer->m_prevLayer->m_pYTensor->reshape({1, N}).print();
     if (nullptr != lossLayer->m_pGroundTruth) {
         cout << "GrounTruth: " << endl;
@@ -302,8 +302,8 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         else if ("BranchLayer" == s.m_type) {
            pLayer = new BranchLayer(s.m_id, s.m_name, pPreLayer);
         }
-        else if ("BiasLayer" == s.m_type) {
-           pLayer = new BiasLayer(s.m_id, s.m_name, pPreLayer);
+        else if ("LinearLayer" == s.m_type) {
+           pLayer = new LinearLayer(s.m_id, s.m_name, pPreLayer);
         }
         else if ("CrossEntropyLoss" == s.m_type) {
            pLayer = new CrossEntropyLoss(s.m_id, s.m_name, pPreLayer);
@@ -326,9 +326,6 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            for(int k=0; k<nInBranches; ++k){
                pLayer->addPreviousLayer(m_layers[s.m_preLayersIDs[k]]);
            }
-        }
-        else if ("ScaleLayer" == s.m_type) {
-           pLayer = new ScaleLayer(s.m_id, s.m_name, pPreLayer);
         }
         else if ("SigmoidLayer" == s.m_type) {
            pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_stride);

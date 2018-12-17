@@ -73,15 +73,15 @@ void MnistConvNet::train(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
 
-    long maxIteration =m_pMnistData->m_pTrainLabels->getLength();
-    long NTrain = maxIteration;
+    int maxIteration =m_pMnistData->m_pTrainLabels->getLength();
+    int NTrain = maxIteration;
     int batchSize = getBatchSize();
     float learningRate = getLearningRate();
-    long numBatch = (maxIteration + batchSize -1) / batchSize;
-    long nIter = 0;
-    long nBatch = 0;
+    int numBatch = (maxIteration + batchSize -1) / batchSize;
+    int nIter = 0;
+    int nBatch = 0;
     //random reshuffle data samples
-    vector<long> randSeq = generateRandomSequence(NTrain);
+    vector<int> randSeq = generateRandomSequence(NTrain);
     while (nBatch < numBatch) {
         zeroParaGradient();
         int i = 0;
@@ -100,9 +100,9 @@ void MnistConvNet::train(){
 float MnistConvNet::test(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
-    long n = 0;
-    long nSuccess = 0;
-    const long Ntest = m_pMnistData->m_pTestLabels->getLength();
+    int n = 0;
+    int nSuccess = 0;
+    const int Ntest = m_pMnistData->m_pTestLabels->getLength();
     while (n < Ntest) {
         inputLayer->setInputTensor(m_pMnistData->m_pTestImages->slice(n));
         lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTestLabels, n));
@@ -115,7 +115,7 @@ float MnistConvNet::test(){
 }
 
 //construct a 2*1 one-hot vector
-Tensor<float> MnistConvNet::constructGroundTruth(Tensor<unsigned char> *pLabels, const long index) {
+Tensor<float> MnistConvNet::constructGroundTruth(Tensor<unsigned char> *pLabels, const int index) {
     Tensor<float> tensor({10, 1});
     tensor.zeroInitialize();
     tensor.e(pLabels->e(index)) = 1;

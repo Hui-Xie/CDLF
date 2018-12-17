@@ -6,24 +6,26 @@
 #define RL_NONCONVEX_BIASLAYER_H
 #include "Layer.h"
 
-/*  Bias Layer
- *  generally put BiasLayer after ConvolutionLayer to indicate the bias of different voxel in previous layer;
- *  Bias Layer is used to express the spacial coordinates bias;
- *  if previous layer is 4D in size, then Bias Layer also indicates the bias of different convolution filter;
- *  Y = X + b
- *  where Y is the output of Bias Layer
- *        X is the input of the Bias Layer
- *        b is the learning parameter of Bias Layer, which is different at each voxel
- *  dL/dX = dL/dY    Where L is Loss
+/*  Element-wise Linear Layer
+ *  It replaces old-version ScaleLayer and LinearLayer.
+ *  Y_i = K_i*X_i + B_i  for each element
+ *  where Y is the output of Linear Layer
+ *        X is the input of the Linear Layer
+ *        K is the learning parameter of Scale for each element
+ *        B is the learning parameter of Bias for each element
+ *  dL/dX = dL/dY * K_i    Where L is Loss
+ *  dL/dk = dL/dY * X_i
  *  dL/db = dL/dY
  * */
 
-class BiasLayer : public Layer {
+class LinearLayer : public Layer {
 public:
-    BiasLayer(const int id, const string& name, Layer* prevLayer);
-    ~BiasLayer();
+    LinearLayer(const int id, const string& name, Layer* prevLayer);
+    ~LinearLayer();
 
+    Tensor<float>*  m_pKTensor;
     Tensor<float>*  m_pBTensor;
+    Tensor<float>*  m_pdKTensor;
     Tensor<float>*  m_pdBTensor;
 
     virtual  void initialize(const string& initialMethod);
@@ -31,7 +33,7 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);

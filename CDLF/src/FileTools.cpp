@@ -8,7 +8,7 @@
 #include <sys/types.h>
 
 bool isExceptionFile(const string file, const vector<string> exceptionFiles){
-    long N = exceptionFiles.size();
+    int N = exceptionFiles.size();
     for(int i =0; i< N; ++i){
         if (file == exceptionFiles[i]) return true;
     }

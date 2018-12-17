@@ -13,7 +13,7 @@
 
 class ReshapeLayer : public Layer {
 public:
-    ReshapeLayer(const int id, const string& name, Layer* prevLayer, const vector<long>& outputSize);
+    ReshapeLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& outputSize);
     ~ReshapeLayer();
 
     virtual  void initialize(const string& initialMethod);
@@ -21,7 +21,7 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

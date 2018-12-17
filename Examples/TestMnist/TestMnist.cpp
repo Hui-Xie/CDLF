@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 
     cout<<"test the matching between image and label in whole dataset"<<endl;
     srand (time(NULL));
-    long index = rand() % 10000;
+    int index = rand() % 10000;
     mnist.displayImage(mnist.m_pTestImages, index);
     cout<<"Image is "<<(int)(mnist.m_pTestLabels->e(index))<<endl;
 
@@ -74,9 +74,9 @@ int main(int argc, char *argv[]){
     net.setUnlearningLayerID(2);
 
 
-    long epoch= 15000;
+    int epoch= 15000;
     float accuracy = 0;
-    for (long i=0; i<epoch; ++i){
+    for (int i=0; i<epoch; ++i){
         net.train();
         net.save();
         accuracy = net.test();

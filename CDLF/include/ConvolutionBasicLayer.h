@@ -11,28 +11,28 @@
 
 class ConvolutionBasicLayer : public Layer {
 public:
-    ConvolutionBasicLayer(const int id, const string& name, Layer* prevLayer, const vector<long>& filterSize,
+    ConvolutionBasicLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize,
                           const int numFilters, const int stride);
     ~ConvolutionBasicLayer();
 
     Tensor<float>**  m_pW;
     Tensor<float>**  m_pdW;
     int m_numFilters;
-    vector<long> m_filterSize;
+    vector<int> m_filterSize;
     int m_stride;
     int m_OneFilterN;
-    vector<long> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
+    vector<int> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
-    bool checkFilterSize(const vector<long>& filterSize, Layer* prevLayer);
+    bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
     void constructFiltersAndY();
 
     void computeOneFiterN();
 
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

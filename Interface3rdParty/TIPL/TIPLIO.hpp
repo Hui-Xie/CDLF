@@ -36,29 +36,29 @@ int TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor<
     const unsigned int dim = imageData.dimension;
 
 
-    vector<long> tensorSize(dim,0);
+    vector<int> tensorSize(dim,0);
     for(int i=0; i<dim; ++i){
         tensorSize[i] = m_imageHeader2.dim[dim-i];// dim[0] is the number of dimensions;
     }
     pTensor = new Tensor<float>(tensorSize);
 
     if (2 == dim){
-        for (long i=0; i<tensorSize[0]; ++i)
-            for (long j=0; j<tensorSize[1];++j)
+        for (int i=0; i<tensorSize[0]; ++i)
+            for (int j=0; j<tensorSize[1];++j)
                 pTensor->e(i,j) = (float) imageData.at(j,i);
     }
     else if (3 == dim){
-        for (long i=0; i<tensorSize[0]; ++i)
-            for (long j=0; j<tensorSize[1];++j)
-                for (long k=0; k<tensorSize[2];++k)
+        for (int i=0; i<tensorSize[0]; ++i)
+            for (int j=0; j<tensorSize[1];++j)
+                for (int k=0; k<tensorSize[2];++k)
                 pTensor->e(i,j,k) = (float)imageData.at(k,j,i);
     }
     // currently TIPL does not support 4D image data
     /*else if (4 == dim){
-        for (long i=0; i<tensorSize[0]; ++i)
-            for (long j=0; j<tensorSize[1];++j)
-                for (long k=0; k<tensorSize[2];++k)
-                    for (long l=0; l<tensorSize[3];++l)
+        for (int i=0; i<tensorSize[0]; ++i)
+            for (int j=0; j<tensorSize[1];++j)
+                for (int k=0; k<tensorSize[2];++k)
+                    for (int l=0; l<tensorSize[3];++l)
                         pTensor->e(i,j,k,l) = (float)imageData.at(l,k,j,i);
 
     }*/
@@ -70,9 +70,9 @@ int TIPLIO<VoxelType, Dimension>::readNIfTIFile(const string & filename, Tensor<
 }
 
 template<typename VoxelType, int Dimension>
-int TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor, const vector<long> &offset,
+int TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor, const vector<int> &offset,
                                                     const string &filename) {
-    const vector<long> tensorSize = pTensor->getDims();
+    const vector<int> tensorSize = pTensor->getDims();
     tipl::io::nifti parser;
     const unsigned int dim = tensorSize.size();
 
@@ -101,9 +101,9 @@ int TIPLIO<VoxelType, Dimension>::write3DNIfTIFile(const Tensor<float> *pTensor,
     parser.nif_header2 = m_imageHeader2;
 
     tipl::image<VoxelType, Dimension> imageData(tipl::geometry<Dimension>(tensorSize[2], tensorSize[1], tensorSize[0]));
-    for (long i = 0; i < tensorSize[0]; ++i)
-        for (long j = 0; j < tensorSize[1]; ++j)
-            for (long k = 0; k < tensorSize[2]; ++k) {
+    for (int i = 0; i < tensorSize[0]; ++i)
+        for (int j = 0; j < tensorSize[1]; ++j)
+            for (int k = 0; k < tensorSize[2]; ++k) {
                 imageData.at(k, j, i) = (VoxelType) pTensor->e(i, j, k);
             }
     parser << imageData;

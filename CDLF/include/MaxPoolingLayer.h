@@ -17,11 +17,11 @@
 
 class MaxPoolingLayer :  public Layer {
 public:
-    MaxPoolingLayer(const int id, const string& name, Layer* prevLayer, const vector<long>& filterSize,
+    MaxPoolingLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize,
                      const int stride=1);
     ~MaxPoolingLayer();
 
-    vector<long> m_filterSize;
+    vector<int> m_filterSize;
     void constructY();
 
 
@@ -30,7 +30,7 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
-    virtual  long getNumParameters();
+    virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

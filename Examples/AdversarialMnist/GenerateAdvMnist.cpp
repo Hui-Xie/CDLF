@@ -71,7 +71,7 @@ int main(int argc, char *argv[]){
     Tensor<float> groundTruth;
     int label; // correct label, which is different with target.
     while (!bPredictCorrect){
-        long index = rand() % 10000;
+        int index = rand() % 10000;
         mnist.getTestImageAndLabel(index, inputTensor, label);
         net.constructGroundTruth(label, groundTruth);
         net.m_groundTruth = groundTruth;

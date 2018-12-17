@@ -21,8 +21,8 @@ float LossConvexExample2::lossCompute(){
     //use m_prevLayerPointer->m_pYTensor,
     m_loss = 0;
     Tensor<float> & prevY = *(m_prevLayer->m_pYTensor);
-    long N = prevY.getLength();
-    for (long i=0; i< N ;++i){
+    int N = prevY.getLength();
+    for (int i=0; i< N ;++i){
         m_loss += exp( prevY.e(i) - i);
     }
     return m_loss;
@@ -35,17 +35,17 @@ void  LossConvexExample2::gradientCompute(){
     //symbol deduced formula to compute gradient to prevLayerPoint->m_pdYTensor
     Tensor<float> & prevY = *(m_prevLayer->m_pYTensor);
     Tensor<float> & prevdY = *(m_prevLayer->m_pdYTensor);
-    long N = prevY.getLength();
-    for (long i=0; i< N ;++i){
+    int N = prevY.getLength();
+    for (int i=0; i< N ;++i){
         prevdY[i] += exp ( prevY[i] - i);
     }
 }
 
 void  LossConvexExample2::printGroundTruth(){
     cout<<"For this specific Loss function: f(x) = \\sum exp(x_i -i), Ground Truth is: ";
-    long N = m_prevLayer->m_pYTensor->getLength();
+    int N = m_prevLayer->m_pYTensor->getLength();
     cout<<"( ";
-    for (long i=0; i< N; ++i){
+    for (int i=0; i< N; ++i){
         if (i != N-1 ) cout<<"-inf"<<", ";
         else cout<<"-inf";
     }

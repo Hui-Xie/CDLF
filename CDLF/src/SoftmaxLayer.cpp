@@ -28,8 +28,8 @@ void SoftmaxLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int nSoftmax = m_pYTensor->getDims()[0];// a vector's dimension to execute softmax
-    const long N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
-    for (long j=0; j<N; ++j){
+    const int N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
+    for (int j=0; j<N; ++j){
         float sumExpX = 1e-8;
         for (int i=0; i< nSoftmax; ++i){
             sumExpX += exp(X(i*N+j));
@@ -46,8 +46,8 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int nSoftmax = m_pdYTensor->getDims()[0];// a vector's dimension to execute softmax
-    const long N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
-    for (long j=0; j<N; ++j){
+    const int N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
+    for (int j=0; j<N; ++j){
         float sumExpX = 1e-8;
         for (int i=0; i< nSoftmax; ++i){
             sumExpX += exp(X(i*N+j));
@@ -70,7 +70,7 @@ void SoftmaxLayer::updateParameters(const float lr, const string& method, const 
     //Null
 }
 
-long  SoftmaxLayer::getNumParameters(){
+int  SoftmaxLayer::getNumParameters(){
     return 0;
 }
 

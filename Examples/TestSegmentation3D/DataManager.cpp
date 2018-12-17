@@ -85,12 +85,12 @@ void DataManager::readLabelFile(const string& filename, Tensor<unsigned char>*& 
 // k indicates number of categories
 // the original label must be continuous integer starting from 0.
 void DataManager::oneHotEncodeLabel(const Tensor<unsigned char>* pLabel, Tensor<float>*& pOneHotLabel, const int k){
-    const long N = pLabel->getLength();
-    vector<long> newDims =  pLabel->getDims();
+    const int N = pLabel->getLength();
+    vector<int> newDims =  pLabel->getDims();
     newDims.insert(newDims.begin(), k);
     pOneHotLabel = new Tensor<float> (newDims);
     pOneHotLabel->zeroInitialize();
-    for(long i=0; i<N; ++i){
+    for(int i=0; i<N; ++i){
         int label = int(pLabel->e(i));
         pOneHotLabel->e((label%k)*N+i) = 1.0;
     }
@@ -103,14 +103,14 @@ void DataManager::oneHot2Label(Tensor<float>* pOneHotLabel, Tensor<unsigned char
     *pLabel = pOneHotLabel->getMaxPositionSubTensor();
 }
 
-void DataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<long>& offset, const string& fullPathFileName){
+void DataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
     m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
 }
 
-void DataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<long>& originalImageTensorSize){
+void DataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<int>& originalImageTensorSize){
     Tensor<unsigned char>* pLabel = nullptr;
     oneHot2Label(pOneHotLabel, pLabel);
-    vector<long> offset = (originalImageTensorSize - pLabel->getDims())/2;
+    vector<int> offset = (originalImageTensorSize - pLabel->getDims())/2;
     saveLabel2File(pLabel, offset, fullPathFileName);
     delete pLabel;
 }

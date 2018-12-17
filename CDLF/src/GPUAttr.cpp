@@ -14,7 +14,7 @@ using namespace std;
 int GPUAttr::m_numDevices = 0;
 int GPUAttr::m_numSMs = 0;
 int GPUAttr::m_maxThreadsPerBlock = 0;
-long GPUAttr::m_blocksPerGrid = 0;
+int GPUAttr::m_blocksPerGrid = 0;
 
 
 void cudaPrintError(){

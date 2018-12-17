@@ -13,7 +13,7 @@ public:
     MnistConvNet(const string& name, const string& saveDir, MNIST* pMnistData);
     ~MnistConvNet();
 
-    Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const long index);
+    Tensor<float> constructGroundTruth(Tensor<unsigned char> *pLabels, const int index);
 
     virtual void build();
     virtual void train();

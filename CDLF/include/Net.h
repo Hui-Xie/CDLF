@@ -18,12 +18,12 @@ struct LayerStruct{
     string m_type;
     string m_name;
     int m_preLayerID;
-    vector<long> m_preLayersIDs;
-    vector<long> m_outputTensorSize;
-    vector<long> m_filterSize;
+    vector<int> m_preLayersIDs;
+    vector<int> m_outputTensorSize;
+    vector<int> m_filterSize;
     int m_numFilter;
     float m_stride;  // or k in sigmoid, lambda in SquareLossLayer
-    vector<long> m_startPosition;
+    vector<int> m_startPosition;
 };
 
 
@@ -36,7 +36,7 @@ public:
     void setLossTolerance(const float tolerance);
     void setJudgeLoss(const bool judgeLoss);
     void setBatchSize(const int batchSize);
-    void setEpoch(const long epoch);
+    void setEpoch(const int epoch);
     void setDir(const string dir);
     void setUnlearningLayerID(const int id);
 
@@ -46,12 +46,12 @@ public:
     float getLossTolerance();
     bool getJudgeLoss();
     int  getBatchSize();
-    long getEpoch();
+    int getEpoch();
     map<int, Layer*> getLayersMap();
     string getDir();
     int getUnlearningLayerID();
 
-    long getNumParameters();
+    int getNumParameters();
 
 
     void addLayer(Layer* layer);
@@ -87,7 +87,7 @@ protected:
     float m_lossTolerance;
     bool m_judgeLoss;
     int m_batchSize;
-    long m_epoch;
+    int m_epoch;
     map<int, Layer*> m_layers;
     // check whether layer pointer and name are duplicated
     bool layerExist(const Layer* layer);

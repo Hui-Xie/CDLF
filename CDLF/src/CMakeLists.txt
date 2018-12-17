@@ -42,10 +42,10 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet.cpp
         statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.hpp Tools.cpp
-        ConvolutionLayer.cpp BiasLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
+        ConvolutionLayer.cpp LinearLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
         IdentityLayer.cpp MergerLayer.cpp BranchLayer.cpp
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
-        SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp ScaleLayer.cpp GPUAttr.cpp CPUAttr.cpp FileTools.cpp
+        SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp GPUAttr.cpp CPUAttr.cpp FileTools.cpp
         LossConvexExample1.cpp LossConvexExample2.cpp LossNonConvexExample1.cpp LossNonConvexExample2.cpp
         TransposedConvolutionLayer.cpp ConvolutionBasicLayer.cpp PaddingLayer.cpp SquareLossLayer.cpp ReshapeLayer.cpp)
 

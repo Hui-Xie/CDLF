@@ -9,43 +9,43 @@
 
 using namespace std;
 
-bool sameVector(const vector<long>& vec1, const vector<long>& vec2);
+bool sameVector(const vector<int>& vec1, const vector<int>& vec2);
 
-long length(const vector<long>& vec);
+int length(const vector<int>& vec);
 
-bool sameLength(const vector<long>& vec1, const vector<long>& vec2);
+bool sameLength(const vector<int>& vec1, const vector<int>& vec2);
 
-vector<long> reverseVector(const vector<long>& src);
+vector<int> reverseVector(const vector<int>& src);
 
-vector<long> operator+ (const vector<long>& left, const int offset);
+vector<int> operator+ (const vector<int>& left, const int offset);
 
-vector<long> operator+ (const vector<long>& left, const vector<long>& right);
+vector<int> operator+ (const vector<int>& left, const vector<int>& right);
 
-vector<long> operator- (const vector<long>& left, const vector<long>& right);
+vector<int> operator- (const vector<int>& left, const vector<int>& right);
 
-vector<long> operator- (const vector<long>& minuend, const int subtrahend);
+vector<int> operator- (const vector<int>& minuend, const int subtrahend);
 
-vector<long> operator* (const vector<long>& left, const int factor);
+vector<int> operator* (const vector<int>& left, const int factor);
 
-vector<long> operator/ (const vector<long>& left, const int divisor);
+vector<int> operator/ (const vector<int>& left, const int divisor);
 
-bool operator<= (const vector<long>& left, const vector<long>& right);
+bool operator<= (const vector<int>& left, const vector<int>& right);
 
-bool operator!= (const vector<long>& left, const vector<long>& right);
+bool operator!= (const vector<int>& left, const vector<int>& right);
 
-bool operator== (const vector<long>& left, const vector<long>& right);
+bool operator== (const vector<int>& left, const vector<int>& right);
 
-void deleteOnes(vector<long>& vec);
+void deleteOnes(vector<int>& vec);
 
-vector<long> nonZeroIndex(const vector<long>& vec);
+vector<int> nonZeroIndex(const vector<int>& vec);
 
-void printVector(const vector<long>& vec);
+void printVector(const vector<int>& vec);
 
-string vector2Str(const vector<long>& vec);
+string vector2Str(const vector<int>& vec);
 
-vector<long> str2Vector(const string& str);
+vector<int> str2Vector(const string& str);
 
-vector<long> generateRandomSequence(const long range);
+vector<int> generateRandomSequence(const int range);
 
 string getStemName(const string& filename);
 
@@ -53,7 +53,7 @@ void printCurrentLocalTime();
 
 string getCurTimeStr();
 
-vector<long> genDimsSpan(const vector<long> vec);
+vector<int> genDimsSpan(const vector<int> vec);
 
 string eraseAllSpaces(string str);
 
