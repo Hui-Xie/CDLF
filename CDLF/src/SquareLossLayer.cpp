@@ -16,14 +16,16 @@ SquareLossLayer::~SquareLossLayer() {
 }
 
 void SquareLossLayer::printGroundTruth() {
-   m_pGroundTruth->print();
+    if (nullptr != m_pGroundTruth){
+        m_pGroundTruth->print();
+    }
 }
 
 // L= lambda*0.5*\sum (x_i- g_i)^2
 float SquareLossLayer::lossCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     const long N = X.getLength();
-    float loss = 0;
+    float loss = 0.0;
     for (long i=0; i<N; ++i){
         loss += pow(X.e(i) - m_pGroundTruth->e(i), 2);
     }
