@@ -23,29 +23,25 @@ RescaleLayer::~RescaleLayer(){
 
 }
 
-void RescaleLayer::forward(){
-    Tensor<float>& Y = *m_pYTensor;
-    Tensor<float>& X = *m_prevLayer->m_pYTensor;
+void RescaleLayer::forward() {
+    Tensor<float> &Y = *m_pYTensor;
+    Tensor<float> &X = *m_prevLayer->m_pYTensor;
     float min = 0;
     float max = 0;
-    X.getMinMax(min,max);
+    X.getMinMax(min, max);
     float kdiff = max - min;
     if (0 == kdiff) {
-        kdiff = m_k;  //todo: need think again
-    }else{
-        kdiff = m_k/kdiff;
+        kdiff = m_k;
+    } else {
+        kdiff = m_k / kdiff;
     }
 
-    if (0 == kdiff){
-        Y.uniformInitialize(m_k);
-    }
-    else{
-        int N = Y.getLength();
-        for (int i=0; i< N; ++i){
-            Y.e(i) = (X.e(i) - min)*kdiff;
-        }
+    int N = Y.getLength();
+    for (int i = 0; i < N; ++i) {
+        Y.e(i) = (X.e(i) - min) * kdiff;
     }
 }
+
 void RescaleLayer::backward(bool computeW, bool computeX){
     if (computeX){
         Tensor<float>& dY = *m_pdYTensor;
