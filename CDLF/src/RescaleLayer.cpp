@@ -31,36 +31,38 @@ void RescaleLayer::forward() {
     X.getMinMax(min, max);
     float kdiff = max - min;
     if (0 == kdiff) {
-        kdiff = m_k;
-    } else {
-        kdiff = m_k / kdiff;
+        return; // all Y.e(i)  =0,which already compute in the forward propagation.
     }
-
-    int N = Y.getLength();
-    for (int i = 0; i < N; ++i) {
-        Y.e(i) = (X.e(i) - min) * kdiff;
+    else {
+        kdiff = m_k / kdiff;
+        const int N = Y.getLength();
+        for (int i = 0; i < N; ++i) {
+            Y.e(i) = (X.e(i) - min) * kdiff;
+        }
     }
 }
 
-void RescaleLayer::backward(bool computeW, bool computeX){
-    if (computeX){
-        Tensor<float>& dY = *m_pdYTensor;
-        Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
-        Tensor<float>& X = *m_prevLayer->m_pYTensor;
+void RescaleLayer::backward(bool computeW, bool computeX) {
+    if (computeX) {
+        Tensor<float> &dY = *m_pdYTensor;
+        Tensor<float> &dX = *m_prevLayer->m_pdYTensor;
+        Tensor<float> &X = *m_prevLayer->m_pYTensor;
 
         float min = 0;
         float max = 0;
-        X.getMinMax(min,max);
+        X.getMinMax(min, max);
         float kdiff = max - min;
         if (0 == kdiff) {
-            kdiff = m_k;
-        }else{
-            kdiff = m_k/kdiff;
+            return;// all dX.e(i) should equal 0
         }
-
-        int N = dY.getLength();
-        for(int i=0; i< N; ++i){
-            dX.e(i) += dY.e(i) * kdiff;
+        else {
+            kdiff = m_k / kdiff;
+            const int N = dY.getLength();
+            for (int i = 0; i < N; ++i) {
+                if (max != X.e(i) && min != X.e(i)) {
+                    dX.e(i) += dY.e(i) * kdiff;
+                }// when X.e(i) ==max or X.e(i) == min, dX.e(i) should equal 0.
+            }
         }
     }
 }

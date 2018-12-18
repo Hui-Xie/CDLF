@@ -538,7 +538,7 @@ float Tensor<ValueType>::min() {
 
 template<class ValueType>
 void Tensor<ValueType>::getMinMax(ValueType& min, ValueType& max){
-    int N = getLength();
+    const int N = getLength();
     min = e(0);
     max = e(0);
     for (int i = 1; i < N; ++i) {
