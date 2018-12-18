@@ -78,6 +78,10 @@ public:
     void saveNetParameters();
     void loadNetParameters();
 
+    //for debug
+    void saveYTensor();
+    void savedYTensor();
+
     virtual void save();
     virtual void load();
 

@@ -438,6 +438,26 @@ void Net::save() {
     cout << "Net parameters saved at " << m_directory << " directory." << endl;
 }
 
+void Net::saveYTensor(){
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        const string fileName = m_directory +"/Y_"+ to_string(iter->second->m_id) + ".csv";
+        if (nullptr != iter->second->m_pYTensor ){
+            iter->second->m_pYTensor->save(fileName,false);
+        }
+    }
+}
+
+void Net::savedYTensor(){
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        const string fileName = m_directory +"/dY_"+ to_string(iter->second->m_id) + ".csv";
+        if (nullptr != iter->second->m_pdYTensor ){
+            iter->second->m_pdYTensor->save(fileName,false);
+        }
+    }
+}
+
+
+
 void Net::load() {
     loadLayersStruct();
     loadNetParameters();

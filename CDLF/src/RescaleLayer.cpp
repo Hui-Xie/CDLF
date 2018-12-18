@@ -29,7 +29,7 @@ void RescaleLayer::forward(){
     float min = 0;
     float max = 0;
     X.getMinMax(min,max);
-    float kdiff = m_k*(max - min);
+    float kdiff = m_k/(max - min);
     if (0 == kdiff){
         Y.uniformInitialize(m_k);
     }
@@ -49,7 +49,7 @@ void RescaleLayer::backward(bool computeW, bool computeX){
         float min = 0;
         float max = 0;
         X.getMinMax(min,max);
-        float kdiff = m_k*(max - min);
+        float kdiff = m_k/(max - min);
 
         int N = dY.getLength();
         for(int i=0; i< N; ++i){

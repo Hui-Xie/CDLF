@@ -59,9 +59,17 @@ int main(int argc, char *argv[]){
     float squareLoss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
+
+        //debug
+        //net.saveYTensor();
+        //net.savedYTensor();
+
         net.save();
         squareLoss = net.test();
         cout<<"Epoch_"<<i<<": "<<" average squareLoss for each image = "<< squareLoss <<endl;
+
+        //debug
+       // break;
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
