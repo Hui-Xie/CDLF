@@ -47,6 +47,12 @@ void ConvexNet::train() {
     int nIter = 0;
     InputLayer *inputLayer = (InputLayer *) getInputLayer();
     LossLayer *lossLayer = (LossLayer *) getFinalLayer();
+    Tensor<float> groundTruth(lossLayer->m_prevLayer->m_pYTensor->getDims());
+    const int N = groundTruth.getLength();
+    for(int i= 0; i<N; ++i){
+        groundTruth.e(i) = i;
+    }
+
     int maxIteration = 1000;
     int batchSize = getBatchSize();
     float lr = getLearningRate();
@@ -65,6 +71,7 @@ void ConvexNet::train() {
             Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
             generateGaussian(&inputTensor, 0, 1);
             inputLayer->setInputTensor(inputTensor);
+            lossLayer->setGroundTruth(groundTruth);
             forwardPropagate();
             backwardPropagate(true);
             ++nIter;
