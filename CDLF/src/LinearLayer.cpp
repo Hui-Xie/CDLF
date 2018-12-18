@@ -38,8 +38,8 @@ LinearLayer::~LinearLayer() {
 
 void LinearLayer::initialize(const string& initialMethod){
   int N = m_pBTensor->getLength();
-  generateGaussian(m_pKTensor, 0, 0.1);
-  generateGaussian(m_pBTensor, 0, 0.1);
+  generateGaussian(m_pKTensor, 0, 0.001);
+  generateGaussian(m_pBTensor, 0, 0.00001);
 }
 
 void LinearLayer::zeroParaGradient(){
