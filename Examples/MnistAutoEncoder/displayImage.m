@@ -1,15 +1,25 @@
 % read txt image files and display
+% and compute their correlation coefficient 
 clear all;
 clc;
-label = 2;
 dir = '/home/hxie1/temp_DecoderOutput';
-originFile = strcat(dir, '/T','1-I4','.txt'); %origin input File
-reconstrFile = strcat(dir, '/T','1-R4','.txt'); %Reconstruction file
-O = dlmread(originFile); R = dlmread(reconstrFile);
-OImage = mat2gray(O,[0,255]); RImage = mat2gray(R,[0,255]);
+originFile = strcat(dir, '/T','0-I0','.txt'); %origin input File
+reconstrFile = strcat(dir, '/T','0-R0','.txt'); %Reconstruction file
+I = dlmread(originFile); R = dlmread(reconstrFile);
+IImage = mat2gray(I,[0,255]); RImage = mat2gray(R,[0,255]);
 
-[filepath,nameO,ext] = fileparts(originFile);
-subplot(1,2,1); imshow(OImage);title(nameO);
+corrMatrix = corrcoef(reshape(I,784,1), reshape(R, 784, 1));
+corr = corrMatrix(1,2);
+
+displayText = sprintf('Correlation Coefficient: %f', corr);
+
+
+[filepath,nameI,ext] = fileparts(originFile);
+subplot(1,2,1); imshow(IImage);title(nameI);
 
 [filepath,nameR,ext] = fileparts(reconstrFile);
 subplot(1,2,2); imshow(RImage);title(nameR);
+
+
+% sgtitle(displayText);
+disp(displayText);
