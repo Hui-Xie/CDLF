@@ -97,6 +97,7 @@ void MnistConvNet::train(){
     }
 }
 
+
 float MnistConvNet::test(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();

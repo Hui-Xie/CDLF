@@ -50,7 +50,6 @@ void MnistAutoEncoder::train() {
 }
 
 
-
 float MnistAutoEncoder::test(){
     InputLayer *inputLayer = getInputLayer();
     SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
