@@ -39,7 +39,7 @@ void TransposedConvolutionLayer::updateTensorSize() {
 
 // Y = W*X
 void TransposedConvolutionLayer::forward() {
-    int N = length(m_tensorSize) / m_numFilters;
+    const int N = length(m_tensorSize) / m_numFilters;
     vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);

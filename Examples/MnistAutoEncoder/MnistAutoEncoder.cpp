@@ -46,6 +46,12 @@ void MnistAutoEncoder::train() {
         }
         sgd(learningRate, i);
         ++nBatch;
+
+        //debug
+        if (nBatch >= numBatch){
+            cout<<"Information: the final batchSize is "<< i<<endl;
+            lossLayer->m_pGroundTruth->save(m_directory +"/" + "GroundTruth.csv");
+        }
     }
 }
 

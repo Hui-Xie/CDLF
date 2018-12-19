@@ -798,7 +798,7 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeB
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();
-    int N = getLength();
+    const int N = getLength();
     vector<int> dimsSpanBeforeCollapse = genDimsSpan(tensorSizeBeforeCollapse);
     for (int oldOffset=0; oldOffset<N; ++oldOffset){
         vector<int> oldIndex = offset2Index(dimsSpanBeforeCollapse, oldOffset);

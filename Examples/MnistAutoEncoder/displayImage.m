@@ -3,8 +3,8 @@
 clear all;
 clc;
 dir = '/home/hxie1/temp_DecoderOutput';
-originFile = strcat(dir, '/T','0-I0','.txt'); %origin input File
-reconstrFile = strcat(dir, '/T','0-R0','.txt'); %Reconstruction file
+originFile = strcat(dir, '/T','2-I8','.txt'); %origin input File
+reconstrFile = strcat(dir, '/T','2-R8','.txt'); %Reconstruction file
 I = dlmread(originFile); R = dlmread(reconstrFile);
 IImage = mat2gray(I,[0,255]); RImage = mat2gray(R,[0,255]);
 

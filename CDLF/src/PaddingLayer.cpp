@@ -36,7 +36,7 @@ void PaddingLayer::zeroParaGradient(){
 void PaddingLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    int N = X.getLength();
+    const int N = X.getLength();
     for (int i=0; i< N; ++i){
         Y.e(m_start+ X.offset2Index(i)) = X.e(i);
     }
@@ -46,7 +46,7 @@ void PaddingLayer::backward(bool computeW, bool computeX){
     if (computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
-        int N = dX.getLength();
+        const int N = dX.getLength();
         for(int i=0; i< N; ++i){
             dX.e(i) += dY.e(m_start+ dX.offset2Index(i));
         }
