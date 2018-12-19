@@ -22,7 +22,7 @@ void MnistAutoEncoder::build() {
 
 void MnistAutoEncoder::train() {
     InputLayer *inputLayer = getInputLayer();
-    SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
+    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
 
     const int maxIteration =m_pMnistData->m_pTrainLabels->getLength();
     const int NTrain = maxIteration;
@@ -58,7 +58,7 @@ void MnistAutoEncoder::train() {
 
 float MnistAutoEncoder::test(){
     InputLayer *inputLayer = getInputLayer();
-    SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
+    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
     int n = 0;
     const int Ntest = m_pMnistData->m_pTestLabels->getLength();
     float squareLoss = 0.0;
@@ -76,7 +76,7 @@ float MnistAutoEncoder::test(){
 void MnistAutoEncoder::autoEncode(const Tensor<float>& inputImage, int& predictLabel, Tensor<float>& reconstructImage){
     InputLayer *inputLayer = getInputLayer();
     FCLayer* predictLayer = (FCLayer*)getLayer(18); // the FC2 layer.
-    SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
+    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
     inputLayer->setInputTensor(inputImage);
     lossLayer->setGroundTruth(inputImage);
     forwardPropagate();

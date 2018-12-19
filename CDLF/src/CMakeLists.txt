@@ -47,7 +47,7 @@ set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForward
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
         SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp GPUAttr.cpp CPUAttr.cpp FileTools.cpp
         LossConvexExample1.cpp LossConvexExample2.cpp LossNonConvexExample1.cpp LossNonConvexExample2.cpp
-        TransposedConvolutionLayer.cpp ConvolutionBasicLayer.cpp PaddingLayer.cpp SquareLossLayer.cpp ReshapeLayer.cpp)
+        TransposedConvolutionLayer.cpp ConvolutionBasicLayer.cpp PaddingLayer.cpp MeanSquareLossLayer.cpp ReshapeLayer.cpp)
 
 if (${Use_GPU})
    set(CDLF_CUDA_Src TensorCuda.cu TensorKernels.cu LayerCuda.cu LayerKernels.cu)

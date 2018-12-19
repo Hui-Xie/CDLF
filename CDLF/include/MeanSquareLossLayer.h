@@ -4,21 +4,22 @@
 
 //
 
-#ifndef CDLF_FRAMEWORK_SQUARELOSS_H
-#define CDLF_FRAMEWORK_SQUARELOSS_H
+#ifndef CDLF_FRAMEWORK_MEANSQUARELOSS_H
+#define CDLF_FRAMEWORK_MEANSQUARELOSS_H
 
 #include "LossLayer.h"
 
-/* L= lambda*0.5*\sum (x_i- g_i)^2
+/* L= lambda*(0.5/N)*\sum (x_i- g_i)^2
  * where g_i is the groundtruth distribution
  *       x_i is the output of previous layer, e.g. softmax;
- *       lambda is super parameter as weight for square loss
+ *       lambda is super parameter as weight for Mean square loss
+ *       N is the number of elements.
  * */
 
-class SquareLossLayer  : public LossLayer {
+class MeanSquareLossLayer  : public LossLayer {
 public:
-    SquareLossLayer(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
-    ~SquareLossLayer();
+    MeanSquareLossLayer(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
+    ~MeanSquareLossLayer();
     virtual void  printGroundTruth();
 
     float m_lambda;
@@ -34,4 +35,4 @@ private:
 };
 
 
-#endif //CDLF_FRAMEWORK_SQUARELOSS_H
+#endif //CDLF_FRAMEWORK_MEANSQUARELOSS_H
