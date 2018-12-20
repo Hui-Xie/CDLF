@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
     }
     net.printArchitecture();
     net.setLearningRate(0.001);
-    net.setUnlearningLayerID(30);  // 18 is the FC2 behind the Softmax of original G net.
+    net.setUnlearningLayerID(130);  // 18 is the FC2 behind the Softmax of original G net.
 
     int epoch= 15000;
     float squareLoss = 0.0;
@@ -61,15 +61,15 @@ int main(int argc, char *argv[]){
         net.train();
 
         //debug
-        net.saveYTensor();
-        net.savedYTensor();
+        //net.saveYTensor();
+        //net.savedYTensor();
 
         net.save();
         squareLoss = net.test();
         cout<<"Epoch_"<<i<<": "<<" mean squareLoss for each pixel = "<< squareLoss <<endl;
 
         //debug
-        break;
+        //break;
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;

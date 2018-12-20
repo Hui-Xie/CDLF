@@ -6,9 +6,15 @@
 #define RL_NONCONVEX_RELU_H
 #include "Layer.h"
 
+/*  parameter ReLU
+ *
+ *  y = x when x>= k;
+ *  y = 0 when x<k;
+ */
+
 class ReLU : public Layer {
 public:
-    ReLU(const int id, const string& name,Layer* prevLayer);
+    ReLU(const int id, const string& name,Layer* prevLayer, const float k = 0);
     ~ReLU();
 
     virtual  void initialize(const string& initialMethod);
@@ -21,6 +27,8 @@ public:
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct(const int layerIndex);
+
+    float m_k;
 };
 
 

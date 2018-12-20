@@ -1,7 +1,7 @@
 % display Gradient and GroudTruth
 clear all;
 clc;
-dir = '/home/hxie1/temp_netParameters/MnistAutoEncoder';
+dir = '/home/hxie1/temp_netParameters/MnistAutoEncoder/backup20181220_0104';
 dYFile = strcat(dir, '/dY_100.csv'); 
 YFile = strcat(dir, '/Y_100.csv'); 
 gtFile = strcat(dir, '/GroundTruth.csv'); 
