@@ -3,8 +3,8 @@
 clear all;
 clc;
 dir = '/home/hxie1/temp_DecoderOutput';
-originFile = strcat(dir, '/T','1-I0','.txt'); %origin input File
-reconstrFile = strcat(dir, '/T','1-R0','.txt'); %Reconstruction file
+originFile = strcat(dir, '/T','2-I9','.txt'); %origin input File
+reconstrFile = strcat(dir, '/T','2-R9','.txt'); %Reconstruction file
 I = dlmread(originFile); R = dlmread(reconstrFile);
 IImage = mat2gray(I,[0,255]); RImage = mat2gray(R,[0,255]);
 
@@ -15,10 +15,10 @@ displayText = sprintf('Correlation Coefficient: %f', corr);
 
 
 [filepath,nameI,ext] = fileparts(originFile);
-subplot(1,2,1); imshow(IImage);title(nameI);
+subplot(1,2,1); imshow(IImage, []);title(nameI);
 
 [filepath,nameR,ext] = fileparts(reconstrFile);
-subplot(1,2,2); imshow(RImage);title(nameR);
+subplot(1,2,2); imshow(RImage, []);title(nameR);
 
 
 % sgtitle(displayText);

@@ -61,15 +61,15 @@ int main(int argc, char *argv[]){
         net.train();
 
         //debug
-        //net.saveYTensor();
-        //net.savedYTensor();
+        net.saveYTensor();
+        net.savedYTensor();
 
         net.save();
         squareLoss = net.test();
         cout<<"Epoch_"<<i<<": "<<" mean squareLoss for each pixel = "<< squareLoss <<endl;
 
         //debug
-        //break;
+        break;
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
