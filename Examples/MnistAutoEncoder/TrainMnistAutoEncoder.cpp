@@ -53,7 +53,7 @@ int main(int argc, char *argv[]){
     }
     net.printArchitecture();
     net.setLearningRate(0.001);
-    net.setUnlearningLayerID(130);  // 18 is the FC2 behind the Softmax of original G net.
+    net.setUnlearningLayerID(100);  // 18 is the FC2 behind the Softmax of original G net.
 
     int epoch= 15000;
     float squareLoss = 0.0;

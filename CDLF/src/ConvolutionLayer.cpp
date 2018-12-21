@@ -10,6 +10,9 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prev
                                    const int numFilters, const int stride)
         : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride) {
     m_type = "ConvolutionLayer";
+    if (stride <=0){
+        cout<<"Error: the stride of convolutionLayer should be greater than 0. "<<endl;
+    }
     updateTensorSize();
     constructFiltersAndY();
 }
