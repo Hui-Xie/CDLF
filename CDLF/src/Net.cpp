@@ -140,8 +140,17 @@ void Net::addLayer(Layer *layer) {
     }
 }
 
-Layer *Net::getLayer(const int ID) {
+Layer* Net::getLayer(const int ID) {
     return m_layers.at(ID);
+}
+
+vector<Layer*> Net::getLayers(const vector<int> IDVec){
+    vector<Layer*> pLayersVec;
+    const int N = IDVec.size();
+    for (int i=0; i<N; ++i){
+        pLayersVec.push_back(m_layers.at(IDVec[i]));
+    }
+    return pLayersVec;
 }
 
 
@@ -326,6 +335,10 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            for(int k=0; k<nInBranches; ++k){
                pLayer->addPreviousLayer(m_layers[s.m_preLayersIDs[k]]);
            }
+        }
+        else if ("ConcatenateLayer" == s.m_type) {
+            vector<Layer*> pLayersVec = getLayers(s.m_preLayersIDs);
+            pLayer = new ConcatenateLayer(s.m_id, s.m_name, pLayersVec);
         }
         else if ("SigmoidLayer" == s.m_type) {
            pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_stride);

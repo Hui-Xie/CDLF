@@ -118,12 +118,12 @@ Tensor<ValueType>::~Tensor() {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::copyDataFrom(void *buff, const int numBytes) {
+void Tensor<ValueType>::copyDataFrom(void *buff, const int numBytes, const int offsetBytes) {
     if (numBytes > getLength() * sizeof(ValueType)) {
         cout << "Error: numBytes of Tensor::copyDataFrom is bigger than data space." << endl;
         return;
     } else {
-        memcpy(m_data, buff, numBytes);
+        memcpy(m_data + offsetBytes, buff, numBytes);
     }
 }
 

@@ -56,6 +56,7 @@ public:
 
     void addLayer(Layer* layer);
     Layer* getLayer(const int ID);
+    vector<Layer*> getLayers(const vector<int> IDVec);
 
 
     InputLayer* getInputLayer();
@@ -103,6 +104,7 @@ protected:
 
     void readLayesStruct(vector<struct LayerStruct>& layersStructVec);
     void createLayers(const vector<struct LayerStruct>& layersStructVec);
+
 
 };
 

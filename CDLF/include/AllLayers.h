@@ -28,6 +28,7 @@
 #include "PaddingLayer.h"
 #include "VectorizationLayer.h"
 #include "ReshapeLayer.h"
+#include "ConcatenateLayer.h"
 #include "RescaleLayer.h"
 #include "LossConvexExample1.h"
 #include "LossConvexExample2.h"

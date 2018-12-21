@@ -25,7 +25,7 @@ public:
     Tensor& operator= (const Tensor& other);
     ~Tensor();
 
-    void copyDataFrom(void* buff, const int numBytes);
+    void copyDataFrom(void* buff, const int numBytes, const int offsetBytes = 0);
 
 
     vector<int> getDims() const;
