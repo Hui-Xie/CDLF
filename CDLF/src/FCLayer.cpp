@@ -77,25 +77,25 @@ void FCLayer::forward() {
 //  dL/db = dL/dy * dy/db = dL/dy
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
 void FCLayer::backward(bool computeW, bool computeX) {
-    Tensor<float> &dLdy = *m_pdYTensor;
+    const Tensor<float> &dLdy = *m_pdYTensor;
     if (computeW){
-        *m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
-        // sgemm(A*X+B)
-        *m_pdBTensor += dLdy;
-        // saxpy
+        //*m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
+        gemm(1.0, false, &dLdy, true, m_prevLayer->m_pYTensor, 1.0, m_pdW);
+        //*m_pdBTensor += dLdy;
+        axpy(1, &dLdy, m_pBTensor);
     }
     if (computeX){
-        *(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;
-        //sgemv(A'*x+B)
+        //*(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;
+        gemv(true, m_pW, &dLdy, m_prevLayer->m_pdYTensor);
     }
 }
 
 void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {
     if ("sgd" == method) {
-        *m_pW -= (*m_pdW) * (lr / batchSize);
-        // mkl_somatadd
-        *m_pBTensor -= (*m_pdBTensor) * (lr / batchSize);
-        // saxpy
+        //*m_pW -= (*m_pdW) * (lr / batchSize);
+        matAdd(1.0, m_pW, -(lr / batchSize), m_pdW, m_pW);
+        //*m_pBTensor -= (*m_pdBTensor) * (lr / batchSize);
+        axpy(-(lr/batchSize), m_pdBTensor, m_pBTensor);
     }
 }
 

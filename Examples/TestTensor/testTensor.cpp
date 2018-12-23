@@ -241,6 +241,40 @@ int main (int argc, char *argv[]) {
     gemv(false, &A, &x, &b);
     b.print();
 
+
+    cout<<"y=3.0*b +y:"<<endl;
+    axpy(3,&b,&y);
+    y.print();
+
+
+    Tensor<float> B({4,3});
+    k=0;
+    for (int i=0; i<4; ++i){
+        for(int j=0; j<3;++j){
+            B.e(k) = k;
+            ++k;
+        }
+    }
+    cout <<"B:"<<endl;
+    B.print();
+
+    Tensor<float> C({3,3});
+    for (int i=0; i< C.getLength(); ++i){
+        C.e(i) = 1;
+    }
+    cout <<"C:"<<endl;
+    C.print();
+    // C = a*A*B+ b*C
+    gemm(3, false, &A, false, &B, 2, &C);
+    cout<<"C= 3*A*B+ 2*C: "<<endl;
+    C.print();
+
+
+    matAdd(3, &C, 4, &C, &C);
+    cout<<"C = 3*C+ 4*C= "<<endl;
+    C.print();
+
+
     cout<<"=========End of Test MKL CBLAS Tensor========="<<endl;
 
 
