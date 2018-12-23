@@ -46,7 +46,7 @@ void ConvexNet::build() {
 void ConvexNet::train() {
     int nIter = 0;
     InputLayer *inputLayer = (InputLayer *) getInputLayer();
-    LossLayer *lossLayer = (LossLayer *) getFinalLayer();
+    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
     Tensor<float> groundTruth(lossLayer->m_prevLayer->m_pYTensor->getDims());
     const int N = groundTruth.getLength();
     for(int i= 0; i<N; ++i){
