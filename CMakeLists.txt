@@ -34,6 +34,21 @@ set(CDLF_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF/include)
 include_directories(${CDLF_INCLUDE_DIR})
 link_directories(${CMAKE_BINARY_DIR}/CDLF/src)
 
+# for Intel MKL library
+set(INTEL  /home/hxie1/intel)
+set(MKLROOT ${INTEL}/mkl)
+set(MKL_INCLUDE_DIR ${MKLROOT}/include)
+include_directories(${MKL_INCLUDE_DIR})
+
+# use intel link advisor below to get link options
+# https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
+# for shared MKL library linking
+set(MKL_LINK_FlAGS "    -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl ")
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${MKL_LINK_FlAGS}")
+
+# for dynamic link MKL library
+set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so  ${MKLROOT}/lib/intel64/libmkl_sequential.so  ${MKLROOT}/lib/intel64/libmkl_core.so)
+
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
 message("1  In Windows, after setting envionmental varialbles, you need to reboot your system.")
@@ -48,7 +63,7 @@ message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
-set(CDLFLib libCDLF.so)    # for Linux
+set(CDLFLib libCDLF.so ${MKL_LIBRARY})    # for Linux
 
 add_subdirectory(CDLF)
 add_subdirectory(Examples)

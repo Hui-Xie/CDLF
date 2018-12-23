@@ -6,6 +6,7 @@
 #define CDLF_FRAMEWORK_CDLF_H
 
 #include "Tensor.h"
+#include "TensorBlas.h"
 
 #include "AllLayers.h"
 

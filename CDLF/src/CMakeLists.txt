@@ -41,7 +41,7 @@ include_directories(${STATS_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp InputLayer.cpp LossLayer.cpp FeedForwardNet.cpp
-        statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.hpp Tools.cpp
+        statisTool.cpp ReLU.cpp NormalizationLayer.cpp Tensor.hpp TensorBlas.cpp Tools.cpp
         ConvolutionLayer.cpp LinearLayer.cpp SoftmaxLayer.cpp MaxPoolingLayer.cpp
         IdentityLayer.cpp MergerLayer.cpp BranchLayer.cpp  RescaleLayer.cpp
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
@@ -56,6 +56,8 @@ else(${Use_GPU})
    set(CDLF_CUDA_Src "")
 endif(${Use_GPU})
 
+
 add_library(CDLF SHARED ${CDLF_CXX_Src} ${CDLF_CUDA_Src})
 set_target_properties(CDLF PROPERTIES CUDA_SEPARABLE_COMPILATION ON )
+target_link_libraries(CDLF ${MKL_LIBRARY})
 

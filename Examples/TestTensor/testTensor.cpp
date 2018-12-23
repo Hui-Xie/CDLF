@@ -205,9 +205,43 @@ int main (int argc, char *argv[]) {
     Tensor<unsigned char> subTensorMaxPos = tensor30.getMaxPositionSubTensor();
     subTensorMaxPos.print();
 
-    cout<<"========End of Test Tensor=========="<<endl;
+    cout<<"========End of Test Basic Tensor=========="<<endl;
+
+    cout<<"=========Start Test MKL CBLAS Tensor========="<<endl;
+
+    Tensor<float> A= tensor1;
+    cout<<"A:"<<endl;
+    A.print();
+
+    Tensor<float> x({4,1});
+    for (int i=0; i<4; ++i){
+        x.e(i) = 1;
+    }
+    cout<<"x:"<<endl;
+    x.print();
+
+    Tensor<float> b({3,1});
+    for (int i=0; i<3; ++i){
+        b.e(i) = i;
+    }
+    cout<<"b:"<<endl;
+    b.print();
 
 
+    Tensor<float> y({3,1});
+    cout<<"y = Ax+b:"<<endl;
+    gemv(false, &A, &x, &b, &y);
+    cout<<"y:"<<endl;
+    y.print();
+
+    cout<<"now b = "<<endl;
+    b.print();
+
+    cout<<"b = Ax+b:"<<endl;
+    gemv(false, &A, &x, &b);
+    b.print();
+
+    cout<<"=========End of Test MKL CBLAS Tensor========="<<endl;
 
 
 

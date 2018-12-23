@@ -6,6 +6,7 @@
 #include "statisTool.h"
 #include <iostream>
 #include <FCLayer.h>
+#include <TensorBlas.h>
 
 
 using namespace std;
@@ -67,7 +68,8 @@ void FCLayer::zeroParaGradient() {
 }
 
 void FCLayer::forward() {
-    *m_pYTensor = (*m_pW) * (*(m_prevLayer->m_pYTensor)) + *(m_pBTensor);
+    //*m_pYTensor = (*m_pW) * (*(m_prevLayer->m_pYTensor)) + *(m_pBTensor);
+    gemv(false, m_pW, m_prevLayer->m_pYTensor, m_pBTensor, m_pYTensor);
 }
 
 //   y = W*x +b
@@ -78,17 +80,22 @@ void FCLayer::backward(bool computeW, bool computeX) {
     Tensor<float> &dLdy = *m_pdYTensor;
     if (computeW){
         *m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
+        // sgemm(A*X+B)
         *m_pdBTensor += dLdy;
+        // saxpy
     }
     if (computeX){
         *(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;
+        //sgemv(A'*x+B)
     }
 }
 
 void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {
     if ("sgd" == method) {
         *m_pW -= (*m_pdW) * (lr / batchSize);
+        // mkl_somatadd
         *m_pBTensor -= (*m_pdBTensor) * (lr / batchSize);
+        // saxpy
     }
 }
 

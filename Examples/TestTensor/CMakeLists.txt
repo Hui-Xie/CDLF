@@ -1,5 +1,4 @@
 
-
 # for test Tensor class
 set(TestTensorSRCS testTensor.cpp)
 add_executable(TestTensor ${TestTensorSRCS})
