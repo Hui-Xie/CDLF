@@ -9,15 +9,15 @@
 void printUsage(char* argv0){
     cout<<"Train MNIST Dataset AutoEncoder:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> "<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir>  learningRate"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist "<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist 0.001"<<endl;
 }
 
 
 int main(int argc, char *argv[]){
     printCurrentLocalTime();
-    if (3 != argc){
+    if (4 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
@@ -25,6 +25,7 @@ int main(int argc, char *argv[]){
 
     const string netDir = argv[1];
     const string mnistDir = argv[2];
+    const float learningRate = stof(argv[3]);
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -52,7 +53,7 @@ int main(int argc, char *argv[]){
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(0.01);
+    net.setLearningRate(learningRate);
     net.setUnlearningLayerID(100);  // 15 and 18 is the FC layers behind the Softmax of original G net.
 
     int epoch= 15000;
