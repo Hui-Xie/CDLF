@@ -211,7 +211,7 @@ int main (int argc, char *argv[]) {
 
     Tensor<float> A= tensor1;
     cout<<"A:"<<endl;
-    A.print();
+    A.print();  //{3*4} matrix
 
     Tensor<float> x({4,1});
     for (int i=0; i<4; ++i){
@@ -251,7 +251,7 @@ int main (int argc, char *argv[]) {
     k=0;
     for (int i=0; i<4; ++i){
         for(int j=0; j<3;++j){
-            B.e(k) = k;
+            B.e(k) = k*2;
             ++k;
         }
     }
@@ -268,11 +268,16 @@ int main (int argc, char *argv[]) {
     gemm(3, false, &A, false, &B, 2, &C);
     cout<<"C= 3*A*B+ 2*C: "<<endl;
     C.print();
+    
+    Tensor<float> Bt = B.transpose();
+    cout <<"Bt: "<<endl;
+    Bt.print();
+    
+    Tensor<float> D({3,4});
 
-
-    matAdd(3, &C, 4, &C, &C);
-    cout<<"C = 3*C+ 4*C= "<<endl;
-    C.print();
+    matAdd(3, &A, 4, &Bt, &D);
+    cout<<"D = 3*A+ 4*Bt= "<<endl;
+    D.print();
 
 
     cout<<"=========End of Test MKL CBLAS Tensor========="<<endl;
