@@ -77,12 +77,12 @@ void FCLayer::forward() {
 //  dL/db = dL/dy * dy/db = dL/dy
 //  dL/dx = dL/dy * dy/dx = W' * dL/dy
 void FCLayer::backward(bool computeW, bool computeX) {
-    const Tensor<float> &dLdy = *m_pdYTensor;
+    Tensor<float> &dLdy = *m_pdYTensor;
     if (computeW){
-        //*m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
+       //*m_pdW += dLdy * (m_prevLayer->m_pYTensor->transpose());
         gemm(1.0, false, &dLdy, true, m_prevLayer->m_pYTensor, 1.0, m_pdW);
         //*m_pdBTensor += dLdy;
-        axpy(1, &dLdy, m_pBTensor);
+        axpy(1, &dLdy, m_pdBTensor);
     }
     if (computeX){
         //*(m_prevLayer->m_pdYTensor) += m_pW->transpose() * dLdy;

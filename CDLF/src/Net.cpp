@@ -172,12 +172,23 @@ void Net::initialize() {
     }
 }
 
-void Net::printIteration(LossLayer *lossLayer, const int nIter) {
+void Net::printIteration(LossLayer *lossLayer, const int nIter, const bool transpose) {
     cout << "Iteration: " << nIter << "  " << "Output Result: " << endl;
-    lossLayer->m_prevLayer->m_pYTensor->print();
+    if (transpose){
+        lossLayer->m_prevLayer->m_pYTensor->transpose().print();
+    }
+    else{
+        lossLayer->m_prevLayer->m_pYTensor->print();
+    }
     if (nullptr != lossLayer->m_pGroundTruth) {
         cout << "GrounTruth: " << endl;
-        lossLayer->m_pGroundTruth->print();
+        if (transpose){
+            lossLayer->m_pGroundTruth->transpose().print();
+        }
+        else{
+            lossLayer->m_pGroundTruth->print();
+        }
+
     }
     cout << "Loss: " << lossLayer->lossCompute() << endl;
     cout << endl;

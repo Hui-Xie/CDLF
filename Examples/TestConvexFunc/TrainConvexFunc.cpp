@@ -78,6 +78,7 @@ int main (int argc, char *argv[])
     else{
         net.load();
     }
+    net.setLearningRate(1);
     net.printArchitecture();
 
     net.train();

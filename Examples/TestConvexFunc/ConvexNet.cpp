@@ -77,7 +77,7 @@ void ConvexNet::train() {
             ++nIter;
         }
         sgd(lr, i);
-        printIteration(lossLayer, nIter);
+        printIteration(lossLayer, nIter, true);
         ++nBatch;
     }
     lossLayer->printGroundTruth();

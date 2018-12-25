@@ -67,7 +67,7 @@ public:
     void initialize();
     void zeroParaGradient();
 
-    void printIteration(LossLayer* lossLayer,const int nIter);
+    void printIteration(LossLayer* lossLayer,const int nIter, const bool transpose = false);
     void printLayersY();
     void printLayersDY();
     void printArchitecture();
