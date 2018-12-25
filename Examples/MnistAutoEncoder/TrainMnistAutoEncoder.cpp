@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(1);
+    net.setLearningRate(0.01);
     net.setUnlearningLayerID(100);  // 15 and 18 is the FC layers behind the Softmax of original G net.
 
     int epoch= 15000;
