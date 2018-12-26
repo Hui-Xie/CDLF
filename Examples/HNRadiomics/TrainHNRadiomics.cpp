@@ -41,10 +41,10 @@ int main(int argc, char *argv[]){
     //Load MnistAutoEncoder Net
     HNRadiomicsNet net("HNRadiomics", netDir);
     if (!isEmptyDir(net.getDir())) {
-        net.load();  //at Dec 17th,2018, the trained MnistNet has an accuracy of 97.26%
+        net.load();
     }
     else{
-        cout<<"Error: program can not load a trained Mnist net."<<endl;
+        cout<<"Error: program can not load net."<<endl;
         return -2;
     }
     net.printArchitecture();
