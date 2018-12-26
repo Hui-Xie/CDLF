@@ -11,9 +11,9 @@ include_directories(${MNISTDir})
 
 set(TrainMnistAutoEncoderSRC TrainMnistAutoEncoder.cpp ${MNISTDir}/MNIST.cpp MnistAutoEncoder.cpp)
 add_executable(TrainMnistAutoEncoder ${TrainMnistAutoEncoderSRC})
-target_link_libraries(TrainMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES} pthread)
+target_link_libraries(TrainMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES} )
 
 
 set(TestMnistAutoEncoderSRC TestMnistAutoEncoder.cpp ${MNISTDir}/MNIST.cpp MnistAutoEncoder.cpp)
 add_executable(TestMnistAutoEncoder ${TestMnistAutoEncoderSRC})
-target_link_libraries(TestMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES} pthread )
+target_link_libraries(TestMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES})

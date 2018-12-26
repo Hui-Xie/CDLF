@@ -13,7 +13,7 @@ if(ITK_FOUND)
 
     set(qSubImagesSrc qSubImages.cpp )
     add_executable(qSubImages ${qSubImagesSrc})
-    target_link_libraries(qSubImages  ${CDLFLib} pthread)
+    target_link_libraries(qSubImages  ${CDLFLib} )
 
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")

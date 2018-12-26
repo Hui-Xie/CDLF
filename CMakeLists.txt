@@ -63,7 +63,7 @@ message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
-set(CDLFLib libCDLF.so ${MKL_LIBRARY})    # for Linux
+set(CDLFLib libCDLF.so pthread ${MKL_LIBRARY})    # for Linux
 
 add_subdirectory(CDLF)
 add_subdirectory(Examples)

@@ -13,4 +13,4 @@ include_directories(${MNISTDir})
 
 set(TestMnistSRCS MnistConvNet.cpp TestMnist.cpp ../../Interface3rdParty/MNIST/MNIST.cpp ../../Interface3rdParty/MNIST/MNIST.h)
 add_executable(TestMnist ${TestMnistSRCS})
-target_link_libraries(TestMnist ${CDLFLib} ${CUDA_LIBRARIES} pthread)
+target_link_libraries(TestMnist ${CDLFLib} ${CUDA_LIBRARIES} )
