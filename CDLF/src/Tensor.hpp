@@ -809,6 +809,18 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeB
 }
 
 template<class ValueType>
+void Tensor<ValueType>::putInBiggerTensor(Tensor* pBiggerTensor, const vector<int>& offsetVec, const int stride) const {
+   assert(m_dims.size() == pBiggerTensor->getDims().size());
+   const int N = getLength();
+   for (int smallOffset=0; smallOffset<N; ++smallOffset){
+        vector<int> smallIndex = offset2Index(smallOffset);
+        vector<int> bigIndex = smallIndex* stride+ offsetVec;
+        int bigOffset = pBiggerTensor->index2Offset(bigIndex);
+        pBiggerTensor->e(bigOffset) = e(smallOffset);
+    }
+}
+
+template<class ValueType>
 Tensor<ValueType> Tensor<ValueType>::column(const int index) {
     assert(2 == m_dims.size());
     vector<int> newDims;

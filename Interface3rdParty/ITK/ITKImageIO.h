@@ -23,8 +23,12 @@ public:
     using ImageType = itk::Image< VoxelType, Dimension >;
 
     void readFile(const string & filename, Tensor<VoxelType>*& pTensor);
+    void readLabelFileAndOrigin(const string & labelFilename, Tensor<VoxelType>*& pTensor, typename itk::Image<VoxelType, Dimension>::PointType& labelOrigin) const;
     void writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset, const string & filename);
     void writeFileWithLessInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset, const string & filename);
+
+    //make label file has same volume with original intensity file
+    void extendLabelFileVolume(const string & labelFilename, Tensor<VoxelType>*& pTensor);
 
 private:
     typename ImageType::PointType m_origin;

@@ -14,6 +14,7 @@ void printUsage(char* argv0){
 
 
 int main(int argc, char *argv[]){
+    /*
     if (3 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]){
     const string inputFilename = argv[1];
     const string outputFilename = argv[2];
 
+    */
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
 
@@ -34,6 +36,7 @@ int main(int argc, char *argv[]){
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
+    /*
     ITKImageIO<float, 3> itkImageIO;
 
     Tensor<float> *pImage = nullptr;
@@ -54,5 +57,35 @@ int main(int argc, char *argv[]){
         delete pImage;
         pImage = nullptr;
     }
+
+     */
+
+
+    cout<<"==================Test Extend label ======================"<<endl;
+    string srcFile = "/home/hxie1/temp/HN-CHUM-040_CT_HN.nrrd";
+    string smallLabelFile = "/home/hxie1/temp/HN-CHUM-040_GTV.nrrd";
+    string bigLabelFile ="/home/hxie1/temp/HN-CHUM-040_GTV_big.nrrd";
+
+    ITKImageIO<int, 3> itkImageIOIntensity;
+    ITKImageIO<unsigned char, 3> itkImageIOLabel;
+    Tensor<int>* pImage2 = nullptr;
+    Tensor<int>* pLabelImage = nullptr;
+    itkImageIOIntensity.readFile(srcFile, pImage2);
+    itkImageIOIntensity.extendLabelFileVolume(smallLabelFile, pLabelImage);
+    itkImageIOIntensity.writeFileWithSameInputDim(pLabelImage, {0,0,0}, bigLabelFile);
+
+
+
+    if (nullptr != pImage2) {
+        delete pImage2;
+        pImage2 = nullptr;
+    }
+
+    if (nullptr != pLabelImage) {
+        delete pLabelImage;
+        pLabelImage = nullptr;
+    }
+
+
     cout << "============= End of TestITKImageIO =============" << endl;
 }

@@ -58,6 +58,49 @@ void ITKImageIO<VoxelType, Dimension>::readFile(const string& filename, Tensor<V
 
 }
 
+template<typename VoxelType, int Dimension>
+void ITKImageIO<VoxelType, Dimension>::readLabelFileAndOrigin(const string &labelFilename, Tensor<VoxelType> *&pTensor,
+                                                              typename itk::Image<VoxelType, Dimension>::PointType& labelOrigin) const {
+
+    using ReaderType = itk::ImageFileReader< ImageType >;
+    typename ReaderType::Pointer reader = ReaderType::New();
+    reader->SetFileName( labelFilename );
+    reader->Update();
+    typename ImageType::Pointer image = reader->GetOutput();
+
+    // get ImageSize
+    typename ImageType::RegionType region  = image->GetLargestPossibleRegion();
+    typename ImageType::SizeType imageSize = region.GetSize();
+    const int dim = imageSize.GetSizeDimension();
+    vector<int> tensorSize;
+    for (int i=0; i<dim; ++i){
+        tensorSize.push_back(imageSize[i]);
+    }
+    tensorSize = reverseVector(tensorSize);
+    pTensor = new Tensor<VoxelType>(tensorSize);
+
+    //get Image origin, spacing etc
+    labelOrigin = image->GetOrigin();
+
+    //do not need:
+    //spacing = image->GetSpacing();
+    //direction = image->GetDirection();
+
+    itk::ImageRegionConstIteratorWithIndex<ImageType> iter(image,region);
+    iter.GoToBegin();
+    vector<int> tensorIndex(dim,0);
+    while(!iter.IsAtEnd())
+    {
+        typename  itk::ImageRegionConstIteratorWithIndex<ImageType>::IndexType index = iter.GetIndex();
+        for (int k=0;k<dim;++k){
+            tensorIndex[k] = index[dim-1-k];
+        }
+        pTensor->e(tensorIndex)= (float)iter.Get();
+        ++iter;
+    }
+
+}
+
 
 template <typename VoxelType, int Dimension>
 void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset,
@@ -177,3 +220,32 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<Vo
     writer->Update();
     cout<<"Info: An output image "<<filename<<" output"<<endl;
 }
+
+template<typename VoxelType, int Dimension>
+void ITKImageIO<VoxelType, Dimension>::extendLabelFileVolume(const string &labelFilename, Tensor<VoxelType> *&pTensor) {
+    Tensor<VoxelType>* pSmallTensor = nullptr;
+    typename itk::Image<VoxelType, Dimension>::PointType labelOrigin;
+    readLabelFileAndOrigin(labelFilename, pSmallTensor,labelOrigin);
+
+    //compute offset
+    vector<int> offsetVec(Dimension, 0);
+    for(int i=0; i<Dimension; ++i){
+        offsetVec[i] = (int)((labelOrigin[i]- m_origin[i])/(m_spacing[i]*m_direction[i][i]) +0.5);
+    }
+    offsetVec = reverseVector(offsetVec);
+
+
+    vector<int> tensorSize;
+    for (int i=0; i<Dimension; ++i){
+        tensorSize.push_back(m_imageSize[Dimension-1-i]);  //reverse dims
+    }
+    pTensor = new Tensor<VoxelType> (tensorSize);
+    pTensor->zeroInitialize();
+    pSmallTensor->putInBiggerTensor(pTensor, offsetVec, 1);
+
+    if (nullptr != pSmallTensor){
+        delete pSmallTensor;
+    }
+}
+
+
