@@ -120,7 +120,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<Vo
     for(int i=0; i< dim; ++i){
         start[i] = 0;
         size[i] = tensorSize[i];
-        newOrigin[i] = m_origin[i]+offset[i]*m_spacing[i];
+        newOrigin[i] = m_origin[i]+offset[i]*m_spacing[i]*m_direction[i][i];
     }
     region.SetSize(size);
     region.SetIndex(start);
@@ -176,7 +176,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<Vo
     for(int i=0; i< dim; ++i){
         start[i] = 0;
         size[i] = tensorSize[i];
-        newOrigin[i] = m_origin[i]+offset[i]*m_spacing[i];
+        newOrigin[i] = m_origin[i]+offset[i]*m_spacing[i]*m_direction[i][i];
     }
     region.SetSize(size);
     region.SetIndex(start);
