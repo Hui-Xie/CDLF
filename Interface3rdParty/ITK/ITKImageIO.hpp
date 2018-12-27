@@ -84,10 +84,8 @@ void ITKImageIO<VoxelType, Dimension>::readLabelFileAndOrigin(const string &labe
     labelOrigin = image->GetOrigin();
 
     //do not need the 2 lines below:
-    typename ImageType::SpacingType spacing = image->GetSpacing();
-    typename ImageType::DirectionType direction = image->GetDirection();
-    
-    
+    //typename ImageType::SpacingType spacing = image->GetSpacing();
+    //typename ImageType::DirectionType direction = image->GetDirection();
 
     itk::ImageRegionConstIteratorWithIndex<ImageType> iter(image,region);
     iter.GoToBegin();
@@ -101,7 +99,6 @@ void ITKImageIO<VoxelType, Dimension>::readLabelFileAndOrigin(const string &labe
         pTensor->e(tensorIndex)= (float)iter.Get();
         ++iter;
     }
-
 }
 
 
@@ -236,7 +233,6 @@ void ITKImageIO<VoxelType, Dimension>::extendLabelFileVolume(const string &label
         offsetVec[i] = (int)((labelOrigin[i]- m_origin[i])/(m_spacing[i]*m_direction[i][i]) +0.5);
     }
     offsetVec = reverseVector(offsetVec);
-
 
     vector<int> tensorSize;
     for (int i=0; i<Dimension; ++i){

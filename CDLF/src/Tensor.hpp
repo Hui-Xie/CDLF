@@ -815,7 +815,7 @@ void Tensor<ValueType>::putInBiggerTensor(Tensor* pBiggerTensor, const vector<in
    for (int smallOffset=0; smallOffset<N; ++smallOffset){
         vector<int> smallIndex = offset2Index(smallOffset);
         vector<int> bigIndex = smallIndex* stride+ offsetVec;
-        int bigOffset = pBiggerTensor->index2Offset(bigIndex);
+        const int bigOffset = pBiggerTensor->index2Offset(bigIndex);
         pBiggerTensor->e(bigOffset) = e(smallOffset);
     }
 }
