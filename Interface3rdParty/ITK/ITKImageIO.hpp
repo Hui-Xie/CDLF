@@ -78,13 +78,16 @@ void ITKImageIO<VoxelType, Dimension>::readLabelFileAndOrigin(const string &labe
     }
     tensorSize = reverseVector(tensorSize);
     pTensor = new Tensor<VoxelType>(tensorSize);
+    pTensor->zeroInitialize();
 
     //get Image origin, spacing etc
     labelOrigin = image->GetOrigin();
 
-    //do not need:
-    //spacing = image->GetSpacing();
-    //direction = image->GetDirection();
+    //do not need the 2 lines below:
+    typename ImageType::SpacingType spacing = image->GetSpacing();
+    typename ImageType::DirectionType direction = image->GetDirection();
+    
+    
 
     itk::ImageRegionConstIteratorWithIndex<ImageType> iter(image,region);
     iter.GoToBegin();
