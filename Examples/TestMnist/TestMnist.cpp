@@ -8,9 +8,9 @@
 void printUsage(char* argv0){
     cout<<"Test 10 digits 0-9 Simultaneously in MNIST Dataset:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> "<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <learningRate>"<<endl;
     cout<<"for examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist  0.0001"<<endl;
 }
 
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 
     printCurrentLocalTime();
     
-    if (3 != argc){
+    if (4 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
@@ -26,6 +26,8 @@ int main(int argc, char *argv[]){
 
     const string netDir = argv[1];
     const string mnistDir = argv[2];
+    const float learningRate = stof(argv[3]);
+
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -72,9 +74,9 @@ int main(int argc, char *argv[]){
     net.save();
     net.printArchitecture();
     net.setUnlearningLayerID(2);
+    net.setLearningRate(learningRate);
 
-
-    int epoch= 15000;
+    int epoch= 20000;
     float accuracy = 0;
     for (int i=0; i<epoch; ++i){
         net.train();
