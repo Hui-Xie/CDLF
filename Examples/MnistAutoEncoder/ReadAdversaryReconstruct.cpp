@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
     getFileVector(advDir, advFileVector);
     const int N = advFileVector.size();
 
-    Tensor<float>  inputImage;
+    Tensor<float>  inputImage({28,28});
     Tensor<float>  reconstrutImage;
     int  predictLabel;
 
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
         inputImage.load(filename, true);
         net.autoEncode(inputImage, predictLabel, reconstrutImage);
 
-        string reconstructFilename = fullPathStem+ "_R_"+ to_string(predictLabel) +suffix;
+        string reconstructFilename = fullPathStem+ "_R"+ to_string(predictLabel) +suffix;
         reconstrutImage.save(reconstructFilename,true);
 
     }
