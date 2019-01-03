@@ -52,6 +52,14 @@ string getDirFromFileName(const string& fullPathFileName){
     return result;
 }
 
+void parseFullPathname(const string& fullPathFileName, string& fullPathStem, string& suffix) {
+    size_t pos = fullPathFileName.rfind('.');
+    if (pos != string::npos) {
+        fullPathStem = fullPathFileName.substr(0, pos);
+        suffix = fullPathFileName.substr(pos);
+    }
+}
+
 bool dirExist(const string& dirPath){
     struct stat statBuff;
     if (stat(dirPath.c_str(),&statBuff) == -1){

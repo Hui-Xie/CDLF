@@ -23,6 +23,8 @@ string getFileName(const string& fullPathFileName);
 
 string getDirFromFileName(const string& fullPathFileName);
 
+void parseFullPathname(const string& fullPathFileName, string& fullPathStem, string& suffix);
+
 bool dirExist(const string& dirPath);
 
 void createDir(const string& dirPath);

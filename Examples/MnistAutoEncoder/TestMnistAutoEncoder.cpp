@@ -10,7 +10,7 @@ void printUsage(char* argv0){
     cout<<"Test MNIST Dataset AutoEncoder:"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <outputImageDir> <nImages> <0|1>"<<endl;
-    cout<<"For examples: "<<endl;
+    cout<<"For example: "<<endl;
     cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist /home/hxie1/temp_DecoderOutput 40  0"<<endl;
     cout<<"<0|1> 0: indicate general reconstruction with correct label prediction; 1: indicate only using incorrectly recognized image for reconstruction"<<endl;
 }
@@ -65,7 +65,6 @@ int main(int argc, char *argv[]){
     Tensor<float>  reconstrutImage;
     int  label;
     int  predictLabel;
-    srand (time(NULL));
 
     cout << "Hint: output file format: \n Tindex-IrealLabel.txt, Tindex-RpredictLabel.txt, e.g. T32-R4.txt, T32-P7.txt"<<endl;
     for (int i=0; i<nImages; ++i){
