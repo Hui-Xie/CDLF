@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
         inputImage.load(filename, true);
         net.autoEncode(inputImage, predictLabel, reconstrutImage);
 
-        string reconstructFilename = fullPathStem+ "_R"+ to_string(predictLabel) +suffix;
+        string reconstructFilename = fullPathStem+ "-R"+ to_string(predictLabel) +suffix;
         reconstrutImage.save(reconstructFilename,true);
 
     }

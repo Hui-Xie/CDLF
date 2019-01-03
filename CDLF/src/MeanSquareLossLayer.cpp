@@ -38,8 +38,7 @@ void MeanSquareLossLayer::gradientCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dX = *(m_prevLayer->m_pdYTensor);
     const int N = X.getLength();
-    //float lambda_N = m_lambda/N;
-    float lambda_N = m_lambda;  // avoid gradient too small
+    float lambda_N = m_lambda/N;
     for (int i=0; i<N; ++i){
        dX[i] += (X.e(i) - m_pGroundTruth->e(i))*lambda_N;
     }
