@@ -11,7 +11,7 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  learningRate"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/**** 0.001"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData 0.001"<<endl;
 }
 
 
@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
     }
 
     const string netDir = argv[1];
-    const string mnistDir = argv[2];
+    const string dataDir = argv[2];
     const float learningRate = stof(argv[3]);
 
     CPUAttr cpuAttr;
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
 #endif
 
     //Load MnistAutoEncoder Net
-    HNRadiomicsNet net("HNRadiomics", netDir);
+    HNRadiomicsNet net("HNSCC", netDir);
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     }
     net.printArchitecture();
     net.setLearningRate(learningRate);
-    net.setUnlearningLayerID(100);  // 15 and 18 is the FC layers behind the Softmax of original G net.
+    net.setUnlearningLayerID(20);
 
     //debug
     return 0 ;

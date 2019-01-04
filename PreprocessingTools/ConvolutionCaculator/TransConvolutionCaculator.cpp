@@ -8,6 +8,7 @@ void printUsage(char* argv0){
     cout<<"============= Compute OutputSize of TransposedConvolution  ==========="<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<"  <PreTensorSize>  <FilterSize>  <NumFilters>  <Stride> "<<endl;
+    cout<<"e.g.  ./TransConvolutionCaculator 53*77*77 5*5*5 1 2"<<endl;
     cout<<endl;
 }
 

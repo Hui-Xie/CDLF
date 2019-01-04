@@ -9,6 +9,7 @@ void printUsage(char* argv0){
     cout<<"============= Compute OutputSize of Convolution  ==========="<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<"  <PreTensorSize>  <FilterSize>  <NumFilters>  <Stride> "<<endl;
+    cout<<"e.g.  ./ConvolutionCaculator 500*500*90 5*5*5 3 2"<<endl;
     cout<<endl;
 }
 
