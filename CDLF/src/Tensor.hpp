@@ -114,7 +114,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator=(const Tensor &other) {
 
 template<class ValueType>
 template<class OtherValueType>
-Tensor<ValueType> &Tensor<ValueType>::valueTypeConvert(const Tensor<OtherValueType> &other) {
+Tensor<ValueType> &Tensor<ValueType>::valueTypeConvertFrom(const Tensor<OtherValueType> &other) {
     freeMem();
     m_dims = other.getDims();
     generateDimsSpan();

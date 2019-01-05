@@ -23,7 +23,7 @@ public:
     Tensor(const vector<int>& dims);
     Tensor(const Tensor& other);
     Tensor& operator= (const Tensor& other);
-    template <class OtherValueType> Tensor& valueTypeConvert(const Tensor<OtherValueType>& other);
+    template <class OtherValueType> Tensor& valueTypeConvertFrom(const Tensor<OtherValueType> &other);
 
     ~Tensor();
 

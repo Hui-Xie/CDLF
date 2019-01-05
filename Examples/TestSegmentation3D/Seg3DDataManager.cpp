@@ -1,14 +1,17 @@
 //
-// Created by Hui Xie on 1/5/19.
+// Created by Hui Xie on 9/21/18.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 //
 
-#include "HNDataManager.h"
-#include <FileTools.h>
+#include "Seg3DDataManager.h"
+#include "FileTools.h"
 
-HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetDir) {
-    // assign specific directories according to application
+
+
+Seg3DDataManager::Seg3DDataManager(const string& dataSetDir) : ITKDataManager(dataSetDir) {
+    m_labelItkImageIO = nullptr;
+
     m_trainImagesDir = m_dataSetDir +"/trainImages";
     m_trainLabelsDir = m_dataSetDir +"/trainLabels";
     m_testImagesDir = m_dataSetDir +"/testImages";
@@ -23,33 +26,32 @@ HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetD
     m_NTestFile = m_testImagesVector.size();
     cout<<"Info: totally read in "<<m_NTestFile << " test images file. "<<endl;
 
-    m_labelItkImageIO = nullptr;
+
 }
 
-HNDataManager::~HNDataManager() {
+Seg3DDataManager::~Seg3DDataManager(){
     freeItkImageIO();
 }
 
-
-void HNDataManager::freeItkImageIO(){
+void Seg3DDataManager::freeItkImageIO(){
     if (nullptr != m_labelItkImageIO){
         delete m_labelItkImageIO;
         m_labelItkImageIO = nullptr;
     }
 }
 
-void HNDataManager::readLabelFile(const string& filename, Tensor<float>*& pLabel){
+void Seg3DDataManager::readLabelFile(const string& filename, Tensor<float>*& pLabel){
     freeItkImageIO();
-    m_labelItkImageIO = new ITKImageIO<short, 3>;
-    Tensor<short>* pIOLabel = nullptr;
+    m_labelItkImageIO = new ITKImageIO<unsigned char, 3>;
+    Tensor<unsigned char>* pIOLabel = nullptr;
     m_labelItkImageIO->readFile(filename, pIOLabel);
     pLabel = new Tensor<float>;
     pLabel->valueTypeConvertFrom(*pIOLabel);
 }
 
 
-void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
-    Tensor<short>* pIOLabel = new Tensor<short>;
-    pIOLabel->valueTypeConvertFrom(*pLabel);
-    m_labelItkImageIO->writeFileWithSameInputDim(pIOLabel, offset, fullPathFileName);
+void Seg3DDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
+    m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
 }
+
+

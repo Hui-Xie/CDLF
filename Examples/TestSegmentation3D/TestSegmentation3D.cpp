@@ -9,20 +9,19 @@
 #include "SegmentDNet.h"
 
 #include "StubNetForD.h"
-#include "DataManager.h"
+#include "Seg3DDataManager.h"
 
 using namespace std;
 
 void printUsage(char* argv0){
     cout<<"A Generative Adversarial Network for Global 3D Medical Images Segmentation: "<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <imageAndLabelDir> [outputTestLabelsDir]"<<endl;
+    cout<<argv0<<"<netDir> <imageAndLabelDir> "<<endl;
     cout<<"Where"<<endl;
     cout<<"netDir: the net parameters saved diretory"<<endl;
     cout<<"the imageAndLabelDir must include 4 subdirectories: testImages  testLabels  trainImages  trainLabels" <<endl;
     cout<<"And the corresponding images file and label file should have same filename in different directories. "<<endl;
-    cout<<"outputTestLabelsDir is the directory for outputting test label files"<<endl;
-    cout<<"Input parameter example: /Users/hxie1/temp_netParameters /Users/hxie1/msd/Task07_Pancreas/CDLFData /Users/hxie1/temp_3DGANOuput"<<endl;
+    cout<<"Input parameter example: /Users/hxie1/temp_netParameters /Users/hxie1/msd/Task07_Pancreas/CDLFData "<<endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -39,19 +38,14 @@ int main(int argc, char *argv[]) {
     cout << "Info: program use CPU, instead of GPU." << endl;
 #endif
 
-
-    printUsage(argv[0]);
-    if (3 != argc && 4 != argc) {
+    if (3 != argc) {
+        printUsage(argv[0]);
         cout << "Error: parameter error. Exit. " << endl;
         return -1;
     }
     string netDir = argv[1];
     string dataSetDir = argv[2];
-    string outputLabelsDir = "";
-    if (4 == argc) {
-        outputLabelsDir = argv[3];
-    }
-    DataManager dataMgr(dataSetDir, outputLabelsDir);
+    Seg3DDataManager dataMgr(dataSetDir);
 
     SegmentGNet Gnet("GNet", netDir);
     if (isEmptyDir(Gnet.getDir())) {

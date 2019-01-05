@@ -6,7 +6,7 @@
 #define CDLF_FRAMEWORK_3DSEGMENTATIONNET_H
 
 #include "CDLF.h"
-#include "DataManager.h"
+#include "Seg3DDataManager.h"
 #include "StubNetForD.h"
 
 
@@ -21,13 +21,13 @@ public:
     virtual float testG(bool outputFile);
 
 
-    void setDataMgr(DataManager* pDataMgr);
+    void setDataMgr(Seg3DDataManager* pDataMgr);
     void setStubNet(StubNetForD* pStubNet);
 
     void pretrainD();
 
     StubNetForD* m_pStubNet;
-    DataManager* m_pDataMgr;
+    Seg3DDataManager* m_pDataMgr;
 
 private:
     void setOneHotLabel(const bool bTrainSet, const int numLabels, const int indexImage, LossLayer* lossLayer, InputLayer* inputLayer);

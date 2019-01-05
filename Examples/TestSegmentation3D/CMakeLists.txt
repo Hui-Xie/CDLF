@@ -7,8 +7,8 @@ if(ITK_FOUND)
     include_directories(${ITKImageIODir})
 
     set(TestSegmentation3DSrc TestSegmentation3D.cpp Segmentation3DNet.cpp SegmentGNet.cpp
-                              SegmentDNet.cpp StubNetForD.cpp
-                              DataManager.cpp)
+                              SegmentDNet.cpp StubNetForD.cpp   Seg3DDataManager.cpp
+                              ${ITKImageIODir}/ITKDataManager.cpp)
     add_executable(TestSegmentation3D ${TestSegmentation3DSrc})
     target_link_libraries(TestSegmentation3D  ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES} )
 else(ITK_FOUND )

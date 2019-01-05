@@ -16,7 +16,7 @@ using namespace std;
 
 class ITKDataManager {
 public:
-    ITKDataManager(const string dataSetDir);
+    ITKDataManager(const string& dataSetDir);
     ~ITKDataManager();
 
     string m_dataSetDir;

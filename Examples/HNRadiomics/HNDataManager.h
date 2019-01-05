@@ -11,7 +11,7 @@
 
 class HNDataManager : public ITKDataManager {
 public:
-    HNDataManager(const string dataSetDir);
+    HNDataManager(const string& dataSetDir);
     ~HNDataManager();
 
     // this ITKImageIO depends on the specific dataset type

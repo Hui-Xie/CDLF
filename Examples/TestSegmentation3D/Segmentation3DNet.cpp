@@ -232,7 +232,7 @@ void Segmentation3DNet::pretrainD() {
     }
 }
 
-void Segmentation3DNet::setDataMgr(DataManager* pDataMgr){
+void Segmentation3DNet::setDataMgr(Seg3DDataManager* pDataMgr){
     m_pDataMgr = pDataMgr;
 }
 
@@ -242,7 +242,7 @@ void Segmentation3DNet::setStubNet(StubNetForD* pStubNet){
 
 void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels, const int indexImage,
                                        LossLayer *lossLayer, InputLayer *inputLayer) {
-    Tensor<unsigned char> *pLabel = nullptr;
+    Tensor<float> *pLabel = nullptr;
     if (bTrainSet) {
         m_pDataMgr->readTrainLabelFile(indexImage, pLabel);
     } else {
@@ -258,9 +258,9 @@ void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels
     }
     cutTensorSize.erase(cutTensorSize.begin());
 
-    Tensor<unsigned char> *pCutLabel = nullptr;
+    Tensor<float> *pCutLabel = nullptr;
     if (cutTensorSize != pLabel->getDims()) {
-        pCutLabel = new Tensor<unsigned char>(cutTensorSize);
+        pCutLabel = new Tensor<float>(cutTensorSize);
         pLabel->subTensorFromTopLeft((pLabel->getDims() - cutTensorSize) / 2, pCutLabel, 1);
         delete pLabel; pLabel = nullptr;
     } else {

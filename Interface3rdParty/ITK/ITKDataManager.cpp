@@ -8,7 +8,7 @@
 #include <FileTools.h>
 
 
-ITKDataManager::ITKDataManager(const string dataSetDir) {
+ITKDataManager::ITKDataManager(const string& dataSetDir) {
      m_dataSetDir = dataSetDir;
 }
 
