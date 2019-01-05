@@ -8,6 +8,7 @@
 #define CDLF_HN_RADIOMICS_H
 
 #include "CDLF.h"
+#include "HNDataManager.h"
 
 class HNRadiomicsNet : public FeedForwardNet {
 public:
@@ -17,6 +18,8 @@ public:
     virtual void build();
     virtual void train();
     virtual float test();
+
+    HNDataManager* m_pDataMgr;
 };
 
 

@@ -3,7 +3,7 @@
 
 
 HNRadiomicsNet::HNRadiomicsNet(const string &name, const string &saveDir) : FeedForwardNet(name, saveDir) {
-  //null
+    m_pDataMgr = nullptr;
 }
 
 HNRadiomicsNet::~HNRadiomicsNet() {

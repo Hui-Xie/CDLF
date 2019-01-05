@@ -9,7 +9,7 @@
 void printUsage(char* argv0){
     cout<<"Train Head&Neck Radiomics Network:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  learningRate"<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
     cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData 0.001"<<endl;
 }
@@ -51,24 +51,17 @@ int main(int argc, char *argv[]){
     net.setLearningRate(learningRate);
     net.setUnlearningLayerID(20);
 
-    //debug
-    return 0 ;
+    HNDataManager dataMgr(dataDir);
+    net.m_pDataMgr = &dataMgr;
+
 
     int epoch= 15000;
     float squareLoss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
-
-        //debug
-        //net.saveYTensor();
-        //net.savedYTensor();
-
         net.save();
         squareLoss = net.test();
         cout<<"Epoch_"<<i<<": "<<" mean squareLoss for each pixel = "<< squareLoss <<endl;
-
-        //debug
-        //break;
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
