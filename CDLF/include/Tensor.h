@@ -23,6 +23,8 @@ public:
     Tensor(const vector<int>& dims);
     Tensor(const Tensor& other);
     Tensor& operator= (const Tensor& other);
+    template <class OtherValueType> Tensor& valueTypeConvert(const Tensor<OtherValueType>& other);
+
     ~Tensor();
 
     void copyDataFrom(void* buff, const int numBytes, const int offsetBytes = 0);

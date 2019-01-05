@@ -6,9 +6,6 @@ if(ITK_FOUND)
     set (ITKImageIODir ../../Interface3rdParty/ITK)
     include_directories(${ITKImageIODir})
 
-    set (LinuxFileDir ../../Interface3rdParty/LinuxFile)
-    include_directories(${LinuxFileDir})
-
     set(TestSegmentation3DSrc TestSegmentation3D.cpp Segmentation3DNet.cpp SegmentGNet.cpp
                               SegmentDNet.cpp StubNetForD.cpp
                               DataManager.cpp)

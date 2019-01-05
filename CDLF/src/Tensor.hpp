@@ -98,16 +98,30 @@ void Tensor<ValueType>::uniformInitialize(const ValueType x) {
 
 
 template<class ValueType>
-Tensor<ValueType> &Tensor<ValueType>::operator=(const Tensor &other) {
+Tensor<ValueType>& Tensor<ValueType>::operator=(const Tensor &other) {
     if (this != &other) {
         freeMem();
         m_dims = other.getDims();
         generateDimsSpan();
         allocateMem();
-        int length = other.getLength();
+        const int N = other.getLength();
         if (length > 0) {
-        memcpy(m_data, other.getData(), length * sizeof(ValueType));
+        memcpy(m_data, other.getData(), N * sizeof(ValueType));
         }
+    }
+    return *this;
+}
+
+template<class ValueType>
+template<class OtherValueType>
+Tensor<ValueType> &Tensor<ValueType>::valueTypeConvert(const Tensor<OtherValueType> &other) {
+    freeMem();
+    m_dims = other.getDims();
+    generateDimsSpan();
+    allocateMem();
+    const int N = other.getLength();
+    for (int i = 0; i < N; ++i) {
+        e(i) = (ValueType) other.e(i);
     }
     return *this;
 }
@@ -566,22 +580,22 @@ int Tensor<ValueType>::maxPosition() {
  *
  * */
 template<class ValueType>
-Tensor<unsigned char> Tensor<ValueType>::getMaxPositionSubTensor() {
+Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() {
     vector<int> subTensorDims = m_dims;
     subTensorDims.erase(subTensorDims.begin());
-    Tensor<unsigned char> subTensor(subTensorDims);
+    Tensor<unsigned  char> subTensor(subTensorDims);
     int compareN = m_dims[0];
     int N = subTensor.getLength();
     for (int j = 0; j < N; ++j) {
         int maxIndex = 0;
-        int maxValue = e(j);
+        ValueType maxValue = e(j);
         for (int i = 1; i < compareN; ++i) {
             if (e(i * N + j) > maxValue) {
                 maxValue = e(i * N + j);
                 maxIndex = i;
             }
         }
-        subTensor(j) = (unsigned char) maxIndex;
+        subTensor(j) = (unsigned  char) maxIndex;
     }
     return subTensor;
 }

@@ -16,6 +16,8 @@ void HNRadiomicsNet::build() {
 
 void HNRadiomicsNet::train() {
 
+
+
 }
 
 float HNRadiomicsNet::test() {
