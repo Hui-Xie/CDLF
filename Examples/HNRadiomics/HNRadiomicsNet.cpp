@@ -7,7 +7,7 @@ HNRadiomicsNet::HNRadiomicsNet(const string &name, const string &saveDir) : Feed
 }
 
 HNRadiomicsNet::~HNRadiomicsNet() {
-
+  //null
 }
 
 void HNRadiomicsNet::build() {
@@ -64,17 +64,9 @@ void HNRadiomicsNet::train() {
             forwardPropagate();
             backwardPropagate(true);
             ++nIter;
-
-            //debug
-            break;
-
         }
         sgd(learningRate, i);
         ++nBatch;
-
-        //debug
-        break;
-
     }
 }
 
@@ -83,7 +75,6 @@ float HNRadiomicsNet::test() {
     MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
 
     int n = 0;
-    int nSuccess = 0;
     const int N = m_pDataMgr->m_NTestFile;
     float loss = 0.0;
     while (n < N) {
@@ -122,8 +113,6 @@ float HNRadiomicsNet::test() {
         loss += lossLayer->getLoss();
         ++n;
 
-        //debug
-        break;
     }
     return  loss/N;
 
