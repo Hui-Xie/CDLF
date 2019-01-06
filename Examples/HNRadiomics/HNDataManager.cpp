@@ -53,3 +53,17 @@ void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<i
     pIOLabel->valueTypeConvertFrom(*pLabel);
     m_labelItkImageIO->writeFileWithSameInputDim(pIOLabel, offset, fullPathFileName);
 }
+
+string HNDataManager::getLabelPathFrom(const string &imagePath) {
+    string imageFileName = getFileName(imagePath);
+    size_t pos = imageFileName.find("_CT.nrrd");
+    string labelFileName = imageFileName.replace(pos,string::npos, "_GTV.nrrd");
+
+    if (string::npos != imagePath.find("trainImages")){
+        labelFileName = m_trainLabelsDir +"/" +labelFileName;
+    }
+    else {
+        labelFileName = m_testLabelsDir +"/" +labelFileName;
+    }
+    return labelFileName;
+}

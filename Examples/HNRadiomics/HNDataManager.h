@@ -21,6 +21,8 @@ public:
     virtual void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName);
     virtual void freeItkImageIO();
 
+    string getLabelPathFrom(const string& imagePath);
+
 };
 
 

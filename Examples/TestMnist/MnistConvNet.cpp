@@ -73,19 +73,18 @@ void MnistConvNet::train(){
     InputLayer *inputLayer = getInputLayer();
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
 
-    int maxIteration =m_pMnistData->m_pTrainLabels->getLength();
-    int NTrain = maxIteration;
-    int batchSize = getBatchSize();
-    float learningRate = getLearningRate();
-    int numBatch = (maxIteration + batchSize -1) / batchSize;
+    const int N =m_pMnistData->m_pTrainLabels->getLength();
+    const int batchSize = getBatchSize();
+    const float learningRate = getLearningRate();
+    const int numBatch = (N + batchSize -1) / batchSize;
     int nIter = 0;
     int nBatch = 0;
     //random reshuffle data samples
-    vector<int> randSeq = generateRandomSequence(NTrain);
+    vector<int> randSeq = generateRandomSequence(N);
     while (nBatch < numBatch) {
         zeroParaGradient();
         int i = 0;
-        for (i = 0; i < batchSize && nIter < maxIteration; ++i) {
+        for (i = 0; i < batchSize && nIter < N; ++i) {
             inputLayer->setInputTensor(m_pMnistData->m_pTrainImages->slice(randSeq[nIter]));
             lossLayer->setGroundTruth(constructGroundTruth(m_pMnistData->m_pTrainLabels, randSeq[nIter]));
             forwardPropagate();
