@@ -19,8 +19,7 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
-    void setInputTensor(const Tensor<float>& inputTensor);
-    void setInputTensor(const Tensor<unsigned char>& inputTensor);
+    template<class T> void setInputTensor(const Tensor<T>& inputTensor);
     virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
@@ -28,6 +27,19 @@ public:
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct(const int layerIndex);
 };
+
+template<class T>
+void InputLayer::setInputTensor(const Tensor<T> &inputTensor) {
+    if (m_tensorSize == inputTensor.getDims()) {
+        const int N = m_pYTensor->getLength();
+        for (int i=0; i<N; ++i){
+            m_pYTensor->e(i) = (float) inputTensor.e(i);
+        }
+    } else {
+        cout << "Error: setInputTensor(const Tensor<T>& inputTensor) has different tensorSize." << endl;
+    }
+
+}
 
 
 #endif //RL_NONCONVEX_INPUTLAYER_H

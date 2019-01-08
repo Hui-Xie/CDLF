@@ -36,27 +36,6 @@ void InputLayer::updateParameters(const float lr, const string& method, const in
     //null
 }
 
-void InputLayer::setInputTensor(const Tensor<float>& inputTensor){
-    if (m_tensorSize == inputTensor.getDims()){
-        *m_pYTensor = inputTensor;
-    }
-    else{
-        cout<<"Error: setInputTensor(const Tensor<float>& inputTensor) has different tensorSize."<<endl;
-    }
-}
-
-void InputLayer::setInputTensor(const Tensor<unsigned char> &inputTensor) {
-    if (m_tensorSize == inputTensor.getDims()) {
-        int N = m_pYTensor->getLength();
-        for (int i=0; i<N; ++i){
-            m_pYTensor->e(i) = (float) inputTensor.e(i);
-        }
-    } else {
-        cout << "Error: setInputTensor(const Tensor<unsigned char>& inputTensor) has different tensorSize." << endl;
-    }
-
-}
-
 int InputLayer::getNumParameters() {
     return 0;
 }

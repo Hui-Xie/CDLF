@@ -31,8 +31,7 @@ public:
 
     Tensor<float>* m_pGroundTruth;
 
-    void setGroundTruth( const Tensor<float>& groundTruth);
-    void setGroundTruth( const Tensor<unsigned  char>& groundTruth);
+    template<class T> void setGroundTruth( const Tensor<T>& groundTruth);
     virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
@@ -41,6 +40,17 @@ public:
     virtual  void printStruct(const int layerIndex);
 
 };
+
+template<class T>
+void LossLayer::setGroundTruth( const Tensor<T>& groundTruth){
+    if (nullptr == m_pGroundTruth){
+        m_pGroundTruth = new Tensor<float> (groundTruth.getDims());
+    }
+    const int N = m_pGroundTruth->getLength();
+    for (int i=0; i<N; ++i){
+        m_pGroundTruth->e(i) = (float) groundTruth.e(i);
+    }
+}
 
 
 #endif //RL_NONCONVEX_LOSSLAYER_H
