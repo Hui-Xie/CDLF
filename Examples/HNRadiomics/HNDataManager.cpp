@@ -45,6 +45,7 @@ void HNDataManager::readLabelFile(const string& filename, Tensor<float>*& pLabel
     m_labelItkImageIO->readFile(filename, pIOLabel);
     pLabel = new Tensor<float>;
     pLabel->valueTypeConvertFrom(*pIOLabel);
+    delete pIOLabel;
 }
 
 
@@ -52,6 +53,7 @@ void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<i
     Tensor<short>* pIOLabel = new Tensor<short>;
     pIOLabel->valueTypeConvertFrom(*pLabel);
     m_labelItkImageIO->writeFileWithSameInputDim(pIOLabel, offset, fullPathFileName);
+    delete pIOLabel;
 }
 
 string HNDataManager::getLabelPathFrom(const string &imagePath) {

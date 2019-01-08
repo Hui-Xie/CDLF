@@ -30,9 +30,10 @@ void HNRadiomicsNet::train() {
         int i = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
 
-            Tensor<float>* pImage = nullptr;
             const string imageFilePath = m_pDataMgr->m_trainImagesVector[randSeq[nIter]];
             const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
+
+            Tensor<float>* pImage = nullptr;
 
             m_pDataMgr->readTrainImageFile(randSeq[nIter], pImage);
             Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
@@ -78,9 +79,11 @@ float HNRadiomicsNet::test() {
     const int N = m_pDataMgr->m_NTestFile;
     float loss = 0.0;
     while (n < N) {
-        Tensor<float>* pImage = nullptr;
+
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
+
+        Tensor<float>* pImage = nullptr;
 
         m_pDataMgr->readTestImageFile(n, pImage);
         Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);

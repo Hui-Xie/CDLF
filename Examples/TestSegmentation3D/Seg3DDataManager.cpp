@@ -47,6 +47,7 @@ void Seg3DDataManager::readLabelFile(const string& filename, Tensor<float>*& pLa
     m_labelItkImageIO->readFile(filename, pIOLabel);
     pLabel = new Tensor<float>;
     pLabel->valueTypeConvertFrom(*pIOLabel);
+    delete pIOLabel;
 }
 
 
