@@ -31,7 +31,7 @@ public:
 
     Tensor<float>* m_pGroundTruth;
 
-    template<class T> void setGroundTruth( const Tensor<T>& groundTruth);
+    template<typename T> void setGroundTruth( const Tensor<T>& groundTruth);
     virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
@@ -41,7 +41,7 @@ public:
 
 };
 
-template<class T>
+template<typename T>
 void LossLayer::setGroundTruth( const Tensor<T>& groundTruth){
     if (nullptr == m_pGroundTruth){
         m_pGroundTruth = new Tensor<float> (groundTruth.getDims());

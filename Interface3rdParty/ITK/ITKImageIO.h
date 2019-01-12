@@ -24,8 +24,8 @@ public:
 
     void readFile(const string & filename, Tensor<VoxelType>*& pTensor);
     void readLabelFileAndOrigin(const string & labelFilename, Tensor<VoxelType>*& pTensor, typename itk::Image<VoxelType, Dimension>::PointType& labelOrigin) const;
-    void writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset, const string & filename);
-    void writeFileWithLessInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset, const string & filename);
+    template<typename OutputValueType> void writeFileWithSameInputDim(const Tensor<OutputValueType>* pTensor, const vector<int>& offset, const string & filename);
+    template<typename OutputValueType> void writeFileWithLessInputDim(const Tensor<OutputValueType>* pTensor, const vector<int>& offset, const string & filename);
 
     //make label file has same volume with original intensity file
     void extendLabelFileVolume(const string & labelFilename, Tensor<VoxelType>*& pTensor);

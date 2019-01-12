@@ -113,7 +113,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator=(const Tensor &other) {
 }
 
 template<class ValueType>
-template<class OtherValueType>
+template<typename OtherValueType>
 Tensor<ValueType> &Tensor<ValueType>::valueTypeConvertFrom(const Tensor<OtherValueType> &other) {
     freeMem();
     m_dims = other.getDims();

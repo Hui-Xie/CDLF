@@ -103,7 +103,8 @@ void ITKImageIO<VoxelType, Dimension>::readLabelFileAndOrigin(const string &labe
 
 
 template <typename VoxelType, int Dimension>
-void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset,
+template<typename OutputValueType>
+void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<OutputValueType>* pTensor, const vector<int>& offset,
                                                   const string& filename)
 {
     vector<int> tensorSize = reverseVector(pTensor->getDims());
@@ -113,10 +114,12 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<Vo
         return;
     }
 
-    typename ImageType::RegionType region;
-    typename ImageType::IndexType start;
-    typename ImageType::SizeType size;
-    typename ImageType::PointType newOrigin;
+    using OutputImageType = itk::Image< OutputValueType, Dimension >;
+
+    typename OutputImageType::RegionType region;
+    typename OutputImageType::IndexType start;
+    typename OutputImageType::SizeType size;
+    typename OutputImageType::PointType newOrigin;
     for(int i=0; i< dim; ++i){
         start[i] = 0;
         size[i] = tensorSize[i];
@@ -125,7 +128,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<Vo
     region.SetSize(size);
     region.SetIndex(start);
 
-    typename ImageType::Pointer image = ImageType::New();
+    typename OutputImageType::Pointer image = OutputImageType::New();
     image->SetRegions(region);
     image->Allocate();
 
@@ -137,18 +140,19 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<Vo
     //copy image data
     int i=0;
     int N = pTensor->getLength();
-    typename  itk::ImageRegionConstIteratorWithIndex<ImageType>::IndexType itkIndex;
+    typename  itk::ImageRegionConstIteratorWithIndex<OutputImageType>::IndexType itkIndex;
     while(i<N)
     {
         vector<int> tensorIndex = pTensor->offset2Index(i);
         for (int k=0;k<dim;++k){
             itkIndex[dim-1-k]= tensorIndex[k];
         }
-        image->SetPixel(itkIndex, (VoxelType)pTensor->e(i));
+        image->SetPixel(itkIndex, pTensor->e(i));
         ++i;
     }
 
-    typedef itk::ImageFileWriter<ImageType> WriterType;
+
+    typedef itk::ImageFileWriter<OutputImageType> WriterType;
     typename WriterType::Pointer writer = WriterType::New();
     writer->SetFileName(filename);
     writer->SetInput(image);
@@ -157,7 +161,8 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<Vo
 }
 
 template <typename VoxelType, int Dimension>
-void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<VoxelType>* pTensor, const vector<int>& offset,
+template<typename OutputValueType>
+void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<OutputValueType>* pTensor, const vector<int>& offset,
                                                                  const string& filename)
 {
     vector<int> tensorSize = reverseVector(pTensor->getDims());
@@ -166,8 +171,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<Vo
         cout<<"Error: the output tensor should has One less dimension than the input image."<<endl;
         return;
     }
-
-    using LessImageType = itk::Image< VoxelType, Dimension-1>;
+    using LessImageType = itk::Image< OutputValueType, Dimension-1>;
 
     typename LessImageType::RegionType region;
     typename LessImageType::IndexType start;
@@ -209,7 +213,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<Vo
         for (int k=0;k<dim;++k){
             itkIndex[dim-1-k]= tensorIndex[k];
         }
-        image->SetPixel(itkIndex, (VoxelType)pTensor->e(i));
+        image->SetPixel(itkIndex, pTensor->e(i));
         ++i;
     }
 

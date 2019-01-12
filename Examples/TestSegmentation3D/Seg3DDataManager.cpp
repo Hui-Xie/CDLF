@@ -51,7 +51,7 @@ void Seg3DDataManager::freeImageItkImageIO(){
 
 void Seg3DDataManager::readImageFile(const string& filename, Tensor<float>*& pImage){
     freeImageItkImageIO();
-    ITKImageIO<float, 3>* m_imageItkImageIO = new ITKImageIO<float, 3>;
+    m_imageItkImageIO = new ITKImageIO<float, 3>;
     m_imageItkImageIO->readFile(filename, pImage);
 }
 
@@ -68,7 +68,12 @@ void Seg3DDataManager::readLabelFile(const string& filename, Tensor<float>*& pLa
 
 
 void Seg3DDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
-    m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+    if (nullptr != m_labelItkImageIO){
+        m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+    }
+    else{
+        m_imageItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+    }
 }
 
 

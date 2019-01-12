@@ -19,7 +19,7 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
-    template<class T> void setInputTensor(const Tensor<T>& inputTensor);
+    template<typename T> void setInputTensor(const Tensor<T>& inputTensor);
     virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);
@@ -28,7 +28,7 @@ public:
     virtual  void printStruct(const int layerIndex);
 };
 
-template<class T>
+template<typename T>
 void InputLayer::setInputTensor(const Tensor<T> &inputTensor) {
     if (m_tensorSize == inputTensor.getDims()) {
         const int N = m_pYTensor->getLength();

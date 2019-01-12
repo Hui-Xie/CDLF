@@ -52,7 +52,7 @@ void HNDataManager::freeImageItkImageIO(){
 
 void HNDataManager::readImageFile(const string& filename, Tensor<float>*& pImage){
     freeImageItkImageIO();
-    ITKImageIO<short, 3>* m_imageItkImageIO = new ITKImageIO<short, 3>;
+    m_imageItkImageIO = new ITKImageIO<short, 3>;
     Tensor<short>* pShortImage = nullptr;
     m_imageItkImageIO->readFile(filename, pShortImage);
     pImage = new Tensor<float> ();
@@ -74,7 +74,12 @@ void HNDataManager::readLabelFile(const string& filename, Tensor<float>*& pLabel
 void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
     Tensor<short>* pIOLabel = new Tensor<short>;
     pIOLabel->valueTypeConvertFrom(*pLabel);
-    m_labelItkImageIO->writeFileWithSameInputDim(pIOLabel, offset, fullPathFileName);
+    if (nullptr != m_labelItkImageIO){
+        m_labelItkImageIO->writeFileWithSameInputDim(pIOLabel, offset, fullPathFileName);
+    }
+    else{
+        m_imageItkImageIO->writeFileWithSameInputDim(pIOLabel, offset, fullPathFileName);
+    }
     delete pIOLabel;
 }
 
