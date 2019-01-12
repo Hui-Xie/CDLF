@@ -21,6 +21,10 @@ public:
 
     HNDataManager* m_pDataMgr;
 
+    float test(const string& imageFilePath, const string& labelFilePath);
+
+
+
     float m_dice;
 };
 

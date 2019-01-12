@@ -29,6 +29,7 @@ public:
 
     //make label file has same volume with original intensity file
     void extendLabelFileVolume(const string & labelFilename, Tensor<VoxelType>*& pTensor);
+    vector<int> getOutputOffset(const vector<int> outputTensorSize);
 
 private:
     typename ImageType::PointType m_origin;

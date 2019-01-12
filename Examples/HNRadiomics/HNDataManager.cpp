@@ -83,16 +83,37 @@ void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<i
     delete pIOLabel;
 }
 
-string HNDataManager::getLabelPathFrom(const string &imagePath) {
-    string imageFileName = getFileName(imagePath);
-    size_t pos = imageFileName.find("_CT.nrrd");
-    string labelFileName = imageFileName.replace(pos,string::npos, "_GTV.nrrd");
+string HNDataManager::getLabelPathFrom(const string &imageFilePath) {
+    if (m_trainLabelsDir.empty()){
+        return "";
+    }
+    else{
+        string imageFileName = getFileName(imageFilePath);
+        size_t pos = imageFileName.find("_CT.nrrd");
+        string labelFileName = imageFileName.replace(pos,string::npos, "_GTV.nrrd");
 
-    if (string::npos != imagePath.find("trainImages")){
-        labelFileName = m_trainLabelsDir +"/" +labelFileName;
+        if (string::npos != imageFilePath.find("trainImages")){
+            labelFileName = m_trainLabelsDir +"/" +labelFileName;
+        }
+        else {
+            labelFileName = m_testLabelsDir +"/" +labelFileName;
+        }
+        return labelFileName;
     }
-    else {
-        labelFileName = m_testLabelsDir +"/" +labelFileName;
+}
+
+string HNDataManager::generateLabelFilePath(const string &imageFilePath) {
+    string imageFile = imageFilePath;
+    size_t pos = imageFile.find(".nrrd");
+    string labelFilePath = imageFile.replace(pos,string::npos, "_Label.nrrd");
+    return labelFilePath;
+}
+
+vector<int> HNDataManager::getOutputOffset(const vector<int> &outputTensorSize) {
+    if (nullptr != m_labelItkImageIO){
+        return  m_labelItkImageIO->getOutputOffset(outputTensorSize);
     }
-    return labelFileName;
+    else{
+        return m_imageItkImageIO->getOutputOffset(outputTensorSize);
+    }
 }

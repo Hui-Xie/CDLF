@@ -57,11 +57,11 @@ int main(int argc, char *argv[]) {
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
-    float squareLoss = net.test();
-    cout << " mean squareLoss for each pixel = " << squareLoss << endl;
+    float meanSquareLoss = net.test(imageFile, labelFile);
+    cout << " mean squareLoss for each pixel = " << meanSquareLoss << endl;
     cout << " mean dice coefficient =   " << net.m_dice << endl;
 
-    cout << "=========== End of Test:  " << net.getName() << " ============" << endl;
+    cout << "=========== End of Predict:  " << net.getName() << " ============" << endl;
     return 0;
 
 }

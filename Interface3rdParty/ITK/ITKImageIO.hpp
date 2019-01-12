@@ -157,7 +157,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithSameInputDim(const Tensor<Ou
     writer->SetFileName(filename);
     writer->SetInput(image);
     writer->Update();
-    cout<<"Info: An output image "<<filename<<" output"<<endl;
+    cout<<"Info: An output image at "<<filename<<endl;
 }
 
 template <typename VoxelType, int Dimension>
@@ -222,7 +222,7 @@ void ITKImageIO<VoxelType, Dimension>::writeFileWithLessInputDim(const Tensor<Ou
     writer->SetFileName(filename);
     writer->SetInput(image);
     writer->Update();
-    cout<<"Info: An output image "<<filename<<" output"<<endl;
+    cout<<"Info: An output image at "<<filename<<endl;
 }
 
 template<typename VoxelType, int Dimension>
@@ -249,6 +249,15 @@ void ITKImageIO<VoxelType, Dimension>::extendLabelFileVolume(const string &label
     if (nullptr != pSmallTensor){
         delete pSmallTensor;
     }
+}
+
+template<typename VoxelType, int Dimension>
+vector<int> ITKImageIO<VoxelType, Dimension>::getOutputOffset(const vector<int> outputTensorSize) {
+    vector<int> offset(Dimension, 0);
+    for(int i=0; i< Dimension; ++i){
+        offset[i] = (m_imageSize[i] - outputTensorSize[Dimension-1-i])/2;
+    }
+    return offset;
 }
 
 

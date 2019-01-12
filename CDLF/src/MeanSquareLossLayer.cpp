@@ -70,3 +70,5 @@ float MeanSquareLossLayer::diceCoefficient(const float threshold) {
     }
     return nSuccess*1.0/N;
 }
+
+

@@ -123,3 +123,56 @@ float HNRadiomicsNet::test() {
     return  loss/N;
 
 }
+
+float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFilePath) {
+    InputLayer *inputLayer = getInputLayer();
+    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+
+    float loss = 0.0;
+    m_dice = 0;
+
+    Tensor<float> *pImage = nullptr;
+    m_pDataMgr->readImageFile(imageFilePath, pImage);
+    Tensor<float> *pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
+    pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims()) / 2, pSubImage, 1);
+    inputLayer->setInputTensor(*pSubImage);
+    if (nullptr != pImage) {
+        delete pImage;
+        pImage = nullptr;
+    }
+    if (nullptr != pSubImage) {
+        delete pSubImage;
+        pSubImage = nullptr;
+    }
+
+    if (!labelFilePath.empty()){
+        m_pDataMgr->readLabelFile(labelFilePath, pImage);
+        Tensor<float> *pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
+        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, 1);
+        lossLayer->setGroundTruth(*pSubLabel);
+        if (nullptr != pImage) {
+            delete pImage;
+            pImage = nullptr;
+        }
+        if (nullptr != pSubLabel) {
+            delete pSubLabel;
+            pSubLabel = nullptr;
+        }
+    }
+
+    forwardPropagate();
+
+    //Output network predicted label
+    Tensor<unsigned char> predictResult(lossLayer->m_prevLayer->m_tensorSize);
+    lossLayer->getPredictTensor(predictResult, 0.5);
+    string outputLabelFilePath = m_pDataMgr->generateLabelFilePath(imageFilePath);
+    vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);
+    m_pDataMgr->saveLabel2File(&predictResult, offset, outputLabelFilePath);
+
+
+    if (!labelFilePath.empty()){
+        loss = lossLayer->getLoss();
+        m_dice = lossLayer->diceCoefficient(0.5);
+    }
+    return loss;
+}

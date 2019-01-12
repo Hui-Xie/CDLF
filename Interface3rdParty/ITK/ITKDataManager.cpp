@@ -9,7 +9,16 @@
 
 
 ITKDataManager::ITKDataManager(const string& dataSetDir) {
-     m_dataSetDir = dataSetDir;
+    m_dataSetDir = dataSetDir;
+    m_trainImagesDir = "";
+    m_trainLabelsDir = "";
+    m_testImagesDir = "";
+    m_testLabelsDir = "";
+
+    m_outputLabelsDir = "";
+    m_NTrainFile = 0;
+    m_NTestFile = 0;
+
 }
 
 ITKDataManager::~ITKDataManager(){

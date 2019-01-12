@@ -25,7 +25,10 @@ public:
     virtual void freeImageItkImageIO();
 
 
-    string getLabelPathFrom(const string& imagePath);
+    string getLabelPathFrom(const string& imageFilePath);
+    string generateLabelFilePath(const string& imageFilePath);
+    vector<int>  getOutputOffset(const vector<int>& outputTensorSize);
+
 
 };
 

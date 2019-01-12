@@ -27,7 +27,9 @@ float LossLayer::getLoss(){
 }
 
 void LossLayer::forward(){
-    lossCompute();
+    if (nullptr != m_pGroundTruth ){
+        lossCompute();
+    }
 }
 void LossLayer::backward(bool computeW, bool computeX){
     gradientCompute();
