@@ -78,6 +78,7 @@ float HNRadiomicsNet::test() {
     int n = 0;
     const int N = m_pDataMgr->m_NTestFile;
     float loss = 0.0;
+    m_dice = 0;
     while (n < N) {
 
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
@@ -114,9 +115,11 @@ float HNRadiomicsNet::test() {
 
         forwardPropagate();
         loss += lossLayer->getLoss();
+        m_dice += lossLayer->diceCoefficient(0.5);
         ++n;
 
     }
+    m_dice = m_dice/N;
     return  loss/N;
 
 }

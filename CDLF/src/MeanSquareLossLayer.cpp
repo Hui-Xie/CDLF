@@ -54,3 +54,17 @@ void MeanSquareLossLayer::printStruct(const int layerIndex) {
     printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s; Lambda=%f; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_lambda);
 }
+
+float MeanSquareLossLayer::diceCoefficient(const float threshold) {
+    const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
+    const Tensor<float>* pGT =  m_pGroundTruth;
+    const int N = pPredict->getLength();
+    int nSuccess = 0;
+    for (int i=0; i< N; ++i)
+    {
+        if (pPredict->e(i) > threshold && pGT->e(i) > threshold){
+            ++nSuccess;
+        }
+    }
+    return nSuccess*1.0/N;
+}

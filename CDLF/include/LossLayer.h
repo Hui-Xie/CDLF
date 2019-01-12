@@ -26,7 +26,7 @@ public:
 
     virtual float lossCompute()=0;
     virtual void  gradientCompute()=0;
-    virtual void printGroundTruth()=0;
+    virtual void  printGroundTruth()=0;
     float m_loss;
 
     Tensor<float>* m_pGroundTruth;

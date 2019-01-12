@@ -38,7 +38,6 @@ void InputLayer::setInputTensor(const Tensor<T> &inputTensor) {
     } else {
         cout << "Error: setInputTensor(const Tensor<T>& inputTensor) has different tensorSize." << endl;
     }
-
 }
 
 

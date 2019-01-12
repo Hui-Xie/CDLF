@@ -20,6 +20,8 @@ public:
     virtual float test();
 
     HNDataManager* m_pDataMgr;
+
+    float m_dice;
 };
 
 

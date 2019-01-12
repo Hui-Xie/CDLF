@@ -26,6 +26,7 @@ public:
 
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct(const int layerIndex);
+    float diceCoefficient(const float threshold);
 
 private:
     virtual float lossCompute();
