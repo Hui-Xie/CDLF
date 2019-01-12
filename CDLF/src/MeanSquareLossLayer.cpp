@@ -62,7 +62,9 @@ float MeanSquareLossLayer::diceCoefficient(const float threshold) {
     int nSuccess = 0;
     for (int i=0; i< N; ++i)
     {
-        if (pPredict->e(i) > threshold && pGT->e(i) > threshold){
+        if (  pPredict->e(i) >= threshold && pGT->e(i) >= threshold
+           || pPredict->e(i) < threshold && pGT->e(i) < threshold )
+        {
             ++nSuccess;
         }
     }
