@@ -20,11 +20,13 @@ public:
     ~Seg3DDataManager();
 
     ITKImageIO<unsigned char, 3>*  m_labelItkImageIO;
+    ITKImageIO<float, 3>*  m_imageItkImageIO;
 
-
+    virtual void readImageFile(const string& filename, Tensor<float>*& pImage);
     virtual void readLabelFile(const string& filename, Tensor<float>*& pLabel);
     virtual void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName);
-    virtual void freeItkImageIO();
+    virtual void freeLabelItkImageIO();
+    virtual void freeImageItkImageIO();
 
 };
 

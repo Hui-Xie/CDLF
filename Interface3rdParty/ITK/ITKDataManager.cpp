@@ -35,11 +35,6 @@ void ITKDataManager::readTestLabelFile(const int index, Tensor<float>*& pLabel){
     readLabelFile(m_testLabelsDir+"/"+filename, pLabel);
 }
 
-void ITKDataManager::readImageFile(const string& filename, Tensor<float>*& pImage){
-    ITKImageIO<float, 3> itkImageIO;
-    itkImageIO.readFile(filename, pImage);
-}
-
 // k indicates number of categories
 // the original label must be continuous integer starting from 0.
 void ITKDataManager::oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>*& pOneHotLabel, const int k){
