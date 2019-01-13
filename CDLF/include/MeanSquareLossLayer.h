@@ -27,6 +27,8 @@ public:
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct(const int layerIndex);
     float diceCoefficient(const float threshold);
+    float getTPR(const float threshold); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
+
     template<typename ValueType> void getPredictTensor(Tensor<ValueType>& predictResult, const float threthold);
 
 private:

@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
     float meanSquareLoss = net.test(imageFile, labelFile);
     cout << " mean squareLoss for each pixel = " << meanSquareLoss << endl;
     cout << " mean dice coefficient =   " << net.m_dice << endl;
+    cout << " mean True Positive Rate =   " << net.m_TPR << endl;
 
     cout << "=========== End of Predict:  " << net.getName() << " ============" << endl;
     return 0;

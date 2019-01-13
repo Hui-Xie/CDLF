@@ -23,8 +23,7 @@ public:
 
     float test(const string& imageFilePath, const string& labelFilePath);
 
-
-
+    float m_TPR; // True positive Rate
     float m_dice;
 };
 

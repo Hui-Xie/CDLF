@@ -79,6 +79,7 @@ float HNRadiomicsNet::test() {
     const int N = m_pDataMgr->m_NTestFile;
     float loss = 0.0;
     m_dice = 0;
+    m_TPR = 0;
     while (n < N) {
 
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
@@ -116,10 +117,12 @@ float HNRadiomicsNet::test() {
         forwardPropagate();
         loss += lossLayer->getLoss();
         m_dice += lossLayer->diceCoefficient(0.5);
+        m_TPR  += lossLayer->getTPR(0.5);
         ++n;
 
     }
-    m_dice = m_dice/N;
+    m_dice /= N;
+    m_TPR /= N;
     return  loss/N;
 
 }
@@ -129,7 +132,8 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
 
     float loss = 0.0;
-    m_dice = 0;
+    m_dice = 0.0;
+    m_TPR = 0.0;
 
     Tensor<float> *pImage = nullptr;
     m_pDataMgr->readImageFile(imageFilePath, pImage);
@@ -173,6 +177,7 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     if (!labelFilePath.empty()){
         loss = lossLayer->getLoss();
         m_dice = lossLayer->diceCoefficient(0.5);
+        m_TPR = lossLayer->getTPR(0.5);
     }
     return loss;
 }

@@ -72,3 +72,24 @@ float MeanSquareLossLayer::diceCoefficient(const float threshold) {
 }
 
 
+// TruePositiveRate = recall= sensitivity = TP/(TP+FN)
+float MeanSquareLossLayer::getTPR(const float threshold){
+    const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
+    const Tensor<float>* pGT =  m_pGroundTruth;
+    const int N = pPredict->getLength();
+    int nTP = 0; // True Positive
+    int nP = 0;// nP = nTP + nFP
+    for (int i=0; i< N; ++i)
+    {
+        if (pGT->e(i) >= threshold)
+        {
+          ++nP;
+          if (pPredict->e(i) >= threshold ){
+              ++nTP;
+          }
+        }
+    }
+    return nTP*1.0/nP;
+}
+
+
