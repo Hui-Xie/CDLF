@@ -74,15 +74,16 @@ float CrossEntropyLoss::diceCoefficient(){
         cout <<"Error: predicting Tensor has a different dimension with groundtruth"<<endl;
         return -1;
     }
-    int nSuccess = 0;
+    int nPredict = 0;
+    int nGT = 0;
+    int nInteresection = 0;
     for (int i=0; i< N; ++i)
     {
-        if (predictMaxPosTensor(i) == GTMaxPosTensor(i)){
-            ++nSuccess;
-        }
+        nPredict += (0 !=predictMaxPosTensor(i))? 1: 0;
+        nGT      += (0 !=GTMaxPosTensor(i))? 1: 0;
+        nInteresection += (predictMaxPosTensor(i) == GTMaxPosTensor(i) && 0 != predictMaxPosTensor(i)) ? 1:0;
     }
-    return nSuccess*1.0/N;
-
+    return nInteresection*2/(nPredict+nGT);
 }
 
 int CrossEntropyLoss::getNumParameters(){
