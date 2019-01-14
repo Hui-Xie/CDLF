@@ -17,7 +17,7 @@ if(ITK_FOUND)
     set (ITKImageIODir ../../Interface3rdParty/ITK)
     include_directories(${ITKImageIODir})
 
-    set(TestITK3DImageIOSRCS TestITK3DImageIO.cpp)
+    set(TestITK3DImageIOSRCS TestITK3DImageIO.cpp TestITKDataMgr.cpp ${ITKImageIODir}/ITKDataManager.cpp)
     add_executable(TestITK3DImageIO ${TestITK3DImageIOSRCS})
     target_link_libraries(TestITK3DImageIO  ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
 else(ITK_FOUND )

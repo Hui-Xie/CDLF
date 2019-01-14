@@ -24,6 +24,8 @@ public:
 
     virtual void readImageFile(const string& filename, Tensor<float>*& pImage);
     virtual void readLabelFile(const string& filename, Tensor<float>*& pLabel);
+
+    // the offset below should be Tensor Image dimension order, instead of ITK image dimension order
     virtual void saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName);
     virtual void freeLabelItkImageIO();
     virtual void freeImageItkImageIO();

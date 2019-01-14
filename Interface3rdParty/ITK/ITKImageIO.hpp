@@ -255,7 +255,7 @@ template<typename VoxelType, int Dimension>
 vector<int> ITKImageIO<VoxelType, Dimension>::getOutputOffset(const vector<int> outputTensorSize) {
     vector<int> offset(Dimension, 0);
     for(int i=0; i< Dimension; ++i){
-        offset[i] = (m_imageSize[i] - outputTensorSize[Dimension-1-i])/2;
+        offset[i] = (m_imageSize[Dimension-1-i] - outputTensorSize[i])/2;
     }
     return offset;
 }

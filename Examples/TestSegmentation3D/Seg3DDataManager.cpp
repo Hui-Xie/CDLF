@@ -68,11 +68,12 @@ void Seg3DDataManager::readLabelFile(const string& filename, Tensor<float>*& pLa
 
 
 void Seg3DDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
+    vector<int> reverseOffset = reverseVector(offset);
     if (nullptr != m_labelItkImageIO){
-        m_labelItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+        m_labelItkImageIO->writeFileWithSameInputDim(pLabel, reverseOffset, fullPathFileName);
     }
     else{
-        m_imageItkImageIO->writeFileWithSameInputDim(pLabel, offset, fullPathFileName);
+        m_imageItkImageIO->writeFileWithSameInputDim(pLabel, reverseOffset, fullPathFileName);
     }
 }
 

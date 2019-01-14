@@ -1,18 +1,19 @@
 //
-// Created by Hui Xie on 1/5/19.
+// Created by Hui Xie on 1/14/19.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 //
 
-#ifndef CDLF_FRAMEWORK_HNDATAMANAGER_H
-#define CDLF_FRAMEWORK_HNDATAMANAGER_H
+#ifndef CDLF_FRAMEWORK_TESTITKDATAMGR_H
+#define CDLF_FRAMEWORK_TESTITKDATAMGR_H
 
 #include "ITKDataManager.h"
 
-class HNDataManager : public ITKDataManager {
+
+class TestITKDataMgr  : public ITKDataManager {
 public:
-    HNDataManager(const string& dataSetDir);
-    ~HNDataManager();
+    TestITKDataMgr(const string& dataSetDir);
+    ~TestITKDataMgr();
 
     // this ITKImageIO depends on the specific dataset type
     ITKImageIO<short, 3>*  m_labelItkImageIO;
@@ -29,12 +30,10 @@ public:
 
     string getLabelPathFrom(const string& imageFilePath);
     string generateLabelFilePath(const string& imageFilePath);
-
-    // in Tensor dimension order
     vector<int>  getOutputOffset(const vector<int>& outputTensorSize);
 
 
 };
 
 
-#endif //CDLF_FRAMEWORK_HNDATAMANAGER_H
+#endif //CDLF_FRAMEWORK_TESTITKDATAMGR_H

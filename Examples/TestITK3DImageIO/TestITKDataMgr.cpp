@@ -1,13 +1,13 @@
 //
-// Created by Hui Xie on 1/5/19.
+// Created by Hui Xie on 1/14/19.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 //
 
-#include "HNDataManager.h"
+#include "TestITKDataMgr.h"
 #include <FileTools.h>
 
-HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetDir) {
+TestITKDataMgr::TestITKDataMgr(const string& dataSetDir) : ITKDataManager(dataSetDir) {
     m_labelItkImageIO = nullptr;
     m_imageItkImageIO = nullptr;
 
@@ -30,27 +30,27 @@ HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetD
 
 }
 
-HNDataManager::~HNDataManager() {
+TestITKDataMgr::~TestITKDataMgr() {
     freeLabelItkImageIO();
     freeImageItkImageIO();
 }
 
 
-void HNDataManager::freeLabelItkImageIO(){
+void TestITKDataMgr::freeLabelItkImageIO(){
     if (nullptr != m_labelItkImageIO){
         delete m_labelItkImageIO;
         m_labelItkImageIO = nullptr;
     }
 }
 
-void HNDataManager::freeImageItkImageIO(){
+void TestITKDataMgr::freeImageItkImageIO(){
     if (nullptr != m_imageItkImageIO){
         delete m_imageItkImageIO;
         m_imageItkImageIO = nullptr;
     }
 }
 
-void HNDataManager::readImageFile(const string& filename, Tensor<float>*& pImage){
+void TestITKDataMgr::readImageFile(const string& filename, Tensor<float>*& pImage){
     freeImageItkImageIO();
     m_imageItkImageIO = new ITKImageIO<short, 3>;
     Tensor<short>* pShortImage = nullptr;
@@ -60,7 +60,7 @@ void HNDataManager::readImageFile(const string& filename, Tensor<float>*& pImage
     delete pShortImage;
 }
 
-void HNDataManager::readLabelFile(const string& filename, Tensor<float>*& pLabel){
+void TestITKDataMgr::readLabelFile(const string& filename, Tensor<float>*& pLabel){
     freeLabelItkImageIO();
     m_labelItkImageIO = new ITKImageIO<short, 3>;
     Tensor<short>* pIOLabel = nullptr;
@@ -71,10 +71,10 @@ void HNDataManager::readLabelFile(const string& filename, Tensor<float>*& pLabel
 }
 
 
-void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
+void TestITKDataMgr::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<int>& offset, const string& fullPathFileName){
     Tensor<short>* pIOLabel = new Tensor<short>;
     pIOLabel->valueTypeConvertFrom(*pLabel);
-    vector<int> reverseOffset = reverseVector(offset);
+    vector<int> reverseOffset = reverseVector(offset); // very important
     if (nullptr != m_labelItkImageIO){
         m_labelItkImageIO->writeFileWithSameInputDim(pIOLabel, reverseOffset, fullPathFileName);
     }
@@ -84,7 +84,7 @@ void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<i
     delete pIOLabel;
 }
 
-string HNDataManager::getLabelPathFrom(const string &imageFilePath) {
+string TestITKDataMgr::getLabelPathFrom(const string &imageFilePath) {
     if (m_trainLabelsDir.empty()){
         return "";
     }
@@ -103,14 +103,14 @@ string HNDataManager::getLabelPathFrom(const string &imageFilePath) {
     }
 }
 
-string HNDataManager::generateLabelFilePath(const string &imageFilePath) {
+string TestITKDataMgr::generateLabelFilePath(const string &imageFilePath) {
     string imageFile = imageFilePath;
     size_t pos = imageFile.find(".nrrd");
     string labelFilePath = imageFile.replace(pos,string::npos, "_Label.nrrd");
     return labelFilePath;
 }
 
-vector<int> HNDataManager::getOutputOffset(const vector<int> &outputTensorSize) {
+vector<int> TestITKDataMgr::getOutputOffset(const vector<int> &outputTensorSize) {
     if (nullptr != m_labelItkImageIO){
         return  m_labelItkImageIO->getOutputOffset(outputTensorSize);
     }

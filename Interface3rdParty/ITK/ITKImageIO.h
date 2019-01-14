@@ -24,6 +24,8 @@ public:
 
     void readFile(const string & filename, Tensor<VoxelType>*& pTensor);
     void readLabelFileAndOrigin(const string & labelFilename, Tensor<VoxelType>*& pTensor, typename itk::Image<VoxelType, Dimension>::PointType& labelOrigin) const;
+
+    // the offset below should be ITK image dimension order, instead of Tensor Image dimension order
     template<typename OutputValueType> void writeFileWithSameInputDim(const Tensor<OutputValueType>* pTensor, const vector<int>& offset, const string & filename);
     template<typename OutputValueType> void writeFileWithLessInputDim(const Tensor<OutputValueType>* pTensor, const vector<int>& offset, const string & filename);
 

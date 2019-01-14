@@ -5,6 +5,7 @@
 
 #include "ITKImageIO.h"
 #include <string>
+#include "TestITKDataMgr.h"
 
 void printUsage(char* argv0){
     cout<<"Test ITK 3D image:"<<endl;
@@ -37,6 +38,8 @@ int main(int argc, char *argv[]){
 #endif
 
     /*
+     * //Test for basic input and output
+     *
     ITKImageIO<float, 3> itkImageIO;
 
     Tensor<float> *pImage = nullptr;
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]){
      */
 
 
-    cout<<"==================Test Extend label ======================"<<endl;
+    /*cout<<"==================Test Extend label ======================"<<endl;
     string srcFile = "/home/hxie1/temp/HN-CHUM-040_CT_HN.nrrd";
     string smallLabelFile = "/home/hxie1/temp/HN-CHUM-040_GTV.nrrd";
     string bigLabelFile ="/home/hxie1/temp/HN-CHUM-040_GTV_big.nrrd";
@@ -84,8 +87,32 @@ int main(int argc, char *argv[]){
     if (nullptr != pLabelImage) {
         delete pLabelImage;
         pLabelImage = nullptr;
-    }
+    }*/
 
+    // read a label file , crop it and save it 
+    const string labelFilePath = "/home/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV.nrrd"; // 512*512*130
+    const string outputLabelFilePath = "/home/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV_test.nrrd";
+    TestITKDataMgr dataMgr("");
+
+    Tensor<float> *pImage = nullptr;
+
+    dataMgr.readLabelFile(labelFilePath, pImage); // pImage with size: 130*512*512
+    Tensor<float> *pSubLabel = new Tensor<float>({90,500,500});
+    pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, 1);
+
+    Tensor<unsigned char> outputLabel({90,500,500});
+    outputLabel.valueTypeConvertFrom(*pSubLabel);
+
+    dataMgr.saveLabel2File(&outputLabel, {20,6,6}, outputLabelFilePath);
+
+    if (nullptr != pImage) {
+        delete pImage;
+        pImage = nullptr;
+    }
+    if (nullptr != pSubLabel) {
+        delete pSubLabel;
+        pSubLabel = nullptr;
+    }
 
     cout << "============= End of TestITKImageIO =============" << endl;
 }
