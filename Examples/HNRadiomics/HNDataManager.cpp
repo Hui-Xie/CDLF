@@ -118,3 +118,10 @@ vector<int> HNDataManager::getOutputOffset(const vector<int> &outputTensorSize) 
         return m_imageItkImageIO->getOutputOffset(outputTensorSize);
     }
 }
+
+void HNDataManager::saveImage2File(Tensor<float> *pImage, const vector<int> &offset, const string &fullPathFileName) {
+    ITKImageIO<float, 3> floatItkImageIO;
+    floatItkImageIO.copyImagePropertyFrom(*m_imageItkImageIO);
+    vector<int> reverseOffset = reverseVector(offset);
+    floatItkImageIO.writeFileWithSameInputDim(pImage, reverseOffset, fullPathFileName);
+}

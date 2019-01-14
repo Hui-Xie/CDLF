@@ -33,12 +33,12 @@ public:
     void extendLabelFileVolume(const string & labelFilename, Tensor<VoxelType>*& pTensor);
     vector<int> getOutputOffset(const vector<int> outputTensorSize);
 
-private:
+    template<typename OtherVoxelType> void copyImagePropertyFrom(ITKImageIO<OtherVoxelType, Dimension> &other);
+
     typename ImageType::PointType m_origin;
     typename ImageType::SizeType m_imageSize;
     typename ImageType::SpacingType m_spacing;
     typename ImageType::DirectionType m_direction;
-    int m_dim;
 };
 
 #include "ITKImageIO.hpp"

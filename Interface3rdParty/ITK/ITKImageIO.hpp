@@ -11,7 +11,7 @@
 
 template <typename VoxelType, int Dimension>
 ITKImageIO<VoxelType, Dimension>::ITKImageIO(){
-    m_dim = Dimension;
+   //null
 }
 
 template <typename VoxelType, int Dimension>
@@ -258,6 +258,19 @@ vector<int> ITKImageIO<VoxelType, Dimension>::getOutputOffset(const vector<int> 
         offset[i] = (m_imageSize[Dimension-1-i] - outputTensorSize[i])/2;
     }
     return offset;
+}
+
+template<typename VoxelType, int Dimension>
+template<typename OtherVoxelType>
+void ITKImageIO<VoxelType, Dimension>::copyImagePropertyFrom(ITKImageIO<OtherVoxelType, Dimension> &other) {
+    for (int i=0; i<Dimension; ++i){
+       m_origin[i] = other.m_origin[i];
+       m_imageSize[i] = other.m_imageSize[i];
+       m_spacing[i] = other.m_spacing[i];
+       for (int j= 0; j<Dimension; ++j){
+           m_direction[i][j] = other.m_direction[i][j];
+       }
+    }
 }
 
 

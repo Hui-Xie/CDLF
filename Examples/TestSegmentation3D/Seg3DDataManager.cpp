@@ -77,4 +77,11 @@ void Seg3DDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vecto
     }
 }
 
+void Seg3DDataManager::saveImage2File(Tensor<float> *pImage, const vector<int> &offset, const string &fullPathFileName) {
+    ITKImageIO<float, 3> floatItkImageIO;
+    floatItkImageIO.copyImagePropertyFrom(*m_imageItkImageIO);
+    vector<int> reverseOffset = reverseVector(offset);
+    floatItkImageIO.writeFileWithSameInputDim(pImage, reverseOffset, fullPathFileName);
+}
+
 
