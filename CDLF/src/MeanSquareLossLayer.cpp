@@ -55,20 +55,22 @@ void MeanSquareLossLayer::printStruct(const int layerIndex) {
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_lambda);
 }
 
+
 float MeanSquareLossLayer::diceCoefficient(const float threshold) {
+    // just compute the target volume, without considering the background
     const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
     const Tensor<float>* pGT =  m_pGroundTruth;
     const int N = pPredict->getLength();
-    int nSuccess = 0;
+    int nPredict = 0;
+    int nGT = 0;
+    int nIntersection = 0;
     for (int i=0; i< N; ++i)
     {
-        if (  pPredict->e(i) >= threshold && pGT->e(i) >= threshold
-           || pPredict->e(i) < threshold && pGT->e(i) < threshold )
-        {
-            ++nSuccess;
-        }
+        nIntersection += (pPredict->e(i) >= threshold && pGT->e(i) >= threshold)? 1: 0;
+        nPredict += (pPredict->e(i) >= threshold)? 1:0;
+        nGT += (pGT->e(i) >= threshold)? 1:0;
     }
-    return nSuccess*1.0/N;
+    return nIntersection*2.0/(nPredict+nGT);
 }
 
 
