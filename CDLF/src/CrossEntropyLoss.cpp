@@ -70,10 +70,6 @@ float CrossEntropyLoss::diceCoefficient(){
     Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
     Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
     const int N = predictMaxPosTensor.getLength();
-    if (N != GTMaxPosTensor.getLength()){
-        cout <<"Error: predicting Tensor has a different dimension with groundtruth"<<endl;
-        return -1;
-    }
     int nPredict = 0;
     int nGT = 0;
     int nInteresection = 0;
@@ -84,6 +80,27 @@ float CrossEntropyLoss::diceCoefficient(){
         nInteresection += (predictMaxPosTensor(i) == GTMaxPosTensor(i) && 0 != predictMaxPosTensor(i)) ? 1:0;
     }
     return nInteresection*2/(nPredict+nGT);
+}
+
+float CrossEntropyLoss::getTPR() {
+    Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
+    Tensor<float> &GT = *m_pGroundTruth;
+    Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
+    Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
+    const int N = predictMaxPosTensor.getLength();
+    int nTP = 0; // True Positive
+    int nP = 0;// nP = nTP + nFP
+    for (int i=0; i< N; ++i)
+    {
+        if (GTMaxPosTensor.e(i) >= 0)
+        {
+            ++nP;
+            if (predictMaxPosTensor.e(i) ==  GTMaxPosTensor.e(i) ){
+                ++nTP;
+            }
+        }
+    }
+    return nTP*1.0/nP;
 }
 
 int CrossEntropyLoss::getNumParameters(){
@@ -103,3 +120,5 @@ void CrossEntropyLoss::saveStructLine(FILE *pFile) {
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
+
+

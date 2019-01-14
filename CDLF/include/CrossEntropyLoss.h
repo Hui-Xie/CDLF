@@ -23,6 +23,7 @@ public:
     virtual void  printGroundTruth();
     bool predictSuccessInColVec();
     float diceCoefficient();
+    float getTPR();
 
     virtual  int getNumParameters();
 

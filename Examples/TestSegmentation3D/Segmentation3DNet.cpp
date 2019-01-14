@@ -163,6 +163,7 @@ float Segmentation3DNet::testG(bool outputFile){
     bool bTrainSet = false;
     const int N = m_pDataMgr->m_NTestFile;
     Tensor<float> dice({N,1});
+    Tensor<float> TPR({N,1});
     for (int i = 0; i <  N; ++i) {
         Tensor<float> *pImage = nullptr;
         m_pDataMgr->readTestImageFile(i, pImage);
@@ -173,6 +174,7 @@ float Segmentation3DNet::testG(bool outputFile){
 
         m_pGNet->forwardPropagate();
         dice.e(i) = m_pGNet->m_pLossLayer->diceCoefficient();
+        TPR.e(i) = m_pGNet->m_pLossLayer->getTPR();
 
         //0utput file
         if (outputFile){
@@ -181,9 +183,9 @@ float Segmentation3DNet::testG(bool outputFile){
             m_pDataMgr->saveOneHotCode2LabelFile(m_pGNet->m_pGxLayer->m_pYTensor, outputFilename, m_pGNet->m_pInputXLayer->m_tensorSize);
          }
     }
-    cout<<"Test "<<N<<" files: "<<"Dice avg=" <<dice.average()<<"; min="<<dice.min()
-        <<"; max="<<dice.max()<<"; variance=" <<dice.variance() <<endl;
-
+    cout<<"Test "<<N<<" files: "<<endl;
+    cout<<"Dice avg=" <<dice.average()<<"; min="<<dice.min() <<"; max="<<dice.max()<<"; variance=" <<dice.variance() <<endl;
+    cout<<"TPR avg=" <<TPR.average()<<"; min="<<TPR.min() <<"; max="<<TPR.max()<<"; variance=" <<TPR.variance() <<endl;
 }
 
 // pretrain an epoch for D
