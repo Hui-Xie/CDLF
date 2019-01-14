@@ -110,6 +110,13 @@ string HNDataManager::generateLabelFilePath(const string &imageFilePath) {
     return labelFilePath;
 }
 
+string HNDataManager::generateFloatImagePath(const string& imageFilePath){
+    string imageFile = imageFilePath;
+    size_t pos = imageFile.find(".nrrd");
+    string floatFilePath = imageFile.replace(pos,string::npos, "_floatOutput.nrrd");
+    return floatFilePath;
+}
+
 vector<int> HNDataManager::getOutputOffset(const vector<int> &outputTensorSize) {
     if (nullptr != m_labelItkImageIO){
         return  m_labelItkImageIO->getOutputOffset(outputTensorSize);

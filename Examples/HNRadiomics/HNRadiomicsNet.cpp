@@ -166,11 +166,16 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
 
     forwardPropagate();
 
+    vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);
+
+    // output float image for debug
+    const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
+    m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
+
     //Output network predicted label
     Tensor<unsigned char> predictResult(lossLayer->m_prevLayer->m_tensorSize);
     lossLayer->getPredictTensor(predictResult, 0.5);
     string outputLabelFilePath = m_pDataMgr->generateLabelFilePath(imageFilePath);
-    vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);
     m_pDataMgr->saveLabel2File(&predictResult, offset, outputLabelFilePath);
 
 
