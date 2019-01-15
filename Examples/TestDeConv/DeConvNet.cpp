@@ -29,6 +29,7 @@ void DeConvNet::train() {
     for(int i =0; i<groundTruthTensor.getLength(); ++i){
         groundTruthTensor.e(i) = i;
     }
+    lossLayer->setGroundTruth(groundTruthTensor);
 
     const int N = 100;
     const int batchSize = getBatchSize();
@@ -45,7 +46,7 @@ void DeConvNet::train() {
             generateGaussian(&inputTensor, 0, 1);
             inputLayer->setInputTensor(inputTensor);
 
-            lossLayer->setGroundTruth(groundTruthTensor);
+
             forwardPropagate();
             backwardPropagate(true);
             ++nIter;
@@ -56,6 +57,29 @@ void DeConvNet::train() {
 }
 
 float DeConvNet::test() {
-     return 0;
+    InputLayer *inputLayer = getInputLayer();
+    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+
+    vector<int> outputSize = lossLayer->m_prevLayer->m_tensorSize;
+    Tensor<float> groundTruthTensor(outputSize);
+    for (int i = 0; i < groundTruthTensor.getLength(); ++i) {
+        groundTruthTensor.e(i) = i;
+    }
+    lossLayer->setGroundTruth(groundTruthTensor);
+
+    float loss = 0;
+    const int N = 20;
+    int nIter = 0;
+    while (nIter < N) {
+        vector<int> inputSize = inputLayer->m_tensorSize;
+        Tensor<float> inputTensor(inputSize);
+        generateGaussian(&inputTensor, 0, 1);
+        inputLayer->setInputTensor(inputTensor);
+
+        forwardPropagate();
+        loss += lossLayer->getLoss();
+        ++nIter;
+    }
+    return loss/N;
 }
 
