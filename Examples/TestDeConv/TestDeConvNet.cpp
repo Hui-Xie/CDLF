@@ -50,7 +50,7 @@ int main(int argc, char *argv[]){
     net.setLearningRate(learningRate);
     net.setUnlearningLayerID(10);
 
-    int epoch= 15000;
+    int epoch= 1500000;
     float squareLoss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
