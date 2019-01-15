@@ -18,3 +18,5 @@ add_subdirectory(TestPerf)
 add_subdirectory(TestVNet)
 add_subdirectory(MnistAutoEncoder)
 add_subdirectory(HNRadiomics)
+add_subdirectory(TestDeConv)
+
