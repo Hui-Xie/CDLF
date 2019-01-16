@@ -29,14 +29,12 @@ endif(${Dev_Debug})
 
 
 message("*************************************")
-
 set(CDLF_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF/include)
 include_directories(${CDLF_INCLUDE_DIR})
 link_directories(${CMAKE_BINARY_DIR}/CDLF/src)
 
 # for Intel MKL library
-set(INTEL  /home/hxie1/intel)
-set(MKLROOT ${INTEL}/mkl)
+set(MKLROOT ${INTEL_Dir}/mkl)
 set(MKL_INCLUDE_DIR ${MKLROOT}/include)
 include_directories(${MKL_INCLUDE_DIR})
 
@@ -51,12 +49,12 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so  ${MKLROOT}/lib/inte
 
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
-message("1  In Windows, after setting envionmental varialbles, you need to reboot your system.")
-message("2  you need to set the directory including CDLFLib into your environment variable.")
-message("3  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
+message("1  you need to set the directory including CDLFLib into your environment variable.")
+message("2  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
+-DINTEL_Dir=/home/hxie1/intel
 -DUse_GPU=1
 -DDev_Debug=0")
 message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
