@@ -315,6 +315,9 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         else if ("ConvolutionLayer" == s.m_type) {
            pLayer = new ConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, (int)s.m_stride);
         }
+        else if ("MatrixConvertLayer" == s.m_type) {
+            pLayer = new MatrixConvertLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize);
+        }
         else if ("TransposedConvolutionLayer" == s.m_type) {
             pLayer = new TransposedConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, (int)s.m_stride);
         }

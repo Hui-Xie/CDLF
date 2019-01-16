@@ -15,6 +15,7 @@
 #include "MeanSquareLossLayer.h"
 #include "ExponentialLayer.h"
 #include "FCLayer.h"
+#include "MatrixConvertLayer.h"
 #include "IdentityLayer.h"
 #include "InputLayer.h"
 #include "LossLayer.h"
