@@ -635,7 +635,7 @@ void Tensor<ValueType>::print(bool fixWidth){
                 if (fixWidth){
                     printf("%3d", int(e(i,j)));
                 }else{
-                    printf("%f ", e(i,j));
+                    printf("%f ", (float)e(i,j));
                 }
             }
             printf("\n");
