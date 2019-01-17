@@ -424,7 +424,7 @@ void Net::loadLayersParameters() {
 }
 
 void Net::saveNetParameters() {
-    const string tableHead = "Name, LearningRate, BatchSize, Epoch, LossTolerance, JudgeLoss, \r\n";
+    const string tableHead = "Name, LearningRate, BatchSize, Epoch, LossTolerance, JudgeLoss, UnlearningID, \r\n";
     string filename = m_directory + "/NetParameters.csv";
     FILE *pFile;
     pFile = fopen(filename.c_str(), "w");
@@ -433,31 +433,31 @@ void Net::saveNetParameters() {
         return;
     }
     fputs(tableHead.c_str(), pFile);
-    fprintf(pFile, "%s, %f, %d, %d, %f, %d, \r\n", m_name.c_str(), m_learningRate, m_batchSize, m_epoch,
-            m_lossTolerance, m_judgeLoss ? 1 : 0);
+    fprintf(pFile, "%s, %f, %d, %d, %f, %d, %d, \r\n", m_name.c_str(), m_learningRate, m_batchSize, m_epoch,
+            m_lossTolerance, m_judgeLoss ? 1 : 0, m_unlearningLayerID);
     fclose(pFile);
 }
 
 void Net::loadNetParameters() {
     string filename = m_directory + "/NetParameters.csv";
     ifstream ifs(filename.c_str());;
-    char netParameterChar[100];
+    char netParameterChar[200];
     int judgeLoss = 0;
     char name[100];
     if (ifs.good()) {
-        ifs.ignore(100, '\n'); // ignore the table head
-        ifs.getline(netParameterChar, 100, '\n');
+        ifs.ignore(200, '\n'); // ignore the table head
+        ifs.getline(netParameterChar, 200, '\n');
         for (int i = 0; i < 100; ++i) {
             if (netParameterChar[i] == ',') netParameterChar[i] = ' ';
         }
-        int nFills = sscanf(netParameterChar, "%s  %f  %d  %d  %f  %d  \r\n", name, &m_learningRate, &m_batchSize,
-                            &m_epoch, &m_lossTolerance, &judgeLoss);
-        if (6 != nFills) {
+        int nFills = sscanf(netParameterChar, "%s  %f  %d  %d  %f  %d  %d \r\n", name, &m_learningRate, &m_batchSize,
+                            &m_epoch, &m_lossTolerance, &judgeLoss, &m_unlearningLayerID);
+        if (7 != nFills) {
             cout << "Error: sscanf netParameterChar in loadNetParameters." << endl;
         }
     }
     m_name = string(name);
-    m_judgeLoss = judgeLoss == 1 ? true : false;
+    m_judgeLoss = (judgeLoss == 1) ? true : false;
     ifs.close();
 }
 
