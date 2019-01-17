@@ -26,7 +26,7 @@ ConcatenateLayer::ConcatenateLayer(const int id, const string& name, const vecto
     }
 
     if (totalLen != length(m_tensorSize)){
-        cout<<"Error: the output TensorSize does not euqal the sum of previous Layers."<<endl;
+        cout<<"Error: the output TensorSize does not euqal the sum of previous Layers, at layID = "<<id<<endl;
     }
 }
 

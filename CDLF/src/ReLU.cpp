@@ -8,13 +8,13 @@
 
 //ReLU has just one previous layer.
 
-ReLU::ReLU(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize, const float k): Layer(id,name, m_tensorSize){
+ReLU::ReLU(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize, const float k): Layer(id,name, tensorSize){
     m_type = "ReLU";
     m_k = k;
     addPreviousLayer(prevLayer);
 
-    if (length(tensorSize) != length(prevLayer->m_tensorSize)){
-        cout<<"Error: The output TensorSize does not equal with the one of the previous layer in ReLU construction."<<endl;
+    if (length(m_tensorSize) != length(m_prevLayer->m_tensorSize)){
+        cout<<"Error: The output TensorSize does not equal with the one of the previous layer in ReLU construction at  layID = "<<id<<endl;
     }
 }
 

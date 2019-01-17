@@ -14,8 +14,8 @@ NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* p
     m_epsilon = 1e-6;
     m_sigma = m_epsilon;
 
-    if (length(tensorSize) != length(prevLayer->m_tensorSize)){
-        cout<<"Error: The output TensorSize does not equal with the one of the previous layer in Normalization construction."<<endl;
+    if (length(m_tensorSize) != length(m_prevLayer->m_tensorSize)){
+        cout<<"Error: The output TensorSize does not equal with the one of the previous layer in Normalization construction at layID = "<<id<<endl;
     }
 }
 NormalizationLayer::~NormalizationLayer(){
