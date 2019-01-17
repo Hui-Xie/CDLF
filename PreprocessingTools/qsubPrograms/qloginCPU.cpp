@@ -38,7 +38,10 @@ int main(int argc, char *argv[]) {
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
     string qsubStr = qsubStrBasic;
-    system(qsubStr.c_str());
+    int result = system(qsubStr.c_str());
+    if (0 != result){
+        cout<<qsubStr << "runs error"<<endl;
+    }
 
     cout << "qlogin submitted: " << jobName <<endl;
     return 0;

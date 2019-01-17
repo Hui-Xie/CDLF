@@ -26,6 +26,11 @@ HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetD
         getFileVector(m_testImagesDir, m_testImagesVector);
         m_NTestFile = m_testImagesVector.size();
         cout<<"Info: totally read in "<<m_NTestFile << " test images file. "<<endl;
+
+        //debug
+        m_NTrainFile = 2;
+        m_NTestFile = 2;
+
     }
 
 }

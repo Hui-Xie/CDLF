@@ -48,7 +48,11 @@ int main(int argc, char *argv[]) {
                           +" " + spacingZ;
 
         string qsubStr = qsubStrBasic +" " + qsubStrCmd;
-        system(qsubStr.c_str());
+        int result = system(qsubStr.c_str());
+        if (0 != result){
+            cout<<qsubStr << "runs error"<<endl;
+        }
+
     }
     cout<<"qsub submitted."<<endl;
     return 0;

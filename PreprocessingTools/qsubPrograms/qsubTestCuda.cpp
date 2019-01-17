@@ -43,7 +43,10 @@ int main(int argc, char *argv[]) {
     string qsubStrCmd = " " + cmdPath +" "+ cmdPara;
 
     string qsubStr = qsubStrBasic + " " + qsubStrCmd;
-    system(qsubStr.c_str());
+    int result = system(qsubStr.c_str());
+    if (0 != result){
+        cout<<qsubStr << "runs error"<<endl;
+    }
 
     cout<<"GPU Resource: "<<gpuResouce<<endl;
     cout << "qsubTest submitted:" << jobName<<endl;

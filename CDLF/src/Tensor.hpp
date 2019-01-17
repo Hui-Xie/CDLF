@@ -645,7 +645,7 @@ void Tensor<ValueType>::print(bool fixWidth){
     else {
         int N = getLength();
         for (int i = 0; i < N; ++i) {
-            printf("%f ", e(i));
+            printf("%f ", (float) e(i));
         }
         printf("\n");
     }
@@ -662,15 +662,24 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
     if (matrix2D && 2 == m_dims.size()){
         for (int i= 0; i< m_dims[0]; ++i){
             for (int j=0; j<m_dims[1]; ++j){
-                fscanf(pFile, "%f ", &e(i,j));
+                int count = fscanf(pFile, "%f ", &e(i,j));
+                if (1 != count){
+                    printf("Error: fsanf in Tensor load method.\n");
+                }
             }
-            fscanf(pFile, "%*c");
+            int count = fscanf(pFile, "%*c");
+            if (1 != count){
+                printf("Error: fsanf in Tensor load method.\n");
+            }
         }
     }
     else {
         int N = getLength();
         for (int i = 0; i < N; ++i) {
-            fscanf(pFile, "%f ", &e(i));
+            int count = fscanf(pFile, "%f ", &e(i));
+            if (1 != count){
+                printf("Error: fsanf in Tensor load method.\n");
+            }
         }
     }
     fclose (pFile);

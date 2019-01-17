@@ -59,7 +59,11 @@ void Net::setDir(const string dir) {
     string netDir = dir;
     if ("." == netDir) {
         char cwd[PATH_MAX];
-        getcwd(cwd, sizeof(cwd));
+        char* result = getcwd(cwd, sizeof(cwd));
+        if (nullptr == result){
+            cout<<"Error: program can not correctly get current working directory. Promram only support Linux."<<endl;
+            return;
+        }
         netDir = string(cwd);
     }
     netDir += "/" + m_name;
@@ -429,7 +433,7 @@ void Net::saveNetParameters() {
         return;
     }
     fputs(tableHead.c_str(), pFile);
-    fprintf(pFile, "%s, %f, %d, %ld, %f, %d, \r\n", m_name.c_str(), m_learningRate, m_batchSize, m_epoch,
+    fprintf(pFile, "%s, %f, %d, %d, %f, %d, \r\n", m_name.c_str(), m_learningRate, m_batchSize, m_epoch,
             m_lossTolerance, m_judgeLoss ? 1 : 0);
     fclose(pFile);
 }
@@ -446,7 +450,7 @@ void Net::loadNetParameters() {
         for (int i = 0; i < 100; ++i) {
             if (netParameterChar[i] == ',') netParameterChar[i] = ' ';
         }
-        int nFills = sscanf(netParameterChar, "%s  %f  %d  %ld  %f  %d  \r\n", name, &m_learningRate, &m_batchSize,
+        int nFills = sscanf(netParameterChar, "%s  %f  %d  %d  %f  %d  \r\n", name, &m_learningRate, &m_batchSize,
                             &m_epoch, &m_lossTolerance, &judgeLoss);
         if (6 != nFills) {
             cout << "Error: sscanf netParameterChar in loadNetParameters." << endl;
