@@ -29,10 +29,10 @@ void ConvexNet::build() {
                                        m_layerWidthVector.at(i));
         addLayer(fcLayer);
         if (i != nLayers - 1) {
-            ReLU *reLU = new ReLU(layerID++, "ReLU" + to_string(i), getFinalLayer());
+            ReLU *reLU = new ReLU(layerID++, "ReLU" + to_string(i), getFinalLayer(),getFinalLayer()->m_tensorSize);
             addLayer(reLU);
             NormalizationLayer *normalLayer = new NormalizationLayer(layerID++, "NormLayer" + to_string(i),
-                                                                     getFinalLayer());
+                                                                     getFinalLayer(),getFinalLayer()->m_tensorSize);
             addLayer(normalLayer);
         }
     }

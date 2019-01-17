@@ -8,10 +8,15 @@
 #include <NormalizationLayer.h>
 
 
-NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize){
+NormalizationLayer::NormalizationLayer(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize):Layer(id,name, tensorSize){
     m_type = "NormalizationLayer";
     addPreviousLayer(prevLayer);
     m_epsilon = 1e-6;
+    m_sigma = m_epsilon;
+
+    if (length(tensorSize) != length(prevLayer->m_tensorSize)){
+        cout<<"Error: The output TensorSize does not equal with the one of the previous layer in Normalization construction."<<endl;
+    }
 }
 NormalizationLayer::~NormalizationLayer(){
 
@@ -32,17 +37,16 @@ void NormalizationLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     float mean = X.average();
-    float sigma = sqrt(X.variance());
-    Y = (X-mean)/(sigma+m_epsilon);
+    float m_sigma = sqrt(X.variance());
+    m_sigma = (0 == m_sigma)? m_epsilon: m_sigma;
+    Y = (X-mean)/m_sigma;
 
 }
 void NormalizationLayer::backward(bool computeW, bool computeX){
     if(computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *(m_prevLayer->m_pdYTensor);
-        Tensor<float>& X =  *(m_prevLayer->m_pYTensor);
-        float sigma = sqrt(X.variance());
-        dX += dY/(sigma+m_epsilon);
+        dX += dY/(m_sigma);
     }
 }
 void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){

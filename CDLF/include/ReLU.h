@@ -14,7 +14,7 @@
 
 class ReLU : public Layer {
 public:
-    ReLU(const int id, const string& name,Layer* prevLayer, const float k = 0);
+    ReLU(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize, const float k = 0);
     ~ReLU();
 
     virtual  void initialize(const string& initialMethod);

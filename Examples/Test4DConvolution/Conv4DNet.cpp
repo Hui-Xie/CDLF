@@ -21,17 +21,17 @@ void Conv4DNet::build(){
 
     ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {7,3,3,3}, 60); //output 60*5*5*5
     addLayer(conv1);
-    ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
+    ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer(), {60,5, 5,5});
     addLayer(reLU1);
-    NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer());
+    NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer(), {60,5, 5,5});
     addLayer(norm1);
 
 
     ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2",getFinalLayer(), {60,5,3,3}, 1); //output 3*3
     addLayer(conv2);
-    ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer());
+    ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer(), {3,3});
     addLayer(reLU2);
-    NormalizationLayer* norm2 = new NormalizationLayer(id++, "Norm2",getFinalLayer());
+    NormalizationLayer* norm2 = new NormalizationLayer(id++, "Norm2",getFinalLayer(), {3,3});
     addLayer(norm2);
 
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer());

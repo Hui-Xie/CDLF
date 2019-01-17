@@ -10,9 +10,10 @@
 
 class NormalizationLayer: public Layer {
 public:
-    NormalizationLayer(const int id, const string& name,Layer* prevLayer);
+    NormalizationLayer(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize);
     ~NormalizationLayer();
     float m_epsilon;
+    float m_sigma; // standard deviation
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();

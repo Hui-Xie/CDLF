@@ -308,10 +308,10 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new FCLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize[0]);
         }
         else if ("ReLU" == s.m_type) {
-            pLayer = new ReLU(s.m_id, s.m_name, pPreLayer, s.m_stride);
+            pLayer = new ReLU(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, s.m_stride);
         }
         else if ("NormalizationLayer" == s.m_type) {
-            pLayer = new NormalizationLayer(s.m_id, s.m_name, pPreLayer);
+            pLayer = new NormalizationLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize);
         }
         else if ("SoftmaxLayer" == s.m_type) {
             pLayer = new SoftmaxLayer(s.m_id, s.m_name, pPreLayer);

@@ -45,9 +45,9 @@ void DAGNet::build(){
     addLayer(inputLayer);
     FCLayer* fc1 = new FCLayer(id++, "FC1", getFinalLayer(), 20);
     addLayer(fc1);
-    ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer());
+    ReLU* reLU1 = new ReLU(id++, "ReLU1", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU1);
-    NormalizationLayer* normalLayer1 = new NormalizationLayer(id++, "NormLayer1",getFinalLayer());
+    NormalizationLayer* normalLayer1 = new NormalizationLayer(id++, "NormLayer1",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(normalLayer1);
 
     BranchLayer* branch = new BranchLayer(id++, "Branch", getFinalLayer()); //output: {20,1}
@@ -56,38 +56,38 @@ void DAGNet::build(){
     //add parallel convolution path
     ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", branch, {5,1} ); //output: {16,1}
     addLayer(conv1);
-    ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer());
+    ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU2);
-    NormalizationLayer* normalLayer2 = new NormalizationLayer(id++, "NormLayer2",getFinalLayer());
+    NormalizationLayer* normalLayer2 = new NormalizationLayer(id++, "NormLayer2",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(normalLayer2);
 
     ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", getFinalLayer(),{3,1}); //output: {14,1}
     addLayer(conv2);
-    ReLU* reLU3 = new ReLU(id++, "ReLU3", getFinalLayer());
+    ReLU* reLU3 = new ReLU(id++, "ReLU3", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU3);
-    NormalizationLayer* normalLayer3 = new NormalizationLayer(id++, "NormLayer3",getFinalLayer());
+    NormalizationLayer* normalLayer3 = new NormalizationLayer(id++, "NormLayer3",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(normalLayer3);
 
     ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", getFinalLayer(), {3,1}); //output: {12,1}
     addLayer(conv3);
-    ReLU* reLU4 = new ReLU(id++, "ReLU4", getFinalLayer());
+    ReLU* reLU4 = new ReLU(id++, "ReLU4", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU4);
-    NormalizationLayer* normalLayer4 = new NormalizationLayer(id++, "NormLayer4",getFinalLayer());
+    NormalizationLayer* normalLayer4 = new NormalizationLayer(id++, "NormLayer4",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(normalLayer4);
 
     //add parallel FC path
     FCLayer* fc2 = new FCLayer(id++, "FC2", branch, 15); //output {15,1}
     addLayer(fc2);
-    ReLU* reLU5 = new ReLU(id++, "ReLU5", fc2);
+    ReLU* reLU5 = new ReLU(id++, "ReLU5", fc2,fc2->m_tensorSize);
     addLayer(reLU5);
-    NormalizationLayer* normalLayer5 = new NormalizationLayer(id++, "NormLayer5",reLU5);
+    NormalizationLayer* normalLayer5 = new NormalizationLayer(id++, "NormLayer5",reLU5, reLU5->m_tensorSize);
     addLayer(normalLayer5);
 
     FCLayer* fc3 = new FCLayer(id++, "FC3", normalLayer5, 12); //output {12,1}
     addLayer(fc3);
-    ReLU* reLU6 = new ReLU(id++, "ReLU6", fc3);
+    ReLU* reLU6 = new ReLU(id++, "ReLU6", fc3,fc3->m_tensorSize);
     addLayer(reLU6);
-    NormalizationLayer* normalLayer6 = new NormalizationLayer(id++, "NormLayer6",reLU6);
+    NormalizationLayer* normalLayer6 = new NormalizationLayer(id++, "NormLayer6",reLU6, reLU6->m_tensorSize);
     addLayer(normalLayer6);
 
     //add MergerLayer
