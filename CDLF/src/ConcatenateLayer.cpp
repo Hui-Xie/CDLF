@@ -6,8 +6,8 @@
 
 #include <ConcatenateLayer.h>
 
-ConcatenateLayer::ConcatenateLayer(const int id, const string& name, const vector<Layer*>& pLayersVec)
-        : Layer(id,name, {}){
+ConcatenateLayer::ConcatenateLayer(const int id, const string& name, const vector<Layer*>& pLayersVec, const vector<int>& tensorSize)
+        : Layer(id,name, tensorSize){
     m_type = "ConcatenateLayer";
     if (pLayersVec.size() <= 1){
         cout<<"Error: the previous Layers in ConcatenateLayer should be greater than 1"<<endl;
@@ -25,8 +25,9 @@ ConcatenateLayer::ConcatenateLayer(const int id, const string& name, const vecto
         totalLen += layerLength;
     }
 
-    m_tensorSize = {totalLen, 1};
-    allocateYdYTensor();
+    if (totalLen != length(m_tensorSize)){
+        cout<<"Error: the output TensorSize does not euqal the sum of previous Layers."<<endl;
+    }
 }
 
 ConcatenateLayer::~ConcatenateLayer(){

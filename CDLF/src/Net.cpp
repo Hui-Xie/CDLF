@@ -355,7 +355,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         }
         else if ("ConcatenateLayer" == s.m_type) {
             vector<Layer*> pLayersVec = getLayers(s.m_preLayersIDs);
-            pLayer = new ConcatenateLayer(s.m_id, s.m_name, pLayersVec);
+            pLayer = new ConcatenateLayer(s.m_id, s.m_name, pLayersVec, s.m_outputTensorSize);
         }
         else if ("SigmoidLayer" == s.m_type) {
            pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_stride);

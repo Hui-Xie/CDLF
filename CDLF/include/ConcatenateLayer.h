@@ -11,7 +11,7 @@
 
 class ConcatenateLayer : public Layer {
 public:
-    ConcatenateLayer(const int id, const string& name, const vector<Layer*>& pLayersVec);
+    ConcatenateLayer(const int id, const string& name, const vector<Layer*>& pLayersVec, const vector<int>& tensorSize);
     ~ConcatenateLayer();
 
     virtual  void initialize(const string& initialMethod);
