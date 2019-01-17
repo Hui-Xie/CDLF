@@ -486,8 +486,6 @@ void Net::savedYTensor(){
     }
 }
 
-
-
 void Net::load() {
     loadLayersStruct();
     loadNetParameters();
