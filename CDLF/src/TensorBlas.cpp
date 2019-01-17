@@ -76,9 +76,12 @@ void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const b
 
    CBLAS_TRANSPOSE transA;
    CBLAS_TRANSPOSE transB;
-   int m = pA->getDims()[0];
+   int m = pC->getDims()[0];
+   int n = pC->getDims()[1];
    int k = pA->getDims()[1];
-   int n = pB->getDims()[1];
+   if (transA){
+      k = pA->getDims()[0];
+   }
 
    int lda, ldb;
    if (transposeA) {
