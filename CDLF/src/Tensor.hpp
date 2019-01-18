@@ -811,14 +811,13 @@ void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor,
 }
 
 template<class ValueType>
-void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& paddingWidthVec, const int stride) const{
-    assert(tensorSizeBeforeCollapse.size() == paddingWidthVec.size());
+void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& filterSize, const int stride) const{
+    assert(tensorSizeBeforeCollapse.size() == filterSize.size());
     assert(length(tensorSizeBeforeCollapse) == length(m_dims));
     const int dim = tensorSizeBeforeCollapse.size();
     vector<int> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
-        newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + 2 + paddingWidthVec[i]*2;
-        // in above, "+2 " is to make sure the inputSize =even still gets correct diluted Tensor
+        newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + filterSize[i]*2 -1;
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();
@@ -826,7 +825,7 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeB
     vector<int> dimsSpanBeforeCollapse = genDimsSpan(tensorSizeBeforeCollapse);
     for (int oldOffset=0; oldOffset<N; ++oldOffset){
         vector<int> oldIndex = offset2Index(dimsSpanBeforeCollapse, oldOffset);
-        vector<int> newIndex = oldIndex* stride+ paddingWidthVec;
+        vector<int> newIndex = oldIndex* stride+ filterSize -1;
         int newOffset = pTensor->index2Offset(newIndex);
         pTensor->e(newOffset) = e(oldOffset);
     }

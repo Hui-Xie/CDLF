@@ -122,7 +122,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
                         if (computeX){
-                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
+                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize, m_stride);
                             this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                         }
                     }
@@ -161,7 +161,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         // single thread compute
         if (computeW) computeDW(m_pdYTensor, m_pdW[0]);
         Tensor<float> *pExpandDY = nullptr;
-        m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize - 1, m_stride);
+        m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize, m_stride);
         computeDX(pExpandDY, m_pW[0]);
         if (nullptr != pExpandDY) {
             delete pExpandDY;

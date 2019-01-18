@@ -42,7 +42,7 @@ void TransposedConvolutionLayer::forward() {
     const int N = length(m_tensorSize) / m_numFilters;
     vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize, m_stride);
     int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;  //num of thread for each filter
     const int NRange = (N +nThread -1)/nThread;
 
@@ -122,7 +122,7 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
                         if (computeX){
-                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize - 1, 1);
+                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize, 1);
                             this->computeDX(pExpandDY[idxF], this->m_pW[idxF],pdX[idxF]); //as pdX needs to accumulate, pass pointer
                         }
                     }
@@ -163,7 +163,7 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
         // single thread compute
         if (computeW) computeDW(m_pdYTensor, m_pdW[0]);
         Tensor<float> *pExpandDY = nullptr;
-        m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize - 1, 1);
+        m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize, 1);
         computeDX(pExpandDY, m_pW[0]);
         if (nullptr != pExpandDY) {
             delete pExpandDY;
@@ -176,7 +176,7 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const int N = pdW->getLength();
     Tensor<float> *pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize, m_stride);
     Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
     const int nThreads = (CPUAttr::m_numCPUCore + m_numFilters - 1)/m_numFilters;
     for (int i = 0; i < N; ++i) {

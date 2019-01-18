@@ -105,7 +105,7 @@ public:
     void subTensorFromTopLeft(const int  offset, Tensor* pTensor, const int stride =1) const ;
 
     //dilute function will automatic allocate memory for pTensor
-    void dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& paddingWidthVec, const int stride) const;
+    void dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& filterSize, const int stride) const;
 
     void putInBiggerTensor(Tensor* pBiggerTensor, const vector<int>& offsetVec, const int stride =1) const;
 
