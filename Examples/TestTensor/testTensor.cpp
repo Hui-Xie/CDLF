@@ -169,11 +169,22 @@ int main (int argc, char *argv[]) {
 
     cout <<"tensor20:"<<endl;
     tensor20.print();
-
     Tensor<float>* pTensor23 = new Tensor<float>({3,3});
     tensor20.subTensorFromTopLeft({0,0},pTensor23,2);
-    cout<<"tensor23: by te tensor20.subTensorFromTopLeft({0,0},{3,3},pTensor23,2):"<<endl;
+    cout<<"tensor23: by tensor20.subTensorFromTopLeft({0,0}, pTensor23,2):"<<endl;
     pTensor23->print();
+
+
+    cout <<"tensor20:"<<endl;
+    tensor20.print();
+    Tensor<float>* pTensor23A = new Tensor<float>({2,3});
+    tensor20.subTensorFromTopLeft({0,0},pTensor23A,1);
+    cout<<"tensor23A: by tensor20.subTensorFromTopLeft({0,0},pTensor23A,1):"<<endl;
+    pTensor23A->print();
+
+    if (nullptr != pTensor23A){
+        delete pTensor23A;
+    }
 
     cout <<"tensor20:"<<endl;
     tensor20.print();
@@ -181,11 +192,23 @@ int main (int argc, char *argv[]) {
     cout<<"tensor23: by te tensor20.subTensorFromTopLeft(1,pTensor23,2):"<<endl;
     pTensor23->print();
 
-
-
     if (nullptr != pTensor23){
         delete pTensor23;
     }
+
+    cout <<"Test 3D Tensor{6,8,9} with element orderly increasging by 1"<<endl;
+    Tensor<float> matrix3D({6,8,9});
+    for(int i=0; i<matrix3D.getLength(); ++i){
+        matrix3D.e(i) = i;
+    }
+    Tensor<float> subMatrix3D({2,3,3});
+    matrix3D.subTensorFromTopLeft(0, &subMatrix3D, 1);
+    for (int i=0; i<2;++i){
+        printf("the %d slice of subMatrix3D(2,3,3)\n", i);
+        subMatrix3D.slice(i).print();
+    }
+
+
 
     cout <<"tensor20:"<<endl;
     tensor20.print();

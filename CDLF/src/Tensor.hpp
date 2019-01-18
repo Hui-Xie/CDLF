@@ -132,7 +132,7 @@ Tensor<ValueType>::~Tensor() {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::copyDataFrom(void *buff, const int numBytes, const int offsetBytes) {
+void Tensor<ValueType>::copyDataFrom(const void *buff, const int numBytes, const int offsetBytes) {
     if (numBytes > getLength() * sizeof(ValueType)) {
         cout << "Error: numBytes of Tensor::copyDataFrom is bigger than data space." << endl;
         return;
@@ -774,8 +774,8 @@ template<class ValueType>
 void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor, const int stride) const {
     vector<int> dims = pTensor->getDims();
     const int dim = dims.size();
-    size_t  elementLen = sizeof(ValueType);
-    size_t  rowLen = dims[dim-1]*elementLen;
+    const size_t  elementLen = sizeof(ValueType);
+    const size_t  rowLen = dims[dim-1]*elementLen;
 
     ValueType* dstOffset = pTensor->m_data;
     ValueType* srcOffset = m_data+offset;
@@ -817,7 +817,7 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeB
     vector<int> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
         newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + 2 + paddingWidthVec[i]*2;
-        // in above, "+2 " is to make sure the inputSize =even still get correct diluted Tensor
+        // in above, "+2 " is to make sure the inputSize =even still gets correct diluted Tensor
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();

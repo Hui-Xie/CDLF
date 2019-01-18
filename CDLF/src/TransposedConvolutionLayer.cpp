@@ -43,12 +43,15 @@ void TransposedConvolutionLayer::forward() {
     vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize - 1, m_stride);
-    int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
+    int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;  //num of thread for each filter
     const int NRange = (N +nThread -1)/nThread;
 
     Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread*m_numFilters];
 
+    printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
+
     vector<std::thread> threadVec;
+    printf("total threads: %d\n", nThread*m_numFilters);
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t= 0; t< nThread; ++t){  // th indicates thread
             threadVec.push_back(thread(
@@ -56,10 +59,16 @@ void TransposedConvolutionLayer::forward() {
                         const int th = t+idxF*nThread; // thread index
                         pSubX[th] = new Tensor<float>(m_filterSize);
                         int offseti = idxF*N;
+                        printf("th= %d\n", th);
+                        printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
+                            printf("before pExtendX->subTensorFromTopLeft:i = %d\n",i);
                             pExtendX->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i), pSubX[th]);
+                            printf("before m_pYTensor->e(offseti+i), offseti+i = %d\n",offseti+i);
                             m_pYTensor->e(offseti+i) = pSubX[th]->conv(*m_pW[idxF]);
                         }
+                        printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
+
                         if (nullptr != pSubX[th]) {
                             delete pSubX[th];
                             pSubX[th] = nullptr;
@@ -69,6 +78,9 @@ void TransposedConvolutionLayer::forward() {
 
         }
     }
+
+    printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
+
     for (int i = 0; i < threadVec.size(); ++i) {
         threadVec[i].join();
     }
@@ -81,6 +93,7 @@ void TransposedConvolutionLayer::forward() {
         delete pExtendX;
         pExtendX = nullptr;
     }
+
 }
 
 // Y =W*X

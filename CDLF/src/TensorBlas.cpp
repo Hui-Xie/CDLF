@@ -64,6 +64,16 @@ void axpy(const float a, const Tensor<float>* px, Tensor<float>* py){
 
 // C = a*A*B+ b*C
 void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const bool transposeB, const Tensor<float>* pB, const float b, Tensor<float>* pC){
+   //debug
+   cout<<"GEMM:  C = a*A*B+ b*C"<<endl;
+   cout<<"A size: "<< vector2Str(pA->getDims())<<endl;
+   cout<<"B size: "<< vector2Str(pB->getDims())<<endl;
+   cout<<"C size: "<< vector2Str(pC->getDims())<<endl;
+   //debug
+
+
+
+
    float *pAblas, *pBblas, *pCblas;
    pAblas = (float*) mkl_calloc(pA->getLength(), sizeof(float), 64);  //initialize 0
    pBblas = (float*) mkl_calloc(pB->getLength(), sizeof(float), 64);
@@ -113,6 +123,8 @@ void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const b
    mkl_free(pAblas);
    mkl_free(pBblas);
    mkl_free(pCblas);
+
+   cout<<"End of GEMM:  C = a*A*B+ b*C"<<endl<<endl<<endl;
 }
 
 

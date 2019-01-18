@@ -48,7 +48,6 @@ void HNRadiomicsNet::train() {
                 pSubImage = nullptr;
             }
 
-
             m_pDataMgr->readLabelFile(labelFilePath, pImage);
             Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
             pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, 1);
@@ -61,9 +60,11 @@ void HNRadiomicsNet::train() {
                 delete pSubLabel;
                 pSubLabel = nullptr;
             }
+            printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
 
             forwardPropagate();
             backwardPropagate(true);
+
             ++nIter;
         }
         sgd(learningRate, i);
