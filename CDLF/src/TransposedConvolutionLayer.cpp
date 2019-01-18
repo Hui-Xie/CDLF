@@ -43,32 +43,44 @@ void TransposedConvolutionLayer::forward() {
     vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize, m_stride);
+
+    //cout<<"TensorSize = "<<vector2Str(m_tensorSize)<<endl;
+    //cout<<"m_tensorSizeBeforeCollapse = " << vector2Str(m_tensorSizeBeforeCollapse)<<endl;
+    //cout<<"Before mutlithread, pExtendX size = "<< vector2Str(pExtendX->getDims())<<endl;
     int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;  //num of thread for each filter
     const int NRange = (N +nThread -1)/nThread;
 
     //Tensor<float> **pSubX = (Tensor<float> **) new void *[nThread*m_numFilters];
 
-    printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
-
     vector<std::thread> threadVec;
-    printf("total threads: %d\n", nThread*m_numFilters);
+    //printf("total threads: %d\n", nThread*m_numFilters);
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t= 0; t< nThread; ++t){  // th indicates thread
             threadVec.push_back(thread(
                     [this, idxF, t, nThread, /*pSubX,*/ N, &dimsSpanBeforeCollpase, pExtendX, NRange]() {
-                        const int th = t+idxF*nThread; // thread index
+                        //const int th = t+idxF*nThread; // thread index
                         //pSubX[th] = new Tensor<float>(m_filterSize);
                         Tensor<float> subX(m_filterSize);
                         const int offseti = idxF*N;
-                        printf("th= %d\n", th);
-                        printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
+                        //printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
-                            printf("before pExtendX->subTensorFromTopLeft:i = %d\n",i);
+                            //printf("before pExtendX->subTensorFromTopLeft:i = %d\n",i);
+                            //debug
+                            /*if (5223 ==i || 6964 ==i || 1741 ==i){
+                                printf("i = %d\n", i);
+                                cout<<"dimsSpanBeforeCollpase = " << vector2Str(dimsSpanBeforeCollpase)<<endl;
+                                cout<<"m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) = "<<vector2Str(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i))<<endl;
+                                cout<<"m_pYTensor size = "<< vector2Str(m_pYTensor->getDims())<<endl;
+                                cout<<"pExtendX size = "<<vector2Str(pExtendX->getDims())<<endl;
+                            }
+*/
+
+                            //debug
                             pExtendX->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i), &subX);
-                            printf("before m_pYTensor->e(offseti+i), offseti+i = %d\n",offseti+i);
+                            //printf("before m_pYTensor->e(offseti+i), offseti+i = %d\n",offseti+i);
                             m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]);
                         }
-                        printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
+                        //printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
 
                         /*if (nullptr != pSubX[th]) {
                             delete pSubX[th];
@@ -80,7 +92,7 @@ void TransposedConvolutionLayer::forward() {
         }
     }
 
-    printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
+   // printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
 
     for (int i = 0; i < threadVec.size(); ++i) {
         threadVec[i].join();
