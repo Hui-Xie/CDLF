@@ -27,7 +27,8 @@ public:
 
     ~Tensor();
 
-    void copyDataFrom(const void* buff, const int numBytes, const int offsetBytes = 0);
+    void copyDataFrom(const ValueType* srcBuff, const int lengthInValueType, const int dstOffsetInValueType = 0);
+    void copyDataFrom(const void* srcBuff, const int lengthInByte, const int dstOffsetInByte = 0);
 
 
     vector<int> getDims() const;
@@ -136,7 +137,7 @@ private:
     inline int index2Offset(const vector<int>& index) const;
     inline int index2Offset(const vector<int>& dimsSpan, const vector<int>& index) const;
 
-    void copyDataTo(Tensor* pTensor, const int offset, const int length);
+    void copyDataTo(Tensor* pTensor, const int lengthInValueType, const int srcOffsetInValueType=0);
 
 };
 

@@ -132,14 +132,15 @@ Tensor<ValueType>::~Tensor() {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::copyDataFrom(const void *buff, const int numBytes, const int offsetBytes) {
-    if (numBytes > getLength() * sizeof(ValueType)) {
-        cout << "Error: numBytes of Tensor::copyDataFrom is bigger than data space." << endl;
-        return;
-    } else {
-        memcpy(m_data + offsetBytes, buff, numBytes);
-    }
+void Tensor<ValueType>::copyDataFrom(const ValueType* srcBuff, const int lengthInValueType, const int dstOffsetInValueType) {
+     memcpy(m_data + dstOffsetInValueType, srcBuff, lengthInValueType* sizeof(ValueType));
 }
+
+template<class ValueType>
+void Tensor<ValueType>::copyDataFrom(const void* srcBuff, const int lengthInByte, const int dstOffsetInByte ){
+    memcpy(m_data + dstOffsetInByte/sizeof(ValueType), srcBuff, lengthInByte);
+}
+
 
 template<class ValueType>
 vector<int> Tensor<ValueType>::getDims() const {
@@ -208,8 +209,8 @@ ValueType &Tensor<ValueType>::e(const vector<int> &index) const {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::copyDataTo(Tensor *pTensor, const int offset, const int length) {
-    memcpy(pTensor->m_data, m_data + offset, length * sizeof(ValueType));
+void Tensor<ValueType>::copyDataTo(Tensor *pTensor, const int lengthInValueType, const int srcOffsetInValueType) {
+    memcpy(pTensor->m_data, m_data + srcOffsetInValueType, lengthInValueType * sizeof(ValueType));
 }
 
 template<class ValueType>
@@ -863,7 +864,7 @@ Tensor<ValueType> Tensor<ValueType>::row(const int index) {
     newDims.push_back(1);
     newDims.push_back(m_dims[1]);
     Tensor<ValueType> tensor(newDims);
-    copyDataTo(&tensor, index * m_dims[1], m_dims[1]);
+    copyDataTo(&tensor, m_dims[1], index * m_dims[1]);
     return tensor;
 }
 
@@ -875,7 +876,7 @@ Tensor<ValueType> Tensor<ValueType>::slice(const int index) {
     newDims.erase(newDims.begin());
     Tensor<ValueType> tensor(newDims);
     int N = tensor.getLength();
-    copyDataTo(&tensor, index * N, N);
+    copyDataTo(&tensor, N,  index * N);
     return tensor;
 }
 
@@ -887,7 +888,7 @@ void Tensor<ValueType>::volume(const int index, Tensor *&pTensor) {
     newDims.erase(newDims.begin());
     pTensor = new Tensor<ValueType>(newDims);
     int N = pTensor->getLength();
-    copyDataTo(pTensor, index * N, N);
+    copyDataTo(pTensor, N, index * N);
 
 }
 
@@ -899,7 +900,7 @@ void Tensor<ValueType>::fourDVolume(const int index, Tensor *&pTensor) {
     newDims.erase(newDims.begin());
     pTensor = new Tensor<ValueType>(newDims);
     int N = pTensor->getLength();
-    copyDataTo(pTensor, index * N, N);
+    copyDataTo(pTensor, N, index * N);
 }
 
 template<class ValueType>
@@ -912,7 +913,7 @@ void Tensor<ValueType>::extractLowerDTensor(const int index, Tensor *&pTensor) {
     }
     pTensor = new Tensor<ValueType>(newDims);
     int N = pTensor->getLength();
-    copyDataTo(pTensor, index * N, N);
+    copyDataTo(pTensor, N, index * N);
 }
 
 

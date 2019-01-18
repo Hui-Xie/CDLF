@@ -23,7 +23,7 @@ void ReshapeLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int N = X.getLength();
-    Y.copyDataFrom(X.getData(), N*sizeof(float));
+    Y.copyDataFrom(X.getData(), N);
 }
 void ReshapeLayer::backward(bool computeW, bool computeX){
     if (computeX){

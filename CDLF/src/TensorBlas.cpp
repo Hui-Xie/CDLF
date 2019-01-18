@@ -30,10 +30,10 @@ void gemv(const bool tranposeA, const Tensor<float>* pA, const Tensor<float>* px
    cblas_sgemv(CblasRowMajor, trans, m, n, 1.0, pAblas, n, pxblas, 1, 1.0, pbblas, 1);
 
    if (nullptr != py){
-       py->copyDataFrom(pbblas, pb->getLength()*sizeof(float), 0);
+       py->copyDataFrom(pbblas, pb->getLength(), 0);
    }
    else{
-      pb->copyDataFrom(pbblas, pb->getLength()*sizeof(float), 0);
+      pb->copyDataFrom(pbblas, pb->getLength(), 0);
    }
 
    mkl_free(pAblas);
@@ -56,7 +56,7 @@ void axpy(const float a, const Tensor<float>* px, Tensor<float>* py){
    cblas_saxpy(n, a, pxblas, 1, pyblas, 1);
 
    //copy back
-   py->copyDataFrom(pyblas, py->getLength()*sizeof(float), 0);
+   py->copyDataFrom(pyblas, py->getLength(), 0);
 
    mkl_free(pxblas);
    mkl_free(pyblas);
@@ -118,7 +118,7 @@ void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const b
                b, pCblas, n);
 
    // copy back
-   pC->copyDataFrom(pCblas, pC->getLength()*sizeof(float), 0);
+   pC->copyDataFrom(pCblas, pC->getLength(), 0);
 
    mkl_free(pAblas);
    mkl_free(pBblas);
@@ -149,7 +149,7 @@ void matAdd(const float a, const Tensor<float>* pA, const float b, const Tensor<
                pCblas, n);
 
    // copy back
-   pC->copyDataFrom(pCblas, pC->getLength()*sizeof(float), 0);
+   pC->copyDataFrom(pCblas, pC->getLength(), 0);
 
    mkl_free(pAblas);
    mkl_free(pBblas);

@@ -39,7 +39,7 @@ void ConcatenateLayer::forward(){
     const int N = m_layerLengthVec.size();
     for(int i = 0; i<N; ++i){
         Tensor<float>& X = *m_pLayersVec[i]->m_pYTensor;
-        Y.copyDataFrom(X.getData(), m_layerLengthVec[i]*sizeof(float), m_layerOffsetVec[i]*sizeof(float));
+        Y.copyDataFrom(X.getData(), m_layerLengthVec[i], m_layerOffsetVec[i]);
     }
 }
 void ConcatenateLayer::backward(bool computeW, bool computeX){
