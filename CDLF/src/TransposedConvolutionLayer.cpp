@@ -42,7 +42,7 @@ void TransposedConvolutionLayer::forward() {
     const int N = length(m_tensorSize) / m_numFilters;
     vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize, m_stride);
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_tensorSize, m_filterSize, m_stride);
 
     //cout<<"TensorSize = "<<vector2Str(m_tensorSize)<<endl;
     //cout<<"m_tensorSizeBeforeCollapse = " << vector2Str(m_tensorSizeBeforeCollapse)<<endl;
@@ -122,7 +122,7 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
         Tensor<float> **pdY = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float> **pExpandDY = (Tensor<float> **) new void *[m_numFilters];
         for (int i = 0; i < m_numFilters; ++i) {
-            pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
+            pdX[i] = new Tensor<float>(m_prevLayer->m_tensorSize);
             pdX[i]->zeroInitialize();  // this is a necessary step as computeX use += operator
             pdY[i] = nullptr;//pdY memory will be allocated in the extractLowerDTensor function
             pExpandDY[i] = nullptr;//pExpandDY memory will be allocated in the dilute method;
@@ -188,7 +188,7 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
     const int N = pdW->getLength();
     Tensor<float> *pExtendX = nullptr;
-    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_pYTensor->getDims(), m_filterSize, m_stride);
+    m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_tensorSize, m_filterSize, m_stride);
     Tensor<float> *pSubX = new Tensor<float>(m_tensorSizeBeforeCollapse);
     const int nThreads = (CPUAttr::m_numCPUCore + m_numFilters - 1)/m_numFilters;
     for (int i = 0; i < N; ++i) {

@@ -22,7 +22,7 @@ void PerfNet::train(){
     Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
     CrossEntropyLoss* lossLayer = (CrossEntropyLoss*) getFinalLayer();
 
-    Tensor<float> groundTruth(lossLayer->m_prevLayer->m_pYTensor->getDims());
+    Tensor<float> groundTruth(lossLayer->m_prevLayer->m_tensorSize);
     groundTruth.uniformInitialize(1);
 
 

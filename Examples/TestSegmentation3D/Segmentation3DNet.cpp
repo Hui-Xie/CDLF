@@ -253,7 +253,7 @@ void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels
 
     vector<int> cutTensorSize; //lossLayer and inputLayer should have same Tensor size
     if (nullptr != lossLayer){
-        cutTensorSize = lossLayer->m_prevLayer->m_pYTensor->getDims();
+        cutTensorSize = lossLayer->m_prevLayer->m_tensorSize;
     }
     if (nullptr != inputLayer){
         cutTensorSize = inputLayer->m_pYTensor->getDims();

@@ -109,7 +109,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         Tensor<float> **pdY = (Tensor<float> **) new void *[m_numFilters];
         Tensor<float> **pExpandDY = (Tensor<float> **) new void *[m_numFilters];
         for (int i = 0; i < m_numFilters; ++i) {
-            pdX[i] = new Tensor<float>(m_prevLayer->m_pdYTensor->getDims());
+            pdX[i] = new Tensor<float>(m_prevLayer->m_tensorSize);
             pdX[i]->zeroInitialize();  // this is a necessary step as computeX use += operator
             pdY[i] = nullptr; //pdY memory will be allocated in the extractLowerDTensor function
             pExpandDY[i] = nullptr; //pExpandDY memory will be allocated in the dilute method;
