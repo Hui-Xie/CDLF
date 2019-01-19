@@ -12,6 +12,7 @@ void printUsage(char* argv0){
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
     cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData 0.001"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.00001"<<endl;
 }
 
 
@@ -39,7 +40,7 @@ int main(int argc, char *argv[]){
 #endif
 
     //Load MnistAutoEncoder Net
-    HNRadiomicsNet net("HNSCC", netDir);
+    HNRadiomicsNet net("HNSCC_matrix", netDir);
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }
