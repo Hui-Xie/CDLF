@@ -1,5 +1,5 @@
 //
-// Created by Hui Xie on 1/16/2019.
+// Created by Hui Xie on 1/19/2019.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #ifndef RL_NONCONVEX_MATRIXCONVERT_H
@@ -8,16 +8,12 @@
 #include "Layer.h"
 #include <map>
 
+//pure virtual class
 
-// y = W*x+B
-// where y is m*n output matrix;
-//       x is k*n input matrix;
-//       W is m*k dimensional matrix
-//       B is same size with y: m*n
-class MatrixConvertLayer :  public Layer{
+class MatrixLayer :  public Layer{
 public:
-    MatrixConvertLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize);
-    ~MatrixConvertLayer();
+    MatrixLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize, const vector<int>& tensorSize);
+    ~MatrixLayer();
 
     Tensor<float>*  m_pW;
     Tensor<float>*  m_pB;
@@ -27,10 +23,7 @@ public:
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
-    virtual  void forward();
-    virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
-
 
     virtual  int getNumParameters();
 
@@ -39,6 +32,5 @@ public:
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct(const int layerIndex);
 };
-
 
 #endif //RL_NONCONVEX_MATRIXCONVERT_H

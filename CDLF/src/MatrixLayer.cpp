@@ -1,30 +1,27 @@
 //
-// Created by Hui Xie on 1/16/2019.
+// Created by Hui Xie on 1/19/2019.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
-#include "MatrixConvertLayer.h"
 #include "statisTool.h"
 #include <iostream>
-#include <MatrixConvertLayer.h>
-#include <TensorBlas.h>
+#include <MatrixLayer.h>
+#include "TensorBlas.h"
+
 
 
 using namespace std;
 
-// y = W*x
-// where y is m*n output matrix;
-//       x is k*n input matrix;
-//       W is m*k dimensional matrix
-//       B is same size with y: m*n
-MatrixConvertLayer::MatrixConvertLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize)
-        : Layer(id, name,{filterSize[0], prevLayer->m_tensorSize[1]})
+// Y = X*W +B or Y = W*X + B
+
+MatrixLayer::MatrixLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize, const vector<int>& tensorSize)
+        : Layer(id, name,tensorSize)
 {
     if (2 != filterSize.size() || 2 != prevLayer->m_tensorSize.size()){
-        cout<<"Error: MatrixCovnertLayer input parameter error. The filterSize and preLayer must be 2D matrix."<<endl;
+        cout<<"Error: MatrixLayer input parameter error. The filterSize and preLayer must be 2D matrix."<<endl;
         return;
     }
 
-    m_type = "MatrixConvertLayer";
+    m_type = "MatrixLayer";
     m_pW = new Tensor<float>(filterSize);
     m_pdW = new Tensor<float>(filterSize);
     m_pB = new Tensor<float>(m_pYTensor->getDims());
@@ -32,7 +29,7 @@ MatrixConvertLayer::MatrixConvertLayer(const int id, const string& name, Layer* 
     addPreviousLayer(prevLayer);
 }
 
-MatrixConvertLayer::~MatrixConvertLayer() {
+MatrixLayer::~MatrixLayer() {
     if (nullptr != m_pW) {
         delete m_pW;
         m_pW = nullptr;
@@ -51,16 +48,16 @@ MatrixConvertLayer::~MatrixConvertLayer() {
     }
 }
 
-void MatrixConvertLayer::initialize(const string &initialMethod) {
+void MatrixLayer::initialize(const string &initialMethod) {
     if ("Xavier" == initialMethod) {
         xavierInitialize(m_pW);
         xavierInitialize(m_pB);
     } else {
-        cout << "Error: Initialize Error in MatrixConvertLayer." << endl;
+        cout << "Error: Initialize Error in MatrixLayer." << endl;
     }
 }
 
-void MatrixConvertLayer::zeroParaGradient() {
+void MatrixLayer::zeroParaGradient() {
     if (nullptr != m_pdW) {
         m_pdW->zeroInitialize();
     }
@@ -69,27 +66,8 @@ void MatrixConvertLayer::zeroParaGradient() {
     }
 }
 
-void MatrixConvertLayer::forward() {
-    *m_pYTensor = *m_pB;
-    gemm(1.0, false, m_pW, false, m_prevLayer->m_pYTensor, 1, m_pYTensor);
-}
 
-//   y = W*x +B
-//  dL/dW = dL/dy * dy/dW = dL/dy * x'
-//  dL/dB = dL/dy * dy/dB = dL/dy
-//  dL/dx = dL/dy * dy/dx = W' * dL/dy
-void MatrixConvertLayer::backward(bool computeW, bool computeX) {
-    Tensor<float> &dLdy = *m_pdYTensor;
-    if (computeW){
-        gemm(1.0, false, &dLdy, true, m_prevLayer->m_pYTensor, 1, m_pdW);
-        matAdd(1, m_pdB, 1, &dLdy, m_pdB);
-    }
-    if (computeX){
-        gemm(1.0, true, m_pW, false, &dLdy, 1, m_prevLayer->m_pdYTensor);
-    }
-}
-
-void MatrixConvertLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void MatrixLayer::updateParameters(const float lr, const string &method, const int batchSize) {
     if ("sgd" == method) {
         //*m_pW -= (*m_pdW) * (lr / batchSize);
         matAdd(1.0, m_pW, -(lr / batchSize), m_pdW, m_pW);
@@ -98,11 +76,11 @@ void MatrixConvertLayer::updateParameters(const float lr, const string &method, 
     }
 }
 
-int MatrixConvertLayer::getNumParameters(){
+int MatrixLayer::getNumParameters(){
     return m_pW->getLength() + m_pB->getLength();
 }
 
-void MatrixConvertLayer::save(const string &netDir) {
+void MatrixLayer::save(const string &netDir) {
     FILE * pFile = nullptr;
     string filename = "";
 
@@ -116,7 +94,7 @@ void MatrixConvertLayer::save(const string &netDir) {
     m_pB->save(filename);
 }
 
-void MatrixConvertLayer::load(const string &netDir) {
+void MatrixLayer::load(const string &netDir) {
     FILE * pFile = nullptr;
     string filename = "";
 
@@ -134,13 +112,13 @@ void MatrixConvertLayer::load(const string &netDir) {
     }
 }
 
-void MatrixConvertLayer::saveStructLine(FILE *pFile) {
+void MatrixLayer::saveStructLine(FILE *pFile) {
     //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
     fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
             vector2Str(m_tensorSize).c_str(), vector2Str(m_pW->getDims()).c_str(), 0, 0, "{}");
 }
 
-void MatrixConvertLayer::printStruct(const int layerIndex) {
+void MatrixLayer::printStruct(const int layerIndex) {
     printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, FilterSize=%s, NumOfFilter=%d, Stide=%d, OutputSize=%s; \n",
            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_pW->getDims()).c_str(), 0, 0, vector2Str(m_tensorSize).c_str());
 }
