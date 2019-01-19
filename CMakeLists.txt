@@ -50,7 +50,8 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so  ${MKLROOT}/lib/inte
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
 message("1  you need to set the directory including CDLFLib into your environment variable.")
-message("2  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
+message("2  you need to install intel MKL library and set MKL directory.")
+message("3  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL

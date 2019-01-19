@@ -60,7 +60,6 @@ void HNRadiomicsNet::train() {
                 delete pSubLabel;
                 pSubLabel = nullptr;
             }
-            printf("Here is line %d in the file %s\n",__LINE__, __FILE__);
 
             forwardPropagate();
             backwardPropagate(true);
