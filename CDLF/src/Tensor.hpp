@@ -817,7 +817,15 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeB
     const int dim = tensorSizeBeforeCollapse.size();
     vector<int> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
-        newTensorSize[i] = (tensorSizeBeforeCollapse[i]-1)* stride + filterSize[i]*2 -1;
+        newTensorSize[i] = tensorSizeBeforeCollapse[i]* stride + filterSize[i]*2 -1;
+        /*analysis:
+        Convolution forward: O = (I-F)/S + 1;
+         O*S -S = I-F
+         (O-1)*S +F = I
+         considering that (I-F)/S may loss remainder less than S, so the (O-1)*S +F<= real I < O*S +F.
+         then considering padding of F-1 in both side of one dimension.
+         therefore, I = O*S +F*2-1
+        */
     }
     pTensor = new Tensor<ValueType>(newTensorSize);
     pTensor->zeroInitialize();

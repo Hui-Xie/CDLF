@@ -66,8 +66,8 @@ void axpy(const float a, const Tensor<float>* px, Tensor<float>* py){
 void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const bool transposeB, const Tensor<float>* pB, const float b, Tensor<float>* pC){
    //debug
    cout<<"GEMM:  C = a*A*B+ b*C"<<endl;
-   cout<<"A size: "<< vector2Str(pA->getDims())<<endl;
-   cout<<"B size: "<< vector2Str(pB->getDims())<<endl;
+   cout<<"A size: "<< vector2Str(pA->getDims())<<(transposeA ? "A Transpose": "") <<endl;
+   cout<<"B size: "<< vector2Str(pB->getDims())<<(transposeB ? "B Transpose": "") << endl;
    cout<<"C size: "<< vector2Str(pC->getDims())<<endl;
    //debug
 
