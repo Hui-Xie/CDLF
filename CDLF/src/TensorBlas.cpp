@@ -64,16 +64,6 @@ void axpy(const float a, const Tensor<float>* px, Tensor<float>* py){
 
 // C = a*A*B+ b*C
 void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const bool transposeB, const Tensor<float>* pB, const float b, Tensor<float>* pC){
-   //debug
-   cout<<"GEMM:  C = a*A*B+ b*C"<<endl;
-   cout<<"A size: "<< vector2Str(pA->getDims())<<(transposeA ? " A Transpose": "") <<endl;
-   cout<<"B size: "<< vector2Str(pB->getDims())<<(transposeB ? " B Transpose": "") << endl;
-   cout<<"C size: "<< vector2Str(pC->getDims())<<endl;
-   //debug
-
-
-
-
    float *pAblas, *pBblas, *pCblas;
    pAblas = (float*) mkl_calloc(pA->getLength(), sizeof(float), 64);  //initialize 0
    pBblas = (float*) mkl_calloc(pB->getLength(), sizeof(float), 64);
@@ -84,16 +74,17 @@ void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const b
    memcpy(pBblas, pB->getData(),pB->getLength()*sizeof(float));
    memcpy(pCblas, pC->getData(),pC->getLength()*sizeof(float));
 
-   CBLAS_TRANSPOSE transA;
-   CBLAS_TRANSPOSE transB;
+
    int m = pC->getDims()[0];
    int n = pC->getDims()[1];
    int k = pA->getDims()[1];
-   if (transA){
+   if (transposeA){
       k = pA->getDims()[0];
    }
 
    int lda, ldb;
+   CBLAS_TRANSPOSE transA;
+   CBLAS_TRANSPOSE transB;
    if (transposeA) {
       transA = CblasTrans;
       lda = max(1,m);
@@ -110,7 +101,7 @@ void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const b
       transB = CblasNoTrans;
       ldb =max(1,n);
    }
-   //compute
+
    cblas_sgemm(CblasRowMajor, transA, transB,
                m, n, k,
                a, pAblas, lda,
@@ -124,7 +115,6 @@ void gemm(const float a, const bool transposeA, const Tensor<float>* pA, const b
    mkl_free(pBblas);
    mkl_free(pCblas);
 
-   cout<<"End of GEMM:  C = a*A*B+ b*C"<<endl<<endl<<endl;
 }
 
 

@@ -37,15 +37,20 @@ link_directories(${CMAKE_BINARY_DIR}/CDLF/src)
 set(MKLROOT ${INTEL_Dir}/mkl)
 set(MKL_INCLUDE_DIR ${MKLROOT}/include)
 include_directories(${MKL_INCLUDE_DIR})
-
 # use intel link advisor below to get link options
 # https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor
-# for shared MKL library linking
-set(MKL_LINK_FlAGS "    -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_sequential -lmkl_core -lpthread -lm -ldl ")
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${MKL_LINK_FlAGS}")
 
+# for single dynamic library with intel ICC and intel64 architeture
+set(MKL_LINK_FlAGS  "  -L${MKLROOT}/lib/intel64 -lmkl_rt -lpthread -lm -ldl  ")
+
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${MKL_LINK_FlAGS}")
 # for dynamic link MKL library
-set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so  ${MKLROOT}/lib/intel64/libmkl_sequential.so  ${MKLROOT}/lib/intel64/libmkl_core.so)
+set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
+                ${MKLROOT}/lib/intel64/libmkl_core.so
+                ${MKLROOT}/lib/intel64/libmkl_sequential.so
+                ${MKLROOT}/lib/intel64/libmkl_rt.so)
+
+
 
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
