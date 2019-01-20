@@ -18,7 +18,7 @@ using namespace std;
 RightMatrixLayer::RightMatrixLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize)
         : MatrixLayer(id, name,prevLayer, filterSize, {prevLayer->m_tensorSize[0], filterSize[1]})
 {
-    m_type = "LeftMatrixLayer";
+    m_type = "RightMatrixLayer";
     if (prevLayer->m_tensorSize[1] != filterSize[0]){
         cout<<"Error: in RightMatrixLayer, filterSize does not match previous Layer."<<endl;
     }
