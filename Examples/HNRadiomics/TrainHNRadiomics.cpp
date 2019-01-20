@@ -50,7 +50,6 @@ int main(int argc, char *argv[]){
     }
     net.printArchitecture();
     net.setLearningRate(learningRate);
-    net.setUnlearningLayerID(20);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
