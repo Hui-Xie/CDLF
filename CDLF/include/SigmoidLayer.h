@@ -13,7 +13,7 @@
 
 class SigmoidLayer : public Layer {
 public:
-    SigmoidLayer(const int id, const string& name,Layer* prevLayer, const int k=1);
+    SigmoidLayer(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize, const int k=1);
     ~SigmoidLayer();
 
     virtual  void initialize(const string& initialMethod);
