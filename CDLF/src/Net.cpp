@@ -361,7 +361,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new ConcatenateLayer(s.m_id, s.m_name, pLayersVec, s.m_outputTensorSize);
         }
         else if ("SigmoidLayer" == s.m_type) {
-           pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_stride);
+           pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, (int)s.m_stride);
         }
         else if ("RescaleLayer" == s.m_type) {
             pLayer = new RescaleLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_stride);
