@@ -64,18 +64,11 @@ void HNRadiomicsNet::train() {
             forwardPropagate();
             backwardPropagate(true);
 
-            break;
-
             ++nIter;
         }
         sgd(learningRate, i);
         ++nBatch;
 
-
-        //debug
-        saveYTensor();
-        savedYTensor();
-        break;
     }
 }
 
