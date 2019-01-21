@@ -37,8 +37,8 @@ void NormalizationLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     float mean = X.average();
-    float m_sigma = sqrt(X.variance());
-    m_sigma = (0 == m_sigma)? m_epsilon: m_sigma;
+    m_sigma = sqrt(X.variance());
+    m_sigma = (0.0 == m_sigma)? m_epsilon: m_sigma;
     const int N = Y.getLength();
     for (int i=0; i<N; ++i){
         Y.e(i) = (X.e(i) -mean)/m_sigma;
