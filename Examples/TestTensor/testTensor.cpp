@@ -305,7 +305,15 @@ int main (int argc, char *argv[]) {
 
     cout<<"=========End of Test MKL CBLAS Tensor========="<<endl;
 
+    //read a Tensor file and output its sigma.
+    Tensor<float> tensor120({500,100});
+    string  filename = "/Users/hxie1/temp_netParameters/HNSCC_matrix/Y_112.csv";
+    tensor120.load(filename);
+    float mean = tensor120.average();
+    float sigma = sqrt(tensor120.variance());
 
+    cout<<filename<<endl;
+    printf("mean = %f, sigma = %f\n", mean, sigma);
 
 
 }

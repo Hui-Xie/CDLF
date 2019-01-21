@@ -39,7 +39,7 @@ void SigmoidLayer::backward(bool computeW, bool computeX){
         Tensor<float>& Y = *m_pYTensor;
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
-        int N = dY.getLength();
+        const int N = dY.getLength();
 
         // use method: dL/dx = dL/dY * dY/dx = dL/dY *k * exp(x)/(1 +exp(x))^2
         /*Tensor<float>& X = *m_prevLayer->m_pYTensor;
@@ -50,7 +50,7 @@ void SigmoidLayer::backward(bool computeW, bool computeX){
 
         //use method:dL/dx = dL/dY * dY/dx = dL/dy *Y*(1- Y/k);
         for(int i=0; i< N; ++i){
-            dX.e(i) = dY.e(i)*Y.e(i)*(1-Y.e(i)/m_k);
+            dX.e(i) += dY.e(i)*Y.e(i)*(1-Y.e(i)/m_k);
         }
     }
 }
