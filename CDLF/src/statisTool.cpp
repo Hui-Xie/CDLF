@@ -21,17 +21,29 @@ void generateGaussian(Tensor<float>* yTensor,const float mu, const float sigma )
     }
 }
 
+// reference: http://andyljones.tumblr.com/post/110998971763/an-explanation-of-xavier-initialization
+/*
+ * Assume:  E(X) = 0; E(W) = 0
+ * in the case A : Y = WX  and  W has size of {m*k}, Y has size of {m*n}, X has size of {k*n}
+ *        case B:  Y = XW  and  W has size of {k*n}, Y has size of {m*n}, X has size of {m*k}
+ *  in    case A and B:  Var(Y) = k * Var(W) *Var(X)
+ *  therefore, Var(W) = 1/k;
+ *  consider backpropagation: Var(W) = 2/(m+k) or Var(W) = 2/(k+n)
+ *  consider ReLU killing half variance: Var(W) = 4/(dim0+dim1)
+ *
+ * */
+
+
 void xavierInitialize(Tensor<float>* pW){
     int nRow = pW->getDims()[0];
     int nCol = pW->getDims()[1];
     const float mu =0;
-    const float sigma = 2.0/nCol; //the variance of output y with consideration of ReLU
+    const float sigma = 4.0/(nCol+nRow); //the variance of output y with consideration of ReLU
     Tensor<float>& W =*pW;
     unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937_64 randEngine(randSeed);
-    for (int i=0; i<nRow; ++i){
-        for (int j=0; j<nCol; ++j){
-            W.e({i,j}) = stats::rnorm(mu,sigma,randEngine);
-        }
+    const int N = pW->getLength();
+    for (int i=0; i<N; ++i){
+         W.e(i) = stats::rnorm(mu,sigma,randEngine);
     }
 }
