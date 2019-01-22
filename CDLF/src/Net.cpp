@@ -341,7 +341,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new MeanSquareLossLayer(s.m_id, s.m_name, pPreLayer, s.m_stride);
         }
         else if ("DiceLossLayer" == s.m_type) {
-            pLayer = new MeanSquareLossLayer(s.m_id, s.m_name, pPreLayer);
+            pLayer = new DiceLossLayer(s.m_id, s.m_name, pPreLayer);
         }
         else if ("ExponentialLayer" == s.m_type) {
            pLayer = new ExponentialLayer(s.m_id, s.m_name, pPreLayer);
