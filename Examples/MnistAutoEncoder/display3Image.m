@@ -6,8 +6,8 @@ clc;
 % for reconstruction from adversarial smaples
 dir = '/home/hxie1/temp_advData';
 originFile = strcat(dir, '/6','.txt'); %origin input File
-advFile = strcat(dir, '/6-Ad1','.txt'); %adversaril File
-reconstrFile = strcat(dir, '/6-Ad1-R1','.txt'); %Reconstruction file
+advFile = strcat(dir, '/6-Ad4','.txt'); %adversaril File
+reconstrFile = strcat(dir, '/6-Ad4-R4','.txt'); %Reconstruction file
 
 origArray = dlmread(originFile); advArray = dlmread(advFile); reArray = dlmread(reconstrFile);
 origImage = mat2gray(origArray,[0,255]); advImage = mat2gray(advArray, [0,255]); ReImage = mat2gray(reArray,[0,255]);

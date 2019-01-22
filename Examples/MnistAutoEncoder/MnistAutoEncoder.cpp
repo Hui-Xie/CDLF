@@ -83,3 +83,11 @@ void MnistAutoEncoder::autoEncode(const Tensor<float>& inputImage, int& predictL
     predictLabel = predictLayer->m_pYTensor->maxPosition();
     reconstructImage = *lossLayer->m_prevLayer->m_pYTensor;
 }
+
+void MnistAutoEncoder::outputLayer(const Tensor<float>& inputImage, const int layID, const string filename){
+    InputLayer *inputLayer = getInputLayer();
+    Layer* layer = (Layer*)getLayer(layID); // the FC2 layer.
+    inputLayer->setInputTensor(inputImage);
+    forwardPropagate();
+    layer->m_pYTensor->save(filename);
+}

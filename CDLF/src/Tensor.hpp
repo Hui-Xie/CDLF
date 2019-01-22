@@ -678,10 +678,8 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
                     printf("Error: fsanf in Tensor load method.\n");
                 }
             }
-            int count = fscanf(pFile, "%*c");
-            if (1 != count){
-                printf("Error: fsanf in Tensor load method.\n");
-            }
+            //int count = fscanf(pFile, "%*c");
+
         }
     }
     else {

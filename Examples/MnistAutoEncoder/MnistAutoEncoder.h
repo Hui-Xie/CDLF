@@ -25,6 +25,8 @@ public:
 
     void autoEncode(const Tensor<float>& inputImage, int& predictLabel, Tensor<float>& reconstructImage);
 
+    void outputLayer(const Tensor<float>& inputImage, const int layID, const string filename);
+
 };
 
 

@@ -71,6 +71,11 @@ int main(int argc, char *argv[]){
         string reconstructFilename = fullPathStem+ "-R"+ to_string(predictLabel) +suffix;
         reconstrutImage.save(reconstructFilename,true);
 
+
+        //print specific layers for analysis
+        const int layerID = 50;
+        string layerOutputFilename = fullPathStem+ "-LayerID"+ to_string(layerID) +suffix;
+        net.outputLayer(inputImage, layerID, layerOutputFilename);
     }
     cout << "input files and reconstruction files  at " <<advDir<<endl;
     cout<< "=========== finished AutoEncoder's image reconstruction from adversary samples ============"<<endl;
