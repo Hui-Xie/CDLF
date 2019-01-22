@@ -50,7 +50,7 @@ set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp
         SigmoidLayer.cpp  CrossEntropyLoss.cpp VectorizationLayer.cpp ExponentialLayer.cpp
         SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp GPUAttr.cpp CPUAttr.cpp FileTools.cpp
         LossConvexExample1.cpp LossConvexExample2.cpp LossNonConvexExample1.cpp LossNonConvexExample2.cpp
-        PaddingLayer.cpp MeanSquareLossLayer.cpp
+        PaddingLayer.cpp MeanSquareLossLayer.cpp  DiceLossLayer.cpp
         ReshapeLayer.cpp ConcatenateLayer.cpp )
 
 if (${Use_GPU})

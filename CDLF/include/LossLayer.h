@@ -26,7 +26,7 @@ public:
 
     virtual float lossCompute()=0;
     virtual void  gradientCompute()=0;
-    virtual void  printGroundTruth()=0;
+    virtual void  printGroundTruth();
     float m_loss;
 
     Tensor<float>* m_pGroundTruth;
@@ -39,6 +39,12 @@ public:
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct(const int layerIndex);
 
+
+    float diceCoefficient(const float threshold);
+    float getTPR(const float threshold); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
+
+    template<typename ValueType> void getPredictTensor(Tensor<ValueType>& predictResult, const float threthold);
+
 };
 
 template<typename T>
@@ -50,6 +56,17 @@ void LossLayer::setGroundTruth( const Tensor<T>& groundTruth){
     for (int i=0; i<N; ++i){
         m_pGroundTruth->e(i) = (float) groundTruth.e(i);
     }
+}
+
+template<typename ValueType>
+void LossLayer::getPredictTensor(Tensor<ValueType>& predictResult, const float threshold) {
+    const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
+    const int N = pPredict->getLength();
+    for (int i=0; i< N; ++i)
+    {
+        predictResult.e(i) = (pPredict->e(i) >= threshold)? 1:0;
+    }
+
 }
 
 

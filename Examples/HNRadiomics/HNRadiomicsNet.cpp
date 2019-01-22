@@ -16,7 +16,7 @@ void HNRadiomicsNet::build() {
 
 void HNRadiomicsNet::train() {
     InputLayer *inputLayer = getInputLayer();
-    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+    DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
     const int N =m_pDataMgr->m_NTrainFile;
     const int batchSize = getBatchSize();
@@ -74,7 +74,7 @@ void HNRadiomicsNet::train() {
 
 float HNRadiomicsNet::test() {
     InputLayer *inputLayer = getInputLayer();
-    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+    DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
     int n = 0;
     const int N = m_pDataMgr->m_NTestFile;
@@ -130,7 +130,7 @@ float HNRadiomicsNet::test() {
 
 float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFilePath) {
     InputLayer *inputLayer = getInputLayer();
-    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+    DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
     float loss = 0.0;
     m_dice = 0.0;

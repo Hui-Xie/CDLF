@@ -602,6 +602,16 @@ Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() {
 }
 
 template<class ValueType>
+float Tensor<ValueType>::normSquare(){
+    const int N = getLength();
+    float sum = 0.0;
+    for (int i=0; i<N; ++i){
+        sum += e(i)*e(i);
+    }
+    return sum;
+}
+
+template<class ValueType>
 void Tensor<ValueType>::save(const string& fullFilename, bool matrix2D){
     FILE * pFile = nullptr;
     pFile = fopen (fullFilename.c_str(),"w");
