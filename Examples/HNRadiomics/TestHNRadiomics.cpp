@@ -57,8 +57,8 @@ int main(int argc, char *argv[]) {
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
-    float meanSquareLoss = net.test(imageFile, labelFile);
-    cout << " mean squareLoss for each pixel = " << meanSquareLoss << endl;
+    float loss = net.test(imageFile, labelFile);
+    cout<<" mean diceLoss for each sample = "<< loss <<endl;
     cout << " mean dice coefficient =   " << net.m_dice << endl;
     cout << " mean True Positive Rate =   " << net.m_TPR << endl;
 

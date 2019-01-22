@@ -56,12 +56,12 @@ int main(int argc, char *argv[]){
 
 
     int epoch= 15000;
-    float squareLoss = 0.0;
+    float loss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
         net.save();
-        squareLoss = net.test();
-        cout<<"Epoch_"<<i<<": "<<" mean squareLoss for each pixel = "<< squareLoss <<endl;
+        loss = net.test();
+        cout<<"Epoch_"<<i<<": "<<" mean diceLoss for each sample = "<< loss <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean dice coefficient =   "<< net.m_dice <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean True Positive Rate =   "<< net.m_TPR <<endl;
 
