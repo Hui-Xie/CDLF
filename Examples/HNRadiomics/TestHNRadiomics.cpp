@@ -12,6 +12,8 @@ void printUsage(char* argv0){
     cout<<"For examples: "<<endl;
     cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData/CT_Images/HNSCC-01-0017_CT.nrrd "
                  " /home/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV.nrrd"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData/CT_Images/HNSCC-01-0017_CT.nrrd "
+                 " /Users/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV.nrrd"<<endl;
     cout<<"Notes:"<<endl;
     cout<<"1  GroundTruth file is optional; if it is given, program will compute its dice coeffficient"<<endl;
 }
@@ -52,8 +54,7 @@ int main(int argc, char *argv[]) {
         return -2;
     }
     net.printArchitecture();
-    net.setUnlearningLayerID(20);
-
+ 
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
