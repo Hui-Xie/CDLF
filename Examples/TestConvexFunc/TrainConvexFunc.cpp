@@ -13,11 +13,9 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"A Fully-Connected Network compute loss function using statistic gradient descent."<<endl;
     cout<<"Usage: "<<endl
-        <<argv0<<"<netDirectory>  <layerWidthVector>  "<<endl
+        <<argv0<<" <netDirectory> "<<endl
         <<"Where:"<<endl
-        <<"netDirectory: the storing directory of net parameters. If not empty, program will load network from this directory instead build network using layerWidthVector"<<endl
-        <<"layerWidthVector: e.g.  5,7,8,10,5   uses comma as separator, and it does not include ReLU layers and Normlization Layers."<<endl;
-
+        <<"netDirectory: the storing directory of net parameters. If not empty, program will load network from this directory instead build network using layerWidthVector"<<endl;
 
 }
 
@@ -52,33 +50,17 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    if (3 != argc){
+    if (2 != argc){
         cout<<"Input parameter error. Exit"<<endl;
         printUsage(argv[0]);
         return -1;
     }
     string netDir= string(argv[1]);
-    string stringLayersWidth = string(argv[2]);
-    vector<int> layerWidthVector;
-    int result = convertCommaStrToVector(stringLayersWidth, layerWidthVector);
-    if (0 != result){
-        cout<<"Layer width string has error. Exit."<<endl;
-        return -1;
-    }
 
-    ConvexNet net("ConvexNet", netDir, layerWidthVector);
+    ConvexNet net("ConvexNet", netDir);
 
-    if (isEmptyDir(net.getDir())){
-        net.build();
-        net.initialize();
-        net.setLearningRate(0.01);
-        net.setLossTolerance(0.02);
-        net.setBatchSize(20);
-    }
-    else{
-        net.load();
-    }
-    net.setLearningRate(1);
+    net.load();
+    net.setLearningRate(0.01);
     net.printArchitecture();
 
     net.train();

@@ -10,14 +10,14 @@
 
 class ConvexNet : public FeedForwardNet {
 public:
-    ConvexNet(const string& name, const string& saveDir, const vector<int>& layerWidthVector);
+    ConvexNet(const string& name, const string& saveDir);
     ~ConvexNet();
 
     virtual void build();
     virtual void train();
     virtual float test();
 
-    vector<int> m_layerWidthVector;
+
 };
 
 
