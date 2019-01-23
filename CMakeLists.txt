@@ -51,6 +51,12 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
                 ${MKLROOT}/lib/intel64/libmkl_rt.so)
 
 
+# for cudnn
+set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
+include_directories(Cudnn_INCLUDE_DIR)
+set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
+
+
 
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
@@ -67,7 +73,7 @@ message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
-set(CDLFLib libCDLF.so pthread ${MKL_LIBRARY})    # for Linux
+set(CDLFLib libCDLF.so pthread ${MKL_LIBRARY} ${Cudnn_LIBRARY})    # for Linux
 
 add_subdirectory(CDLF)
 add_subdirectory(Examples)
