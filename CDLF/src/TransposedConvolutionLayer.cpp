@@ -51,7 +51,7 @@ void TransposedConvolutionLayer::forward() {
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t= 0; t< nThread; ++t){  // th indicates thread
             threadVec.push_back(thread(
-                    [this, idxF, t, nThread, N, &dimsSpanBeforeCollpase, pExtendX, NRange]() {
+                    [this, idxF, t, N, &dimsSpanBeforeCollpase, pExtendX, NRange]() {
                         Tensor<float> subX(m_filterSize);
                         const int offseti = idxF*N;
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {

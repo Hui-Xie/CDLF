@@ -48,7 +48,7 @@ void ConvolutionLayer::forward() {
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t = 0; t < nThread; ++t) {
             threadVec.push_back(thread(
-                    [this, idxF, t, nThread, N, &dimsSpanBeforeCollpase, NRange]() {
+                    [this, idxF, t, N, &dimsSpanBeforeCollpase, NRange]() {
                         Tensor<float> subX = Tensor<float>(m_filterSize);
                         const int offseti = idxF * N;
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
