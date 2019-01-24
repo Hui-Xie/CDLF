@@ -10,13 +10,13 @@
 #include "LossLayer.h"
 
 /* Loss = 1- Dice
- *      = 1 - 2 |x.* g|/(|x|^2 + |g|^2)
+ *      = 1 - 2 |x.* g|/(|x| + |g|)
  * where x is the output vector of previous layer
- *       g is the corresponding binary groundtruth vector containing only 0 or 1 element
+ *       g is the corresponding binary groundtruth vector containing only 0 or 1 elements
  *       prim indicate transpose vector;
  *
  * further deduction:
- *  Loss = 1 - 2 sqrt((x .* g)'*(x .*g))/ (x'*x+ g'*g)
+ *  Loss = 1 - 2 sqrt((x .* g)'*(x .*g))/ (sqrt(x'*x)+ sqrt(g'*g))
  *
  * */
 
@@ -28,8 +28,8 @@ public:
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();
-    float m_xDotgnorm;
-    float m_sum_x_gnorm2;
+    float m_xDotg_norm;
+    float m_xPlusg_norm;
 
 
 };

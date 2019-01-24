@@ -602,13 +602,13 @@ Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::normSquare(){
+float Tensor<ValueType>::L2Norm(){
     const int N = getLength();
     float sum = 0.0;
     for (int i=0; i<N; ++i){
         sum += e(i)*e(i);
     }
-    return sum;
+    return sqrt(sum);
 }
 
 template<class ValueType>

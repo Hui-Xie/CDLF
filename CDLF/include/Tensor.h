@@ -88,7 +88,7 @@ public:
     int maxPosition();
     Tensor<unsigned char> getMaxPositionSubTensor();
 
-    float normSquare();
+    float L2Norm();
 
     void save(const string& fullFilename, bool matrix2D=false);
     void load(const string& fullFilename, bool matrix2D=false);
