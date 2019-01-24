@@ -19,8 +19,9 @@ public:
     int m_numFilters;
     int* m_filterSizeArray; // include the number of Filter dimension
     int m_filterArrayDim;
+    size_t m_workspaceSize;
 
-    void setConvDescriptors();
+    void setConvDescriptorsAndAlgorithm();
 
 
 
