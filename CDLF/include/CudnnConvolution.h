@@ -17,12 +17,19 @@ public:
     cudnnFilterDescriptor_t m_filterDescriptor;
     cudnnConvolutionFwdAlgo_t m_fwdConvAlgorithm;
     int m_numFilters;
+    vector<int> m_filterSize;
     int* m_filterSizeArray; // include the number of Filter dimension
     int m_filterArrayDim;
     size_t m_workspaceSize;
 
     void setConvDescriptorsAndAlgorithm();
 
+    void allocateDeviceMemAndCopy();
+
+    void* d_pWorkspace;
+    float* d_pX;
+    float* d_pY;
+    float* d_pFilter;
 
 
 };
