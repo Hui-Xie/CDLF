@@ -166,6 +166,20 @@ string vector2Str(const vector<int>& vec){
     return result;
 }
 
+string array2Str(const int array[], const int N){
+    string result ="{";
+    for (int i=0;i< N; ++i){
+        if (i != N-1){
+            result += to_string(array[i]) + "*";
+        }
+        else{
+            result += to_string(array[i]);
+        }
+    }
+    result +="}";
+    return result;
+}
+
 vector<int> str2Vector(const string& str){
     string tempStr = str;
     int N = tempStr.size();

@@ -43,6 +43,8 @@ void printVector(const vector<int>& vec);
 
 string vector2Str(const vector<int>& vec);
 
+string array2Str(const int array[], const int  N);
+
 vector<int> str2Vector(const string& str);
 
 vector<int> generateRandomSequence(const int range);

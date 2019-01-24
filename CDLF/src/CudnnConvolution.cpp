@@ -1,8 +1,8 @@
 
 #include <CudnnConvolution.h>
-#include "ConvolutionLayer.h"
 
-CudnnConvolution::CudnnConvolution(Layer *pLayer, const vector<int> &filterSize, const int numFilters,
+
+CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &filterSize, const int numFilters,
                                    const int stride): Cudnn(pLayer, stride)
 {
     d_pWorkspace = nullptr;
@@ -19,6 +19,7 @@ CudnnConvolution::CudnnConvolution(Layer *pLayer, const vector<int> &filterSize,
     getDimsArrayFromFilterSize(filterSize,m_numFilters, m_filterSizeArray, m_filterArrayDim);
 
     setConvDescriptorsAndAlgorithm();
+    isOutputDimCorrect();
 }
 
 
@@ -30,7 +31,7 @@ CudnnConvolution::~CudnnConvolution(){
 
     cudnnDestroyFilterDescriptor(m_filterDescriptor);
     cudnnDestroyConvolutionDescriptor(m_convDescriptor);
-    delete m_filterSizeArray;
+    delete[] m_filterSizeArray;
 }
 
 void CudnnConvolution::setConvDescriptorsAndAlgorithm() {
@@ -53,10 +54,51 @@ void CudnnConvolution::allocateDeviceMemAndCopy() {
     cudaMalloc(&d_pY, ySize);
     cudaMemset(d_pY, 0, ySize);
 
-
     const int oneFilterSize = length(m_filterSize)*sizeof(float);
     cudaMalloc(&d_pFilter, oneFilterSize*m_numFilters);
     for (int i=0; i< m_numFilters; ++i){
         cudaMemcpy(d_pFilter+i*oneFilterSize, ((ConvolutionLayer*)m_pLayer)->m_pW[i]->getData(), oneFilterSize, cudaMemcpyHostToDevice);
     }
+}
+
+void CudnnConvolution::forward() {
+    allocateDeviceMemAndCopy();
+    float alpha = 1;
+    float beta = 0;
+    cudnnConvolutionForward(m_cudnnContext, &alpha,
+                            m_xDescriptor, d_pX,
+                            m_filterDescriptor, d_pFilter,
+                            m_convDescriptor, m_fwdConvAlgorithm,
+                            d_pWorkspace, m_workspaceSize,
+                            &beta,
+                            m_yDescriptor, d_pY);
+    const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
+    cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
+}
+
+void CudnnConvolution::backward() {
+
+}
+
+bool CudnnConvolution::isOutputDimCorrect() {
+    int nbDim = ((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse.size();
+    nbDim = nbDim+2;
+    int* tensorOuputDimA = new int [nbDim];
+    cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_filterDescriptor, nbDim, tensorOuputDimA);
+    bool result  = true;
+    for (int i = 0; i<nbDim; ++i){
+       if (((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse[i] != tensorOuputDimA[i]){
+           result = false;
+           break;
+       }
+    }
+
+    if (!result){
+       printf("In Convolution layer: %s\n", m_pLayer->m_name.c_str());
+       printf("m_tensorSizeBeforeCollapse = %s\n", vector2Str(((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse).c_str());
+       printf("cudnnComputedOutputDims  = %s\n",  array2Str(tensorOuputDimA, nbDim).c_str());
+    }
+
+    delete[] tensorOuputDimA;
+    return result;
 }

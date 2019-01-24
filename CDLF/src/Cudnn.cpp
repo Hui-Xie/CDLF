@@ -60,8 +60,8 @@ void Cudnn::setDescriptors() {
     generateStrideArray(m_stride,dim, strideArray);
     cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, dim, xDimsA,strideArray);
 
-    delete xDimsA;
-    delete strideArray;
+    delete[] xDimsA;
+    delete[] strideArray;
 
     // output descriptor
     int* yDimsA = nullptr;
@@ -69,7 +69,7 @@ void Cudnn::setDescriptors() {
     generateStrideArray(m_stride,dim, strideArray);
     cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, dim, yDimsA,strideArray);
 
-    delete yDimsA;
-    delete strideArray;
+    delete[] yDimsA;
+    delete[] strideArray;
 }
 

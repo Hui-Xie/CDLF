@@ -4,7 +4,7 @@
 
 #include "ConvolutionLayer.h"
 #include <thread>
-
+#include "CudnnConvolution.h"
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<int> &filterSize,
                                    const int numFilters, const int stride)
@@ -39,6 +39,11 @@ void ConvolutionLayer::updateTensorSize() {
 
 // Y = W*X
 void ConvolutionLayer::forward() {
+#ifdef Use_GPU
+    CudnnConvolution cudnnConvolution(this, m_filterSize, m_numFilters, m_stride);
+    cudnnConvolution.forward();
+
+#else
     const int N = length(m_tensorSize) / m_numFilters;
     const vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     const int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
@@ -63,6 +68,8 @@ void ConvolutionLayer::forward() {
     for (int t = 0; t < threadVec.size(); ++t) {
         threadVec[t].join();
     }
+#endif
+
 }
 
 // Y =W*X

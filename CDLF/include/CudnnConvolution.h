@@ -7,10 +7,12 @@
 #define RL_NONCONVEX_CUDNNCONVOLUTION_H
 
 #include "Cudnn.h"
+#include "ConvolutionLayer.h"
+
 
 class CudnnConvolution : public Cudnn{
 public:
-    CudnnConvolution(Layer* pLayer, const vector<int>& filterSize, const int numFilters=1, const int stride =1);
+    CudnnConvolution(ConvolutionLayer* pLayer, const vector<int>& filterSize, const int numFilters=1, const int stride =1);
     ~CudnnConvolution();
 
     cudnnConvolutionDescriptor_t    m_convDescriptor;
@@ -23,8 +25,11 @@ public:
     size_t m_workspaceSize;
 
     void setConvDescriptorsAndAlgorithm();
-
     void allocateDeviceMemAndCopy();
+    bool isOutputDimCorrect();
+
+    void forward();
+    void backward();
 
     void* d_pWorkspace;
     float* d_pX;
