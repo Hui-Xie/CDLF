@@ -10,6 +10,19 @@
 #include "cudnn.h"
 #include "Layer.h"
 
+#define checkCUDNN(expression)                               \
+  {                                                          \
+    cudnnStatus_t status = (expression);                     \
+    if (status != CUDNN_STATUS_SUCCESS) {                    \
+      std::cerr << "Error on line " << __LINE__ << " of File: "<< __FILE__\
+                << std::endl                                  \
+                << cudnnGetErrorString(status) << std::endl; \
+      std::exit(EXIT_FAILURE);                               \
+    }                                                        \
+  }
+
+
+
 class Cudnn{
 public:
     Cudnn(Layer* pLayer, const int stride =1);

@@ -13,8 +13,8 @@ CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &
 
     m_filterSize = filterSize;
     m_numFilters = numFilters;
-    cudnnCreateFilterDescriptor(&m_filterDescriptor);
-    cudnnCreateConvolutionDescriptor(&m_convDescriptor);
+    checkCUDNN(cudnnCreateFilterDescriptor(&m_filterDescriptor));
+    checkCUDNN(cudnnCreateConvolutionDescriptor(&m_convDescriptor));
 
     getDimsArrayFromFilterSize(filterSize,m_numFilters, m_filterSizeArray, m_filterArrayDim);
 
@@ -35,12 +35,29 @@ CudnnConvolution::~CudnnConvolution(){
 }
 
 void CudnnConvolution::setConvDescriptorsAndAlgorithm() {
-    cudnnSetFilterNdDescriptor(m_filterDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, m_filterArrayDim, m_filterSizeArray);
-    cudnnSetConvolution2dDescriptor(m_convDescriptor, 0,0, m_stride, m_stride, 1, 1, CUDNN_CROSS_CORRELATION, CUDNN_DATA_FLOAT);
-    cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_filterDescriptor, m_convDescriptor, m_yDescriptor,
-                    CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, 0, &m_fwdConvAlgorithm);
-    cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_xDescriptor, m_filterDescriptor, m_convDescriptor, m_yDescriptor,
-                    m_fwdConvAlgorithm, &m_workspaceSize);
+
+    checkCUDNN(cudnnSetFilterNdDescriptor(m_filterDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, m_filterArrayDim, m_filterSizeArray));
+
+    const int  arrayLength = m_filterSize.size();
+    int* padA = new int [arrayLength];
+    int* filterStrideA  = new int [arrayLength];
+    int* dilationA = new int[arrayLength];
+    for (int i=0; i< arrayLength; ++i){
+        padA[i] = 0;
+        filterStrideA[i] = m_stride;
+        dilationA[i] = 1;
+    }
+    checkCUDNN(cudnnSetConvolutionNdDescriptor(m_convDescriptor, arrayLength, padA, filterStrideA, dilationA, CUDNN_CROSS_CORRELATION, CUDNN_DATA_FLOAT));
+
+    checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_filterDescriptor, m_convDescriptor, m_yDescriptor,
+                    CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, 0, &m_fwdConvAlgorithm));
+
+    checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_xDescriptor, m_filterDescriptor, m_convDescriptor, m_yDescriptor,
+                    m_fwdConvAlgorithm, &m_workspaceSize));
+
+    delete[] padA;
+    delete[] filterStrideA;
+    delete[] dilationA;
 }
 
 void CudnnConvolution::allocateDeviceMemAndCopy() {
@@ -65,13 +82,13 @@ void CudnnConvolution::forward() {
     allocateDeviceMemAndCopy();
     float alpha = 1;
     float beta = 0;
-    cudnnConvolutionForward(m_cudnnContext, &alpha,
+    checkCUDNN(cudnnConvolutionForward(m_cudnnContext, &alpha,
                             m_xDescriptor, d_pX,
                             m_filterDescriptor, d_pFilter,
                             m_convDescriptor, m_fwdConvAlgorithm,
                             d_pWorkspace, m_workspaceSize,
                             &beta,
-                            m_yDescriptor, d_pY);
+                            m_yDescriptor, d_pY));
     const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
 }
@@ -81,10 +98,10 @@ void CudnnConvolution::backward() {
 }
 
 bool CudnnConvolution::isOutputDimCorrect() {
-    int nbDim = ((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse.size();
+    int nbDim = ((ConvolutionLayer*)m_pLayer)->m_filterSize.size();
     nbDim = nbDim+2;
     int* tensorOuputDimA = new int [nbDim];
-    cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_filterDescriptor, nbDim, tensorOuputDimA);
+    checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_filterDescriptor, nbDim, tensorOuputDimA));
     bool result  = true;
     for (int i = 0; i<nbDim; ++i){
        if (((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse[i] != tensorOuputDimA[i]){

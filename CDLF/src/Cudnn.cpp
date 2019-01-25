@@ -6,9 +6,9 @@
 Cudnn::Cudnn(Layer* pLayer, const int stride){
     m_pLayer = pLayer;
     m_stride = stride;
-    cudnnCreate(&m_cudnnContext);
-    cudnnCreateTensorDescriptor(&m_xDescriptor);
-    cudnnCreateTensorDescriptor(&m_yDescriptor);
+    checkCUDNN(cudnnCreate(&m_cudnnContext));
+    checkCUDNN(cudnnCreateTensorDescriptor(&m_xDescriptor));
+    checkCUDNN(cudnnCreateTensorDescriptor(&m_yDescriptor));
 
     setDescriptors();
 }
@@ -58,7 +58,7 @@ void Cudnn::setDescriptors() {
     int* strideArray = nullptr;
     getDimsArrayFromTensorSize(m_pLayer->m_prevLayer->m_tensorSize, xDimsA, dim);
     generateStrideArray(m_stride,dim, strideArray);
-    cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, dim, xDimsA,strideArray);
+    checkCUDNN(cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, dim, xDimsA,strideArray));
 
     delete[] xDimsA;
     delete[] strideArray;
@@ -67,7 +67,7 @@ void Cudnn::setDescriptors() {
     int* yDimsA = nullptr;
     getDimsArrayFromTensorSize(m_pLayer->m_tensorSize, yDimsA, dim);
     generateStrideArray(m_stride,dim, strideArray);
-    cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, dim, yDimsA,strideArray);
+    checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, dim, yDimsA,strideArray));
 
     delete[] yDimsA;
     delete[] strideArray;
