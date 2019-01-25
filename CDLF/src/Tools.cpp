@@ -193,6 +193,14 @@ string array2Str(const int array[], const int N){
     return result;
 }
 
+void vector2Array(const vector<int>& vec, int & N, int array[]){
+    N = vec.size();
+    array = new int [N];
+    for (int i=0; i< N; ++i){
+        array[i] = vec[i];
+    }
+}
+
 vector<int> str2Vector(const string& str){
     string tempStr = str;
     int N = tempStr.size();

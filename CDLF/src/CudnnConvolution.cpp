@@ -31,7 +31,6 @@ CudnnConvolution::~CudnnConvolution(){
 
     cudnnDestroyFilterDescriptor(m_filterDescriptor);
     cudnnDestroyConvolutionDescriptor(m_convDescriptor);
-    delete[] m_filterSizeArray;
 }
 
 void CudnnConvolution::forward() {
@@ -53,29 +52,52 @@ void CudnnConvolution::backward() {
 
 }
 
-void CudnnConvolution::setFilterDescriptor() {
-    int k = m_numFilters;
-    int c = 1, h =1, w =1;
-    if (2 == m_filterSize.size()){
-        h = m_filterSize[0];
-        w = m_filterSize[1];
-    }
-    else if (3 ==m_filterSize.size()){
-        c = m_filterSize[0];
-        h = m_filterSize[1];
-        w = m_filterSize[2];
-    }
-    else{
-        cout<<"Error: cudnn can not support 4D or above filter in layer "<<m_pLayer->m_name<<endl;
-        std::exit(EXIT_FAILURE);
+
+
+void CudnnConvolution::setXDescriptor() {
+    vector<int> & tensorSize = m_pLayer->m_prevLayer->m_tensorSize;
+
+    //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
+    int nbDims = tensorSize.size()+2;
+
+    int* dimA = new int[nbDims];
+    int* strideA = new int [nbDims];
+    for (int i=0; i< nbDims; ++i){
+        if (i< 2){
+           dimA[i]  = 1;
+           strideA[i]  =1;
+        }
+        else{
+            dimA[i]  = tensorSize[i-2];
+            strideA[i]  = m_stride;
+        }
     }
 
-    checkCUDNN(cudnnSetFilter4dDescriptor(m_filterDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, k, c, h, w));
+    checkCUDNN(cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
+
+    delete[] dimA;
+    delete[] strideA;
+}
+
+void CudnnConvolution::setFilterDescriptor() {
+    //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
+    int nbDims = m_filterSize.size()+2;
+
+    int* filterDimA = new int[nbDims];
+    filterDimA[0] = m_numFilters;
+    filterDimA[1] = 1;
+    for (int i=2; i< nbDims; ++i){
+        filterDimA[i]  = m_filterSize[i-2];
+    }
+
+    checkCUDNN(cudnnSetFilterNdDescriptor(m_filterDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
+
+    delete[] filterDimA;
 }
 
 void CudnnConvolution::setConvDescriptor() {
     // That same convolution descriptor can be reused in the backward path provided it corresponds to the same layer.
-    const int  arrayLength = m_filterSize.size();
+    const int  arrayLength = m_filterSize.size();  // this arrayLength does not include n, c.
     int* padA = new int [arrayLength];
     int* filterStrideA  = new int [arrayLength];
     int* dilationA = new int[arrayLength];
@@ -93,15 +115,25 @@ void CudnnConvolution::setConvDescriptor() {
 
 }
 
+
+
 void CudnnConvolution::setYDescriptor() {
-    int nbDim = m_filterSize.size()+2;
-    int* tensorOuputDimA = new int [nbDim];
-    checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_filterDescriptor, nbDim, tensorOuputDimA));
-    if (length(nbDim, tensorOuputDimA) != length(m_pLayer->m_tensorSize)){
+    int nbDims = m_filterSize.size()+2;
+    int* tensorOuputDimA = new int [nbDims];
+    checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_filterDescriptor, nbDims, tensorOuputDimA));
+    if (length(nbDims, tensorOuputDimA) != length(m_pLayer->m_tensorSize)){
         printf("In Convolution layer: %s\n", m_pLayer->m_name.c_str());
         printf("m_tensorSize = %s\n", vector2Str(m_pLayer->m_tensorSize).c_str());
-        printf("cudnnComputedOutputDims  = %s\n",  array2Str(tensorOuputDimA, nbDim).c_str());
+        printf("cudnnComputedOutputDims  = %s\n",  array2Str(tensorOuputDimA, nbDims).c_str());
         std::exit(EXIT_FAILURE);
+    }
+    else{
+        int* strideA = new int[nbDims];
+        for (int i=0; i< nbDims; ++i){
+            strideA[i] = 1;
+        }
+        checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, tensorOuputDimA, strideA));
+        delete[] strideA;
     }
 
     delete[] tensorOuputDimA;
@@ -133,6 +165,7 @@ void CudnnConvolution::allocateDeviceMem() {
 }
 
 void CudnnConvolution::setDescriptorsAndAlg() {
+    setXDescriptor();
     setFilterDescriptor();
     setConvDescriptor();
     setYDescriptor();

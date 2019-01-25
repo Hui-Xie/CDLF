@@ -34,13 +34,6 @@ public:
 
     Layer* m_pLayer;
 
-
-    void setXDescriptor();
-
-protected:
-    void getDimsArrayFromTensorSize(const vector<int> tensorSize, int& dim, int*& array);
-    void getDimsArrayFromFilterSize(const vector<int> filterSize, const int numFilters, int& dim, int*& array);
-    void generateStrideArray(const int stride, const int dim, int*& array);
 };
 
 #endif //RL_NONCONVEX_CUDNN_H

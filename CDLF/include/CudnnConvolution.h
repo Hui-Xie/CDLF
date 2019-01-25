@@ -23,14 +23,9 @@ public:
     int m_numFilters;
     int m_stride;
 
-    int m_filterArrayDim;
-    int* m_filterSizeArray; // include the number of Filters dimension
-
     size_t m_workspaceSize;
 
-
-    bool isOutputDimCorrect();
-
+    void setXDescriptor();
     void setFilterDescriptor();
     void setConvDescriptor();
     void setYDescriptor();
