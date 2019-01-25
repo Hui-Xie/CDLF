@@ -77,6 +77,12 @@ void ConvolutionLayer::forward() {
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(bool computeW, bool computeX) {
+
+#ifdef Use_GPU
+    CudnnConvolution cudnnConvolution(this, m_filterSize, m_numFilters, m_stride);
+    cudnnConvolution.backward(computeW, computeX);
+#else
+      
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         //==============Single Thread computation==========================
@@ -166,6 +172,9 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         }
 
     }
+
+#endif
+
 }
 
 
