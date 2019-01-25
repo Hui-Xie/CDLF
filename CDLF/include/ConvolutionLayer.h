@@ -42,7 +42,6 @@ private:
     // if pdx !=  nullptr, computeX will use it to compute dx for one filter;
     void computeDX(const Tensor<float>* pExpandDY, const Tensor<float>* pW, Tensor<float>* pdX = nullptr);
 
-
 };
 
 
