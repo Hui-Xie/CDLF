@@ -105,7 +105,7 @@ Tensor<ValueType>& Tensor<ValueType>::operator=(const Tensor &other) {
         generateDimsSpan();
         allocateMem();
         const int N = other.getLength();
-        if (length > 0) {
+        if (N > 0) {
         memcpy(m_data, other.getData(), N * sizeof(ValueType));
         }
     }

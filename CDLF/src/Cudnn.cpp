@@ -3,14 +3,13 @@
 
 #include "Cudnn.h"
 
-Cudnn::Cudnn(Layer* pLayer, const int stride){
+Cudnn::Cudnn(Layer* pLayer){
     m_pLayer = pLayer;
-    m_stride = stride;
     checkCUDNN(cudnnCreate(&m_cudnnContext));
     checkCUDNN(cudnnCreateTensorDescriptor(&m_xDescriptor));
     checkCUDNN(cudnnCreateTensorDescriptor(&m_yDescriptor));
 
-    setDescriptors();
+    setXDescriptor();
 }
 
 Cudnn::~Cudnn(){
@@ -19,7 +18,7 @@ Cudnn::~Cudnn(){
    cudnnDestroy(m_cudnnContext);
 }
 
-void Cudnn::getDimsArrayFromTensorSize(const vector<int> tensorSize, int*& array, int& dim) {
+void Cudnn::getDimsArrayFromTensorSize(const vector<int> tensorSize, int& dim, int*& array) {
     const int oldDim = tensorSize.size();
     const int newDim  = (oldDim < 4)? 4: oldDim;
     dim = newDim;
@@ -32,7 +31,7 @@ void Cudnn::getDimsArrayFromTensorSize(const vector<int> tensorSize, int*& array
     }
 }
 
-void Cudnn::getDimsArrayFromFilterSize(const vector<int> filterSize, const int numFilters, int *&array, int &dim) {
+void Cudnn::getDimsArrayFromFilterSize(const vector<int> filterSize, const int numFilters, int &dim, int *&array) {
     const int oldDim = filterSize.size();
     dim = oldDim +1;
     array = new int[dim];
@@ -51,25 +50,23 @@ void Cudnn::generateStrideArray(const int stride, const int dim, int *&array) {
    }
 }
 
-void Cudnn::setDescriptors() {
-    // input descriptor
-    int dim = 0;
-    int* xDimsA = nullptr;
-    int* strideArray = nullptr;
-    getDimsArrayFromTensorSize(m_pLayer->m_prevLayer->m_tensorSize, xDimsA, dim);
-    generateStrideArray(m_stride,dim, strideArray);
-    checkCUDNN(cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, dim, xDimsA,strideArray));
-
-    delete[] xDimsA;
-    delete[] strideArray;
-
-    // output descriptor
-    int* yDimsA = nullptr;
-    getDimsArrayFromTensorSize(m_pLayer->m_tensorSize, yDimsA, dim);
-    generateStrideArray(m_stride,dim, strideArray);
-    checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, dim, yDimsA,strideArray));
-
-    delete[] yDimsA;
-    delete[] strideArray;
+void Cudnn::setXDescriptor() {
+    int n=1, c=1, h=1, w =1;
+    vector<int> & tensorSize = m_pLayer->m_prevLayer->m_tensorSize;
+    if (2 == tensorSize.size()){
+        h = tensorSize[0];
+        w = tensorSize[1];
+    }
+    else if (3 ==tensorSize.size()){
+        c = tensorSize[0];
+        h = tensorSize[1];
+        w = tensorSize[2];
+    }
+    else{
+        cout<<"Error: cudnn can not support 4D or above input Tensor in layer "<<m_pLayer->m_name<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+    checkCUDNN(cudnnSetTensor4dDescriptor(m_xDescriptor, CUDNN_TENSOR_NCHW, CUDNN_DATA_FLOAT, n, c, h, w));
 }
+
 

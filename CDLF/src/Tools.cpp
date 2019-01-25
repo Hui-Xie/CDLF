@@ -36,6 +36,19 @@ int length(const vector<int>& vec){
     }
 }
 
+int length(const int N, const int array[]){
+    if (N >0){
+        int length=array[0];
+        for(int i =1; i< N; ++i){
+            length *= array[i];
+        }
+        return length;
+    }
+    else{
+        return 0;
+    }
+}
+
 bool sameLength(const vector<int>& vec1, const vector<int>& vec2){
     return (length(vec1) == length(vec2));
 }

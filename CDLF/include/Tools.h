@@ -13,6 +13,8 @@ bool sameVector(const vector<int>& vec1, const vector<int>& vec2);
 
 int length(const vector<int>& vec);
 
+int length(const int N, const int array[]);
+
 bool sameLength(const vector<int>& vec1, const vector<int>& vec2);
 
 vector<int> reverseVector(const vector<int>& src);

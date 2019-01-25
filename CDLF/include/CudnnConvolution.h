@@ -18,15 +18,27 @@ public:
     cudnnConvolutionDescriptor_t    m_convDescriptor;
     cudnnFilterDescriptor_t m_filterDescriptor;
     cudnnConvolutionFwdAlgo_t m_fwdConvAlgorithm;
-    int m_numFilters;
+
     vector<int> m_filterSize;
-    int* m_filterSizeArray; // include the number of Filter dimension
+    int m_numFilters;
+    int m_stride;
+
     int m_filterArrayDim;
+    int* m_filterSizeArray; // include the number of Filters dimension
+
     size_t m_workspaceSize;
 
-    void setConvDescriptorsAndAlgorithm();
-    void allocateDeviceMemAndCopy();
+
     bool isOutputDimCorrect();
+
+    void setFilterDescriptor();
+    void setConvDescriptor();
+    void setYDescriptor();
+    void setForwardAlg();
+    void allocateDeviceMem();
+
+    void setDescriptorsAndAlg();
+
 
     void forward();
     void backward();
