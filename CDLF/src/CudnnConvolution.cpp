@@ -69,7 +69,7 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
         allocateDevicedW();
         setBackWardFilterAlg();
         checkCUDNN(cudnnGetConvolutionBackwardFilterWorkspaceSize(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
-                                                                m_bwdFilterAlg, &m_workspaceSize));
+                                                                 m_bwdFilterAlg, &m_workspaceSize));
         cudaMalloc(&d_pWorkspace, m_workspaceSize);
 
         float alpha = 1;
@@ -148,7 +148,7 @@ void CudnnConvolution::setXDescriptor() {
 }
 
 void CudnnConvolution::setFilterDescriptor() {
-    //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
+    //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
     int nbDims = m_filterSize.size()+2;
 
     int* filterDimA = new int[nbDims];
@@ -189,6 +189,20 @@ void CudnnConvolution::setYDescriptor() {
     int nbDims = m_filterSize.size()+2;
     int* tensorOuputDimA = new int [nbDims];
     checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_wDescriptor, nbDims, tensorOuputDimA));
+
+    //debug------------
+    cout<<"========================================"<<endl;
+    printf("In Convolution layer: %s\n", m_pLayer->m_name.c_str());
+    printf("m_tensorSize = %s\n", vector2Str(m_pLayer->m_tensorSize).c_str());
+    printf("m_tensorSizeBeforeCollaps = %s\n", vector2Str(((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse).c_str());
+    printf("cudnnComputedOutputDims  = %s\n",  array2Str(tensorOuputDimA, nbDims).c_str());
+
+    cout<<"========================================"<<endl;
+
+
+
+
+
     if (length(nbDims, tensorOuputDimA) != length(m_pLayer->m_tensorSize)){
         printf("In Convolution layer: %s\n", m_pLayer->m_name.c_str());
         printf("m_tensorSize = %s\n", vector2Str(m_pLayer->m_tensorSize).c_str());
@@ -217,8 +231,20 @@ void CudnnConvolution::setBackwardDataAlg(){
                                                   CUDNN_CONVOLUTION_BWD_DATA_PREFER_FASTEST, 0, &m_bwdDataAlg));
 }
 void CudnnConvolution::setBackWardFilterAlg(){
+    //cout <<"at layer: "<<m_pLayer->m_name<<" back Filter setBackWardFilterAlg"<<endl;
+    int countAlg =0;
+    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithmMaxCount(m_cudnnContext, &countAlg));
+
+    cudnnConvolutionBwdFilterAlgoPerf_t* perfResults = new  cudnnConvolutionBwdFilterAlgoPerf_t[countAlg];
+    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm_v7(m_cudnnContext, m_xDescriptor,m_yDescriptor, m_convDescriptor, m_wDescriptor,
+                                                             countAlg, &countAlg, perfResults ));
+    m_bwdFilterAlg = perfResults[0].algo;
+    delete[] perfResults;
+
+    /*
     checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
                                                  CUDNN_CONVOLUTION_BWD_FILTER_PREFER_FASTEST, 0, &m_bwdFilterAlg));
+    */
 }
 
 void CudnnConvolution::setDescriptors() {
@@ -226,7 +252,6 @@ void CudnnConvolution::setDescriptors() {
     setFilterDescriptor();
     setConvDescriptor();
     setYDescriptor();
-
 }
 
 void CudnnConvolution::allocateDeviceX() {

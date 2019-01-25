@@ -82,7 +82,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
     CudnnConvolution cudnnConvolution(this, m_filterSize, m_numFilters, m_stride);
     cudnnConvolution.backward(computeW, computeX);
 #else
-      
+
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         //==============Single Thread computation==========================
