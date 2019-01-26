@@ -9,7 +9,6 @@ Cudnn::Cudnn(Layer* pLayer){
     checkCUDNN(cudnnCreateTensorDescriptor(&m_xDescriptor));
     checkCUDNN(cudnnCreateTensorDescriptor(&m_yDescriptor));
 
-
 }
 
 Cudnn::~Cudnn(){
@@ -17,6 +16,8 @@ Cudnn::~Cudnn(){
    cudnnDestroyTensorDescriptor(m_yDescriptor);
    cudnnDestroy(m_cudnnContext);
 }
+
+
 
 
 

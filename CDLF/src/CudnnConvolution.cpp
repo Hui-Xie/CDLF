@@ -19,6 +19,7 @@ CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &
     m_stride = stride;
 
     checkCUDNN(cudnnCreateFilterDescriptor(&m_wDescriptor));
+    checkCUDNN(cudnnCreateFilterDescriptor(&m_dwDescriptor));
     checkCUDNN(cudnnCreateConvolutionDescriptor(&m_convDescriptor));
 
     setDescriptors();
@@ -27,15 +28,38 @@ CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &
 
 
 CudnnConvolution::~CudnnConvolution(){
-    if (nullptr != d_pWorkspace)  cudaFree(d_pWorkspace);
-    if (nullptr != d_pX)  cudaFree(d_pX);
-    if (nullptr != d_pY)  cudaFree(d_pY);
-    if (nullptr != d_pW)  cudaFree(d_pW);
-    if (nullptr != d_pdX)  cudaFree(d_pdX);
-    if (nullptr != d_pdY)  cudaFree(d_pdY);
-    if (nullptr != d_pdW)  cudaFree(d_pdW);
+    if (nullptr != d_pWorkspace)  {
+        cudaFree(d_pWorkspace);
+        d_pWorkspace= nullptr;
+
+    }
+    if (nullptr != d_pX)  {
+        cudaFree(d_pX);
+        d_pX= nullptr;
+    }
+    if (nullptr != d_pY)  {
+        cudaFree(d_pY);
+        d_pY= nullptr;
+    }
+    if (nullptr != d_pW)  {
+        cudaFree(d_pW);
+        d_pW= nullptr;
+    }
+    if (nullptr != d_pdX)  {
+        cudaFree(d_pdX);
+        d_pdX= nullptr;
+    }
+    if (nullptr != d_pdY)  {
+        cudaFree(d_pdY);
+        d_pdY = nullptr;
+    }
+    if (nullptr != d_pdW)  {
+        cudaFree(d_pdW);
+        d_pdW= nullptr;
+    }
 
     cudnnDestroyFilterDescriptor(m_wDescriptor);
+    cudnnDestroyFilterDescriptor(m_dwDescriptor);
     cudnnDestroyConvolutionDescriptor(m_convDescriptor);
 }
 
@@ -59,6 +83,11 @@ void CudnnConvolution::forward() {
                             m_yDescriptor, d_pY));
     const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
+
+    if (nullptr != d_pWorkspace){
+        cudaFree(d_pWorkspace);
+        d_pWorkspace = nullptr;
+    }
 }
 
 void CudnnConvolution::backward(bool computeW, bool computeX) {
@@ -73,7 +102,7 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
         cudaMalloc(&d_pWorkspace, m_workspaceSize);
 
         float alpha = 1;
-        float beta = 1;
+        float beta = 1; //for dw to accumulate
         checkCUDNN(cudnnConvolutionBackwardFilter(m_cudnnContext, &alpha,
                                                 m_xDescriptor, d_pX,
                                                 m_yDescriptor, d_pdY,
@@ -129,17 +158,14 @@ void CudnnConvolution::setXDescriptor() {
     int nbDims = tensorSize.size()+2;
 
     int* dimA = new int[nbDims];
-    int* strideA = new int [nbDims];
-    for (int i=0; i< nbDims; ++i){
-        if (i< 2){
-           dimA[i]  = 1;
-           strideA[i]  =1;
-        }
-        else{
-            dimA[i]  = tensorSize[i-2];
-            strideA[i]  = m_stride;
-        }
+    dimA[0] = 1;
+    dimA[1] = 1;
+    for (int i=2; i< nbDims; ++i){
+        dimA[i]  = tensorSize[i-2];
     }
+
+    int* strideA = new int [nbDims];  //span in each dimension. It is different concept with filter-stride in convolution.
+    dimA2SpanA(dimA, nbDims, strideA);
 
     checkCUDNN(cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
 
@@ -147,7 +173,7 @@ void CudnnConvolution::setXDescriptor() {
     delete[] strideA;
 }
 
-void CudnnConvolution::setFilterDescriptor() {
+void CudnnConvolution::setWDescriptor() {
     //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
     int nbDims = m_filterSize.size()+2;
 
@@ -180,28 +206,12 @@ void CudnnConvolution::setConvDescriptor() {
     delete[] padA;
     delete[] filterStrideA;
     delete[] dilationA;
-
 }
-
-
 
 void CudnnConvolution::setYDescriptor() {
     int nbDims = m_filterSize.size()+2;
     int* tensorOuputDimA = new int [nbDims];
     checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_wDescriptor, nbDims, tensorOuputDimA));
-
-    //debug------------
-    cout<<"========================================"<<endl;
-    printf("In Convolution layer: %s\n", m_pLayer->m_name.c_str());
-    printf("m_tensorSize = %s\n", vector2Str(m_pLayer->m_tensorSize).c_str());
-    printf("m_tensorSizeBeforeCollaps = %s\n", vector2Str(((ConvolutionLayer*)m_pLayer)->m_tensorSizeBeforeCollapse).c_str());
-    printf("cudnnComputedOutputDims  = %s\n",  array2Str(tensorOuputDimA, nbDims).c_str());
-
-    cout<<"========================================"<<endl;
-
-
-
-
 
     if (length(nbDims, tensorOuputDimA) != length(m_pLayer->m_tensorSize)){
         printf("In Convolution layer: %s\n", m_pLayer->m_name.c_str());
@@ -211,10 +221,10 @@ void CudnnConvolution::setYDescriptor() {
     }
     else{
         int* strideA = new int[nbDims];
-        for (int i=0; i< nbDims; ++i){
-            strideA[i] = 1;
-        }
+        dimA2SpanA(tensorOuputDimA, nbDims,strideA);
+
         checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, tensorOuputDimA, strideA));
+
         delete[] strideA;
     }
 
@@ -231,28 +241,16 @@ void CudnnConvolution::setBackwardDataAlg(){
                                                   CUDNN_CONVOLUTION_BWD_DATA_PREFER_FASTEST, 0, &m_bwdDataAlg));
 }
 void CudnnConvolution::setBackWardFilterAlg(){
-    //cout <<"at layer: "<<m_pLayer->m_name<<" back Filter setBackWardFilterAlg"<<endl;
-    int countAlg =0;
-    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithmMaxCount(m_cudnnContext, &countAlg));
-
-    cudnnConvolutionBwdFilterAlgoPerf_t* perfResults = new  cudnnConvolutionBwdFilterAlgoPerf_t[countAlg];
-    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm_v7(m_cudnnContext, m_xDescriptor,m_yDescriptor, m_convDescriptor, m_wDescriptor,
-                                                             countAlg, &countAlg, perfResults ));
-    m_bwdFilterAlg = perfResults[0].algo;
-    delete[] perfResults;
-
-    /*
     checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
                                                  CUDNN_CONVOLUTION_BWD_FILTER_PREFER_FASTEST, 0, &m_bwdFilterAlg));
-    */
 }
 
 void CudnnConvolution::setDescriptors() {
     setXDescriptor();
-    setFilterDescriptor();
+    setWDescriptor();
     setConvDescriptor();
     setYDescriptor();
-}
+ }
 
 void CudnnConvolution::allocateDeviceX() {
     const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);

@@ -17,6 +17,7 @@ public:
 
     cudnnConvolutionDescriptor_t    m_convDescriptor;
     cudnnFilterDescriptor_t m_wDescriptor;
+    cudnnFilterDescriptor_t m_dwDescriptor;
     cudnnConvolutionFwdAlgo_t m_fwdAlg;
     cudnnConvolutionBwdDataAlgo_t m_bwdDataAlg;
     cudnnConvolutionBwdFilterAlgo_t m_bwdFilterAlg;
@@ -29,7 +30,7 @@ public:
     size_t m_workspaceSize;
 
     void setXDescriptor();
-    void setFilterDescriptor();
+    void setWDescriptor();
     void setConvDescriptor();
     void setYDescriptor();
 
@@ -41,8 +42,6 @@ public:
 
     void setDescriptors();
 
-
-    void allocateDeviceMem();
     void allocateDeviceX();
     void allocateDeviceY();
     void allocateDeviceW();

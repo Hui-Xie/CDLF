@@ -276,6 +276,14 @@ string eraseAllSpaces(string str){
     return str;
 }
 
+void dimA2SpanA(const int* dimA, const int N, int * spanA){
+    if (N<1) return;
+    spanA[N-1] = 1;
+    for(int i=N-2; i>=0; --i){
+        spanA[i] = spanA[i+1]*dimA[i+1];
+    }
+}
+
 
 
 

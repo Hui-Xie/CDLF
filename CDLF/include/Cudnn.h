@@ -33,6 +33,7 @@ public:
     cudnnTensorDescriptor_t m_yDescriptor;
 
     Layer* m_pLayer;
+
 };
 
 #endif //RL_NONCONVEX_CUDNN_H

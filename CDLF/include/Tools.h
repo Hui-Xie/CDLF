@@ -64,5 +64,7 @@ vector<int> genDimsSpan(const vector<int> vec);
 
 string eraseAllSpaces(string str);
 
+void dimA2SpanA(const int* dimA, const int N, int * spanA);
+
 
 #endif //RL_NONCONVEX_TOOLS_H

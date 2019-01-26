@@ -4,7 +4,7 @@
 //
 
 #include "ConvNet.h"
-#include "LossConvexExample1.h"
+
 
 ConvNet::ConvNet(const string& name, const string& saveDir): FeedForwardNet(name, saveDir){
 
@@ -41,21 +41,25 @@ void ConvNet::build(){
     ReLU* reLU3 = new ReLU(id++, "ReLU3", getFinalLayer(), {8,1});
     addLayer(reLU3);
 
-
     VectorizationLayer* vec1 = new VectorizationLayer(id++, "Vec1", getFinalLayer()); // output 8*1
     addLayer(vec1);
     FCLayer* fc1 = new FCLayer(id++, "FC1", getFinalLayer(), 7);
     addLayer(fc1);
-    LossConvexExample1* loss = new LossConvexExample1(id++, "Loss", getFinalLayer());
+    MeanSquareLossLayer * loss = new MeanSquareLossLayer(id++, "Loss", getFinalLayer(), 1);
     addLayer(loss);
 }
 void ConvNet::train(){
     InputLayer* inputLayer = getInputLayer();
     Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
-    LossConvexExample1* lossLayer = (LossConvexExample1*) getFinalLayer();
+    MeanSquareLossLayer* lossLayer = (MeanSquareLossLayer*) getFinalLayer();
+    Tensor<float> groundTruth(lossLayer->m_prevLayer->m_tensorSize);
+    for (int i=0; i< groundTruth.getLength(); ++i){
+        groundTruth.e(i) = i;
+    }
+    lossLayer->setGroundTruth(groundTruth);
 
     int batchSize = getBatchSize();
-    int iBatch = 30;
+    int iBatch = 130;
 
     int i=0;
     while (i< iBatch){
@@ -63,6 +67,7 @@ void ConvNet::train(){
         for(int j=0; j<batchSize; ++j){
             generateGaussian(&inputTensor,0,1);
             inputLayer->setInputTensor(inputTensor);
+
             forwardPropagate();
             backwardPropagate(true);
         }

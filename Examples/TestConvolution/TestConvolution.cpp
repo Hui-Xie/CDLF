@@ -3,8 +3,27 @@
 //
 #include "ConvNet.h"
 
+void printUsage(char* argv0){
+    cout<<"Train Convolution Network:"<<endl;
+    cout<<"Usage: "<<endl;
+    cout<<argv0<<"<netDir> "<<endl;
+    cout<<"For examples: "<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters "<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  "<<endl;
+}
+
+
 int main (int argc, char *argv[])
 {
+    printCurrentLocalTime();
+    if (2 != argc){
+        cout<<"Error: input parameter error."<<endl;
+        printUsage(argv[0]);
+        return -1;
+    }
+
+    const string netDir = argv[1];
+
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
 
@@ -16,22 +35,17 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    cout<<"Notes:"<<endl;
-    cout<<"This program test that 2 simple convolutional layers can approximate a convex function, and converge."<<endl;
-    cout<<"This program support real 3D convolution."<<endl;
+    ConvNet net("ConvNet", netDir);
 
-    ConvNet net("ConvNet", ".");
+    //net.load();
 
-    if (isEmptyDir(net.getDir())) {
-        net.build();
-        net.initialize();
-        net.setLearningRate(0.001);
-        net.setLossTolerance(0.02);
-        net.setBatchSize(20);
-    }
-    else{
-        net.load();
-    }
+    //test a special network.
+    net.build();
+    net.setLearningRate(0.01);
+    net.setBatchSize(20);
+    net.setEpoch(1000);
+
+
     net.printArchitecture();
 
     //  run network
