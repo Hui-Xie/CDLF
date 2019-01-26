@@ -139,8 +139,8 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                            d_pWorkspace, m_workspaceSize,
                                            &beta,
                                            m_xDescriptor, d_pdX));
-        const int xSize = length(m_pLayer->m_tensorSize)*sizeof(float);
-        cudaMemcpy(m_pLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
+        const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
+        cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
 
         if (nullptr != d_pWorkspace){
             cudaFree(d_pWorkspace);

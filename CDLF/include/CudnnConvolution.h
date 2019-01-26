@@ -41,7 +41,6 @@ public:
 
 
     void setDescriptors();
-
     void allocateDeviceX();
     void allocateDeviceY();
     void allocateDeviceW();
