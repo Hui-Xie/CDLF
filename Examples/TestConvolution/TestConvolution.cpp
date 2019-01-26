@@ -37,13 +37,13 @@ int main (int argc, char *argv[])
 
     ConvNet net("ConvNet", netDir);
 
-    //net.load();
+    net.load();
 
     //test a special network.
-    net.build();
-    net.setLearningRate(0.01);
-    net.setBatchSize(20);
-    net.setEpoch(1000);
+    //net.build();
+    //net.setLearningRate(0.01);
+    //net.setBatchSize(20);
+    //net.setEpoch(1000);
 
 
     net.printArchitecture();

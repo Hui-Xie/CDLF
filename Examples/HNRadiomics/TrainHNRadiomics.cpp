@@ -11,8 +11,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData 0.001"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.001"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData 0.1"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.1"<<endl;
 }
 
 
