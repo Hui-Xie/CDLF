@@ -14,9 +14,10 @@ CudnnConvolution::~CudnnConvolution(){
 }
 
 void CudnnConvolution::forward() {
+    allocateDeviceY();
+
     allocateDeviceX();
     allocateDeviceW();
-    allocateDeviceY();
     setForwardAlg();
     checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
                                                        m_fwdAlg, &m_workspaceSize));

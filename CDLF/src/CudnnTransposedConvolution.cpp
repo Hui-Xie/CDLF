@@ -17,20 +17,20 @@ void CudnnTransposedConvolution::forward() {
     allocateDeviceX();
     allocateDeviceW();
     allocateDeviceY();
-    setForwardAlg();
-    checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
-                                                       m_fwdAlg, &m_workspaceSize));
+    setBackwardDataAlg();
+    checkCUDNN(cudnnGetConvolutionBackwardDataWorkspaceSize(m_cudnnContext, m_wDescriptor, m_xDescriptor, m_convDescriptor, m_yDescriptor,
+                                                            m_bwdDataAlg, &m_workspaceSize));
     cudaMalloc(&d_pWorkspace, m_workspaceSize);
 
     float alpha = 1;
     float beta = 0;
-    checkCUDNN(cudnnConvolutionForward(m_cudnnContext, &alpha,
-                                       m_xDescriptor, d_pX,
-                                       m_wDescriptor, d_pW,
-                                       m_convDescriptor, m_fwdAlg,
-                                       d_pWorkspace, m_workspaceSize,
-                                       &beta,
-                                       m_yDescriptor, d_pY));
+    checkCUDNN(cudnnConvolutionBackwardData(m_cudnnContext, &alpha,
+                                            m_wDescriptor, d_pW,
+                                            m_xDescriptor, d_pX,
+                                            m_convDescriptor, m_bwdDataAlg,
+                                            d_pWorkspace, m_workspaceSize,
+                                            &beta,
+                                            m_yDescriptor, d_pY));
     const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
 
@@ -47,15 +47,15 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
         allocateDeviceX();
         allocateDevicedW();
         setBackWardFilterAlg();
-        checkCUDNN(cudnnGetConvolutionBackwardFilterWorkspaceSize(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
+        checkCUDNN(cudnnGetConvolutionBackwardFilterWorkspaceSize(m_cudnnContext, m_yDescriptor, m_xDescriptor, m_convDescriptor, m_wDescriptor,
                                                                   m_bwdFilterAlg, &m_workspaceSize));
         cudaMalloc(&d_pWorkspace, m_workspaceSize);
 
         float alpha = 1;
         float beta = 1; //for dw to accumulate
         checkCUDNN(cudnnConvolutionBackwardFilter(m_cudnnContext, &alpha,
-                                                  m_xDescriptor, d_pX,
                                                   m_yDescriptor, d_pdY,
+                                                  m_xDescriptor, d_pX,
                                                   m_convDescriptor, m_bwdFilterAlg,
                                                   d_pWorkspace, m_workspaceSize,
                                                   &beta,
@@ -75,20 +75,20 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
     if (computeX){
         allocateDevicedX();
         allocateDeviceW();
-        setBackwardDataAlg();
-        checkCUDNN(cudnnGetConvolutionBackwardDataWorkspaceSize(m_cudnnContext, m_wDescriptor, m_yDescriptor, m_convDescriptor, m_xDescriptor,
-                                                                m_bwdDataAlg, &m_workspaceSize));
+        setForwardAlg();
+        checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_yDescriptor, m_wDescriptor, m_convDescriptor, m_xDescriptor,
+                                                           m_fwdAlg, &m_workspaceSize));
         cudaMalloc(&d_pWorkspace, m_workspaceSize);
 
         float alpha = 1;
         float beta = 0;
-        checkCUDNN(cudnnConvolutionBackwardData(m_cudnnContext, &alpha,
-                                                m_wDescriptor, d_pW,
-                                                m_yDescriptor, d_pdY,
-                                                m_convDescriptor, m_bwdDataAlg,
-                                                d_pWorkspace, m_workspaceSize,
-                                                &beta,
-                                                m_xDescriptor, d_pdX));
+        checkCUDNN(cudnnConvolutionForward(m_cudnnContext, &alpha,
+                                           m_yDescriptor, d_pdY,
+                                           m_wDescriptor, d_pW,
+                                           m_convDescriptor, m_fwdAlg,
+                                           d_pWorkspace, m_workspaceSize,
+                                           &beta,
+                                           m_xDescriptor, d_pdX));
         const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
         cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
 
@@ -122,15 +122,15 @@ void CudnnTransposedConvolution::setYDescriptor() {
 }
 
 void CudnnTransposedConvolution::setForwardAlg() {
-    checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
+    checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_yDescriptor, m_wDescriptor, m_convDescriptor, m_xDescriptor,
                                                    CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, 0, &m_fwdAlg));
 }
 
 void CudnnTransposedConvolution::setBackwardDataAlg(){
-    checkCUDNN(cudnnGetConvolutionBackwardDataAlgorithm(m_cudnnContext, m_wDescriptor, m_yDescriptor, m_convDescriptor, m_xDescriptor,
+    checkCUDNN(cudnnGetConvolutionBackwardDataAlgorithm(m_cudnnContext, m_wDescriptor, m_xDescriptor, m_convDescriptor, m_yDescriptor,
                                                         CUDNN_CONVOLUTION_BWD_DATA_PREFER_FASTEST, 0, &m_bwdDataAlg));
 }
 void CudnnTransposedConvolution::setBackWardFilterAlg(){
-    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
+    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm(m_cudnnContext, m_yDescriptor, m_xDescriptor, m_convDescriptor, m_wDescriptor,
                                                           CUDNN_CONVOLUTION_BWD_FILTER_PREFER_FASTEST, 0, &m_bwdFilterAlg));
 }
