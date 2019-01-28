@@ -5,7 +5,7 @@
 CudnnTransposedConvolution::CudnnTransposedConvolution(TransposedConvolutionLayer *pLayer, const vector<int> &filterSize, const int numFilters,
                                    const int stride): CudnnBasicConvolution(pLayer, filterSize, numFilters, stride)
 {
-  //null
+    setDescriptors();
 }
 
 

@@ -21,7 +21,7 @@ CudnnBasicConvolution::CudnnBasicConvolution(ConvolutionBasicLayer *pLayer, cons
     checkCUDNN(cudnnCreateFilterDescriptor(&m_wDescriptor));
     checkCUDNN(cudnnCreateConvolutionDescriptor(&m_convDescriptor));
 
-    setDescriptors();
+
 }
 
 
