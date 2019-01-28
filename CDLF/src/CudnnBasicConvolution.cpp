@@ -118,20 +118,6 @@ void CudnnBasicConvolution::setConvDescriptor() {
     delete[] dilationA;
 }
 
-void CudnnBasicConvolution::setForwardAlg() {
-    checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
-                                                   CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, 0, &m_fwdAlg));
-}
-
-void CudnnBasicConvolution::setBackwardDataAlg(){
-    checkCUDNN(cudnnGetConvolutionBackwardDataAlgorithm(m_cudnnContext, m_wDescriptor, m_yDescriptor, m_convDescriptor, m_xDescriptor,
-                                                        CUDNN_CONVOLUTION_BWD_DATA_PREFER_FASTEST, 0, &m_bwdDataAlg));
-}
-void CudnnBasicConvolution::setBackWardFilterAlg(){
-    checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
-                                                          CUDNN_CONVOLUTION_BWD_FILTER_PREFER_FASTEST, 0, &m_bwdFilterAlg));
-}
-
 void CudnnBasicConvolution::setDescriptors() {
     setXDescriptor();
     setWDescriptor();
