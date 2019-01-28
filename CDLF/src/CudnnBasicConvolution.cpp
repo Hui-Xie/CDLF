@@ -83,21 +83,7 @@ void CudnnBasicConvolution::setXDescriptor() {
     delete[] strideA;
 }
 
-void CudnnBasicConvolution::setWDescriptor() {
-    //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
-    int nbDims = m_filterSize.size()+2;
 
-    int* filterDimA = new int[nbDims];
-    filterDimA[0] = m_numFilters;
-    filterDimA[1] = 1;
-    for (int i=2; i< nbDims; ++i){
-        filterDimA[i]  = m_filterSize[i-2];
-    }
-
-    checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
-
-    delete[] filterDimA;
-}
 
 void CudnnBasicConvolution::setConvDescriptor() {
     // That same convolution descriptor can be reused in the backward path provided it corresponds to the same layer.

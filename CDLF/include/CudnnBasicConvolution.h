@@ -28,7 +28,6 @@ public:
     size_t m_workspaceSize;
 
     void setXDescriptor();
-    void setWDescriptor();
     void setConvDescriptor();
 
     void setDescriptors();
@@ -43,7 +42,9 @@ public:
     virtual void setBackwardDataAlg()=0;
     virtual void setBackWardFilterAlg()=0;
 
+    virtual void setWDescriptor() =0;
     virtual void setYDescriptor() = 0;
+
     virtual void forward() = 0;
     virtual void backward(bool computeW, bool computeX)=0;
 

@@ -99,17 +99,47 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
     }
 }
 
+void CudnnTransposedConvolution::setWDescriptor() {
+    //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
+    int nbDims = m_filterSize.size()+2;
+
+    int* filterDimA = new int[nbDims];
+    filterDimA[0] = 1;
+    filterDimA[1] = m_numFilters;
+    for (int i=2; i< nbDims; ++i){
+        filterDimA[i]  = m_filterSize[i-2];
+    }
+
+    checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
+
+    delete[] filterDimA;
+}
+
+
 void CudnnTransposedConvolution::setYDescriptor() {
     vector<int> & tensorSize = m_pLayer->m_tensorSize;
 
     //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
-    int nbDims = tensorSize.size()+2;
+    int nbDims = tensorSize.size();
+    if (m_numFilters >1){
+        nbDims = nbDims+1;
+    }
+    else {
+        nbDims = nbDims+2;
+    }
 
     int* dimA = new int[nbDims];
     dimA[0] = 1;
-    dimA[1] = 1;
-    for (int i=2; i< nbDims; ++i){
-        dimA[i]  = tensorSize[i-2];
+    if (1 == m_numFilters){
+        dimA[1] = 1;
+        for (int i=2; i< nbDims; ++i){
+            dimA[i]  = tensorSize[i-2];
+        }
+    }
+    else{
+        for (int i=1; i< nbDims; ++i){
+            dimA[i]  = tensorSize[i-1];
+        }
     }
 
     int* strideA = new int [nbDims];  //span in each dimension. It is a different concept with filter-stride in convolution.
@@ -134,3 +164,5 @@ void CudnnTransposedConvolution::setBackWardFilterAlg(){
     checkCUDNN(cudnnGetConvolutionBackwardFilterAlgorithm(m_cudnnContext, m_yDescriptor, m_xDescriptor, m_convDescriptor, m_wDescriptor,
                                                           CUDNN_CONVOLUTION_BWD_FILTER_PREFER_FASTEST, 0, &m_bwdFilterAlg));
 }
+
+

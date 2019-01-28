@@ -19,7 +19,9 @@ public:
     virtual void setBackwardDataAlg();
     virtual void setBackWardFilterAlg();
 
+    virtual void setWDescriptor();
     virtual void setYDescriptor();
+
     virtual void forward();
     virtual void backward(bool computeW, bool computeX);
 };
