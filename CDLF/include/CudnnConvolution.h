@@ -6,58 +6,22 @@
 #ifndef RL_NONCONVEX_CUDNNCONVOLUTION_H
 #define RL_NONCONVEX_CUDNNCONVOLUTION_H
 
-#include "Cudnn.h"
+#include "CudnnBasicConvolution.h"
 #include "ConvolutionLayer.h"
 
 
-class CudnnConvolution : public Cudnn{
+class CudnnConvolution : public CudnnBasicConvolution{
 public:
     CudnnConvolution(ConvolutionLayer* pLayer, const vector<int>& filterSize, const int numFilters=1, const int stride =1);
     ~CudnnConvolution();
 
-    cudnnConvolutionDescriptor_t    m_convDescriptor;
-    cudnnFilterDescriptor_t m_wDescriptor;
-    cudnnFilterDescriptor_t m_dwDescriptor;
-    cudnnConvolutionFwdAlgo_t m_fwdAlg;
-    cudnnConvolutionBwdDataAlgo_t m_bwdDataAlg;
-    cudnnConvolutionBwdFilterAlgo_t m_bwdFilterAlg;
+    virtual void setForwardAlg();
+    virtual void setBackwardDataAlg();
+    virtual void setBackWardFilterAlg();
 
-
-    vector<int> m_filterSize;
-    int m_numFilters;
-    int m_stride;
-
-    size_t m_workspaceSize;
-
-    void setXDescriptor();
-    void setWDescriptor();
-    void setConvDescriptor();
-    void setYDescriptor();
-
-    void setForwardAlg();
-    void setBackwardDataAlg();
-    void setBackWardFilterAlg();
-
-
-
-    void setDescriptors();
-    void allocateDeviceX();
-    void allocateDeviceY();
-    void allocateDeviceW();
-    void allocateDevicedX();
-    void allocateDevicedY();
-    void allocateDevicedW();
-
-    void forward();
-    void backward(bool computeW, bool computeX);
-
-    void* d_pWorkspace;
-    float* d_pX;
-    float* d_pY;
-    float* d_pW;
-    float* d_pdX;
-    float* d_pdY;
-    float* d_pdW;
+    virtual void setYDescriptor();
+    virtual void forward();
+    virtual void backward(bool computeW, bool computeX);
 };
 
 #endif //RL_NONCONVEX_CUDNNCONVOLUTION_H

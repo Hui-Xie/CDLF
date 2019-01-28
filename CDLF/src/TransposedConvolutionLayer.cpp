@@ -6,6 +6,7 @@
 
 #include "TransposedConvolutionLayer.h"
 #include <thread>
+#include <CudnnTransposedConvolution.h>
 
 TransposedConvolutionLayer::TransposedConvolutionLayer(const int id, const string &name, Layer *prevLayer,
                                                        const vector<int> &filterSize,
@@ -39,6 +40,12 @@ void TransposedConvolutionLayer::updateTensorSize() {
 
 // Y = W*X
 void TransposedConvolutionLayer::forward() {
+
+#ifdef Use_GPU
+    CudnnTransposedConvolution cudnnTConvolution(this, m_filterSize, m_numFilters, m_stride);
+    cudnnTConvolution.forward();
+
+#else
     const int N = length(m_tensorSize) / m_numFilters;
     const vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
@@ -73,6 +80,7 @@ void TransposedConvolutionLayer::forward() {
         delete pExtendX;
         pExtendX = nullptr;
     }
+#endif
 
 }
 
@@ -81,6 +89,12 @@ void TransposedConvolutionLayer::forward() {
 // dL/dX = dL/dY * dY/dX;
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
+
+#ifdef Use_GPU
+    CudnnTransposedConvolution cudnnTConvolution(this, m_filterSize, m_numFilters, m_stride);
+    cudnnTConvolution.backward(computeW, computeX);
+#else
+
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         // ==================multithread computation=======================
@@ -149,6 +163,8 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
             pExpandDY = nullptr;
         }
     }
+#endif
+
 }
 
 
