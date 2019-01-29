@@ -65,7 +65,7 @@ void CudnnActivation::setYDescriptor() {
 
 
 void CudnnActivation::setActivationDescriptor(){
-    
+
 }
 
 void CudnnActivation::setDescriptors() {
