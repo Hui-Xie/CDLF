@@ -14,9 +14,17 @@ void HNRadiomicsNet::build() {
    //null: use csv file to create network
 }
 
+void HNRadiomicsNet::defineAssemblyLoss() {
+    AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
+    Layer* prevLayer = lossLayer->m_prevLayer;
+    lossLayer->addLoss( new SquareLossLayer(-1, "SquareLoss", prevLayer, 1));
+    lossLayer->addLoss( new DiceLossLayer(-2, "DiceLoss", prevLayer));
+    lossLayer->addLoss( new CrossEntropyLoss(-3, "CrossEntropyLoss", prevLayer));
+}
+
 void HNRadiomicsNet::train() {
     InputLayer *inputLayer = getInputLayer();
-    DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
+    AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
 
     const int N =m_pDataMgr->m_NTrainFile;
     const int batchSize = getBatchSize();
@@ -74,7 +82,7 @@ void HNRadiomicsNet::train() {
 
 float HNRadiomicsNet::test() {
     InputLayer *inputLayer = getInputLayer();
-    DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
+    AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
 
     int n = 0;
     const int N = m_pDataMgr->m_NTestFile;
@@ -130,7 +138,7 @@ float HNRadiomicsNet::test() {
 
 float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFilePath) {
     InputLayer *inputLayer = getInputLayer();
-    DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
+    AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
 
     float loss = 0.0;
     m_dice = 0.0;

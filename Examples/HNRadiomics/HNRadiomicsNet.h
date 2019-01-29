@@ -25,7 +25,11 @@ public:
 
     float m_TPR; // True positive Rate
     float m_dice;
+
+    void defineAssemblyLoss();
 };
+
+
 
 
 #endif //CDLF_HN_RADIOMICS_H

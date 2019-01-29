@@ -48,6 +48,7 @@ int main(int argc, char *argv[]){
         cout<<"Error: program can not load net."<<endl;
         return -2;
     }
+    net.defineAssemblyLoss();
     net.printArchitecture();
     net.setLearningRate(learningRate);
 
@@ -61,7 +62,7 @@ int main(int argc, char *argv[]){
         net.train();
         net.save();
         loss = net.test();
-        cout<<"Epoch_"<<i<<": "<<" mean diceLoss for each sample = "<< loss <<endl;
+        cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each sample = "<< loss <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean dice coefficient =   "<< net.m_dice <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean True Positive Rate =   "<< net.m_TPR <<endl;
 

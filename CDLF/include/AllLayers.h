@@ -14,6 +14,7 @@
 #include "CrossEntropyLoss.h"
 #include "SquareLossLayer.h"
 #include "DiceLossLayer.h"
+#include "AssemblyLossLayer.h"
 #include "ExponentialLayer.h"
 #include "FCLayer.h"
 #include "LeftMatrixLayer.h"

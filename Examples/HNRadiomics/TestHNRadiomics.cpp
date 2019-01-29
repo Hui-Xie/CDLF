@@ -53,13 +53,14 @@ int main(int argc, char *argv[]) {
         cout << "Error: program can not load net." << endl;
         return -2;
     }
+    net.defineAssemblyLoss();
     net.printArchitecture();
 
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
     float loss = net.test(imageFile, labelFile);
-    cout<<" mean diceLoss for each sample = "<< loss <<endl;
+    cout<<" mean Assembly Loss for each sample = "<< loss <<endl;
     cout << " mean dice coefficient =   " << net.m_dice << endl;
     cout << " mean True Positive Rate =   " << net.m_TPR << endl;
 
