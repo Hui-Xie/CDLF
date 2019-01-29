@@ -14,7 +14,7 @@ CrossEntropyLoss::~CrossEntropyLoss(){
 
 }
 
-/* L= -\sum p_i * log(x_i)
+/* L= -\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
  * where p_i is the groundtruth distribution
  *       x_i is the output of previous layer, e.g. softmax;
  *       */
@@ -22,34 +22,43 @@ CrossEntropyLoss::~CrossEntropyLoss(){
 float CrossEntropyLoss::lossCompute(){
     //X.e \in [0,1]
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
-    m_loss = m_pGroundTruth->hadamard(X.ln()).sum()*(-1);
+    const int N = X.getLength();
+    m_loss  = 0;
+    for (int i=0; i< N; ++i){
+        m_loss -= m_pGroundTruth->e(i)* log(X.e(i)) + (1- m_pGroundTruth->e(i))* log(1- X.e(i));
+    }
     return m_loss;
 }
 
-// L= -\sum p_i * log(x_i)
-// dL/dx_i = - p_i/x_i
+// L= -\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
+// dL/dx_i = - p_i/x_i + (1-p_i)/(1-x_i)
 // this formula implies it is better for p_i is one-hot vector;
-// and we need to check X.e(i) ==0 case.
+// and we need to check X.e(i) ==0  and X.e(i) ==1 case.
 
 void CrossEntropyLoss::gradientCompute() {
     //symbol deduced formula to compute gradient to prevLayer->m_pdYTensor
     Tensor<float> &X = *(m_prevLayer->m_pYTensor);
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
-    int N = dX.getLength();
-    const float epsilon = 0.0001;
+    const int N = dX.getLength();
     for (int i = 0; i < N; ++i) {
-        if (0 != X.e(i)){
-            dX[i] -= m_pGroundTruth->e(i)/X.e(i);
+        float x = X.e(i);
+        float g = m_pGroundTruth->e(i);
+        if (x == g){
+            continue;
         }
         else{
-            dX[i] -= m_pGroundTruth->e(i)/epsilon;
+            if (0 == x ){
+                x = 0.0001;
+            }
+            if (1 == x){
+                x = 0.9999;
+            }
+            dX[i] -= g/x +(g-1)/(1-x);
         }
-
     }
 }
 
 void  CrossEntropyLoss::printGroundTruth() {
-    cout << "For this specific Loss function, Ground Truth is: ";
     m_pGroundTruth->print();
 }
 
@@ -79,7 +88,7 @@ float CrossEntropyLoss::diceCoefficient(){
         nGT      += (0 !=GTMaxPosTensor(i))? 1: 0;
         nInteresection += (predictMaxPosTensor(i) == GTMaxPosTensor(i) && 0 != predictMaxPosTensor(i)) ? 1:0;
     }
-    return nInteresection*2/(nPredict+nGT);
+    return nInteresection*2.0/(nPredict+nGT);
 }
 
 float CrossEntropyLoss::getTPR() {

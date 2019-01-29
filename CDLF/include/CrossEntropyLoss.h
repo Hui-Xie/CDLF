@@ -7,12 +7,13 @@
 
 #include "LossLayer.h"
 
-/* L= -\sum p_i * log(x_i)
+/* L= -\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
  * where p_i is the groundtruth distribution
  *       x_i is the output of previous layer, e.g. softmax;
  *       where log is natural logarithm
  * Cross Entropy in concept is same with  Kullback–Leibler divergence
  * Cross entropy supports N-d tensor
+ * p_i is binary, and x_i belongs [0,1]
  * */
 
 class CrossEntropyLoss: public LossLayer {
