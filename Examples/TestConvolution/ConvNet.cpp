@@ -45,13 +45,13 @@ void ConvNet::build(){
     addLayer(vec1);
     FCLayer* fc1 = new FCLayer(id++, "FC1", getFinalLayer(), 7);
     addLayer(fc1);
-    MeanSquareLossLayer * loss = new MeanSquareLossLayer(id++, "Loss", getFinalLayer(), 1);
+    SquareLossLayer * loss = new SquareLossLayer(id++, "Loss", getFinalLayer(), 1);
     addLayer(loss);
 }
 void ConvNet::train(){
     InputLayer* inputLayer = getInputLayer();
     Tensor<float> inputTensor(inputLayer->m_pYTensor->getDims());
-    MeanSquareLossLayer* lossLayer = (MeanSquareLossLayer*) getFinalLayer();
+    SquareLossLayer* lossLayer = (SquareLossLayer*) getFinalLayer();
     Tensor<float> groundTruth(lossLayer->m_prevLayer->m_tensorSize);
     for (int i=0; i< groundTruth.getLength(); ++i){
         groundTruth.e(i) = i;

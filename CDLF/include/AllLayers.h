@@ -12,7 +12,7 @@
 #include "ConvolutionLayer.h"
 #include "TransposedConvolutionLayer.h"
 #include "CrossEntropyLoss.h"
-#include "MeanSquareLossLayer.h"
+#include "SquareLossLayer.h"
 #include "DiceLossLayer.h"
 #include "ExponentialLayer.h"
 #include "FCLayer.h"

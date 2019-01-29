@@ -337,8 +337,8 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         else if ("CrossEntropyLoss" == s.m_type) {
            pLayer = new CrossEntropyLoss(s.m_id, s.m_name, pPreLayer);
         }
-        else if ("MeanSquareLossLayer" == s.m_type) {
-            pLayer = new MeanSquareLossLayer(s.m_id, s.m_name, pPreLayer, s.m_stride);
+        else if ("SquareLossLayer" == s.m_type) {
+            pLayer = new SquareLossLayer(s.m_id, s.m_name, pPreLayer, s.m_stride);
         }
         else if ("DiceLossLayer" == s.m_type) {
             pLayer = new DiceLossLayer(s.m_id, s.m_name, pPreLayer);

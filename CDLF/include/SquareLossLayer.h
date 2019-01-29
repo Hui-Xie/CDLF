@@ -9,17 +9,17 @@
 
 #include "LossLayer.h"
 
-/* L= lambda*(0.5/N)*\sum (x_i- g_i)^2
+/* L= lambda*(0.5)*\sum (x_i- g_i)^2
  * where g_i is the groundtruth distribution
  *       x_i is the output of previous layer, e.g. softmax;
  *       lambda is super parameter as weight for Mean square loss
- *       N is the number of elements.
+ *
  * */
 
-class MeanSquareLossLayer  : public LossLayer {
+class SquareLossLayer  : public LossLayer {
 public:
-    MeanSquareLossLayer(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
-    ~MeanSquareLossLayer();
+    SquareLossLayer(const int id, const string& name,  Layer *prevLayer, float lambda = 1.0);
+    ~SquareLossLayer();
 
     float m_lambda;
 

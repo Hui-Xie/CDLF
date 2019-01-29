@@ -22,7 +22,7 @@ void DeConvNet::build() {
 
 void DeConvNet::train() {
     InputLayer *inputLayer = getInputLayer();
-    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+    SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
 
     vector<int> outputSize = lossLayer->m_prevLayer->m_tensorSize;
     Tensor<float> groundTruthTensor(outputSize);
@@ -58,7 +58,7 @@ void DeConvNet::train() {
 
 float DeConvNet::test() {
     InputLayer *inputLayer = getInputLayer();
-    MeanSquareLossLayer *lossLayer = (MeanSquareLossLayer *) getFinalLayer();
+    SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
 
     vector<int> outputSize = lossLayer->m_prevLayer->m_tensorSize;
     Tensor<float> groundTruthTensor(outputSize);
