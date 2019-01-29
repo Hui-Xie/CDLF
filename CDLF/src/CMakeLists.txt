@@ -57,7 +57,8 @@ set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp
 if (${Use_GPU})
    set(CDLF_CUDA_Src TensorCuda.cu TensorKernels.cu LayerCuda.cu LayerKernels.cu
                      Cudnn.cpp CudnnBasicConvolution.cpp
-                     CudnnConvolution.cpp CudnnTransposedConvolution.cpp)
+                     CudnnConvolution.cpp CudnnTransposedConvolution.cpp
+                     CudnnActivation.cpp)
 else(${Use_GPU})
    set(CDLF_CUDA_Src "")
 endif(${Use_GPU})
