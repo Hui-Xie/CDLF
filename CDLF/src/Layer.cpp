@@ -8,13 +8,8 @@
 using namespace std;
 
 Layer::Layer(const int id, const string& name, const vector<int>& tensorSize){
-    if (id > 0){
-        m_id = id;
-    }
-    else {
-        cout<<"Error: program needs layerID > 0, and  0 reserves for null layer."<<endl;
-    }
-
+    //  layerID in net must be greater than 0, and  0 reserves for null layer
+    m_id = id;
     m_name = eraseAllSpaces(name);
     m_type = "Layer";
     m_prevLayer = nullptr;
