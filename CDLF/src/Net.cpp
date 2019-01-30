@@ -297,7 +297,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         return;
     }
     else{
-        cout<<"Info: program load "<<N <<" layers"<<endl;
+        cout<<"Info: program loaded "<<N <<" layers"<<endl;
     }
 
     Layer *pLayer = nullptr;

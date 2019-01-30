@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     net.m_pDataMgr = &dataMgr;
 
     float loss = net.test(imageFile, labelFile);
-    cout<<" mean Assembly Loss for each sample = "<< loss <<endl;
+    cout<<" mean Assembly Loss for each test sample = "<< loss <<endl;
     cout << " mean dice coefficient =   " << net.m_dice << endl;
     cout << " mean True Positive Rate =   " << net.m_TPR << endl;
 

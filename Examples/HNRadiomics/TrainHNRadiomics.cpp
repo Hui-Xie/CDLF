@@ -56,14 +56,14 @@ int main(int argc, char *argv[]){
     net.m_pDataMgr = &dataMgr;
 
 
-    //int epoch= 15000;
-    int epoch = 2;
+    int epoch= 15000;
+    //int epoch = 2;
     float loss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
         net.save();
         loss = net.test();
-        cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each sample = "<< loss <<endl;
+        cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each test sample = "<< loss <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean dice coefficient =   "<< net.m_dice <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean True Positive Rate =   "<< net.m_TPR <<endl;
 

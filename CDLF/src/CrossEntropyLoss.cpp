@@ -25,7 +25,20 @@ float CrossEntropyLoss::lossCompute(){
     const int N = X.getLength();
     m_loss  = 0;
     for (int i=0; i< N; ++i){
-        m_loss -= m_pGroundTruth->e(i)* log(X.e(i)) + (1- m_pGroundTruth->e(i))* log(1- X.e(i));
+        float  x = X.e(i);
+        float  g = m_pGroundTruth->e(i);
+        if (x == g){
+            continue;
+        }
+        else{
+            if (x < 0.1){
+                x = 0.1;
+            }
+            if (x >0.9){
+                x = 0.9;
+            }
+            m_loss -= g*log(x)+(1-g)*log(1-x);
+        }
     }
     return m_loss;
 }
