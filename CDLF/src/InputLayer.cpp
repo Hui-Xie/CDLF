@@ -54,6 +54,6 @@ void InputLayer::saveStructLine(FILE *pFile) {
 }
 
 void InputLayer::printStruct() {
-    printf("id=%d, Name=%s, Type=%s,  OutputSize=%s; \n",
+    printf("id=%d, Name=%s, Type=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(), vector2Str(m_tensorSize).c_str());
 }

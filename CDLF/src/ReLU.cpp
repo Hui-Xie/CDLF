@@ -78,6 +78,6 @@ void ReLU::saveStructLine(FILE *pFile) {
 }
 
 void ReLU::printStruct() {
-    printf("id=%d, Name=%s, Type=%s,  PrevLayer=%s, k=%f, OutputSize=%s; \n",
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, k=%f, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
 }
