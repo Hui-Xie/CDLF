@@ -27,15 +27,10 @@ public:
 
     size_t m_workspaceSize;
 
-    void setXDescriptor();
     void setConvDescriptor();
 
-    void setDescriptors();
-    void allocateDeviceX();
-    void allocateDeviceY();
+    virtual void setDescriptors();
     void allocateDeviceW();
-    void allocateDevicedX();
-    void allocateDevicedY();
     void allocateDevicedW();
 
     virtual void setForwardAlg()=0;
@@ -43,17 +38,10 @@ public:
     virtual void setBackWardFilterAlg()=0;
 
     virtual void setWDescriptor() =0;
-    virtual void setYDescriptor() = 0;
-
-    virtual void forward() = 0;
-    virtual void backward(bool computeW, bool computeX)=0;
 
     void* d_pWorkspace;
-    float* d_pX;
-    float* d_pY;
+
     float* d_pW;
-    float* d_pdX;
-    float* d_pdY;
     float* d_pdW;
 };
 

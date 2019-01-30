@@ -28,9 +28,6 @@ public:
 private:
     virtual float lossCompute();
     virtual void  gradientCompute();
-    float m_xDotg_norm;
-    float m_xPlusg_norm;
-
 
 };
 #endif //CDLF_FRAMEWORK_DICELOSS_H

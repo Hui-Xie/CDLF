@@ -34,6 +34,24 @@ public:
 
     Layer* m_pLayer;
 
+    void allocateDeviceX();
+    void allocateDeviceY();
+    void allocateDevicedX();
+    void allocateDevicedY();
+
+    void setXDescriptor();
+    virtual void setYDescriptor() = 0;
+    virtual void setDescriptors() = 0;
+
+    virtual void forward() = 0;
+    virtual void backward(bool computeW, bool computeX) = 0;
+
+    float* d_pX;
+    float* d_pY;
+    float* d_pdX;
+    float* d_pdY;
+
+
 };
 
 #endif //RL_NONCONVEX_CUDNN_H

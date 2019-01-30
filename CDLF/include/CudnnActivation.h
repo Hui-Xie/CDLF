@@ -29,24 +29,14 @@ public:
     cudnnActivationDescriptor_t    m_activationDescriptor;
     cudnnActivationMode_t m_activationMode;
 
-    void setXDescriptor();
     void setActivationDescriptor();
 
-    void setDescriptors();
-    void allocateDeviceX();
-    void allocateDeviceY();
-    void allocateDevicedX();
-    void allocateDevicedY();
-
     virtual void setYDescriptor();
+    virtual void setDescriptors();
 
     virtual void forward();
     virtual void backward(bool computeW, bool computeX);
 
-    float* d_pX;
-    float* d_pY;
-    float* d_pdX;
-    float* d_pdY;
 };
 
 #endif //RL_NONCONVEX_CUDNNACTIVATION_H
