@@ -306,15 +306,23 @@ int main (int argc, char *argv[]) {
     cout<<"=========End of Test MKL CBLAS Tensor========="<<endl;
 
     //read a Tensor file and output its sigma.
-    /*Tensor<float> tensor120({500,100});
-    string  filename = "/Users/hxie1/temp_netParameters/HNSCC_matrix/Y_112.csv";
+    /*
+    Tensor<float> tensor120({90,500,500});
+    string  filename = "/Users/hxie1/temp_netParameters/HNSCC_matrix/groundTruth.csv";
     tensor120.load(filename);
     float mean = tensor120.average();
     float sigma = sqrt(tensor120.variance());
+    const int N = tensor120.getLength();
+    int count1 =0;
+    for (int i=0; i< N; ++i){
+        if (1 == tensor120.e(i)) ++count1;
+    }
+
 
     cout<<filename<<endl;
-    printf("mean = %f, sigma = %f\n", mean, sigma);*/
-
+    printf("mean = %f, sigma = %f\n", mean, sigma);
+    printf("count1 = %d \n", count1);
+    */
 
 }
 

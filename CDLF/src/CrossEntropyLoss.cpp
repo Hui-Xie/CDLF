@@ -47,11 +47,11 @@ void CrossEntropyLoss::gradientCompute() {
             continue;
         }
         else{
-            if (0 == x ){
-                x = 0.0001;
+            if (x < 0.1){
+                x = 0.1;
             }
-            if (1 == x){
-                x = 0.9999;
+            if (x >0.9){
+                x = 0.9;
             }
             dX[i] -= g/x +(g-1)/(1-x);
         }

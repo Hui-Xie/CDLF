@@ -34,7 +34,7 @@ float LossLayer::getLoss(){
 }
 
 void LossLayer::forward(){
-    if (nullptr != m_pGroundTruth ){
+    if(nullptr != m_pGroundTruth){
         lossCompute();
     }
 }

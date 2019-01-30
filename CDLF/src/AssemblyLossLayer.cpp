@@ -9,6 +9,7 @@ AssemblyLossLayer::AssemblyLossLayer(const int id, const string &name, Layer *pr
 AssemblyLossLayer::~AssemblyLossLayer() {
     list<LossLayer*>::iterator it = m_lossList.begin();
     while( it != m_lossList.end()){
+        (*it)->m_pGroundTruth = nullptr;
         delete *it;
         *it = nullptr;
         ++it;
@@ -35,7 +36,7 @@ void AssemblyLossLayer::gradientCompute() {
     list<LossLayer*>::iterator it = m_lossList.begin();
     while( it != m_lossList.end()){
         (*it)->gradientCompute();
-        ++it;
+         ++it;
     }
 }
 

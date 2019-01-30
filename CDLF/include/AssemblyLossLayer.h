@@ -32,11 +32,14 @@ private:
 };
 
 
+
 template<typename T>
 void AssemblyLossLayer::setGroundTruth( const Tensor<T>& groundTruth){
+    LossLayer::setGroundTruth<T>(groundTruth);
+
     list<LossLayer*>::iterator it = m_lossList.begin();
     while( it != m_lossList.end()){
-        (*it)->setGroundTruth<T>(groundTruth);
+        (*it)->m_pGroundTruth = m_pGroundTruth;
         ++it;
     }
 }
