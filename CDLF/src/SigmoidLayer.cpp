@@ -28,7 +28,7 @@ SigmoidLayer::~SigmoidLayer(){
 void SigmoidLayer::forward(){
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
-    int N = Y.getLength();
+    const int N = Y.getLength();
     for (int i=0; i< N; ++i){
         float exp_x = exp(-X.e(i));
         Y.e(i) = m_k/(1+exp_x);

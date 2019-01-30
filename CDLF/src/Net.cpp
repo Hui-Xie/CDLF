@@ -478,6 +478,7 @@ void Net::loadNetParameters() {
 }
 
 void Net::save() {
+    cout<<"Net parameters start to save..."<<endl;
     saveLayersStruct();
     saveNetParameters();
     saveLayersParameters();
