@@ -24,7 +24,6 @@ public:
     void addLoss(LossLayer* lossLayer);
     template<typename T> void setGroundTruth( const Tensor<T>& groundTruth);
 
-    virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct();
 
 private:
