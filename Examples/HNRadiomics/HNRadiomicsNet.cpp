@@ -72,6 +72,10 @@ void HNRadiomicsNet::train() {
             forwardPropagate();
             backwardPropagate(true);
 
+            string lossGradientFile = m_directory+"/lossGradient.csv";
+            lossLayer->m_prevLayer->m_pdYTensor->save(lossGradientFile);
+            cout<<"info: "<<lossGradientFile <<" has been save."<<endl;
+
             ++nIter;
         }
         sgd(learningRate, i);
