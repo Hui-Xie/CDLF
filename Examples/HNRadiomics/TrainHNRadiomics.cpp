@@ -11,8 +11,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.01"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.001"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.001"<<endl;
 }
 
 
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 
 
     int epoch= 15000;
-    //int epoch = 2;
+    //int epoch = 1;
     float loss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();

@@ -72,6 +72,9 @@ void HNRadiomicsNet::train() {
             forwardPropagate();
             backwardPropagate(true);
 
+            //saveYTensor();
+            //savedYTensor();
+
             ++nIter;
         }
         sgd(learningRate, i);
