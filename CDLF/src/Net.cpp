@@ -293,6 +293,14 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
 
 void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
     int N = layersStructVec.size();
+    if (0 == N){
+        cout<<"Error: layer struct vector is empty."<<endl;
+        return;
+    }
+    else{
+        cout<<"Info: program load "<<N <<" layers"<<endl;
+    }
+
     Layer *pLayer = nullptr;
     Layer *pPreLayer = nullptr;
     for (int i = 0; i < N; ++i) {
