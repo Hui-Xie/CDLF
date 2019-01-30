@@ -86,14 +86,14 @@ void ConcatenateLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
 
-void ConcatenateLayer::printStruct(const int layerIndex) {
+void ConcatenateLayer::printStruct() {
     string prevLayersStr="";
     const int N = m_pLayersVec.size();
     for (int i=0; i<N; ++i){
         prevLayersStr += to_string(m_pLayersVec[i]->m_id) + ((N-1 == i)?"":"_");
     }
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, OutputSize=%s; \n",
-           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  prevLayersStr.c_str(), vector2Str(m_tensorSize).c_str());
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),  prevLayersStr.c_str(), vector2Str(m_tensorSize).c_str());
 }
 
 float& ConcatenateLayer::dX(const int index) const {

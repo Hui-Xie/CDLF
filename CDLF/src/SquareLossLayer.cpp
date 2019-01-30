@@ -45,8 +45,8 @@ void SquareLossLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, m_lambda, "{}");
 }
 
-void SquareLossLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s; Lambda=%f; \n",
-           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_lambda);
+void SquareLossLayer::printStruct() {
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s; Lambda=%f; \n",
+           m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), m_lambda);
 }
 

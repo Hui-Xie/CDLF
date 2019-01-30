@@ -214,9 +214,8 @@ void Net::printLayersDY() {
 void Net::printArchitecture() {
     cout << endl << "========== Network Architecture of " << m_name << " =============" << endl;
     cout << "===========================================================" << endl;
-    int i = 1;
     for (map<int, Layer *>::const_iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->printStruct(i++);
+        iter->second->printStruct();
     }
     cout << "Total learning parameters: " << getNumParameters() << endl;
     cout << "=========== End of Network Architecture ==================" << endl;

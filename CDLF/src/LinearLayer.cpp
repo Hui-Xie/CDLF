@@ -125,7 +125,7 @@ void LinearLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
 
-void LinearLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, OutputSize=%s; \n",
-           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
+void LinearLayer::printStruct() {
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
 }

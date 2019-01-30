@@ -45,15 +45,15 @@ void AssemblyLossLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
 }
 
-void AssemblyLossLayer::printStruct(const int layerIndex) {
+void AssemblyLossLayer::printStruct() {
     string assemblyLayer;
     list<LossLayer*>::iterator it = m_lossList.begin();
     while( it != m_lossList.end()){
         assemblyLayer += (*it)->m_type+ " ";
         ++it;
     }
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s; Assembly={%s}; \n",
-           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), assemblyLayer.c_str());
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s; Assembly={%s}; \n",
+           m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), assemblyLayer.c_str());
 }
 
 

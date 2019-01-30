@@ -84,7 +84,7 @@ void SigmoidLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, m_k, "{}");
 }
 
-void SigmoidLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, k=%d, OutputSize=%s; \n",
-           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
+void SigmoidLayer::printStruct() {
+    printf("id=%d, Name=%s, Type=%s,  PrevLayer=%s, k=%d, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
 }

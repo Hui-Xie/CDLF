@@ -37,7 +37,7 @@ public:
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
-    virtual  void printStruct(const int layerIndex);
+    virtual  void printStruct();
 
 protected:
     //int m_NRange;  //N range for a thread to compute

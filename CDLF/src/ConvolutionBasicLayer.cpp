@@ -150,7 +150,7 @@ void ConvolutionBasicLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, "{}");
 }
 
-void ConvolutionBasicLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, FilterSize=%s, NumOfFilter=%d, Stide=%d, OutputSize=%s; \n",
-            layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, vector2Str(m_tensorSize).c_str());
+void ConvolutionBasicLayer::printStruct() {
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, NumOfFilter=%d, Stide=%d, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, vector2Str(m_tensorSize).c_str());
 }

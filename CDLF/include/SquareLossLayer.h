@@ -24,7 +24,7 @@ public:
     float m_lambda;
 
     virtual  void saveStructLine(FILE* pFile);
-    virtual  void printStruct(const int layerIndex);
+    virtual  void printStruct();
 
 private:
     virtual float lossCompute();

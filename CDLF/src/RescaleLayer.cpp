@@ -96,7 +96,7 @@ void RescaleLayer::saveStructLine(FILE *pFile) {
             vector2Str(m_tensorSize).c_str(), "{}", 0, m_k, "{}");
 }
 
-void RescaleLayer::printStruct(const int layerIndex) {
-    printf("Layer%03d, Name=%s, Type=%s, id=%d, PrevLayer=%s, k=%f, OutputSize=%s; \n",
-           layerIndex, m_name.c_str(),m_type.c_str(), m_id,  m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
+void RescaleLayer::printStruct() {
+    printf("id=%d, Name=%s, Type=%s,  PrevLayer=%s, k=%f, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
 }

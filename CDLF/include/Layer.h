@@ -49,7 +49,7 @@ public:
     virtual  void load(const string& netDir)=0;
 
     virtual  void saveStructLine(FILE* pFile)=0;
-    virtual  void printStruct(const int layerIndex) = 0;
+    virtual  void printStruct() = 0;
 
 
     virtual void addPreviousLayer(Layer* prevLayer);
