@@ -17,7 +17,7 @@ SquareLossLayer::~SquareLossLayer() {
 
 
 
-//  L= lambda*(0.5)*\sum (x_i- g_i)^2
+//  L= lambda*(0.5/N)*\sum (x_i- g_i)^2
 float SquareLossLayer::lossCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     const int N = X.getLength();
@@ -25,17 +25,18 @@ float SquareLossLayer::lossCompute() {
     for (int i=0; i<N; ++i){
         loss += pow(X.e(i) - m_pGroundTruth->e(i), 2);
     }
-    m_loss = loss*0.5*m_lambda;
+    m_loss = loss*0.5*m_lambda/N;
     return m_loss;
  }
 
-//dL/dx = (x_i-g_i)*lambda
+//dL/dx = (x_i-g_i)*lambda/N
 void SquareLossLayer::gradientCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dX = *(m_prevLayer->m_pdYTensor);
     const int N = X.getLength();
+    float lambdaN = m_lambda/N;
     for (int i=0; i<N; ++i){
-       dX[i] += (X.e(i) - m_pGroundTruth->e(i))*m_lambda;
+       dX[i] += (X.e(i) - m_pGroundTruth->e(i))*lambdaN;
     }
 }
 

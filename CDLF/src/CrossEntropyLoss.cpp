@@ -14,7 +14,7 @@ CrossEntropyLoss::~CrossEntropyLoss(){
 
 }
 
-/* L= -\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
+/* L= -(1/N)*\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
  * where p_i is the groundtruth distribution
  *       x_i is the output of previous layer, e.g. softmax;
  *       */
@@ -40,11 +40,12 @@ float CrossEntropyLoss::lossCompute(){
             m_loss += -g*log(x)-(1-g)*log(1-x);
         }
     }
+    m_loss /=N;
     return m_loss;
 }
 
-// L= -\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
-// dL/dx_i = - p_i/x_i + (1-p_i)/(1-x_i)
+// L= -(1/N)*\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
+// dL/dx_i = (- p_i/x_i + (1-p_i)/(1-x_i))/N
 // this formula implies it is better for p_i is one-hot vector;
 // and we need to check X.e(i) ==0  and X.e(i) ==1 case.
 
@@ -66,7 +67,7 @@ void CrossEntropyLoss::gradientCompute() {
             if (x > 0.9){
                 x = 0.9;
             }
-            dX[i] += -g/x +(1-g)/(1-x);
+            dX[i] += (-g/x +(1-g)/(1-x))/N;
         }
     }
 }

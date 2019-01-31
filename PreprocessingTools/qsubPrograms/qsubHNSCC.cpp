@@ -8,7 +8,7 @@
 using namespace std;
 
 string cmdPath = " /Users/hxie1/temp_release/Examples/HNRadiomics/TrainHNRadiomics ";
-string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.001 ";
+string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 ";
 
 void printUsage(char* argv0){
     cout<<"Train HNSCC Radiomics in HPC"<<endl;
