@@ -232,7 +232,7 @@ bool Net::layerExist(const Layer *layer) {
 }
 
 void Net::saveLayersStruct() {
-    const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n";
+    const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/Lambda, StartPosition, \r\n";
     string filename = m_directory + "/LayersStruct.csv";
     FILE *pFile;
     pFile = fopen(filename.c_str(), "w");
