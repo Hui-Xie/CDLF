@@ -42,7 +42,7 @@ void ConvolutionLayer::updateTensorSize() {
 // Y = W*X
 void ConvolutionLayer::forward() {
 #ifdef Use_GPU
-    CudnnConvolution cudnnConvolution(this, m_filterSize, m_numFilters, m_stride);
+    CudnnConvolution cudnnConvolution(this, m_filterSize, m_stride, m_numFilters);
     cudnnConvolution.forward();
 
 #else
@@ -82,7 +82,7 @@ void ConvolutionLayer::forward() {
 void ConvolutionLayer::backward(bool computeW, bool computeX) {
 
 #ifdef Use_GPU
-    CudnnConvolution cudnnConvolution(this, m_filterSize, m_numFilters, m_stride);
+    CudnnConvolution cudnnConvolution(this, m_filterSize, m_stride, m_numFilters);
     cudnnConvolution.backward(computeW, computeX);
 #else
 
