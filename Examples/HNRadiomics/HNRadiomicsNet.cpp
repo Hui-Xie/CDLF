@@ -60,10 +60,6 @@ void HNRadiomicsNet::train() {
             Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
             pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, 1);
             lossLayer->setGroundTruth(*pSubLabel);
-            if (0 == pSubLabel->L2Norm()){
-                cout<<"Error: label file has full zero: "<<labelFilePath<<endl;
-                return;
-            }
             if (nullptr != pImage) {
                 delete pImage;
                 pImage = nullptr;
@@ -121,10 +117,6 @@ float HNRadiomicsNet::test() {
         Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
         pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, 1);
         lossLayer->setGroundTruth(*pSubLabel);
-        if (0 == pSubLabel->L2Norm()){
-            cout<<"Error: label file has full zero: "<<labelFilePath<<endl;
-            return 0;
-        }
 
         if (nullptr != pImage) {
             delete pImage;

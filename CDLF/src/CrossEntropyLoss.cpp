@@ -34,10 +34,10 @@ float CrossEntropyLoss::lossCompute(){
             if (x < 0.1){
                 x = 0.1;
             }
-            if (x >0.9){
+            if (x > 0.9){
                 x = 0.9;
             }
-            m_loss -= g*log(x)+(1-g)*log(1-x);
+            m_loss += -g*log(x)-(1-g)*log(1-x);
         }
     }
     return m_loss;
@@ -63,10 +63,10 @@ void CrossEntropyLoss::gradientCompute() {
             if (x < 0.1){
                 x = 0.1;
             }
-            if (x >0.9){
+            if (x > 0.9){
                 x = 0.9;
             }
-            dX[i] -= g/x +(g-1)/(1-x);
+            dX[i] += -g/x +(1-g)/(1-x);
         }
     }
 }
