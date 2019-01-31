@@ -48,6 +48,7 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
 bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, const vector<int>& stride, Layer *prevLayer) {
     const int dimFilter = filterSize.size();
     if (dimFilter != stride.size()){
+        cout<<"Error: the dimension of filterSize and stride should be same."<<endl;
         return false;
     }
 
