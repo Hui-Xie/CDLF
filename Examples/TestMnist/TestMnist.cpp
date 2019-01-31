@@ -71,7 +71,6 @@ int main(int argc, char *argv[]){
     else{
         net.load();
     }
-    net.save();
     net.printArchitecture();
     net.setUnlearningLayerID(2);
     net.setLearningRate(learningRate);

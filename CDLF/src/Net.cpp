@@ -265,12 +265,15 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
             for (int i = 0; i < 120; ++i) {
                 if (lineChar[i] == ',') lineChar[i] = ' ';
             }
+
             // tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition,
+            // total 10 parameters.
+
             struct LayerStruct layerStruct;
             int nFills = sscanf(lineChar, "%d  %s  %s  %s  %s  %s  %s  %d  %f  %s  \r\n",
                                 &layerStruct.m_id, type, name, preLayersIDsChar, outputTensorSizeChar,
                                 filterSizeChar, strideChar, &layerStruct.m_numFilter,  &layerStruct.m_k, startPosition);
-            if (9 != nFills) {
+            if (10 != nFills) {
                 cout << "Error: sscanf netParameterChar in loadLayersStruct at line: " << string(lineChar) << endl;
             } else {
                 layerStruct.m_type = string(type);
@@ -296,7 +299,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
     int N = layersStructVec.size();
     if (0 == N){
         cout<<"Error: layer struct vector is empty."<<endl;
-        return;
+        std::exit(EXIT_FAILURE);
     }
     else{
         cout<<"Info: program loaded "<<N <<" layers"<<endl;
@@ -480,6 +483,10 @@ void Net::loadNetParameters() {
 }
 
 void Net::save() {
+    if (0 == m_layers.size()){
+        cout<<"Error: net has 0 layer. Exit"<<endl;
+        std::exit(EXIT_FAILURE);
+    }
     cout<<"Net parameters start to save ....."<<endl;
     saveLayersStruct();
     saveNetParameters();
