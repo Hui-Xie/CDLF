@@ -774,13 +774,13 @@ Tensor<ValueType> Tensor<ValueType>::reshape(vector<int> newDims) {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::subTensorFromTopLeft(const vector<int> &tlIndex, Tensor *pTensor, const int stride) const {
+void Tensor<ValueType>::subTensorFromTopLeft(const vector<int> &tlIndex, Tensor *pTensor, const vector<int>& stride) const {
     assert(pTensor->getDims().size() == tlIndex.size());
     subTensorFromTopLeft(index2Offset(tlIndex), pTensor, stride);
 }
 
 template<class ValueType>
-void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor, const int stride) const {
+void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor, const vector<int>& stride) const {
     vector<int> dims = pTensor->getDims();
     const int dim = dims.size();
     const size_t  elementLen = sizeof(ValueType);
@@ -795,14 +795,14 @@ void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor,
         int srcNum = 0;
         for (int i=0; i< dim-1; ++i){
             dstNum += pTensor->m_dimsSpan[i]*index[i];
-            srcNum += m_dimsSpan[i]*index[i]*stride;
+            srcNum += m_dimsSpan[i]*index[i]*stride[i];
         }
-        if (1 == stride){
+        if (isElementEqual1(stride)){
             memcpy(dstOffset+dstNum, srcOffset+srcNum, rowLen);
         }
         else{
             for (int i=0; i< dims[dim-1]; ++i){
-                memcpy(dstOffset+dstNum+i, srcOffset+srcNum+i*stride, elementLen);
+                memcpy(dstOffset+dstNum+i, srcOffset+srcNum+i*stride[i], elementLen);
             }
         }
 
@@ -819,13 +819,13 @@ void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor,
 }
 
 template<class ValueType>
-void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& filterSize, const int stride) const{
+void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& filterSize, const vector<int>& stride) const{
     assert(tensorSizeBeforeCollapse.size() == filterSize.size());
     assert(length(tensorSizeBeforeCollapse) == length(m_dims));
     const int dim = tensorSizeBeforeCollapse.size();
     vector<int> newTensorSize(dim, 0);
     for (int i=0; i< dim; ++i){
-        newTensorSize[i] = tensorSizeBeforeCollapse[i]* stride + filterSize[i]*2 -1;
+        newTensorSize[i] = tensorSizeBeforeCollapse[i]* stride[i] + filterSize[i]*2 -1;
         /*analysis:
         Convolution forward: O = (I-F)/S + 1;
          O*S -S = I-F
@@ -848,7 +848,7 @@ void Tensor<ValueType>::dilute(Tensor* & pTensor, const vector<int>& tensorSizeB
 }
 
 template<class ValueType>
-void Tensor<ValueType>::putInBiggerTensor(Tensor* pBiggerTensor, const vector<int>& offsetVec, const int stride) const {
+void Tensor<ValueType>::putInBiggerTensor(Tensor* pBiggerTensor, const vector<int>& offsetVec, const vector<int>& stride) const {
    assert(m_dims.size() == pBiggerTensor->getDims().size());
    const int N = getLength();
    for (int smallOffset=0; smallOffset<N; ++smallOffset){

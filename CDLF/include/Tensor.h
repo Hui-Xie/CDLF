@@ -103,13 +103,13 @@ public:
     Tensor reshape(vector<int> newDims);
 
     //before using subTensor function, user must allocate the memory of pTensor;
-    void subTensorFromTopLeft(const vector<int>& tlIndex, Tensor* pTensor, const int stride =1) const ;
-    void subTensorFromTopLeft(const int  offset, Tensor* pTensor, const int stride =1) const ;
+    void subTensorFromTopLeft(const vector<int>& tlIndex, Tensor* pTensor, const vector<int>& stride) const ;
+    void subTensorFromTopLeft(const int  offset, Tensor* pTensor, const vector<int>& stride) const ;
 
     //dilute function will automatic allocate memory for pTensor
-    void dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& filterSize, const int stride) const;
+    void dilute(Tensor* & pTensor, const vector<int>& tensorSizeBeforeCollapse, const vector<int>& filterSize, const vector<int>& stride) const;
 
-    void putInBiggerTensor(Tensor* pBiggerTensor, const vector<int>& offsetVec, const int stride =1) const;
+    void putInBiggerTensor(Tensor* pBiggerTensor, const vector<int>& offsetVec, const vector<int>& stride) const;
 
     // extractLowerDTensor will be repalced by slice, volume, fourDVolume
     Tensor column(const int index);

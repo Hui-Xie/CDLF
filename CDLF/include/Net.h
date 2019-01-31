@@ -21,8 +21,9 @@ struct LayerStruct{
     vector<int> m_preLayersIDs;
     vector<int> m_outputTensorSize;
     vector<int> m_filterSize;
+    vector<int> m_stride;
     int m_numFilter;
-    float m_stride;  // or k in SigmoidLayer and RescaleLayer and ReLU, lambda in SquareLossLayer,
+    float m_k;  // or k in SigmoidLayer and RescaleLayer and ReLU, lambda in SquareLossLayer,
     vector<int> m_startPosition;
 };
 

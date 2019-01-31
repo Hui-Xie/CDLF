@@ -76,14 +76,14 @@ void ConcatenateLayer::load(const string &netDir) {
 }
 
 void ConcatenateLayer::saveStructLine(FILE *pFile) {
-    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n"
     string prevLayersStr="";
     const int N = m_pLayersVec.size();
     for (int i=0; i<N; ++i){
         prevLayersStr += to_string(m_pLayersVec[i]->m_id) + ((N-1 == i)?"":"_");
     }
-    fprintf(pFile, "%d, %s, %s, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), prevLayersStr.c_str(),
-            vector2Str(m_tensorSize).c_str(), "{}", 0, 0, "{}");
+    fprintf(pFile, "%d, %s, %s, %s, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), prevLayersStr.c_str(),
+            vector2Str(m_tensorSize).c_str(), "{}", "{}", 0, 0, "{}");
 }
 
 void ConcatenateLayer::printStruct() {

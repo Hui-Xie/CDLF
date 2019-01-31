@@ -110,6 +110,19 @@ vector<int> operator* (const vector<int>& left, const int factor){
     return result;
 }
 
+vector<int> operator* (const vector<int>& left, const vector<int>& right){
+    const int N = left.size();
+    if (N != right.size()){
+        cout<<"Error: multiplication of 2 vector has different size."<<endl;
+        return left;
+    }
+    vector<int> result(left);
+    for (int i=0; i<N;++i){
+        result[i] *= right[i];
+    }
+    return result;
+}
+
 vector<int> operator/ (const vector<int>& left, const int divisor){
     const int N = left.size();
     vector<int> result = left;
@@ -282,6 +295,22 @@ void dimA2SpanA(const int* dimA, const int N, int * spanA){
     for(int i=N-2; i>=0; --i){
         spanA[i] = spanA[i+1]*dimA[i+1];
     }
+}
+
+bool isElementBiggerThan0(const vector<int>& vec){
+    const int N = vec.size();
+    for(int i=0; i<N; ++i){
+        if (vec[i]<=0) return false;
+    }
+    return true;
+}
+
+bool isElementEqual1(const vector<int>& vec){
+    const int N = vec.size();
+    for(int i=0; i<N; ++i){
+        if (1 != vec[i]) return false;
+    }
+    return true;
 }
 
 

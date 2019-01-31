@@ -8,7 +8,7 @@
 
 
 MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, Layer *prevLayer, const vector<int> &filterSize,
-                                  const int stride)
+                                 const vector<int>& stride)
         : Layer(id, name, {}) {
 
     m_type = "MaxPoolingLayer";
@@ -33,7 +33,7 @@ void MaxPoolingLayer::constructY() {
     //get refined pYTensor size
     const int dim = m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
+        m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride[i] + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
     allocateYdYTensor();
@@ -53,7 +53,8 @@ void MaxPoolingLayer::forward() {
     Tensor<float>* pSubX = new Tensor<float>(m_filterSize);
     for (int i=0; i< N; ++i){
         vector<int> index = m_pYTensor->offset2Index(i);
-        m_prevLayer->m_pYTensor->subTensorFromTopLeft(index*m_stride, pSubX);
+        const vector<int> stride1 = vector<int>(m_filterSize.size(),1);
+        m_prevLayer->m_pYTensor->subTensorFromTopLeft(index*m_stride, pSubX, stride1);
         m_pYTensor->e(i) = pSubX->max();
     }
     if (nullptr != pSubX){
@@ -71,7 +72,8 @@ void MaxPoolingLayer::backward(bool computeW, bool computeX) {
         for (int i=0; i< N; ++i){
             vector<int> index = m_pdYTensor->offset2Index(i);
             vector<int> indexX = index*m_stride;
-            m_prevLayer->m_pYTensor->subTensorFromTopLeft(indexX, pSubX);
+            const vector<int> stride1 = vector<int>(m_filterSize.size(),1);
+            m_prevLayer->m_pYTensor->subTensorFromTopLeft(indexX, pSubX, stride1);
             const int maxPos = pSubX->maxPosition();
             vector<int> maxIndex = pSubX->offset2Index(maxPos);
             m_prevLayer->m_pdYTensor->e(indexX + maxIndex) += m_pdYTensor->e(i);
@@ -100,14 +102,14 @@ void MaxPoolingLayer::load(const string &netDir) {
 }
 
 void MaxPoolingLayer::saveStructLine(FILE *pFile) {
-    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride, StartPosition, \r\n"
-    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
-            vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), 0, m_stride, "{}");
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), 0, 0, "{}");
 }
 
 void MaxPoolingLayer::printStruct() {
-    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, NumOfFilter=1, Stide=%d, OutputSize=%s; \n",
-           m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), m_stride, vector2Str(m_tensorSize).c_str());
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, Stride=%s, NumOfFilter=1, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), vector2Str(m_tensorSize).c_str());
 }
 
 

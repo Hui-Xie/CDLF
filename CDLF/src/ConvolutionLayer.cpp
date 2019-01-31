@@ -4,13 +4,15 @@
 
 #include "ConvolutionLayer.h"
 #include <thread>
-#include "CudnnConvolution.h"
+#ifdef Use_GPU
+   #include "CudnnConvolution.h"
+#endif
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<int> &filterSize,
-                                   const int numFilters, const int stride)
-        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, numFilters, stride) {
+                                   const vector<int>& stride, const int numFilters)
+        : ConvolutionBasicLayer(id, name, prevLayer, filterSize, stride, numFilters) {
     m_type = "ConvolutionLayer";
-    if (stride <=0){
+    if (!isElementBiggerThan0(stride)){
         cout<<"Error: the stride of convolutionLayer should be greater than 0. "<<endl;
     }
     updateTensorSize();
@@ -26,7 +28,7 @@ void ConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride + 1;
+        m_tensorSize[i] = (m_tensorSize[i] - m_filterSize[i]) / m_stride[i] + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
     m_tensorSizeBeforeCollapse = m_tensorSize;
@@ -56,9 +58,10 @@ void ConvolutionLayer::forward() {
                     [this, idxF, t, N, &dimsSpanBeforeCollpase, NRange]() {
                         Tensor<float> subX = Tensor<float>(m_filterSize);
                         const int offseti = idxF * N;
+                        const vector<int> stride1(m_filterSize.size(),1);
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             m_prevLayer->m_pYTensor->subTensorFromTopLeft(
-                                    m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, &subX);
+                                    m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, &subX, stride1);
                             m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]);
                         }
                     }
@@ -202,8 +205,9 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
         threadVec.push_back(thread(
                 [this, t, pExpandDY, pdX, N, pW, NRange]() {
                     Tensor<float> subExpandDy = Tensor<float>(m_filterSize);
+                    const vector<int> stride1(m_filterSize.size(),1);
                     for (int i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
-                        pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), &subExpandDy, 1);
+                        pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), &subExpandDy, stride1);
                         pdX->e(i) += pW->flipConv(subExpandDy);
                     }
                 }

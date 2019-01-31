@@ -11,7 +11,7 @@
 
 class CudnnTransposedConvolution : public CudnnBasicConvolution{
 public:
-    CudnnTransposedConvolution(TransposedConvolutionLayer* pLayer, const vector<int>& filterSize, const int numFilters=1, const int stride =1);
+    CudnnTransposedConvolution(TransposedConvolutionLayer* pLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters=1);
     ~CudnnTransposedConvolution();
 
     virtual void setForwardAlg();

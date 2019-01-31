@@ -29,6 +29,8 @@ vector<int> operator- (const vector<int>& minuend, const int subtrahend);
 
 vector<int> operator* (const vector<int>& left, const int factor);
 
+vector<int> operator* (const vector<int>& left, const vector<int>& right);
+
 vector<int> operator/ (const vector<int>& left, const int divisor);
 
 bool operator<= (const vector<int>& left, const vector<int>& right);
@@ -65,6 +67,9 @@ vector<int> genDimsSpan(const vector<int> vec);
 string eraseAllSpaces(string str);
 
 void dimA2SpanA(const int* dimA, const int N, int * spanA);
+
+bool isElementBiggerThan0(const vector<int>& vec);
+bool isElementEqual1(const vector<int>& vec);
 
 
 #endif //RL_NONCONVEX_TOOLS_H

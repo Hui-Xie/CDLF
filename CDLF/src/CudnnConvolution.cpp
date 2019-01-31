@@ -2,8 +2,8 @@
 #include <CudnnConvolution.h>
 
 
-CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &filterSize, const int numFilters,
-                                   const int stride): CudnnBasicConvolution(pLayer, filterSize, numFilters, stride)
+CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &filterSize, const vector<int>& stride,
+                                   const int numFilters): CudnnBasicConvolution(pLayer, filterSize, stride, numFilters)
 {
     setDescriptors();
 }

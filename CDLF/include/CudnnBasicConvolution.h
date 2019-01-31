@@ -11,7 +11,7 @@
 
 class CudnnBasicConvolution : public Cudnn{
 public:
-    CudnnBasicConvolution(ConvolutionBasicLayer* pLayer, const vector<int>& filterSize, const int numFilters=1, const int stride =1);
+    CudnnBasicConvolution(ConvolutionBasicLayer* pLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters=1);
     ~CudnnBasicConvolution();
 
     cudnnConvolutionDescriptor_t    m_convDescriptor;
@@ -22,8 +22,9 @@ public:
 
 
     vector<int> m_filterSize;
+    vector<int> m_stride;
     int m_numFilters;
-    int m_stride;
+
 
     size_t m_workspaceSize;
 

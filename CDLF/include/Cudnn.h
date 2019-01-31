@@ -59,4 +59,5 @@ public:
 
 };
 
+
 #endif //RL_NONCONVEX_CUDNN_H

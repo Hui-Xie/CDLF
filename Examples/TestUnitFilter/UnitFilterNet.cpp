@@ -19,7 +19,7 @@ void UnitFilterNet::build(){
     int layerID = 1;
     InputLayer* inputLayer = new InputLayer(layerID++, "Input Layer",{3,2,2});
     addLayer(inputLayer);
-    ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1", getFinalLayer(), {1,1,1},3);
+    ConvolutionLayer* conv1 = new ConvolutionLayer(layerID++, "Conv1", getFinalLayer(), {1,1,1},{1,1,1}, 3);
     addLayer(conv1);
     SubTensorLayer * subTensor = new SubTensorLayer(layerID++, "SubTensor1", getFinalLayer(),{0,0,0,0}, {3,3,2,2});
     addLayer(subTensor);

@@ -12,14 +12,14 @@
 class ConvolutionBasicLayer : public Layer {
 public:
     ConvolutionBasicLayer(const int id, const string& name, Layer* prevLayer, const vector<int>& filterSize,
-                          const int numFilters, const int stride);
+                          const vector<int>& stride, const int numFilters);
     ~ConvolutionBasicLayer();
 
     Tensor<float>**  m_pW;
     Tensor<float>**  m_pdW;
     int m_numFilters;
     vector<int> m_filterSize;
-    int m_stride;
+    vector<int> m_stride;
     int m_OneFilterN;
     vector<int> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
 
@@ -27,7 +27,7 @@ public:
     virtual  void zeroParaGradient();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
-    bool checkFilterSize(const vector<int>& filterSize, Layer* prevLayer);
+    bool checkFilterSize(const vector<int>& filterSize, const vector<int>& stride, Layer* prevLayer);
     void constructFiltersAndY();
 
     void computeOneFiterN();
@@ -40,7 +40,8 @@ public:
     virtual  void printStruct();
 
 protected:
-    //int m_NRange;  //N range for a thread to compute
+
+
 
 };
 

@@ -91,9 +91,9 @@ void RescaleLayer::load(const string &netDir) {
 }
 
 void RescaleLayer::saveStructLine(FILE *pFile) {
-    //const string tableHead= "ID, Type, Name, previousLayerIDs, outputTensorSize, filterSize, numFilter, FilterStride(k), startPosition, \r\n";
-    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %f, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
-            vector2Str(m_tensorSize).c_str(), "{}", 0, m_k, "{}");
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %s, %d, %f, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), "{}", "{}", 0, m_k, "{}");
 }
 
 void RescaleLayer::printStruct() {

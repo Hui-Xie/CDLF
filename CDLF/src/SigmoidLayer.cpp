@@ -3,7 +3,9 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #include <SigmoidLayer.h>
-#include <CudnnActivation.h>
+#ifdef Use_GPU
+   #include <CudnnActivation.h>
+#endif
 
 SigmoidLayer::SigmoidLayer(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize, const int k): Layer(id,name, tensorSize){
     m_type = "SigmoidLayer";
@@ -93,9 +95,9 @@ void SigmoidLayer::load(const string &netDir) {
 }
 
 void SigmoidLayer::saveStructLine(FILE *pFile) {
-    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
-    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
-            vector2Str(m_tensorSize).c_str(), "{}", 0, m_k, "{}");
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), "{}", "{}", 0, m_k, "{}");
 }
 
 void SigmoidLayer::printStruct() {

@@ -27,7 +27,7 @@ void SegmentDNet::build() {
                                                      {108, 265, 265}); //output size: 108*265*265
     addLayer(subTensor10);
     //let this convolution layer to learn best parameter to match the probability
-    ConvolutionLayer *conv20 = new ConvolutionLayer(20, "D_Conv20", subTensor10, {1, 1, 1}, 3); //output: 3*108*265*265
+    ConvolutionLayer *conv20 = new ConvolutionLayer(20, "D_Conv20", subTensor10, {1, 1, 1}, {1,1,1}, 3); //output: 3*108*265*265
     addLayer(conv20);
     NormalizationLayer *norm24 = new NormalizationLayer(24, "D_Norm24", conv20, conv20->m_tensorSize);
     addLayer(norm24);
@@ -47,7 +47,7 @@ void SegmentDNet::build() {
     m_pMerger->addPreviousLayer(m_pGTLayer);
     m_pMerger->addPreviousLayer(m_pGxLayer);
 
-    ConvolutionLayer *conv40 = new ConvolutionLayer(40, "D_Conv40", m_pMerger, {3, 3, 3, 3}, 3);//outputsize: 3*106*263*263
+    ConvolutionLayer *conv40 = new ConvolutionLayer(40, "D_Conv40", m_pMerger, {3, 3, 3, 3}, {1,1,1,1}, 3);//outputsize: 3*106*263*263
     addLayer(conv40);
     ReLU *reLU42 = new ReLU(42, "D_ReLU42", conv40, conv40->m_tensorSize);
     addLayer(reLU42);
@@ -55,40 +55,40 @@ void SegmentDNet::build() {
     addLayer(norm44);
 
 
-    ConvolutionLayer *conv50 = new ConvolutionLayer(50, "D_Conv50", norm44, {3, 3, 3, 3}, 3);//outputsize: 3*104*261*261
+    ConvolutionLayer *conv50 = new ConvolutionLayer(50, "D_Conv50", norm44, {3, 3, 3, 3}, {1,1,1,1}, 3);//outputsize: 3*104*261*261
     addLayer(conv50);
     ReLU *reLU52 = new ReLU(52, "D_ReLU52", conv50, conv50->m_tensorSize);
     addLayer(reLU52);
     NormalizationLayer *norm54 = new NormalizationLayer(54, "D_norm54", reLU52, reLU52->m_tensorSize);
     addLayer(norm54);
 
-    ConvolutionLayer *conv60 = new ConvolutionLayer(60, "D_Conv60", norm54, {3, 3, 3, 3}, 1);//outputsize: 102*259*259
+    ConvolutionLayer *conv60 = new ConvolutionLayer(60, "D_Conv60", norm54, {3, 3, 3, 3}, {1,1,1,1}, 1);//outputsize: 102*259*259
     addLayer(conv60);
     ReLU *reLU62 = new ReLU(62, "D_ReLU62", conv60, conv60->m_tensorSize);
     addLayer(reLU62);
     NormalizationLayer *norm64 = new NormalizationLayer(64, "D_norm64", reLU62, reLU62->m_tensorSize);
     addLayer(norm64);
 
-    ConvolutionLayer *conv70 = new ConvolutionLayer(70, "D_Conv70", norm64, {3, 3, 3}, 1);//outputsize: 100*257*257
+    ConvolutionLayer *conv70 = new ConvolutionLayer(70, "D_Conv70", norm64, {3, 3, 3}, {1,1,1}, 1);//outputsize: 100*257*257
     addLayer(conv70);
     ReLU *reLU72 = new ReLU(72, "D_ReLU72", conv70, conv70->m_tensorSize);
     addLayer(reLU72);
     NormalizationLayer *norm74 = new NormalizationLayer(74, "D_norm74", reLU72, reLU72->m_tensorSize);
     addLayer(norm74);
 
-    MaxPoolingLayer *maxPool76 = new MaxPoolingLayer(76, "D_maxPool76", norm74, {3, 3, 3}, 3); //outputsize: 33*85*85
+    MaxPoolingLayer *maxPool76 = new MaxPoolingLayer(76, "D_maxPool76", norm74, {3, 3, 3}, {3,3,3}); //outputsize: 33*85*85
     addLayer(maxPool76);
 
-    ConvolutionLayer *conv80 = new ConvolutionLayer(80, "D_Conv80", maxPool76, {3, 3, 3}, 1);//outputsize: 32*83*83
+    ConvolutionLayer *conv80 = new ConvolutionLayer(80, "D_Conv80", maxPool76, {3, 3, 3}, {1,1,1}, 1);//outputsize: 32*83*83
     addLayer(conv80);
     ReLU *reLU82 = new ReLU(82, "D_ReLU82", conv80, conv80->m_tensorSize);
     addLayer(reLU82);
     NormalizationLayer *norm84 = new NormalizationLayer(84, "D_norm84", reLU82, reLU82->m_tensorSize);
     addLayer(norm84);
-    MaxPoolingLayer *maxPool86 = new MaxPoolingLayer(86, "D_maxPool86", norm84, {3, 3, 3}, 3); //outputsize: 10*27*27
+    MaxPoolingLayer *maxPool86 = new MaxPoolingLayer(86, "D_maxPool86", norm84, {3, 3, 3}, {3,3,3}); //outputsize: 10*27*27
     addLayer(maxPool86);
 
-    ConvolutionLayer *conv90 = new ConvolutionLayer(90, "D_Conv90", maxPool86, {10, 3, 3}, 1);//outputsize: 25*25
+    ConvolutionLayer *conv90 = new ConvolutionLayer(90, "D_Conv90", maxPool86, {10, 3, 3}, {1,1,1}, 1);//outputsize: 25*25
     addLayer(conv90);
     ReLU *reLU92 = new ReLU(92, "D_ReLU92", conv90, conv90->m_tensorSize);
     addLayer(reLU92);

@@ -11,9 +11,9 @@
 
 
 ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, Layer *prevLayer,
-                                             const vector<int> &filterSize, const int numFilters, const int stride):
+                                             const vector<int> &filterSize, const vector<int>& stride, const int numFilters):
                                              Layer(id, name, {}){
-    if (checkFilterSize(filterSize, prevLayer)) {
+    if (checkFilterSize(filterSize, stride, prevLayer)) {
         m_type = "ConvolutionBasicLayer";
         m_stride = stride;
         m_filterSize = filterSize;
@@ -45,9 +45,13 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
 
 // the filterSize in each dimension should be odd,
 // or if it is even, it must be same size of corresponding dimension of tensorSize of input X
-bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, Layer *prevLayer) {
-    int dimFilter = filterSize.size();
-    int dimX = prevLayer->m_tensorSize.size();
+bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, const vector<int>& stride, Layer *prevLayer) {
+    const int dimFilter = filterSize.size();
+    if (dimFilter != stride.size()){
+        return false;
+    }
+
+    const int dimX = prevLayer->m_tensorSize.size();
     if (dimFilter == dimX) {
         for (int i = 0; i < dimX; ++i) {
             if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i]) {
@@ -145,12 +149,12 @@ void ConvolutionBasicLayer::load(const string &netDir) {
 }
 
 void ConvolutionBasicLayer::saveStructLine(FILE *pFile) {
-    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n"
-    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
-            vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, "{}");
+    //const string tableHead= "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n"
+    fprintf(pFile, "%d, %s, %s, %d, %s, %s, %s, %d, %d, %s, \r\n", m_id, m_type.c_str(), m_name.c_str(), m_prevLayer->m_id,
+            vector2Str(m_tensorSize).c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters, 0, "{}");
 }
 
 void ConvolutionBasicLayer::printStruct() {
-    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, NumOfFilter=%d, Stide=%d, OutputSize=%s; \n",
-           m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), m_numFilters, m_stride, vector2Str(m_tensorSize).c_str());
+    printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, Stride=%s, NumOfFilter=%d, OutputSize=%s; \n",
+           m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
 }

@@ -263,7 +263,8 @@ void Segmentation3DNet::setOneHotLabel(const bool bTrainSet, const int numLabels
     Tensor<float> *pCutLabel = nullptr;
     if (cutTensorSize != pLabel->getDims()) {
         pCutLabel = new Tensor<float>(cutTensorSize);
-        pLabel->subTensorFromTopLeft((pLabel->getDims() - cutTensorSize) / 2, pCutLabel, 1);
+        const vector<int> stride1 = vector<int>(cutTensorSize.size(),1);
+        pLabel->subTensorFromTopLeft((pLabel->getDims() - cutTensorSize) / 2, pCutLabel, stride1);
         delete pLabel; pLabel = nullptr;
     } else {
         pCutLabel = pLabel;

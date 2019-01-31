@@ -26,7 +26,7 @@ void SegmentGNet::build(){
     NormalizationLayer* normAfterInput02 = new NormalizationLayer(5, "G_NormAfterInput5", inputLayer01, inputLayer01->m_tensorSize);
     addLayer(normAfterInput02);
 
-    ConvolutionLayer* conv30 = new ConvolutionLayer(30, "G_Conv30", normAfterInput02, {3,3, 3}, 3); //output size: 3*118*275*275
+    ConvolutionLayer* conv30 = new ConvolutionLayer(30, "G_Conv30", normAfterInput02, {3,3, 3}, {1,1,1}, 3); //output size: 3*118*275*275
     addLayer(conv30);
     ReLU* reLU32 = new ReLU(32, "G_ReLU32", conv30,conv30->m_tensorSize);
     addLayer(reLU32);
@@ -43,28 +43,28 @@ void SegmentGNet::build(){
     NormalizationLayer* norm54 = new NormalizationLayer(54, "G_Norm54", reLU52, reLU52->m_tensorSize);
     addLayer(norm54);
 
-    ConvolutionLayer* conv60 = new ConvolutionLayer(60, "G_Conv60", norm54, {3,3, 3,3}, 3); //output size: 3*116*273*273
+    ConvolutionLayer* conv60 = new ConvolutionLayer(60, "G_Conv60", norm54, {3,3, 3,3}, {1,1,1,1}, 3); //output size: 3*116*273*273
     addLayer(conv60);
     ReLU* reLU62 = new ReLU(62, "G_ReLU62", conv60, conv60->m_tensorSize);
     addLayer(reLU62);
     NormalizationLayer* norm64 = new NormalizationLayer(64, "G_Norm64", reLU62, reLU62->m_tensorSize);
     addLayer(norm64);
 
-    ConvolutionLayer* conv70 = new ConvolutionLayer(70, "G_Conv70", norm64, {3,3,3,3}, 3); //output size: 3*114*271*271
+    ConvolutionLayer* conv70 = new ConvolutionLayer(70, "G_Conv70", norm64, {3,3,3,3}, {1,1,1,1}, 3); //output size: 3*114*271*271
     addLayer(conv70);
     ReLU* reLU4 = new ReLU(72, "G_ReLU72", conv70,conv70->m_tensorSize);
     addLayer(reLU4);
     NormalizationLayer* norm74 = new NormalizationLayer(74, "G_Norm74", reLU4, reLU4->m_tensorSize);
     addLayer(norm74);
 
-    ConvolutionLayer* conv80 = new ConvolutionLayer(80, "G_Conv80", norm74, {3,3,3,3}, 3); //output size: 3*112*269*269
+    ConvolutionLayer* conv80 = new ConvolutionLayer(80, "G_Conv80", norm74, {3,3,3,3}, {1,1,1,1}, 3); //output size: 3*112*269*269
     addLayer(conv80);
     ReLU* reLU82 = new ReLU(82, "G_ReLU82", conv80, conv80->m_tensorSize);
     addLayer(reLU82);
     NormalizationLayer* norm5 = new NormalizationLayer(84, "G_Norm85", reLU82,reLU82->m_tensorSize);
     addLayer(norm5);
 
-    ConvolutionLayer* conv90 = new ConvolutionLayer(90, "G_Conv90", norm5, {3,3,3,3},3); //output size: 3*110*267*267
+    ConvolutionLayer* conv90 = new ConvolutionLayer(90, "G_Conv90", norm5, {3,3,3,3},{1,1,1,1}, 3); //output size: 3*110*267*267
     addLayer(conv90);
     ReLU* reLU92 = new ReLU(92, "G_ReLU92", conv90, conv90->m_tensorSize);
     addLayer(reLU92);
@@ -72,7 +72,7 @@ void SegmentGNet::build(){
     addLayer(norm94);
 
 
-    ConvolutionLayer* conv100 = new ConvolutionLayer(100, "G_Conv100", norm94, {3,3,3,3}, 3); //output size: 3*108*265*265
+    ConvolutionLayer* conv100 = new ConvolutionLayer(100, "G_Conv100", norm94, {3,3,3,3}, {1,1,1,1},3); //output size: 3*108*265*265
     addLayer(conv100);
     ReLU* reLU102 = new ReLU(102, "G_ReLU102", conv100, conv100->m_tensorSize);
     addLayer(reLU102);
@@ -81,7 +81,7 @@ void SegmentGNet::build(){
 
     //connect 2nd branch from branch1 to merger
     // branch1 output size: 7*118*275*275
-    ConvolutionLayer* conv110 = new ConvolutionLayer(110, "G_Conv110", branch50, {3,3,3,3}, 3); //output size: 3*116*273*273
+    ConvolutionLayer* conv110 = new ConvolutionLayer(110, "G_Conv110", branch50, {3,3,3,3}, {1,1,1,1}, 3); //output size: 3*116*273*273
     addLayer(conv110);
     SubTensorLayer* subTensor111 = new SubTensorLayer(111, "G_SubTensor111", conv110, {0,4,4,4}, {3,108,265,265}); //output size: 3*108*265*265
     addLayer(subTensor111);

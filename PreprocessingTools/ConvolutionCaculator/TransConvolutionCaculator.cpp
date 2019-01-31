@@ -7,8 +7,8 @@ using namespace std;
 void printUsage(char* argv0){
     cout<<"============= Compute OutputSize of TransposedConvolution  ==========="<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"  <PreTensorSize>  <FilterSize>  <NumFilters>  <Stride> "<<endl;
-    cout<<"e.g.  ./TransConvolutionCaculator 53*77*77 5*5*5 1 2"<<endl;
+    cout<<argv0<<"  <PreTensorSize>  <FilterSize>  <Stride>  <NumFilters>"<<endl;
+    cout<<"e.g.  ./TransConvolutionCaculator 53*77*77 5*5*5  2*2*2  1"<<endl;
     cout<<endl;
 }
 
@@ -21,22 +21,27 @@ int main(int argc, char *argv[]) {
 
     const string preTensorSizeStr = argv[1];
     const string filterSizeStr = argv[2];
-    const int numFilters = atoi(argv[3]);
-    const int stride = atoi(argv[4]);
-
-    if (stride <=0){
-        cout<<"Error: the stride of convolutionLayer should be greater than 0. "<<endl;
-        return -2;
-    }
+    const string strideStr = argv[3];
+    const int numFilters = atoi(argv[4]);
 
 
     const vector<int> inputTensorSize = str2Vector(preTensorSizeStr);
     const vector<int> filterSize = str2Vector(filterSizeStr);
+    const vector<int> stride =  str2Vector(strideStr);
+
+    if (!isElementBiggerThan0(stride)){
+        cout<<"Error: the stride of convolutionLayer should be greater than 0. "<<endl;
+        return -2;
+    }
+    if (filterSize.size() != stride.size()){
+        cout<<"Error: filterSize and stride should have same dims"<<endl;
+        return -2;
+    }
 
     vector<int> outputTensorSize = inputTensorSize;
     const int dim = outputTensorSize.size();
     for (int i = 0; i < dim; ++i) {
-        outputTensorSize[i] = (outputTensorSize[i] - 1) * stride + filterSize[i];
+        outputTensorSize[i] = (outputTensorSize[i] - 1) * stride[i] + filterSize[i];
     }
     if (1 != numFilters) {
         outputTensorSize.insert(outputTensorSize.begin(), numFilters);

@@ -18,7 +18,7 @@ void ConvCudaNet::build(){
     InputLayer* inputLayer = new InputLayer(id++, "InputLayer", {200,250,300});  //output 200*250*300
     addLayer(inputLayer);
 
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {3,3,3}, 1); //output 198*248*298
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", getFinalLayer(), {3,3,3}, {1,1,1}); //output 198*248*298
     addLayer(conv1);
     NormalizationLayer* norm1 = new NormalizationLayer(id++, "Norm1",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(norm1);

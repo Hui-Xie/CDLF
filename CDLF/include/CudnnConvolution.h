@@ -12,7 +12,7 @@
 
 class CudnnConvolution : public CudnnBasicConvolution{
 public:
-    CudnnConvolution(ConvolutionLayer* pLayer, const vector<int>& filterSize, const int numFilters=1, const int stride =1);
+    CudnnConvolution(ConvolutionLayer* pLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters=1);
     ~CudnnConvolution();
 
     virtual void setForwardAlg();

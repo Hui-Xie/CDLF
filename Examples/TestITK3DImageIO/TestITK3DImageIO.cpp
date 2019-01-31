@@ -98,7 +98,7 @@ int main(int argc, char *argv[]){
 
     dataMgr.readLabelFile(labelFilePath, pImage); // pImage with size: 130*512*512
     Tensor<float> *pSubLabel = new Tensor<float>({90,500,500});
-    pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, 1);
+    pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, {1,1,1});
 
     Tensor<unsigned char> outputLabel({90,500,500});
     outputLabel.valueTypeConvertFrom(*pSubLabel);

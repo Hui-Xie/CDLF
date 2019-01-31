@@ -170,16 +170,16 @@ int main (int argc, char *argv[]) {
     cout <<"tensor20:"<<endl;
     tensor20.print();
     Tensor<float>* pTensor23 = new Tensor<float>({3,3});
-    tensor20.subTensorFromTopLeft({0,0},pTensor23,2);
-    cout<<"tensor23: by tensor20.subTensorFromTopLeft({0,0}, pTensor23,2):"<<endl;
+    tensor20.subTensorFromTopLeft({0,0},pTensor23,{2,2});
+    cout<<"tensor23: by tensor20.subTensorFromTopLeft({0,0}, pTensor23,{2,2}):"<<endl;
     pTensor23->print();
 
 
     cout <<"tensor20:"<<endl;
     tensor20.print();
     Tensor<float>* pTensor23A = new Tensor<float>({2,3});
-    tensor20.subTensorFromTopLeft({0,0},pTensor23A,1);
-    cout<<"tensor23A: by tensor20.subTensorFromTopLeft({0,0},pTensor23A,1):"<<endl;
+    tensor20.subTensorFromTopLeft({0,0},pTensor23A,{1,1});
+    cout<<"tensor23A: by tensor20.subTensorFromTopLeft({0,0},pTensor23A,{1,1}):"<<endl;
     pTensor23A->print();
 
     if (nullptr != pTensor23A){
@@ -188,7 +188,7 @@ int main (int argc, char *argv[]) {
 
     cout <<"tensor20:"<<endl;
     tensor20.print();
-    tensor20.subTensorFromTopLeft(1,pTensor23,2);
+    tensor20.subTensorFromTopLeft(1,pTensor23,{2,2});
     cout<<"tensor23: by te tensor20.subTensorFromTopLeft(1,pTensor23,2):"<<endl;
     pTensor23->print();
 
@@ -202,7 +202,7 @@ int main (int argc, char *argv[]) {
         matrix3D.e(i) = i;
     }
     Tensor<float> subMatrix3D({2,3,3});
-    matrix3D.subTensorFromTopLeft(0, &subMatrix3D, 1);
+    matrix3D.subTensorFromTopLeft(0, &subMatrix3D, {1,1,1});
     for (int i=0; i<2;++i){
         printf("the %d slice of subMatrix3D(2,3,3)\n", i);
         subMatrix3D.slice(i).print();

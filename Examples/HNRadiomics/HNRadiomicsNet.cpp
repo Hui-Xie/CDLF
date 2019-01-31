@@ -45,7 +45,8 @@ void HNRadiomicsNet::train() {
 
             m_pDataMgr->readTrainImageFile(randSeq[nIter], pImage);
             Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
-            pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims())/2, pSubImage, 1);
+            const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
+            pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims())/2, pSubImage, stride1);
             inputLayer->setInputTensor(*pSubImage);
             if (nullptr != pImage) {
                 delete pImage;
@@ -58,7 +59,7 @@ void HNRadiomicsNet::train() {
 
             m_pDataMgr->readLabelFile(labelFilePath, pImage);
             Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
-            pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, 1);
+            pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
             lossLayer->setGroundTruth(*pSubLabel);
             if (nullptr != pImage) {
                 delete pImage;
@@ -101,7 +102,8 @@ float HNRadiomicsNet::test() {
 
         m_pDataMgr->readTestImageFile(n, pImage);
         Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
-        pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims())/2, pSubImage, 1);
+        const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
+        pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims())/2, pSubImage, stride1);
         inputLayer->setInputTensor(*pSubImage);
         if (nullptr != pImage) {
             delete pImage;
@@ -115,7 +117,7 @@ float HNRadiomicsNet::test() {
 
         m_pDataMgr->readLabelFile(labelFilePath, pImage);
         Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
-        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, 1);
+        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
         lossLayer->setGroundTruth(*pSubLabel);
 
         if (nullptr != pImage) {
@@ -151,7 +153,8 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     Tensor<float> *pImage = nullptr;
     m_pDataMgr->readImageFile(imageFilePath, pImage);
     Tensor<float> *pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
-    pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims()) / 2, pSubImage, 1);
+    const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
+    pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims()) / 2, pSubImage, stride1);
     inputLayer->setInputTensor(*pSubImage);
     if (nullptr != pImage) {
         delete pImage;
@@ -165,7 +168,7 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     if (!labelFilePath.empty()){
         m_pDataMgr->readLabelFile(labelFilePath, pImage);
         Tensor<float> *pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
-        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, 1);
+        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, stride1);
         lossLayer->setGroundTruth(*pSubLabel);
         if (nullptr != pImage) {
             delete pImage;

@@ -50,12 +50,12 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
                 ${MKLROOT}/lib/intel64/libmkl_sequential.so
                 ${MKLROOT}/lib/intel64/libmkl_rt.so)
 
-
-# for cudnn
-set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
-include_directories(Cudnn_INCLUDE_DIR)
-set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
-
+if (${Use_GPU})
+    # for cudnn
+    set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
+    include_directories(Cudnn_INCLUDE_DIR)
+    set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
+endif(${Use_GPU})
 
 
 message("General Notes:")

@@ -232,7 +232,7 @@ bool Net::layerExist(const Layer *layer) {
 }
 
 void Net::saveLayersStruct() {
-    const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride(k), StartPosition, \r\n";
+    const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition, \r\n";
     string filename = m_directory + "/LayersStruct.csv";
     FILE *pFile;
     pFile = fopen(filename.c_str(), "w");
@@ -255,6 +255,7 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
     char name[30];
     char outputTensorSizeChar[30];
     char filterSizeChar[30];
+    char strideChar[30];
     char startPosition[30];
     char preLayersIDsChar[30];
     if (ifs.good()) {
@@ -264,11 +265,11 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
             for (int i = 0; i < 120; ++i) {
                 if (lineChar[i] == ',') lineChar[i] = ' ';
             }
-            // tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, NumFilter, FilterStride, StartPosition,
+            // tableHead: ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/lambda, StartPosition,
             struct LayerStruct layerStruct;
-            int nFills = sscanf(lineChar, "%d  %s  %s  %s  %s  %s  %d  %f  %s  \r\n",
+            int nFills = sscanf(lineChar, "%d  %s  %s  %s  %s  %s  %s  %d  %f  %s  \r\n",
                                 &layerStruct.m_id, type, name, preLayersIDsChar, outputTensorSizeChar,
-                                filterSizeChar, &layerStruct.m_numFilter, &layerStruct.m_stride, startPosition);
+                                filterSizeChar, strideChar, &layerStruct.m_numFilter,  &layerStruct.m_k, startPosition);
             if (9 != nFills) {
                 cout << "Error: sscanf netParameterChar in loadLayersStruct at line: " << string(lineChar) << endl;
             } else {
@@ -280,6 +281,7 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
                 }
                 layerStruct.m_outputTensorSize = str2Vector(string(outputTensorSizeChar));
                 layerStruct.m_filterSize = str2Vector(string(filterSizeChar));
+                layerStruct.m_stride = str2Vector(string(strideChar));
                 layerStruct.m_startPosition = str2Vector(string(startPosition));
 
                 layersStructVec.push_back(layerStruct);
@@ -315,7 +317,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new FCLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize[0]);
         }
         else if ("ReLU" == s.m_type) {
-            pLayer = new ReLU(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, s.m_stride);
+            pLayer = new ReLU(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, s.m_k);
         }
         else if ("NormalizationLayer" == s.m_type) {
             pLayer = new NormalizationLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize);
@@ -324,7 +326,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new SoftmaxLayer(s.m_id, s.m_name, pPreLayer);
         }
         else if ("ConvolutionLayer" == s.m_type) {
-           pLayer = new ConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, (int)s.m_stride);
+           pLayer = new ConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_stride, s.m_numFilter);
         }
         else if ("LeftMatrixLayer" == s.m_type) {
             pLayer = new LeftMatrixLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize);
@@ -333,7 +335,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new RightMatrixLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize);
         }
         else if ("TransposedConvolutionLayer" == s.m_type) {
-            pLayer = new TransposedConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_numFilter, (int)s.m_stride);
+            pLayer = new TransposedConvolutionLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_stride, s.m_numFilter);
         }
         else if ("BranchLayer" == s.m_type) {
            pLayer = new BranchLayer(s.m_id, s.m_name, pPreLayer);
@@ -345,7 +347,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            pLayer = new CrossEntropyLoss(s.m_id, s.m_name, pPreLayer);
         }
         else if ("SquareLossLayer" == s.m_type) {
-            pLayer = new SquareLossLayer(s.m_id, s.m_name, pPreLayer, s.m_stride);
+            pLayer = new SquareLossLayer(s.m_id, s.m_name, pPreLayer, s.m_k);
         }
         else if ("DiceLossLayer" == s.m_type) {
             pLayer = new DiceLossLayer(s.m_id, s.m_name, pPreLayer);
@@ -357,7 +359,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            pLayer = new IdentityLayer(s.m_id, s.m_name, pPreLayer);
         }
         else if ("MaxPoolingLayer" == s.m_type) {
-           pLayer = new MaxPoolingLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, (int)s.m_stride);
+           pLayer = new MaxPoolingLayer(s.m_id, s.m_name, pPreLayer, s.m_filterSize, s.m_stride);
         }
         else if ("MergerLayer" == s.m_type) {
            pLayer = new MergerLayer(s.m_id, s.m_name, s.m_outputTensorSize);
@@ -371,10 +373,10 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
             pLayer = new ConcatenateLayer(s.m_id, s.m_name, pLayersVec, s.m_outputTensorSize);
         }
         else if ("SigmoidLayer" == s.m_type) {
-           pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, (int)s.m_stride);
+           pLayer = new SigmoidLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, (int)s.m_k);
         }
         else if ("RescaleLayer" == s.m_type) {
-            pLayer = new RescaleLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_stride);
+            pLayer = new RescaleLayer(s.m_id, s.m_name, pPreLayer, (int)s.m_k);
         }
         else if ("SubTensorLayer" == s.m_type) {
            pLayer = new SubTensorLayer(s.m_id, s.m_name, pPreLayer, s.m_startPosition, s.m_outputTensorSize);

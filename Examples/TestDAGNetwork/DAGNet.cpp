@@ -28,7 +28,7 @@ void DAGNet::buildSimple(){
     addLayer(inputLayer);
 
     //add parallel convolution path
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", inputLayer, {3,1} ); //output: {8,1}
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", inputLayer, {3,1}, {1,1} ); //output: {8,1}
     addLayer(conv1);
 
     //add Loss Layer
@@ -54,21 +54,21 @@ void DAGNet::build(){
     addLayer(branch);
 
     //add parallel convolution path
-    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", branch, {5,1} ); //output: {16,1}
+    ConvolutionLayer* conv1 = new ConvolutionLayer(id++, "Conv1", branch, {5,1}, {1,1} ); //output: {16,1}
     addLayer(conv1);
     ReLU* reLU2 = new ReLU(id++, "ReLU2", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU2);
     NormalizationLayer* normalLayer2 = new NormalizationLayer(id++, "NormLayer2",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(normalLayer2);
 
-    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", getFinalLayer(),{3,1}); //output: {14,1}
+    ConvolutionLayer* conv2 = new ConvolutionLayer(id++, "Conv2", getFinalLayer(),{3,1}, {1,1}); //output: {14,1}
     addLayer(conv2);
     ReLU* reLU3 = new ReLU(id++, "ReLU3", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU3);
     NormalizationLayer* normalLayer3 = new NormalizationLayer(id++, "NormLayer3",getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(normalLayer3);
 
-    ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", getFinalLayer(), {3,1}); //output: {12,1}
+    ConvolutionLayer* conv3 = new ConvolutionLayer(id++, "Conv3", getFinalLayer(), {3,1}, {1,1}); //output: {12,1}
     addLayer(conv3);
     ReLU* reLU4 = new ReLU(id++, "ReLU4", getFinalLayer(), getFinalLayer()->m_tensorSize);
     addLayer(reLU4);

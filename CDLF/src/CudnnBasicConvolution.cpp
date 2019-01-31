@@ -2,8 +2,8 @@
 #include <CudnnBasicConvolution.h>
 
 
-CudnnBasicConvolution::CudnnBasicConvolution(ConvolutionBasicLayer *pLayer, const vector<int> &filterSize, const int numFilters,
-                                                       const int stride): Cudnn(pLayer)
+CudnnBasicConvolution::CudnnBasicConvolution(ConvolutionBasicLayer *pLayer, const vector<int> &filterSize,
+                                             const vector<int>& stride, const int numFilters): Cudnn(pLayer)
 {
     d_pWorkspace = nullptr;
     d_pW = nullptr;
@@ -46,7 +46,7 @@ void CudnnBasicConvolution::setConvDescriptor() {
     int* dilationA = new int[arrayLength];
     for (int i=0; i< arrayLength; ++i){
         padA[i] = 0;
-        filterStrideA[i] = m_stride;
+        filterStrideA[i] = m_stride[i];
         dilationA[i] = 1;
     }
 
