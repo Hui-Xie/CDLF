@@ -60,7 +60,7 @@ int main (int argc, char *argv[])
     ConvexNet net("ConvexNet", netDir);
 
     net.load();
-    net.setLearningRate(0.01);
+    //net.setLearningRate(0.01);
     net.printArchitecture();
 
     net.train();
