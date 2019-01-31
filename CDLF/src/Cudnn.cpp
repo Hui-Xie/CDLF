@@ -16,24 +16,10 @@ Cudnn::Cudnn(Layer* pLayer){
 }
 
 Cudnn::~Cudnn(){
-
-    if (nullptr != d_pX)  {
-        cudaFree(d_pX);
-        d_pX= nullptr;
-    }
-    if (nullptr != d_pY)  {
-        cudaFree(d_pY);
-        d_pY= nullptr;
-    }
-    if (nullptr != d_pdX)  {
-        cudaFree(d_pdX);
-        d_pdX= nullptr;
-    }
-    if (nullptr != d_pdY)  {
-        cudaFree(d_pdY);
-        d_pdY = nullptr;
-    }
-
+   freeDeviceX();
+   freeDeviceY();
+   freeDevicedX();
+   freeDevicedY();
    cudnnDestroyTensorDescriptor(m_xDescriptor);
    cudnnDestroyTensorDescriptor(m_yDescriptor);
    cudnnDestroy(m_cudnnContext);
@@ -64,29 +50,80 @@ void Cudnn::setXDescriptor() {
 
 
 void Cudnn::allocateDeviceX() {
+    freeDeviceX();
+
     const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
     cudaMalloc(&d_pX, xSize);
     cudaMemcpy(d_pX, m_pLayer->m_prevLayer->m_pYTensor->getData(), xSize, cudaMemcpyHostToDevice);
 }
 
-void Cudnn::allocateDeviceY() {
+void Cudnn::allocateDeviceY(bool copyComputedY) {
+    freeDeviceY();
+
     const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMalloc(&d_pY, ySize);
-    cudaMemset(d_pY, 0, ySize);
+    if (copyComputedY){
+        cudaMemcpy(d_pY, m_pLayer->m_pYTensor->getData(), ySize, cudaMemcpyHostToDevice);
+    }
+    else{
+       cudaMemset(d_pY, 0, ySize);
+    }
 }
 
 
 void Cudnn::allocateDevicedX() {
+    freeDevicedX();
+
     const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
     cudaMalloc(&d_pdX, xSize);
     cudaMemset(d_pdX, 0, xSize);
 }
 
 void Cudnn::allocateDevicedY() {
+    freeDevicedY();
+
     const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMalloc(&d_pdY, ySize);
     cudaMemcpy(d_pdY, m_pLayer->m_pdYTensor->getData(), ySize, cudaMemcpyHostToDevice);
 }
+
+void Cudnn::freeDeviceX() {
+    if (nullptr != d_pX) {
+        cudaFree(d_pX);
+        d_pX = nullptr;
+    }
+}
+
+void Cudnn::freeDeviceY() {
+    if (nullptr != d_pY) {
+        cudaFree(d_pY);
+        d_pY = nullptr;
+    }
+}
+
+void Cudnn::freeDevicedX() {
+    if (nullptr != d_pdX) {
+        cudaFree(d_pdX);
+        d_pdX = nullptr;
+    }
+}
+
+void Cudnn::freeDevicedY() {
+    if (nullptr != d_pdY) {
+        cudaFree(d_pdY);
+        d_pdY = nullptr;
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

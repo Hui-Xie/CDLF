@@ -3,8 +3,7 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #include <SigmoidLayer.h>
-
-#include "SigmoidLayer.h"
+#include <CudnnActivation.h>
 
 SigmoidLayer::SigmoidLayer(const int id, const string& name,Layer* prevLayer, const vector<int>& tensorSize, const int k): Layer(id,name, tensorSize){
     m_type = "SigmoidLayer";
@@ -26,6 +25,10 @@ SigmoidLayer::~SigmoidLayer(){
  * dL/dx = dL/dY * dY/dx = dL/dy *Y*(1- Y/k);
  * */
 void SigmoidLayer::forward(){
+#ifdef Use_GPU
+    CudnnActivation cudnnActivation(this, CUDNN_ACTIVATION_SIGMOID);
+    cudnnActivation.forward();
+#else
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int N = Y.getLength();
@@ -33,8 +36,17 @@ void SigmoidLayer::forward(){
         float exp_x = exp(-X.e(i));
         Y.e(i) = m_k/(1+exp_x);
     }
+#endif
+
 }
 void SigmoidLayer::backward(bool computeW, bool computeX){
+#ifdef Use_GPU
+    if (computeX) {
+        CudnnActivation cudnnActivation(this, CUDNN_ACTIVATION_SIGMOID);
+        cudnnActivation.backward(computeW, computeX);
+    }
+#else
+
     if (computeX){
         Tensor<float>& Y = *m_pYTensor;
         Tensor<float>& dY = *m_pdYTensor;
@@ -53,6 +65,8 @@ void SigmoidLayer::backward(bool computeW, bool computeX){
             dX.e(i) += dY.e(i)*Y.e(i)*(1-Y.e(i)/m_k);
         }
     }
+#endif
+
 }
 void SigmoidLayer::initialize(const string& initialMethod){
     //null

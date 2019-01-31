@@ -15,7 +15,6 @@ CudnnConvolution::~CudnnConvolution(){
 
 void CudnnConvolution::forward() {
     allocateDeviceY();
-
     allocateDeviceX();
     allocateDeviceW();
     setForwardAlg();

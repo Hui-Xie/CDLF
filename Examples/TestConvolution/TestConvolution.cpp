@@ -41,7 +41,7 @@ int main (int argc, char *argv[])
 
     //test a special network.
     //net.build();
-    //net.setLearningRate(0.01);
+    net.setLearningRate(0.0001);
     //net.setBatchSize(20);
     //net.setEpoch(1000);
 

@@ -3,8 +3,8 @@
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 #include <ReLU.h>
+#include <CudnnActivation.h>
 
-#include "ReLU.h"
 
 //ReLU has just one previous layer.
 
@@ -27,6 +27,11 @@ ReLU::~ReLU(){
 // dL/dx = dL/dy * dy/dx = dL/dy if X>=m_k;
 // dL/dx = 0 if X < m_k
 void ReLU::forward(){
+#ifdef Use_GPU
+    CudnnActivation cudnnActivation(this, CUDNN_ACTIVATION_RELU);
+    cudnnActivation.forward();
+#else
+
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int N = Y.getLength();
@@ -34,8 +39,17 @@ void ReLU::forward(){
        if (X.e(i) >= m_k ) Y.e(i) = X.e(i);
        else Y.e(i) = 0;
     }
+#endif
 }
-void ReLU::backward(bool computeW, bool computeX){
+
+void ReLU::backward(bool computeW, bool computeX) {
+#ifdef Use_GPU
+    if (computeX) {
+        CudnnActivation cudnnActivation(this, CUDNN_ACTIVATION_RELU);
+        cudnnActivation.backward(computeW, computeX);
+    }
+#else
+
     if (computeX){
         Tensor<float>& dY = *m_pdYTensor;
         Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
@@ -46,6 +60,8 @@ void ReLU::backward(bool computeW, bool computeX){
             // all dX.e(i) = 0 in zeroDYTensor() method in each iteration.
         }
     }
+#endif
+
 }
 void ReLU::initialize(const string& initialMethod){
     //null

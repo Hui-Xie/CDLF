@@ -35,9 +35,14 @@ public:
     Layer* m_pLayer;
 
     void allocateDeviceX();
-    void allocateDeviceY();
+    void allocateDeviceY(bool copyComputedY = false);
     void allocateDevicedX();
     void allocateDevicedY();
+
+    void freeDeviceX();
+    void freeDeviceY();
+    void freeDevicedX();
+    void freeDevicedY();
 
     void setXDescriptor();
     virtual void setYDescriptor() = 0;

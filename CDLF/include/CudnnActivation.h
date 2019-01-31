@@ -27,7 +27,7 @@ public:
     ~CudnnActivation();
 
     cudnnActivationDescriptor_t    m_activationDescriptor;
-    cudnnActivationMode_t m_activationMode;
+    cudnnActivationMode_t          m_activationMode;
 
     void setActivationDescriptor();
 
