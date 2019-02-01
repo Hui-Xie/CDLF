@@ -675,7 +675,7 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
             for (int j=0; j<m_dims[1]; ++j){
                 int count = fscanf(pFile, "%f ", &e(i,j));
                 if (1 != count){
-                    printf("Error: fsanf in Tensor load method.\n");
+                    printf("Error: fscanf in Tensor load method.\n");
                 }
             }
             //int count = fscanf(pFile, "%*c");
@@ -687,7 +687,7 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
         for (int i = 0; i < N; ++i) {
             int count = fscanf(pFile, "%f ", &e(i));
             if (1 != count){
-                printf("Error: fsanf in Tensor load method.\n");
+                printf("Error: fscanf in Tensor load method.\n");
             }
         }
     }
