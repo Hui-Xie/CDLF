@@ -802,7 +802,7 @@ void Tensor<ValueType>::subTensorFromTopLeft(const int  offset, Tensor* pTensor,
         }
         else{
             for (int i=0; i< dims[dim-1]; ++i){
-                memcpy(dstOffset+dstNum+i, srcOffset+srcNum+i*stride[i], elementLen);
+                memcpy(dstOffset+dstNum+i, srcOffset+srcNum+i*stride[dim-1], elementLen);
             }
         }
 
