@@ -33,8 +33,8 @@ int main(int argc, char *argv[]) {
         cout<<"Error: the stride of convolutionLayer should be greater than 0. "<<endl;
         return -2;
     }
-    if (filterSize.size() != stride.size()){
-        cout<<"Error: filterSize and stride should have same dims"<<endl;
+    if (filterSize.size() != stride.size() || filterSize.size() != inputTensorSize.size()){
+        cout<<"Error: InputTensorSize, filterSize and stride should have same dims"<<endl;
         return -2;
     }
 
