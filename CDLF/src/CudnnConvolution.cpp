@@ -101,7 +101,8 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
 
 void CudnnConvolution::setWDescriptor() {
     //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
-    int nbDims = m_filterSize.size()+2;
+    const int filterDim = m_filterSize.size();
+    const int nbDims = filterDim+2;
 
     int* filterDimA = new int[nbDims];
     filterDimA[0] = m_numFilters;
@@ -110,7 +111,15 @@ void CudnnConvolution::setWDescriptor() {
         filterDimA[i]  = m_filterSize[i-2];
     }
 
+
+
+
+
+
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
+
+    cout<<"In "<<m_pLayer->m_name<<endl;
+    cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
 
     delete[] filterDimA;
 }
@@ -130,6 +139,9 @@ void CudnnConvolution::setYDescriptor() {
         int* strideA = new int[nbDims];
         dimA2SpanA(tensorOuputDimA, nbDims,strideA);
 
+        cout<<"In "<<m_pLayer->m_name<<endl;
+        cout<<"yDescriptor: "<<array2Str(tensorOuputDimA, nbDims)<<endl;
+
         checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, tensorOuputDimA, strideA));
 
         delete[] strideA;
@@ -139,6 +151,7 @@ void CudnnConvolution::setYDescriptor() {
 }
 
 void CudnnConvolution::setForwardAlg() {
+    m_pLayer->printStruct();
     checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
                                                    CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, 0, &m_fwdAlg));
 }

@@ -39,8 +39,10 @@ int main(int argc, char *argv[]){
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    //Load MnistAutoEncoder Net
-    HNRadiomicsNet net("HNSCC_matrix", netDir);
+    //HNRadiomicsNet net("HNSCC_matrix", netDir);
+    HNRadiomicsNet net("HNSCC_convV", netDir);
+    cout<<"Info: this "<<net.getName() <<" net."<<endl;
+
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }
@@ -56,8 +58,8 @@ int main(int argc, char *argv[]){
     net.m_pDataMgr = &dataMgr;
 
 
-    int epoch= 15000;
-    //int epoch = 1;
+    //int epoch= 15000;
+    int epoch = 1;
     float loss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
