@@ -385,7 +385,7 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
            pLayer = new SubTensorLayer(s.m_id, s.m_name, pPreLayer, s.m_startPosition, s.m_outputTensorSize);
         }
         else if ("PaddingLayer" == s.m_type) {
-            pLayer = new PaddingLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize);
+            pLayer = new PaddingLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize, s.m_k);
         }
         else if ("VectorizationLayer" == s.m_type) {
            pLayer = new VectorizationLayer(s.m_id, s.m_name, pPreLayer);

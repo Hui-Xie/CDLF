@@ -23,7 +23,10 @@ struct LayerStruct{
     vector<int> m_filterSize;
     vector<int> m_stride;
     int m_numFilter;
-    float m_k;  // or k in SigmoidLayer and RescaleLayer and ReLU, lambda in SquareLossLayer,
+
+    // k in SigmoidLayer and RescaleLayer and ReLU, lambda in SquareLossLayer, initialValue in PaddingLayer
+    float m_k;
+
     vector<int> m_startPosition;
 };
 

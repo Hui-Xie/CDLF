@@ -12,7 +12,7 @@
 class PaddingLayer : public Layer {
 public:
 
-    PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& tensorSize);
+    PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& tensorSize, const float initialValue);
 
     ~PaddingLayer();
 
@@ -34,6 +34,7 @@ public:
 
 private:
     vector<int> m_start;
+    float m_initialValue;
 
 };
 

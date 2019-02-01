@@ -7,7 +7,7 @@
 #include "PaddingLayer.h"
 
 
-PaddingLayer::PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& tensorSize)
+PaddingLayer::PaddingLayer(const int id, const string &name, Layer *prevLayer, const vector<int>& tensorSize, const float initialValue)
         :Layer(id,name, tensorSize)
 {
     m_type = "PaddingLayer";
@@ -19,6 +19,7 @@ PaddingLayer::PaddingLayer(const int id, const string &name, Layer *prevLayer, c
         }
     }
     m_start = (m_tensorSize - m_prevLayer->m_tensorSize)/2;
+    m_initialValue = initialValue;
 }
 
 PaddingLayer::~PaddingLayer(){
