@@ -17,19 +17,9 @@ CudnnBasicConvolution::CudnnBasicConvolution(ConvolutionBasicLayer *pLayer): Cud
 
 
 CudnnBasicConvolution::~CudnnBasicConvolution(){
-    if (nullptr != d_pWorkspace)  {
-        cudaFree(d_pWorkspace);
-        d_pWorkspace= nullptr;
-    }
-
-    if (nullptr != d_pW)  {
-        cudaFree(d_pW);
-        d_pW= nullptr;
-    }
-    if (nullptr != d_pdW)  {
-        cudaFree(d_pdW);
-        d_pdW= nullptr;
-    }
+    freeWorkSpace();
+    freeDeviceW();
+    freeDevicedW();
 
     cudnnDestroyFilterDescriptor(m_wDescriptor);
     cudnnDestroyConvolutionDescriptor(m_convDescriptor);
@@ -112,6 +102,27 @@ void CudnnBasicConvolution::allocateDevicedW() {
     cudaMalloc(&d_pdW, oneFilterSize*m_pLayer->m_numFilters);
     for (int i=0; i< m_pLayer->m_numFilters; ++i){
         cudaMemcpy(d_pdW+i*oneFilterSize, m_pLayer->m_pdW[i]->getData(), oneFilterSize, cudaMemcpyHostToDevice);
+    }
+}
+
+void CudnnBasicConvolution::freeDeviceW(){
+    if (nullptr != d_pW)  {
+        cudaFree(d_pW);
+        d_pW= nullptr;
+    }
+}
+
+void CudnnBasicConvolution::freeDevicedW(){
+    if (nullptr != d_pdW)  {
+        cudaFree(d_pdW);
+        d_pdW= nullptr;
+    }
+}
+
+void CudnnBasicConvolution::freeWorkSpace(){
+    if (nullptr != d_pWorkspace)  {
+        cudaFree(d_pWorkspace);
+        d_pWorkspace= nullptr;
     }
 }
 

@@ -27,6 +27,10 @@ public:
     void allocateDeviceW();
     void allocateDevicedW();
 
+    void freeDeviceW();
+    void freeDevicedW();
+    void freeWorkSpace();
+
     virtual void setForwardAlg()=0;
     virtual void setBackwardDataAlg()=0;
     virtual void setBackWardFilterAlg()=0;

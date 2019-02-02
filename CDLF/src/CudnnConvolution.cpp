@@ -30,13 +30,13 @@ void CudnnConvolution::forward() {
                             d_pWorkspace, m_workspaceSize,
                             &beta,
                             m_yDescriptor, d_pY));
-    const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
+    const size_t ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
 
-    if (nullptr != d_pWorkspace){
-        cudaFree(d_pWorkspace);
-        d_pWorkspace = nullptr;
-    }
+    freeWorkSpace();
+    freeDeviceY();
+    freeDeviceX();
+    freeDeviceW();
 }
 
 void CudnnConvolution::backward(bool computeW, bool computeX) {
@@ -60,15 +60,14 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                                 &beta,
                                                 m_wDescriptor, d_pdW));
 
-        const int wSize = length(m_pLayer->m_feature_filterSize);
+        const size_t wSize = length(m_pLayer->m_feature_filterSize);
         for (int i=0; i< m_pLayer->m_numFilters; ++i){
             cudaMemcpy(m_pLayer->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
         }
 
-        if (nullptr != d_pWorkspace){
-            cudaFree(d_pWorkspace);
-            d_pWorkspace = nullptr;
-        }
+        freeWorkSpace();
+        freeDeviceX();
+        freeDevicedW();
     }
 
     if (computeX){
@@ -88,14 +87,14 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                            d_pWorkspace, m_workspaceSize,
                                            &beta,
                                            m_xDescriptor, d_pdX));
-        const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
+        const size_t xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
         cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
 
-        if (nullptr != d_pWorkspace){
-            cudaFree(d_pWorkspace);
-            d_pWorkspace = nullptr;
-        }
+        freeWorkSpace();
+        freeDevicedX();
+        freeDeviceW();
     }
+    freeDevicedY();
 }
 
 void CudnnConvolution::setWDescriptor() {
@@ -111,8 +110,8 @@ void CudnnConvolution::setWDescriptor() {
 
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
 
-    cout<<"In "<<m_pLayer->m_name<<": ";
-    cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
+    //cout<<"In "<<m_pLayer->m_name<<": ";
+    //cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
 
     delete[] filterDimA;
 }
@@ -132,8 +131,8 @@ void CudnnConvolution::setYDescriptor() {
         int* strideA = new int[nbDims];
         dimA2SpanA(tensorOuputDimA, nbDims,strideA);
 
-        cout<<"In "<<m_pLayer->m_name<<": ";
-        cout<<"yDescriptor: "<<array2Str(tensorOuputDimA, nbDims)<<endl;
+        //cout<<"In "<<m_pLayer->m_name<<": ";
+        //cout<<"yDescriptor: "<<array2Str(tensorOuputDimA, nbDims)<<endl;
 
         checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, tensorOuputDimA, strideA));
 

@@ -9,6 +9,9 @@
 
 using namespace std;
 
+#define printCurrentFileLine()   {std::cerr << "Execute at line " << __LINE__ << " of file: "<< __FILE__<<std::endl;}
+
+
 bool sameVector(const vector<int>& vec1, const vector<int>& vec2);
 
 size_t length(const vector<int>& vec);
