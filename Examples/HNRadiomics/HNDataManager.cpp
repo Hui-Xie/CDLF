@@ -28,8 +28,8 @@ HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetD
         cout<<"Info: totally read in "<<m_NTestFile << " test images file. "<<endl;
 
         //debug
-        m_NTrainFile = 1;
-        m_NTestFile = 1;
+        //m_NTrainFile = 1;
+        //m_NTestFile = 1;
 
     }
 

@@ -39,8 +39,6 @@ void CudnnTransposedConvolution::forward() {
     freeDeviceX();
     freeDeviceW();
     freeDeviceY();
-
-
 }
 
 void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
@@ -51,19 +49,9 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
         allocateDevicedW();
         setBackWardFilterAlg();
 
-        //printCurrentFileLine();
-
         checkCUDNN(cudnnGetConvolutionBackwardFilterWorkspaceSize(m_cudnnContext, m_yDescriptor, m_xDescriptor, m_convDescriptor, m_wDescriptor,
                                                                   m_bwdFilterAlg, &m_workspaceSize));
         cudaMalloc(&d_pWorkspace, m_workspaceSize);
-
-        /*
-        if(nullptr == d_pWorkspace){
-            cout<<"Error: can not allocate workspace in backward ComputeW at layer: "<<m_pLayer->m_name<<endl;
-            cout<<"Error: m_workspaceSize = "<<m_workspaceSize<<endl;
-        }*/
-
-        //printCurrentFileLine();
 
         float alpha = 1;
         float beta = 1; //for dw to accumulate
@@ -74,7 +62,6 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
                                                   d_pWorkspace, m_workspaceSize,
                                                   &beta,
                                                   m_wDescriptor, d_pdW));
-       // printCurrentFileLine();
 
         const size_t wSize = length(m_pLayer->m_feature_filterSize);
         for (int i=0; i< m_pLayer->m_numFilters; ++i){
@@ -86,8 +73,6 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
         freeDevicedW();
     }
 
-    //printCurrentFileLine();
-
     if (computeX){
         allocateDevicedX();
         allocateDeviceW();
@@ -95,8 +80,6 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
         checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_yDescriptor, m_wDescriptor, m_convDescriptor, m_xDescriptor,
                                                            m_fwdAlg, &m_workspaceSize));
         cudaMalloc(&d_pWorkspace, m_workspaceSize);
-
-        //printCurrentFileLine()
 
         float alpha = 1;
         float beta = 0;
@@ -110,9 +93,6 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
         const size_t xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
         cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
 
-        //printCurrentFileLine()
-
-
         freeWorkSpace();
         freeDevicedX();
         freeDeviceW();
@@ -120,7 +100,6 @@ void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
 
     freeDevicedY();
 
-    //printCurrentFileLine()
 }
 
 void CudnnTransposedConvolution::setWDescriptor() {
@@ -136,8 +115,8 @@ void CudnnTransposedConvolution::setWDescriptor() {
 
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
 
-    cout<<"In "<<m_pLayer->m_name<<": ";
-    cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
+    //cout<<"In "<<m_pLayer->m_name<<": ";
+    //cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
 
     delete[] filterDimA;
 }
@@ -174,8 +153,8 @@ void CudnnTransposedConvolution::setYDescriptor() {
 
     checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
 
-    cout<<"In "<<m_pLayer->m_name<<": ";
-    cout<<"yDescriptor: "<<array2Str(dimA, nbDims)<<endl;
+    //cout<<"In "<<m_pLayer->m_name<<": ";
+    //cout<<"yDescriptor: "<<array2Str(dimA, nbDims)<<endl;
 
 
     delete[] dimA;

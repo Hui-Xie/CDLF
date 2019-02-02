@@ -41,7 +41,9 @@ int main(int argc, char *argv[]){
 
     //HNRadiomicsNet net("HNSCC_matrix", netDir);
     HNRadiomicsNet net("HNSCC_convV", netDir);
+    cout<<"=========================================="<<endl;
     cout<<"Info: this "<<net.getName() <<" net."<<endl;
+    cout<<"=========================================="<<endl;
 
     if (!isEmptyDir(net.getDir())) {
         net.load();
@@ -58,8 +60,8 @@ int main(int argc, char *argv[]){
     net.m_pDataMgr = &dataMgr;
 
 
-    //int epoch= 15000;
-    int epoch = 1;
+    int epoch= 15000;
+    //int epoch = 1;
     float loss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
