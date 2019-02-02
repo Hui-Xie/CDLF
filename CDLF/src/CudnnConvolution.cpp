@@ -2,8 +2,7 @@
 #include <CudnnConvolution.h>
 
 
-CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer, const vector<int> &filterSize, const vector<int>& stride,
-                                   const int numFilters): CudnnBasicConvolution(pLayer, filterSize, stride, numFilters)
+CudnnConvolution::CudnnConvolution(ConvolutionLayer *pLayer): CudnnBasicConvolution(pLayer)
 {
     setDescriptors();
 }
@@ -61,9 +60,9 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                                 &beta,
                                                 m_wDescriptor, d_pdW));
 
-        const int wSize = length(m_filterSize);
-        for (int i=0; i< m_numFilters; ++i){
-            cudaMemcpy(((ConvolutionLayer*)m_pLayer)->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
+        const int wSize = length(m_pLayer->m_feature_filterSize);
+        for (int i=0; i< m_pLayer->m_numFilters; ++i){
+            cudaMemcpy(m_pLayer->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
         }
 
         if (nullptr != d_pWorkspace){
@@ -101,20 +100,14 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
 
 void CudnnConvolution::setWDescriptor() {
     //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
-    const int filterDim = m_filterSize.size();
-    const int nbDims = filterDim+2;
+    const int filterDim = m_pLayer->m_feature_filterSize.size();
+    const int nbDims = filterDim+1;
 
     int* filterDimA = new int[nbDims];
-    filterDimA[0] = m_numFilters;
-    filterDimA[1] = 1;
-    for (int i=2; i< nbDims; ++i){
-        filterDimA[i]  = m_filterSize[i-2];
+    filterDimA[0] = m_pLayer->m_numOutputFeatures;
+    for (int i=1; i< nbDims; ++i){
+        filterDimA[i]  = m_pLayer->m_feature_filterSize[i-1];
     }
-
-
-
-
-
 
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
 
@@ -125,7 +118,7 @@ void CudnnConvolution::setWDescriptor() {
 }
 
 void CudnnConvolution::setYDescriptor() {
-    int nbDims = m_filterSize.size()+2;
+    int nbDims = m_pLayer->m_filterSize.size()+2;
     int* tensorOuputDimA = new int [nbDims];
     checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_wDescriptor, nbDims, tensorOuputDimA));
 

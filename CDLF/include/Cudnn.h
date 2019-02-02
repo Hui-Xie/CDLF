@@ -44,7 +44,7 @@ public:
     void freeDevicedX();
     void freeDevicedY();
 
-    void setXDescriptor();
+    virtual void setXDescriptor();
     virtual void setYDescriptor() = 0;
     virtual void setDescriptors() = 0;
 

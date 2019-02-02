@@ -88,10 +88,8 @@ bool ConvolutionBasicLayer::checkFilterSize(Layer *prevLayer, const vector<int> 
 
 void ConvolutionBasicLayer::updateFeatureFilterSize() {
     m_feature_filterSize = m_filterSize;
-    if (1 != m_numInputFeatures){
-        m_feature_filterSize.insert(m_feature_filterSize.begin(), m_numInputFeatures);
-    }
-}
+    m_feature_filterSize.insert(m_feature_filterSize.begin(), m_numInputFeatures);
+ }
 
 
 void ConvolutionBasicLayer::computeOneFiterN() {
@@ -111,8 +109,16 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
     m_pW = (Tensor<float> **) new void *[m_numFilters];
     m_pdW = (Tensor<float> **) new void *[m_numFilters];
     for (int i = 0; i < m_numFilters; ++i) {
-        m_pW[i] = new Tensor<float>(m_feature_filterSize);
-        m_pdW[i] = new Tensor<float>(m_feature_filterSize);
+
+        if (1 != m_numInputFeatures){
+            m_pW[i] = new Tensor<float>(m_feature_filterSize);
+            m_pdW[i] = new Tensor<float>(m_feature_filterSize);
+        }
+        else{
+            m_pW[i] = new Tensor<float>(m_filterSize);
+            m_pdW[i] = new Tensor<float>(m_filterSize);
+        }
+
     }
     allocateYdYTensor();
 }

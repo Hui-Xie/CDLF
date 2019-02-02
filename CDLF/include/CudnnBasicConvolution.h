@@ -11,7 +11,7 @@
 
 class CudnnBasicConvolution : public Cudnn{
 public:
-    CudnnBasicConvolution(ConvolutionBasicLayer* pLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters=1);
+    CudnnBasicConvolution(ConvolutionBasicLayer* pLayer);
     ~CudnnBasicConvolution();
 
     cudnnConvolutionDescriptor_t    m_convDescriptor;
@@ -20,14 +20,7 @@ public:
     cudnnConvolutionBwdDataAlgo_t m_bwdDataAlg;
     cudnnConvolutionBwdFilterAlgo_t m_bwdFilterAlg;
 
-
-    vector<int> m_filterSize;
-    vector<int> m_stride;
-    int m_numFilters;
-
-
-    size_t m_workspaceSize;
-
+    virtual void setXDescriptor();
     void setConvDescriptor();
 
     virtual void setDescriptors();
@@ -40,10 +33,13 @@ public:
 
     virtual void setWDescriptor() =0;
 
+    size_t m_workspaceSize;
     void* d_pWorkspace;
 
     float* d_pW;
     float* d_pdW;
+
+    ConvolutionBasicLayer* m_pLayer;
 };
 
 #endif //RL_NONCONVEX_CUDNNCONVOLUTIONBASIC_H

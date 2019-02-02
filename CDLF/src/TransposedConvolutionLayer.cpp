@@ -52,7 +52,7 @@ void TransposedConvolutionLayer::updateTensorSize() {
 void TransposedConvolutionLayer::forward() {
 
 #ifdef Use_GPU
-    CudnnTransposedConvolution cudnnTConvolution(this, m_filterSize, m_stride, m_numFilters);
+    CudnnTransposedConvolution cudnnTConvolution(this);
     cudnnTConvolution.forward();
 
 #else
@@ -106,7 +106,7 @@ void TransposedConvolutionLayer::forward() {
 void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
 
 #ifdef Use_GPU
-    CudnnTransposedConvolution cudnnTConvolution(this, m_filterSize,  m_stride, m_numFilters);
+    CudnnTransposedConvolution cudnnTConvolution(this);
     cudnnTConvolution.backward(computeW, computeX);
 #else
 

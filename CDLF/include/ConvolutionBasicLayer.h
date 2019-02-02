@@ -19,7 +19,7 @@ public:
     Tensor<float>**  m_pdW;
     int m_numFilters;
     vector<int> m_filterSize;
-    vector<int> m_feature_filterSize;
+    vector<int> m_feature_filterSize;  //include feature dimension, even 1.
     int m_numInputFeatures;
     int m_numOutputFeatures;
 
