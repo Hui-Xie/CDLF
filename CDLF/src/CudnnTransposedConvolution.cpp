@@ -103,8 +103,8 @@ void CudnnTransposedConvolution::setWDescriptor() {
     int nbDims = m_pLayer->m_filterSize.size()+2;
 
     int* filterDimA = new int[nbDims];
-    filterDimA[0] = 1;
-    filterDimA[1] = m_pLayer->m_numFilters;
+    filterDimA[0] = m_pLayer->m_numInputFeatures;
+    filterDimA[1] = m_pLayer->m_numOutputFeatures;
     for (int i=2; i< nbDims; ++i){
         filterDimA[i]  = m_pLayer->m_filterSize[i-2];
     }
