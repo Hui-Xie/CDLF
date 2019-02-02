@@ -8,7 +8,8 @@
 using namespace std;
 
 string cmdPath = " /Users/hxie1/temp_release/Examples/HNRadiomics/TrainHNRadiomics ";
-string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 ";
+//string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 ";  // for HNSCC_matrixV model
+string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.1 ";  // for HNSCC_ConvV model
 
 void printUsage(char* argv0){
     cout<<"Train HNSCC Radiomics in HPC"<<endl;
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
     string qsubStrBasic = string(" qsub -b y -cwd ")
                           + " -N " + jobName + " "
                           + " -q " + queue + " "
-                          //+ " -l " + gpuResouce+ " "
+                          + " -l " + gpuResouce+ " "  
                           + " -pe smp "+ to_string(numSlots) + " "
                           + " -e ~/temp_qsub/Error_" + jobName + ".txt "
                           + " -o ~/temp_qsub/StdOutput_" + jobName + ".txt ";
