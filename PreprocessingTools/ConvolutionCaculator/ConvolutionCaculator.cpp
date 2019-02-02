@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     const vector<int> filterSize = str2Vector(filterSizeStr);
     const vector<int> stride =  str2Vector(strideStr);
 
-    cout<<"Info: it is a good practice to keep the output in each dimension odd."<<endl;
+    cout<<"Info: it is a good practice to keep the output in each dimension odd."<<endl<<endl;
 
     const int dimFilter = filterSize.size();
     if (dimFilter != stride.size()) {
