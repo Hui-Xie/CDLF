@@ -14,6 +14,7 @@ Layer::Layer(const int id, const string& name, const vector<int>& tensorSize){
     m_type = "Layer";
     m_prevLayer = nullptr;
     m_attribute = "";
+    m_numFeatures = 1;
 
     m_tensorSize = tensorSize;
     allocateYdYTensor();
@@ -93,5 +94,6 @@ void Layer::printVector(Tensor<float>* vector){
 void Layer::addPreviousLayer(Layer* prevLayer){
     if (nullptr != prevLayer){
         m_prevLayer = prevLayer;
+        m_numFeatures = m_prevLayer->m_numFeatures;
     }
 }

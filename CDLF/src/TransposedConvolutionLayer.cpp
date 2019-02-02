@@ -29,9 +29,20 @@ TransposedConvolutionLayer::~TransposedConvolutionLayer() {
 void TransposedConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
+
+    const int s = (1 == m_prevLayer->m_numFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
+
     for (int i = 0; i < dim; ++i) {
-        m_tensorSize[i] = (m_tensorSize[i] - 1) * m_stride[i] + m_filterSize[i];
+        m_tensorSize[i+s] = (m_tensorSize[i+s] - 1) * m_stride[i] + m_filterSize[i];
     }
+
+    if (0 ==s){
+        m_tensorSize.insert(m_tensorSize.begin(), 1);
+    }
+    else{
+        m_tensorSize[0] = 1;
+    }
+
     m_tensorSizeBeforeCollapse = m_tensorSize;
     if (1 != m_numFilters) {
         m_tensorSize.insert(m_tensorSize.begin(), m_numFilters);
@@ -48,6 +59,9 @@ void TransposedConvolutionLayer::forward() {
     cudnnTConvolution.forward();
 
 #else
+
+    cout<<"TransposedConvolution need GPU."<<endl;
+    /*
     const int N = length(m_tensorSize) / m_numFilters;
     const vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     Tensor<float> *pExtendX = nullptr;
@@ -83,6 +97,7 @@ void TransposedConvolutionLayer::forward() {
         delete pExtendX;
         pExtendX = nullptr;
     }
+    */
 #endif
 
 }
@@ -98,6 +113,8 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
     cudnnTConvolution.backward(computeW, computeX);
 #else
 
+    cout<<"TransposedConvolution need GPU."<<endl;
+   /*
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         // ==================multithread computation=======================
@@ -168,12 +185,14 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
             pExpandDY = nullptr;
         }
     }
+    */
 #endif
 
 }
 
 
 void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
+   /*
     const int N = pdW->getLength();
     Tensor<float> *pExtendX = nullptr;
     m_prevLayer->m_pYTensor->dilute(pExtendX, m_prevLayer->m_tensorSize, m_filterSize, m_stride);
@@ -188,11 +207,13 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
         delete pExtendX;
         pExtendX = nullptr;
     }
+    */
 }
 
 //Note: dx need to accumulate along filters
 void
 TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float> *pdX) {
+    /*
     if (nullptr == pdX) {
         pdX = m_prevLayer->m_pdYTensor;
     }
@@ -219,6 +240,7 @@ TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tens
     for (int t = 0; t < threadVec.size(); ++t) {
         threadVec[t].join();
     }
+    */
 }
 
 

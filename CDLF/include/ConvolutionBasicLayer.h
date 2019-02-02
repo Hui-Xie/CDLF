@@ -19,6 +19,7 @@ public:
     Tensor<float>**  m_pdW;
     int m_numFilters;
     vector<int> m_filterSize;
+    vector<int> m_feature_filterSize;
     vector<int> m_stride;
     int m_OneFilterN;
     vector<int> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
@@ -40,7 +41,7 @@ public:
     virtual  void printStruct();
 
 protected:
-
+    void updateFeatureFilterSize();
 
 
 };

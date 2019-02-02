@@ -14,12 +14,13 @@ ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, L
                                              const vector<int> &filterSize, const vector<int>& stride, const int numFilters):
                                              Layer(id, name, {}){
     if (checkFilterSize(filterSize, stride, prevLayer)) {
+        addPreviousLayer(prevLayer); // this must first execute
         m_type = "ConvolutionBasicLayer";
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
-        //m_NRange = 2000000;
-        addPreviousLayer(prevLayer);
+        m_numFeatures = m_numFilters;
+        updateFeatureFilterSize();
         computeOneFiterN();
 
     } else {
@@ -53,9 +54,11 @@ bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, const
     }
 
     const int dimX = prevLayer->m_tensorSize.size();
-    if (dimFilter == dimX) {
-        for (int i = 0; i < dimX; ++i) {
-            if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i]) {
+    const int s = (1 == prevLayer->m_numFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
+
+    if ( dimFilter == dimX -s) {
+        for (int i = 0; i < dimFilter; ++i) {
+            if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i+s]) {
                 cout << "Error: the filterSize in each dimension should be odd, "
                         "or if it is even, it must be same size of corresponding dimension of tensorSize of input X."
                      << endl;
@@ -70,11 +73,11 @@ bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, const
 }
 
 void ConvolutionBasicLayer::computeOneFiterN() {
-    int N = m_filterSize.size();
+    int N = m_feature_filterSize.size();
     if (N > 0){
         m_OneFilterN = 1;
         for (int i = 0; i < N; ++i) {
-            m_OneFilterN *= m_filterSize[i];
+            m_OneFilterN *= m_feature_filterSize[i];
         }
     }
     else{
@@ -86,8 +89,8 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
     m_pW = (Tensor<float> **) new void *[m_numFilters];
     m_pdW = (Tensor<float> **) new void *[m_numFilters];
     for (int i = 0; i < m_numFilters; ++i) {
-        m_pW[i] = new Tensor<float>(m_filterSize);
-        m_pdW[i] = new Tensor<float>(m_filterSize);
+        m_pW[i] = new Tensor<float>(m_feature_filterSize);
+        m_pdW[i] = new Tensor<float>(m_feature_filterSize);
     }
     allocateYdYTensor();
 }
@@ -158,4 +161,9 @@ void ConvolutionBasicLayer::saveStructLine(FILE *pFile) {
 void ConvolutionBasicLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, Stride=%s, NumOfFilter=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
+}
+
+void ConvolutionBasicLayer::updateFeatureFilterSize() {
+    m_feature_filterSize = m_filterSize;
+    m_feature_filterSize.insert(m_feature_filterSize.begin(), m_numFeatures);
 }
