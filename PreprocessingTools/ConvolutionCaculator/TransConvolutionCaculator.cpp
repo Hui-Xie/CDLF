@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     const vector<int> filterSize = str2Vector(filterSizeStr);
     const vector<int> stride =  str2Vector(strideStr);
 
-    cout<<"Info: it is a good pratice to keep the output in each dimension odd."<<endl;
+    cout<<"Info: it is a good practice to keep the output in each dimension odd."<<endl;
 
     const int dimFilter = filterSize.size();
     if (dimFilter != stride.size()) {
@@ -72,6 +72,9 @@ int main(int argc, char *argv[]) {
         outputTensorSize[i+s] = (outputTensorSize[i+s] - 1) * stride[i] + filterSize[i];
     }
 
+    if (1 ==s){
+        outputTensorSize[0] = 1;
+    }
 
     if (1 != numFilters) {
         outputTensorSize.insert(outputTensorSize.begin(), numFilters);
