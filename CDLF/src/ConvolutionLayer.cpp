@@ -12,9 +12,6 @@ ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prev
                                    const vector<int>& stride, const int numFilters)
         : ConvolutionBasicLayer(id, name, prevLayer, filterSize, stride, numFilters) {
     m_type = "ConvolutionLayer";
-    if (!isElementBiggerThan0(stride)){
-        cout<<"Error: the stride of convolutionLayer should be greater than 0. "<<endl;
-    }
     updateTensorSize();
     constructFiltersAndY();
 }
@@ -28,17 +25,14 @@ void ConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
 
-    const int s = (1 == m_prevLayer->m_numFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
+    const int s = (1 == m_numInputFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
 
-    for (int i = 0; i < dim; ++i) {
+    for (int i = 0; i+s < dim; ++i) {
         m_tensorSize[i+s] = (m_tensorSize[i+s] - m_filterSize[i]) / m_stride[i] + 1;
         // ref formula: http://cs231n.github.io/convolutional-networks/
     }
 
-    if (0 ==s){
-        m_tensorSize.insert(m_tensorSize.begin(), 1);
-    }
-    else{
+    if (1 ==s){
         m_tensorSize[0] = 1;
     }
 

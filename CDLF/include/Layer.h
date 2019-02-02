@@ -27,7 +27,6 @@ public:
     int m_id; // id >0, 0 means null;
     string m_name;
     string m_type;
-    int m_numFeatures;
 
     string m_attribute; //Some supplement information for layer type
 

@@ -20,6 +20,10 @@ public:
     int m_numFilters;
     vector<int> m_filterSize;
     vector<int> m_feature_filterSize;
+    int m_numInputFeatures;
+    int m_numOutputFeatures;
+
+
     vector<int> m_stride;
     int m_OneFilterN;
     vector<int> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
@@ -28,7 +32,7 @@ public:
     virtual  void zeroParaGradient();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
-    bool checkFilterSize(const vector<int>& filterSize, const vector<int>& stride, Layer* prevLayer);
+    bool checkFilterSize(Layer* prevLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters);
     void constructFiltersAndY();
 
     void computeOneFiterN();

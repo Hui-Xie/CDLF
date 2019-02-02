@@ -30,16 +30,13 @@ void TransposedConvolutionLayer::updateTensorSize() {
     m_tensorSize = m_prevLayer->m_tensorSize;
     const int dim = m_tensorSize.size();
 
-    const int s = (1 == m_prevLayer->m_numFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
+    const int s = (1 == m_numInputFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
 
-    for (int i = 0; i < dim; ++i) {
+    for (int i = 0; i+s < dim; ++i) {
         m_tensorSize[i+s] = (m_tensorSize[i+s] - 1) * m_stride[i] + m_filterSize[i];
     }
 
-    if (0 ==s){
-        m_tensorSize.insert(m_tensorSize.begin(), 1);
-    }
-    else{
+    if (1 ==s){
         m_tensorSize[0] = 1;
     }
 

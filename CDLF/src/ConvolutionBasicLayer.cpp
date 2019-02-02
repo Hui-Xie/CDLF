@@ -13,13 +13,13 @@
 ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, Layer *prevLayer,
                                              const vector<int> &filterSize, const vector<int>& stride, const int numFilters):
                                              Layer(id, name, {}){
-    if (checkFilterSize(filterSize, stride, prevLayer)) {
-        addPreviousLayer(prevLayer); // this must first execute
+    if (checkFilterSize(prevLayer, filterSize, stride, numFilters)) {
         m_type = "ConvolutionBasicLayer";
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
-        m_numFeatures = m_numFilters;
+        m_numOutputFeatures = m_numFilters;
+        addPreviousLayer(prevLayer);
         updateFeatureFilterSize();
         computeOneFiterN();
 
@@ -46,31 +46,53 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
 
 // the filterSize in each dimension should be odd,
 // or if it is even, it must be same size of corresponding dimension of tensorSize of input X
-bool ConvolutionBasicLayer::checkFilterSize(const vector<int> &filterSize, const vector<int>& stride, Layer *prevLayer) {
+
+bool ConvolutionBasicLayer::checkFilterSize(Layer *prevLayer, const vector<int> &filterSize, const vector<int> &stride,
+                                            const int numFilters) {
     const int dimFilter = filterSize.size();
-    if (dimFilter != stride.size()){
-        cout<<"Error: the dimension of filterSize and stride should be same."<<endl;
+    if (dimFilter != stride.size()) {
+        cout << "Error: the dimension of filterSize and stride should be same." << endl;
+        return false;
+    }
+
+    if (!isElementBiggerThan0(stride)){
+        cout<<"Error: the stride should be greater than 0. "<<endl;
         return false;
     }
 
     const int dimX = prevLayer->m_tensorSize.size();
-    const int s = (1 == prevLayer->m_numFeatures)? 0: 1; //indicate whether previousTensor includes feature dimension
-
-    if ( dimFilter == dimX -s) {
-        for (int i = 0; i < dimFilter; ++i) {
-            if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i+s]) {
-                cout << "Error: the filterSize in each dimension should be odd, "
-                        "or if it is even, it must be same size of corresponding dimension of tensorSize of input X."
-                     << endl;
-                return false;
-            }
-        }
-        return true;
+    if (dimX == dimFilter) {
+        m_numInputFeatures = 1;
+    } else if (dimX - 1 == dimFilter) {
+        m_numInputFeatures = prevLayer->m_tensorSize[0];
     } else {
-        cout << "Error: dimension of filter should be consistent with the output of the previous Layer." << endl;
+        cout<< "Error: the dimensionon of filterSize should be equal with or 1 less than of the dimension of previous layer tensorSize."
+            << endl;
         return false;
     }
+
+    const int s = (1 == m_numInputFeatures) ? 0 : 1; //indicate whether previousTensor includes feature dimension
+
+
+    for (int i = 0; i < dimFilter; ++i) {
+        if (0 == filterSize[i] % 2 && filterSize[i] != prevLayer->m_tensorSize[i + s]) {
+            cout << "Error: the filterSize in each dimension should be odd, "
+                    "or if it is even, it must be same size of corresponding dimension of tensorSize of input X."
+                 << endl;
+            return false;
+        }
+    }
+    return true;
+
 }
+
+void ConvolutionBasicLayer::updateFeatureFilterSize() {
+    m_feature_filterSize = m_filterSize;
+    if (1 != m_numInputFeatures){
+        m_feature_filterSize.insert(m_feature_filterSize.begin(), m_numInputFeatures);
+    }
+}
+
 
 void ConvolutionBasicLayer::computeOneFiterN() {
     int N = m_feature_filterSize.size();
@@ -163,7 +185,4 @@ void ConvolutionBasicLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
 }
 
-void ConvolutionBasicLayer::updateFeatureFilterSize() {
-    m_feature_filterSize = m_filterSize;
-    m_feature_filterSize.insert(m_feature_filterSize.begin(), m_numFeatures);
-}
+
