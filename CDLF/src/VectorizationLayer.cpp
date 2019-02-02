@@ -5,7 +5,7 @@
 #include <VectorizationLayer.h>
 
 VectorizationLayer::VectorizationLayer(const int id, const string& name,Layer* prevLayer)
-   : ReshapeLayer(id,name, prevLayer, {prevLayer->m_pYTensor->getLength(),1}){
+   : ReshapeLayer(id,name, prevLayer, {(int)prevLayer->m_pYTensor->getLength(),1}){
     m_type = "VectorizationLayer";
     addPreviousLayer(prevLayer);
 }

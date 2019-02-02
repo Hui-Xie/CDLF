@@ -158,7 +158,7 @@ ValueType *Tensor<ValueType>::getData() const {
 }
 
 template<class ValueType>
-int Tensor<ValueType>::getLength() const {
+size_t Tensor<ValueType>::getLength() const {
     return length(m_dims);
 }
 

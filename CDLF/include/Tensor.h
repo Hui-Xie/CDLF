@@ -34,7 +34,7 @@ public:
     vector<int> getDims() const;
     vector<int> getDimsSpan() const;
     ValueType* getData() const;
-    int getLength() const;
+    size_t getLength() const;
 
     void setDimsAndAllocateMem(const vector<int>& dims);
 

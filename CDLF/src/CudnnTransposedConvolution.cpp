@@ -21,6 +21,8 @@ void CudnnTransposedConvolution::forward() {
                                                             m_bwdDataAlg, &m_workspaceSize));
     cudaMalloc(&d_pWorkspace, m_workspaceSize);
 
+    cout<<"==========before execute  cudnnConvolutionBackwardDat in  the forward of CudnnTranposedConvolution at "<<m_pLayer->m_name<<endl;
+
     float alpha = 1;
     float beta = 0;
     checkCUDNN(cudnnConvolutionBackwardData(m_cudnnContext, &alpha,
@@ -30,13 +32,16 @@ void CudnnTransposedConvolution::forward() {
                                             d_pWorkspace, m_workspaceSize,
                                             &beta,
                                             m_yDescriptor, d_pY));
-    const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
+    const size_t ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
     cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
 
     if (nullptr != d_pWorkspace){
         cudaFree(d_pWorkspace);
         d_pWorkspace = nullptr;
     }
+
+    cout<<"==========Finished the forward of CudnnTranposedConvolution at "<<m_pLayer->m_name<<endl;
+
 }
 
 void CudnnTransposedConvolution::backward(bool computeW, bool computeX) {
@@ -111,6 +116,9 @@ void CudnnTransposedConvolution::setWDescriptor() {
 
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
 
+    cout<<"In "<<m_pLayer->m_name<<": ";
+    cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
+
     delete[] filterDimA;
 }
 
@@ -145,6 +153,10 @@ void CudnnTransposedConvolution::setYDescriptor() {
     dimA2SpanA(dimA, nbDims, strideA);
 
     checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
+
+    cout<<"In "<<m_pLayer->m_name<<": ";
+    cout<<"yDescriptor: "<<array2Str(dimA, nbDims)<<endl;
+
 
     delete[] dimA;
     delete[] strideA;

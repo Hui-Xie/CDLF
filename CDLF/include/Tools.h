@@ -11,9 +11,9 @@ using namespace std;
 
 bool sameVector(const vector<int>& vec1, const vector<int>& vec2);
 
-int length(const vector<int>& vec);
+size_t length(const vector<int>& vec);
 
-int length(const int N, const int array[]);
+size_t length(const int N, const int array[]);
 
 bool sameLength(const vector<int>& vec1, const vector<int>& vec2);
 

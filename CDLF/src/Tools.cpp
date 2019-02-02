@@ -22,10 +22,10 @@ bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
     }
 }
 
-int length(const vector<int>& vec){
+size_t length(const vector<int>& vec){
     int dim = vec.size();
     if (dim >0){
-        int length=vec[0];
+        size_t length=vec[0]*1l;
         for(int i =1; i< dim; ++i){
             length *= vec[i];
         }
@@ -36,9 +36,9 @@ int length(const vector<int>& vec){
     }
 }
 
-int length(const int N, const int array[]){
+size_t length(const int N, const int array[]){
     if (N >0){
-        int length=array[0];
+        size_t length=array[0]*1l;
         for(int i =1; i< N; ++i){
             length *= array[i];
         }

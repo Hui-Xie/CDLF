@@ -111,7 +111,7 @@ void CudnnConvolution::setWDescriptor() {
 
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
 
-    cout<<"In "<<m_pLayer->m_name<<endl;
+    cout<<"In "<<m_pLayer->m_name<<": ";
     cout<<"wDescriptor: "<<array2Str(filterDimA, nbDims)<<endl;
 
     delete[] filterDimA;
@@ -132,7 +132,7 @@ void CudnnConvolution::setYDescriptor() {
         int* strideA = new int[nbDims];
         dimA2SpanA(tensorOuputDimA, nbDims,strideA);
 
-        cout<<"In "<<m_pLayer->m_name<<endl;
+        cout<<"In "<<m_pLayer->m_name<<": ";
         cout<<"yDescriptor: "<<array2Str(tensorOuputDimA, nbDims)<<endl;
 
         checkCUDNN(cudnnSetTensorNdDescriptor(m_yDescriptor, CUDNN_DATA_FLOAT, nbDims, tensorOuputDimA, strideA));
@@ -144,8 +144,7 @@ void CudnnConvolution::setYDescriptor() {
 }
 
 void CudnnConvolution::setForwardAlg() {
-    m_pLayer->printStruct();
-    checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
+     checkCUDNN(cudnnGetConvolutionForwardAlgorithm(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
                                                    CUDNN_CONVOLUTION_FWD_PREFER_FASTEST, 0, &m_fwdAlg));
 }
 
