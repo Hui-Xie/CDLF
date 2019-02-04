@@ -11,6 +11,7 @@ void printUsage(char* argv0){
     cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <learningRate>"<<endl;
     cout<<"for examples: "<<endl;
     cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist  0.0001"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters /Users/hxie1/Projects/mnist  0.0001"<<endl;
 }
 
 
