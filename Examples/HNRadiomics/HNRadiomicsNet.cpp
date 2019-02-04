@@ -18,8 +18,8 @@ void HNRadiomicsNet::defineAssemblyLoss() {
     AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
     Layer* prevLayer = lossLayer->m_prevLayer;
     lossLayer->addLoss( new SquareLossLayer(-1, "SquareLoss", prevLayer, 1));
-    lossLayer->addLoss( new DiceLossLayer(-2, "DiceLoss", prevLayer));
-    lossLayer->addLoss( new CrossEntropyLoss(-3, "CrossEntropyLoss", prevLayer));
+    lossLayer->addLoss( new CrossEntropyLoss(-2, "CrossEntropyLoss", prevLayer));
+    //lossLayer->addLoss( new DiceLossLayer(-3, "DiceLoss", prevLayer));
 }
 
 void HNRadiomicsNet::train() {
@@ -58,8 +58,28 @@ void HNRadiomicsNet::train() {
             }
 
             m_pDataMgr->readLabelFile(labelFilePath, pImage);
-            Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
-            pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
+            Tensor<float>* pSubLabel = nullptr;
+            pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
+            //  for lossLayer->m_prevLayer is Softmax
+            if (pImage->getDims().size() +1  == lossLayer->m_prevLayer->m_tensorSize.size()){
+                const int k = lossLayer->m_prevLayer->m_tensorSize[0];
+                Tensor<float>* pOneHotLabel = nullptr;
+                m_pDataMgr->oneHotEncodeLabel(pImage, pOneHotLabel, k);
+                const vector<int> strideOneHot = vector<int>(lossLayer->m_prevLayer->m_tensorSize.size(),1);
+                pOneHotLabel->subTensorFromTopLeft((pOneHotLabel->getDims() - pSubLabel->getDims())/2, pSubLabel, strideOneHot);
+                if (nullptr != pOneHotLabel) {
+                    delete pOneHotLabel;
+                    pOneHotLabel = nullptr;
+                }
+            }
+            // for lossLayer->m_prevLayer is Sigmoid
+            else if (pImage->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
+               pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
+            }
+            else{
+                cout<<"Error: lossLayer->prevLayer size does not match label image size."<<endl;
+                std::exit(EXIT_FAILURE);
+            }
             lossLayer->setGroundTruth(*pSubLabel);
             if (nullptr != pImage) {
                 delete pImage;
@@ -116,8 +136,28 @@ float HNRadiomicsNet::test() {
 
 
         m_pDataMgr->readLabelFile(labelFilePath, pImage);
-        Tensor<float>* pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
-        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
+        Tensor<float>* pSubLabel = nullptr;
+        pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
+        //  for lossLayer->m_prevLayer is Softmax
+        if (pImage->getDims().size() +1  == lossLayer->m_prevLayer->m_tensorSize.size()){
+            const int k = lossLayer->m_prevLayer->m_tensorSize[0];
+            Tensor<float>* pOneHotLabel = nullptr;
+            m_pDataMgr->oneHotEncodeLabel(pImage, pOneHotLabel, k);
+            const vector<int> strideOneHot = vector<int>(lossLayer->m_prevLayer->m_tensorSize.size(),1);
+            pOneHotLabel->subTensorFromTopLeft((pOneHotLabel->getDims() - pSubLabel->getDims())/2, pSubLabel, strideOneHot);
+            if (nullptr != pOneHotLabel) {
+                delete pOneHotLabel;
+                pOneHotLabel = nullptr;
+            }
+        }
+            // for lossLayer->m_prevLayer is Sigmoid
+        else if (pImage->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
+            pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
+        }
+        else{
+            cout<<"Error: lossLayer->prevLayer size does not match label image size."<<endl;
+            std::exit(EXIT_FAILURE);
+        }
         lossLayer->setGroundTruth(*pSubLabel);
 
         if (nullptr != pImage) {
@@ -167,8 +207,28 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
 
     if (!labelFilePath.empty()){
         m_pDataMgr->readLabelFile(labelFilePath, pImage);
-        Tensor<float> *pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
-        pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, stride1);
+        Tensor<float>* pSubLabel = nullptr;
+        pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
+        //  for lossLayer->m_prevLayer is Softmax
+        if (pImage->getDims().size() +1  == lossLayer->m_prevLayer->m_tensorSize.size()){
+            const int k = lossLayer->m_prevLayer->m_tensorSize[0];
+            Tensor<float>* pOneHotLabel = nullptr;
+            m_pDataMgr->oneHotEncodeLabel(pImage, pOneHotLabel, k);
+            const vector<int> strideOneHot = vector<int>(lossLayer->m_prevLayer->m_tensorSize.size(),1);
+            pOneHotLabel->subTensorFromTopLeft((pOneHotLabel->getDims() - pSubLabel->getDims())/2, pSubLabel, strideOneHot);
+            if (nullptr != pOneHotLabel) {
+                delete pOneHotLabel;
+                pOneHotLabel = nullptr;
+            }
+        }
+            // for lossLayer->m_prevLayer is Sigmoid
+        else if (pImage->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
+            pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
+        }
+        else{
+            cout<<"Error: lossLayer->prevLayer size does not match label image size."<<endl;
+            std::exit(EXIT_FAILURE);
+        }
         lossLayer->setGroundTruth(*pSubLabel);
         if (nullptr != pImage) {
             delete pImage;

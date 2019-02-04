@@ -8,68 +8,152 @@
 
 CrossEntropyLoss::CrossEntropyLoss(const int id, const string& name, Layer *prevLayer ): LossLayer(id,name,prevLayer){
     m_type = "CrossEntropyLoss";
+
+    if ("SigmoidLayer" != m_prevLayer->m_type && "SoftmaxLayer" != m_prevLayer->m_type){
+        cout<<"Error: it is better that the previous layer of crossEntropy is Softmax or Sigmoid."<<endl;
+        std::exit(EXIT_FAILURE);
+    }
 }
 
 CrossEntropyLoss::~CrossEntropyLoss(){
 
 }
 
-/* L= -(1/N)*\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
+/*
+ *
+ * for preLayer is Sigmoid:
+ * L= -(1/N)*\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
  * where p_i is the groundtruth distribution
- *       x_i is the output of previous layer, e.g. softmax;
- *       */
+ *       x_i is the output of previous layer, e.g. sigmoid
+ *       N is the total number of elements
+ *       where log is natural logarithm
+ *
+ *
+ * for prelayer is Softmax:
+ * L = -(1/N*C)*\sum p_i* log(x_i)
+ * where p_i is the groundtruth distribution
+ *       x_i is the output of previous layer, e.g. softmax
+ *       N is the total number of elements, and C is the channel number, or C = X.dims[0]
+ *       where log is natural logarithm
+ *
+ *
+ * */
 
 float CrossEntropyLoss::lossCompute(){
     //X.e \in [0,1]
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     const int N = X.getLength();
     m_loss  = 0;
-    for (int i=0; i< N; ++i){
-        float  x = X.e(i);
-        float  g = m_pGroundTruth->e(i);
-        if (x == g){
-            continue;
-        }
-        else{
-            if (x < 0.1){
-                x = 0.1;
+
+    if ("SigmoidLayer"== m_prevLayer->m_type){
+        for (int i=0; i< N; ++i){
+            float  x = X.e(i);
+            float  g = m_pGroundTruth->e(i);
+            if (x == g){
+                continue;
             }
-            if (x > 0.9){
-                x = 0.9;
+            else{
+                if (x < 0.1){
+                    x = 0.1;
+                }
+                if (x > 0.9){
+                    x = 0.9;
+                }
+                m_loss += -g*log(x)-(1-g)*log(1-x);
             }
-            m_loss += -g*log(x)-(1-g)*log(1-x);
         }
+        m_loss /=N;
     }
-    m_loss /=N;
+
+    else if ("SoftmaxLayer"== m_prevLayer->m_type){
+        for (int i=0; i< N; ++i){
+            float  x = X.e(i);
+            float  g = m_pGroundTruth->e(i);
+            if (x == g){
+                continue;
+            }
+            else{
+                if (x < 0.1){
+                    x = 0.1;
+                }
+                m_loss += -g*log(x);
+            }
+        }
+        const int C = X.getDims()[0];
+        m_loss /=N*C;
+    }
+
+    else{
+        cout<<"Error: The previous layer of CrossEntropy is not Softmax or Sigmoid."<<endl;
+    }
+
     return m_loss;
 }
 
-// L= -(1/N)*\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
-// dL/dx_i = (- p_i/x_i + (1-p_i)/(1-x_i))/N
-// this formula implies it is better for p_i is one-hot vector;
-// and we need to check X.e(i) ==0  and X.e(i) ==1 case.
+/*
+ *
+ * for prelayer is Softmax:
+ * L= -(1/N)*\sum (p_i * log(x_i) + (1-p_i) *log(1 -x_i))
+ * dL/dx_i = (- p_i/x_i + (1-p_i)/(1-x_i))/N
+ * this formula implies it is better for p_i is one-hot vector;
+ * and we need to check X.e(i) ==0  and X.e(i) ==1 case.
+ *
+ *
+ * for prelayer is Softmax:
+ * L = -(1/N*C)*\sum p_i* log(x_i)
+ * dL/dx_i = -(1/N*C)*p_i/x_i
+ * and we need to check X.e(i) ==0 case.
+ *
+ *
+ * */
 
 void CrossEntropyLoss::gradientCompute() {
     //symbol deduced formula to compute gradient to prevLayer->m_pdYTensor
     Tensor<float> &X = *(m_prevLayer->m_pYTensor);
     Tensor<float> &dX = *(m_prevLayer->m_pdYTensor);
     const int N = dX.getLength();
-    for (int i = 0; i < N; ++i) {
-        float x = X.e(i);
-        float g = m_pGroundTruth->e(i);
-        if (x == g){
-            continue;
-        }
-        else{
-            if (x < 0.1){
-                x = 0.1;
+
+    if ("SigmoidLayer"== m_prevLayer->m_type){
+        for (int i = 0; i < N; ++i) {
+            float x = X.e(i);
+            float g = m_pGroundTruth->e(i);
+            if (x == g){
+                continue;
             }
-            if (x > 0.9){
-                x = 0.9;
+            else{
+                if (x < 0.1){
+                    x = 0.1;
+                }
+                if (x > 0.9){
+                    x = 0.9;
+                }
+                dX[i] += (-g/x +(1-g)/(1-x))/N;
             }
-            dX[i] += (-g/x +(1-g)/(1-x))/N;
         }
     }
+
+    else if ("SoftmaxLayer"== m_prevLayer->m_type){
+        const int NC = N* X.getDims()[0];
+        for (int i = 0; i < N; ++i) {
+            float x = X.e(i);
+            float g = m_pGroundTruth->e(i);
+            if (x == g){
+                continue;
+            }
+            else{
+                if (x < 0.1){
+                    x = 0.1;
+                }
+                dX[i] += (-g/x)/NC;
+            }
+        }
+
+    }
+
+    else{
+        cout<<"Error: The previous layer of CrossEntropy is not Softmax or Sigmoid."<<endl;
+    }
+
 }
 
 void  CrossEntropyLoss::printGroundTruth() {
@@ -90,6 +174,8 @@ bool CrossEntropyLoss::predictSuccessInColVec(){
 float CrossEntropyLoss::diceCoefficient(){
     Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
     Tensor<float> &GT = *m_pGroundTruth;
+
+    // get the index of position of maximum value over the dim[0] dimension
     Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
     Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
     const int N = predictMaxPosTensor.getLength();
@@ -108,6 +194,8 @@ float CrossEntropyLoss::diceCoefficient(){
 float CrossEntropyLoss::getTPR() {
     Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
     Tensor<float> &GT = *m_pGroundTruth;
+
+    // get the index of position of maximum value over the dim[0] dimension
     Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
     Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
     const int N = predictMaxPosTensor.getLength();

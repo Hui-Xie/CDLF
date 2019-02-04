@@ -9,11 +9,16 @@
 
 #include "LossLayer.h"
 
-/* Loss = 1- Dice
+/*
+ *
+ * For preLayer is Sigmoid
+ * Loss = 1- Dice
  *      = 1 - 2 |x.* g|/(|x| + |g|)
  * where x is the output vector of previous layer
  *       g is the corresponding binary groundtruth vector containing only 0 or 1 elements
  *       prim indicate transpose vector;
+ *       But this formula is not a correct correspondence with its set-version of Dice.
+ *
  *
  * further deduction:
  *  Loss = 1 - 2 sqrt((x .* g)'*(x .*g))/ (sqrt(x'*x)+ sqrt(g'*g))

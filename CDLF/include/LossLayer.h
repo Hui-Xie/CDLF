@@ -40,6 +40,7 @@ public:
     virtual  void printStruct();
 
 
+    // only for loss after sigmoid
     float diceCoefficient(const float threshold);
     float getTPR(const float threshold); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
 

@@ -79,6 +79,7 @@ void LossLayer::printStruct() {
 }
 
 
+// only for loss after sigmoid
 float LossLayer::diceCoefficient(const float threshold) {
     // just compute the target volume, without considering the background
     const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
@@ -96,7 +97,7 @@ float LossLayer::diceCoefficient(const float threshold) {
     return nIntersection*2.0/(nPredict+nGT);
 }
 
-
+// only for loss after sigmoid
 // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
 float LossLayer::getTPR(const float threshold){
     const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
