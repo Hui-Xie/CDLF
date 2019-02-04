@@ -30,10 +30,14 @@ void SoftmaxLayer::forward(){
     const int nSoftmax = m_pYTensor->getDims()[0];// a vector's dimension to execute softmax
     const int N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
     for (int j=0; j<N; ++j){
-        float sumExpX = 1e-8;
+        float sumExpX = 0;
         for (int i=0; i< nSoftmax; ++i){
             sumExpX += exp(X(i*N+j));
         }
+        if (0 == sumExpX){
+            sumExpX = 1e-8;
+        }
+
         for (int i=0; i< nSoftmax; ++i){
             Y(i*N+j) = exp(X(i*N+j))/sumExpX;
         }
@@ -48,10 +52,14 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
     const int nSoftmax = m_pdYTensor->getDims()[0];// a vector's dimension to execute softmax
     const int N = X.getLength()/nSoftmax;  // the number of element vectors needing softmax
     for (int j=0; j<N; ++j){
-        float sumExpX = 1e-8;
+        float sumExpX = 0;
         for (int i=0; i< nSoftmax; ++i){
             sumExpX += exp(X(i*N+j));
         }
+        if (0 == sumExpX){
+            sumExpX = 1e-8;
+        }
+
         float sumExpX2 = sumExpX*sumExpX;
 
         // \sum(dL/dy_j*exp(x_j)
