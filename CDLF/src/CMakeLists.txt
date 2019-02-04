@@ -58,7 +58,7 @@ if (${Use_GPU})
    set(CDLF_CUDA_Src TensorCuda.cu TensorKernels.cu LayerCuda.cu LayerKernels.cu
                      Cudnn.cpp CudnnBasicConvolution.cpp
                      CudnnConvolution.cpp CudnnTransposedConvolution.cpp
-                     CudnnActivation.cpp)
+                     CudnnActivation.cpp  CudnnSoftmax.cpp)
 else(${Use_GPU})
    set(CDLF_CUDA_Src "")
 endif(${Use_GPU})

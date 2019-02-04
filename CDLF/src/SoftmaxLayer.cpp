@@ -2,9 +2,12 @@
 // Created by Hui Xie on 7/28/2018.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
-#include "SoftmaxLayer.h"
 #include <math.h>       /* exp */
 #include <SoftmaxLayer.h>
+
+#ifdef Use_GPU
+     #include <CudnnSoftmax.h>
+#endif
 
 
 SoftmaxLayer::SoftmaxLayer(const int id, const string& name,Layer* prevLayer):Layer(id,name, prevLayer->m_tensorSize) {
@@ -25,6 +28,11 @@ void SoftmaxLayer::zeroParaGradient(){
 }
 
 void SoftmaxLayer::forward(){
+#ifdef Use_GPU
+    CudnnSoftmax cudnnSoftmax(this);
+    cudnnSoftmax.forward();
+#else
+
     Tensor<float>& Y = *m_pYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
     const int nSoftmax = m_pYTensor->getDims()[0];// a vector's dimension to execute softmax
@@ -42,10 +50,18 @@ void SoftmaxLayer::forward(){
             Y(i*N+j) = exp(X(i*N+j))/sumExpX;
         }
     }
+#endif
 }
 
 void SoftmaxLayer::backward(bool computeW, bool computeX){
     if (!computeX) return;
+
+#ifdef Use_GPU
+    CudnnSoftmax cudnnSoftmax(this);
+    cudnnSoftmax.backward(computeW, computeX);
+
+#else
+
     Tensor<float>& dY = *m_pdYTensor;
     Tensor<float>& dX = *m_prevLayer->m_pdYTensor;
     Tensor<float>& X = *m_prevLayer->m_pYTensor;
@@ -73,6 +89,9 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
         }
 
     }
+
+#endif
+
 }
 void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //Null
