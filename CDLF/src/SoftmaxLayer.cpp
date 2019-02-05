@@ -42,9 +42,6 @@ void SoftmaxLayer::forward(){
         for (int i=0; i< nSoftmax; ++i){
             sumExpX += exp(X(i*N+j));
         }
-        if (0 == sumExpX){
-            sumExpX = 1e-8;
-        }
 
         for (int i=0; i< nSoftmax; ++i){
             Y(i*N+j) = exp(X(i*N+j))/sumExpX;
@@ -72,10 +69,6 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
         for (int i=0; i< nSoftmax; ++i){
             sumExpX += exp(X(i*N+j));
         }
-        if (0 == sumExpX){
-            sumExpX = 1e-8;
-        }
-
         float sumExpX2 = sumExpX*sumExpX;
 
         // \sum(dL/dy_j*exp(x_j)
