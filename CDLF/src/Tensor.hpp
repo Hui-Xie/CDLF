@@ -663,12 +663,12 @@ void Tensor<ValueType>::print(bool fixWidth){
 }
 
 template<class ValueType>
-void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
+bool Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
     FILE * pFile = nullptr;
     pFile = fopen (fullFilename.c_str(),"r");
     if (nullptr == pFile){
         printf("Error: can not open  %s  file for reading.\n", fullFilename.c_str());
-        return;
+        return false;
     }
     if (matrix2D && 2 == m_dims.size()){
         for (int i= 0; i< m_dims[0]; ++i){
@@ -692,6 +692,7 @@ void Tensor<ValueType>::load(const string& fullFilename, bool matrix2D){
         }
     }
     fclose (pFile);
+    return true;
 }
 
 //natural logarithm

@@ -175,7 +175,9 @@ void ConvolutionBasicLayer::load(const string &netDir) {
     else {
         for (int i = 0; i < m_numFilters; ++i) {
             filename = layerDir + "/W" + to_string(i) + ".csv";
-            m_pW[i]->load(filename);
+            if (! m_pW[i]->load(filename)){
+                generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
+            }
         }
     }
 }

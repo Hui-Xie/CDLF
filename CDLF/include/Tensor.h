@@ -91,7 +91,7 @@ public:
     float L2Norm();
 
     void save(const string& fullFilename, bool matrix2D=false);
-    void load(const string& fullFilename, bool matrix2D=false);
+    bool load(const string& fullFilename, bool matrix2D=false);
     void print(bool fixWidth = false);
 
     Tensor ln();//natural logarithm

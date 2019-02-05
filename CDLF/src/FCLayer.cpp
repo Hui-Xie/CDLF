@@ -142,10 +142,16 @@ void FCLayer::load(const string &netDir) {
     }
     else{
         filename= layerDir + "/W.csv";
-        m_pW->load(filename);
+        if (!m_pW->load(filename)){
+            xavierInitialize(m_pW);
+        }
 
         filename= layerDir + "/B.csv";
-        m_pBTensor->load(filename);
+        if (!m_pBTensor->load(filename)){
+            int nRow = m_pBTensor->getDims()[0];
+            const float sigmaB = 1.0 / nRow;
+            generateGaussian(m_pBTensor, 0, sigmaB);
+        }
     }
 }
 

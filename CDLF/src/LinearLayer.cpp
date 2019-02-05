@@ -112,10 +112,14 @@ void LinearLayer::load(const string &netDir) {
     }
     else{
         filename= layerDir + "/B.csv";
-        m_pBTensor->load(filename);
+        if  (!m_pBTensor->load(filename)){
+            generateGaussian(m_pBTensor, 0, 0.00001);
+        }
 
         filename= layerDir + "/K.csv";
-        m_pKTensor->load(filename);
+        if (! m_pKTensor->load(filename)){
+            generateGaussian(m_pKTensor, 0, 0.001);
+        }
     }
 }
 

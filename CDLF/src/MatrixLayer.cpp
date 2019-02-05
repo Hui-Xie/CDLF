@@ -105,10 +105,14 @@ void MatrixLayer::load(const string &netDir) {
     }
     else{
         filename= layerDir + "/W.csv";
-        m_pW->load(filename);
+        if (!m_pW->load(filename)){
+            xavierInitialize(m_pW);
+        }
 
         filename= layerDir + "/B.csv";
-        m_pB->load(filename);
+        if (!m_pB->load(filename)){
+            xavierInitialize(m_pB);
+        }
     }
 }
 

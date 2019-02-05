@@ -60,22 +60,30 @@ void parseFullPathname(const string& fullPathFileName, string& fullPathStem, str
     }
 }
 
-bool dirExist(const string& dirPath){
+bool dirExist(const string &dirPath) {
     struct stat statBuff;
-    if (stat(dirPath.c_str(),&statBuff) == -1){
+    if (stat(dirPath.c_str(), &statBuff) == -1) {
         return false;
     }
-    if (S_IFDIR == (statBuff.st_mode & S_IFMT)){
+    if (S_IFDIR == (statBuff.st_mode & S_IFMT)) {
         return true;
-    }
-    else{
+    } else {
         return false;
     }
 }
 
-void createDir(const string& dirPath){
-    if (!dirExist(dirPath)){
-        mkdir(dirPath.c_str(),S_IRWXU |S_IRWXG | S_IROTH |S_IXOTH);
+bool fileExist(const string &fileName) {
+    if (FILE *file = fopen(fileName.c_str(), "r")) {
+        fclose(file);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void createDir(const string &dirPath) {
+    if (!dirExist(dirPath)) {
+        mkdir(dirPath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
     }
 }
 
