@@ -31,6 +31,7 @@ public:
 
     void setActivationDescriptor();
 
+    virtual void setXDescriptor();
     virtual void setYDescriptor();
     virtual void setDescriptors();
 

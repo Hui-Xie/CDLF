@@ -15,6 +15,34 @@ CudnnActivation::~CudnnActivation(){
     cudnnDestroyActivationDescriptor(m_activationDescriptor);
 }
 
+void CudnnActivation::setXDescriptor() {
+    // in order to support the dimension reshape of activation, setXDescriptor use its output demension
+    // because the input and output of actication has same diemnsion.
+    vector<int> & tensorSize = m_pLayer->m_tensorSize;
+
+    //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
+    int nbDims = tensorSize.size()+2;
+
+    int* dimA = new int[nbDims];
+    dimA[0] = 1;
+    dimA[1] = 1;
+    for (int i=2; i< nbDims; ++i){
+        dimA[i]  = tensorSize[i-2];
+    }
+
+    int* strideA = new int [nbDims];  //span in each dimension. It is a different concept with filter-stride in convolution.
+    dimA2SpanA(dimA, nbDims, strideA);
+
+    checkCUDNN(cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
+
+    // cout<<"In "<<m_pLayer->m_name<<": ";
+    //cout<<"xDescriptor: "<<array2Str(dimA, nbDims)<<endl;
+
+    delete[] dimA;
+    delete[] strideA;
+}
+
+
 void CudnnActivation::setYDescriptor() {
     vector<int> & tensorSize = m_pLayer->m_tensorSize;
 
@@ -93,6 +121,7 @@ void CudnnActivation::backward(bool computeW, bool computeX) {
     freeDevicedY();
 
 }
+
 
 
 
