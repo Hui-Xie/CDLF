@@ -152,7 +152,7 @@ float HNRadiomicsNet::test() {
                 pOneHotLabel = nullptr;
             }
         }
-            // for lossLayer->m_prevLayer is Sigmoid
+        // for lossLayer->m_prevLayer is Sigmoid
         else if (pImage->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
             isSoftmaxBeforeLoss = false;
             pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
@@ -235,7 +235,7 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
                 pOneHotLabel = nullptr;
             }
         }
-            // for lossLayer->m_prevLayer is Sigmoid
+        // for lossLayer->m_prevLayer is Sigmoid
         else if (pImage->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
             isSoftmaxBeforeLoss = false;
             pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
@@ -264,10 +264,15 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
 
     //Output network predicted label
-    Tensor<unsigned char> predictResult(lossLayer->m_prevLayer->m_tensorSize);
-    lossLayer->getPredictTensor(predictResult, 0.5);
     string outputLabelFilePath = m_pDataMgr->generateLabelFilePath(imageFilePath);
-    m_pDataMgr->saveLabel2File(&predictResult, offset, outputLabelFilePath);
+    if (isSoftmaxBeforeLoss){
+       m_pDataMgr->saveOneHotCode2LabelFile(lossLayer->m_prevLayer->m_pYTensor, outputLabelFilePath, inputLayer->m_tensorSize);
+    }
+    else{
+        Tensor<unsigned char> predictResult(lossLayer->m_prevLayer->m_tensorSize);
+        lossLayer->getPredictTensor(predictResult, 0.5);
+        m_pDataMgr->saveLabel2File(&predictResult, offset, outputLabelFilePath);
+    }
 
 
     if (!labelFilePath.empty()){

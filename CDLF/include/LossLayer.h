@@ -43,12 +43,14 @@ public:
     // only for loss after sigmoid
     float diceCoefficient(const float threshold);
     float getTPR(const float threshold); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
+    template<typename ValueType> void getPredictTensor(Tensor<ValueType>& predictResult, const float threthold);
+
 
     //for softmax over feature channels
     float diceCoefficient();
     float getTPR(); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
 
-    template<typename ValueType> void getPredictTensor(Tensor<ValueType>& predictResult, const float threthold);
+
 
 };
 
