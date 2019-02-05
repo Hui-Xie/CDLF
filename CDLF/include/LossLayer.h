@@ -44,6 +44,10 @@ public:
     float diceCoefficient(const float threshold);
     float getTPR(const float threshold); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
 
+    //for softmax over feature channels
+    float diceCoefficient();
+    float getTPR(); // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
+
     template<typename ValueType> void getPredictTensor(Tensor<ValueType>& predictResult, const float threthold);
 
 };

@@ -171,49 +171,6 @@ bool CrossEntropyLoss::predictSuccessInColVec(){
     }
 }
 
-float CrossEntropyLoss::diceCoefficient(){
-    Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
-    Tensor<float> &GT = *m_pGroundTruth;
-
-    // get the index of position of maximum value over the dim[0] dimension
-    Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
-    Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
-    const int N = predictMaxPosTensor.getLength();
-    int nPredict = 0;
-    int nGT = 0;
-    int nInteresection = 0;
-    for (int i=0; i< N; ++i)
-    {
-        nPredict += (0 !=predictMaxPosTensor(i))? 1: 0;
-        nGT      += (0 !=GTMaxPosTensor(i))? 1: 0;
-        nInteresection += (predictMaxPosTensor(i) == GTMaxPosTensor(i) && 0 != predictMaxPosTensor(i)) ? 1:0;
-    }
-    return nInteresection*2.0/(nPredict+nGT);
-}
-
-float CrossEntropyLoss::getTPR() {
-    Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
-    Tensor<float> &GT = *m_pGroundTruth;
-
-    // get the index of position of maximum value over the dim[0] dimension
-    Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
-    Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
-    const int N = predictMaxPosTensor.getLength();
-    int nTP = 0; // True Positive
-    int nP = 0;// nP = nTP + nFP
-    for (int i=0; i< N; ++i)
-    {
-        if (GTMaxPosTensor.e(i) >= 0)
-        {
-            ++nP;
-            if (predictMaxPosTensor.e(i) ==  GTMaxPosTensor.e(i) ){
-                ++nTP;
-            }
-        }
-    }
-    return nTP*1.0/nP;
-}
-
 int CrossEntropyLoss::getNumParameters(){
     return 0;
 }

@@ -81,6 +81,11 @@ void LossLayer::printStruct() {
 
 // only for loss after sigmoid
 float LossLayer::diceCoefficient(const float threshold) {
+    if (nullptr == m_pGroundTruth){
+        cout<<"Error: compute diceCoefficient without groundtruth. "<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+
     // just compute the target volume, without considering the background
     const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
     const Tensor<float>* pGT =  m_pGroundTruth;
@@ -100,6 +105,11 @@ float LossLayer::diceCoefficient(const float threshold) {
 // only for loss after sigmoid
 // TruePositiveRate = recall= sensitivity = TP/(TP+FN)
 float LossLayer::getTPR(const float threshold){
+    if (nullptr == m_pGroundTruth){
+        cout<<"Error: compute TPR without groundtruth. "<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+
     const Tensor<float>* pPredict = m_prevLayer->m_pYTensor;
     const Tensor<float>* pGT =  m_pGroundTruth;
     const int N = pPredict->getLength();
@@ -116,6 +126,64 @@ float LossLayer::getTPR(const float threshold){
         }
     }
     return nTP*1.0/nP;
+}
+
+
+//0 indicate background in softmax case
+float LossLayer::diceCoefficient(){
+    if (nullptr == m_pGroundTruth){
+        cout<<"Error: compute diceCoefficient without groundtruth. "<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
+    Tensor<float> &GT = *m_pGroundTruth;
+
+    // get the index of position of maximum value over the dim[0] dimension
+    Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
+    Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
+    const int N = predictMaxPosTensor.getLength();
+    int nPredict = 0;
+    int nGT = 0;
+    int nInteresection = 0;
+    for (int i=0; i< N; ++i)
+    {
+        nPredict += (0 !=predictMaxPosTensor(i))? 1: 0;
+        nGT      += (0 !=GTMaxPosTensor(i))? 1: 0;
+        nInteresection += (predictMaxPosTensor(i) == GTMaxPosTensor(i) && 0 != predictMaxPosTensor(i)) ? 1:0;
+    }
+    return nInteresection*2.0/(nPredict+nGT);
+
+
+}
+
+float LossLayer::getTPR(){
+    if (nullptr == m_pGroundTruth){
+        cout<<"Error: compute TPR without groundtruth. "<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+    Tensor<float> &predict = *(m_prevLayer->m_pYTensor);
+    Tensor<float> &GT = *m_pGroundTruth;
+
+    // get the index of position of maximum value over the dim[0] dimension
+    Tensor<unsigned char> predictMaxPosTensor = predict.getMaxPositionSubTensor();
+    Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
+    const int N = predictMaxPosTensor.getLength();
+    int nTP = 0; // True Positive
+    int nP = 0;// nP = nTP + nFP
+    for (int i=0; i< N; ++i)
+    {
+        if (GTMaxPosTensor.e(i) >= 0)
+        {
+            ++nP;
+            if (predictMaxPosTensor.e(i) ==  GTMaxPosTensor.e(i) ){
+                ++nTP;
+            }
+        }
+    }
+    return nTP*1.0/nP;
+
 }
 
 
