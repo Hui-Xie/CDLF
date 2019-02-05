@@ -11,7 +11,7 @@
 
 class ConcatenateLayer : public Layer {
 public:
-    ConcatenateLayer(const int id, const string& name, const vector<Layer*>& pLayersVec, const vector<int>& tensorSize);
+    ConcatenateLayer(const int id, const string& name, const vector<Layer*>& layersVec, const vector<int>& tensorSize);
     ~ConcatenateLayer();
 
     virtual  void initialize(const string& initialMethod);
@@ -19,14 +19,14 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
-    virtual  int getNumParameters();
+    virtual  int  getNumParameters();
 
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
     virtual  void printStruct();
 
-    vector<Layer*> m_pLayersVec;
+    vector<Layer*> m_layersVec;
 
 private:
     vector<int> m_layerLengthVec;
