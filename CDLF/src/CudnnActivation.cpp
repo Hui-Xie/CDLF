@@ -21,13 +21,12 @@ void CudnnActivation::setXDescriptor() {
     vector<int> & tensorSize = m_pLayer->m_tensorSize;
 
     //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
-    int nbDims = tensorSize.size()+2;
+    int nbDims = tensorSize.size()+1;
 
     int* dimA = new int[nbDims];
     dimA[0] = 1;
-    dimA[1] = 1;
-    for (int i=2; i< nbDims; ++i){
-        dimA[i]  = tensorSize[i-2];
+    for (int i=1; i< nbDims; ++i){
+        dimA[i]  = tensorSize[i-1];
     }
 
     int* strideA = new int [nbDims];  //span in each dimension. It is a different concept with filter-stride in convolution.
@@ -47,13 +46,12 @@ void CudnnActivation::setYDescriptor() {
     vector<int> & tensorSize = m_pLayer->m_tensorSize;
 
     //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
-    int nbDims = tensorSize.size()+2;
+    int nbDims = tensorSize.size()+1;
 
     int* dimA = new int[nbDims];
     dimA[0] = 1;
-    dimA[1] = 1;
-    for (int i=2; i< nbDims; ++i){
-        dimA[i]  = tensorSize[i-2];
+    for (int i=1; i< nbDims; ++i){
+        dimA[i]  = tensorSize[i-1];
     }
 
     int* strideA = new int [nbDims];  //span in each dimension. It is a different concept with filter-stride in convolution.

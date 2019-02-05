@@ -51,7 +51,7 @@ void ConcatenateLayer::backward(bool computeW, bool computeX){
         //for (int i=0; i<N; ++i){
         //    dX(i) += dY.e(i);
         //}
-        
+
         //=================
         const int N = m_layersVec.size();
         for (int i =0; i< N; ++i){
