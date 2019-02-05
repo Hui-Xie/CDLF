@@ -260,9 +260,10 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);
 
     // output float image for debug
-    const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
-    m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
-
+    if (!isSoftmaxBeforeLoss) {
+        const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
+        m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
+    }
     //Output network predicted label
     string outputLabelFilePath = m_pDataMgr->generateLabelFilePath(imageFilePath);
     if (isSoftmaxBeforeLoss){

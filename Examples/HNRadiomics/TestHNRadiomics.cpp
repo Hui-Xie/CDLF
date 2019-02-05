@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 #endif
 
     //Load MnistAutoEncoder Net
-    HNRadiomicsNet net("HNSCC_matrix", netDir);
+    HNRadiomicsNet net("HNSCC_convV", netDir);
     if (!isEmptyDir(net.getDir())) {
         net.load();
     } else {
