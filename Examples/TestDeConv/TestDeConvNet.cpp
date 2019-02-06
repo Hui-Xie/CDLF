@@ -11,7 +11,7 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters 0.001"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters 0.1"<<endl;
 }
 
 
@@ -50,13 +50,16 @@ int main(int argc, char *argv[]){
     net.setLearningRate(learningRate);
     net.setUnlearningLayerID(10);
 
+    net.setOneSampleTrain(true);
+
     int epoch= 1500000;
-    float squareLoss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
         net.save();
-        squareLoss = net.test();
-        cout<<"Epoch_"<<i<<": "<<" mean squareLoss for each element = "<< squareLoss <<endl;
+        if (! net.getOneSampleTrain()){
+            net.test();
+        }
+        cout<<"Epoch_"<<i<<": "<<" mean squareLoss for each element = "<< net.m_loss <<endl;
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;

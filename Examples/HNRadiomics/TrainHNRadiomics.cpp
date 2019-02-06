@@ -67,11 +67,14 @@ int main(int argc, char *argv[]){
 
     for (int i=0; i<epoch; ++i){
         net.train();
+        if (0 == (i+1)%5 ){
+            net.save();
+        }
+
         if (net.getOneSampleTrain()){
             cout<<"One Sample Training: "<<endl;
         }
         else{
-            net.save();
             net.test();
         }
         cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each test sample = "<< net.m_loss <<endl;

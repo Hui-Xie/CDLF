@@ -25,6 +25,7 @@ public:
 
 
     vector<int> m_stride;
+    vector<int> m_feature_stride;
     int m_OneFilterN;
     vector<int> m_tensorSizeBeforeCollapse;  //it does not include feature dimension, only for one filter
 

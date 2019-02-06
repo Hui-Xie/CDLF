@@ -89,6 +89,8 @@ bool ConvolutionBasicLayer::checkFilterSize(Layer *prevLayer, const vector<int> 
 void ConvolutionBasicLayer::updateFeatureFilterSize() {
     m_feature_filterSize = m_filterSize;
     m_feature_filterSize.insert(m_feature_filterSize.begin(), m_numInputFeatures);
+    m_feature_stride = m_stride;
+    m_feature_stride.insert(m_feature_stride.begin(), 1);
  }
 
 
