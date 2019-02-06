@@ -174,7 +174,7 @@ float LossLayer::getTPR(){
     int nP = 0;// nP = nTP + nFP
     for (int i=0; i< N; ++i)
     {
-        if (GTMaxPosTensor.e(i) >= 0)
+        if (GTMaxPosTensor.e(i) > 0)
         {
             ++nP;
             if (predictMaxPosTensor.e(i) ==  GTMaxPosTensor.e(i) ){

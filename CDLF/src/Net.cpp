@@ -79,7 +79,9 @@ void Net::setUnlearningLayerID(const int id){
 
 void Net::setOneSampleTrain(bool oneSample){
     m_OneSampleTrain = oneSample;
-    cout<<"Info: network is running at One Sample Training mode."<<endl;
+    if (m_OneSampleTrain){
+        cout<<"Info: network is running at One Sample Training mode."<<endl;
+    }
 }
 
 string Net::getName() {
