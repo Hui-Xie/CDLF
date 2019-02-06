@@ -39,8 +39,8 @@ int main(int argc, char *argv[]){
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    HNRadiomicsNet net("HNSCC_matrix", netDir);
-    //HNRadiomicsNet net("HNSCC_convV", netDir);
+    //HNRadiomicsNet net("HNSCC_matrix", netDir);
+    HNRadiomicsNet net("HNSCC_convV", netDir);
     cout<<"=========================================="<<endl;
     cout<<"Info: this "<<net.getName() <<" net."<<endl;
     cout<<"=========================================="<<endl;
