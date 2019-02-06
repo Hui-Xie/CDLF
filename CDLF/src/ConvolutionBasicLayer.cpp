@@ -140,9 +140,16 @@ void ConvolutionBasicLayer::zeroParaGradient() {
 
 
 void ConvolutionBasicLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+    cout<<"Layer name: "<<m_name<<endl;
     if ("sgd" == method) {
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             *m_pW[idxF] -= *m_pdW[idxF] * (lr / batchSize);
+
+            //debug
+            cout<<"W"<<idxF<<" = ";
+            m_pW[idxF]->print();
+            cout<<"dW"<<idxF<<" = ";
+            m_pdW[idxF]->print();
         }
     }
 }

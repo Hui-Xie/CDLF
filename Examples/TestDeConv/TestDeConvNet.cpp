@@ -55,7 +55,9 @@ int main(int argc, char *argv[]){
     int epoch= 1500000;
     for (int i=0; i<epoch; ++i){
         net.train();
-        net.save();
+        if (0 == (i+1)%5){
+            net.save();
+        }        
         if (! net.getOneSampleTrain()){
             net.test();
         }

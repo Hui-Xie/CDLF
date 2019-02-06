@@ -59,9 +59,9 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                                 &beta,
                                                 m_wDescriptor, d_pdW));
 
-        const size_t wSize = length(m_pLayer->m_feature_filterSize);
-        for (int i=0; i< m_pLayer->m_numFilters; ++i){
-            cudaMemcpy(m_pLayer->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
+        const size_t wSize = length(((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize);
+        for (int i=0; i< ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters; ++i){
+            cudaMemcpy(((ConvolutionBasicLayer*) m_pLayer)->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
         }
 
         freeWorkSpace();
@@ -98,13 +98,13 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
 
 void CudnnConvolution::setWDescriptor() {
     //The first dimension of the tensor defines number of output features, and the second dimension defines the number of input features maps.
-    const int filterDim = m_pLayer->m_feature_filterSize.size();
+    const int filterDim = ((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize.size();
     const int nbDims = filterDim+1;
 
     int* filterDimA = new int[nbDims];
-    filterDimA[0] = m_pLayer->m_numOutputFeatures;
+    filterDimA[0] = ((ConvolutionBasicLayer*) m_pLayer)->m_numOutputFeatures;
     for (int i=1; i< nbDims; ++i){
-        filterDimA[i]  = m_pLayer->m_feature_filterSize[i-1];
+        filterDimA[i]  = ((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize[i-1];
     }
 
     checkCUDNN(cudnnSetFilterNdDescriptor(m_wDescriptor, CUDNN_DATA_FLOAT, CUDNN_TENSOR_NCHW, nbDims, filterDimA));
@@ -116,7 +116,7 @@ void CudnnConvolution::setWDescriptor() {
 }
 
 void CudnnConvolution::setYDescriptor() {
-    int nbDims = m_pLayer->m_filterSize.size()+2;
+    int nbDims = ((ConvolutionBasicLayer*) m_pLayer)->m_filterSize.size()+2;
     int* tensorOuputDimA = new int [nbDims];
     checkCUDNN(cudnnGetConvolutionNdForwardOutputDim(m_convDescriptor, m_xDescriptor, m_wDescriptor, nbDims, tensorOuputDimA));
 

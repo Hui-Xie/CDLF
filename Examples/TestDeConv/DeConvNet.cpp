@@ -73,8 +73,6 @@ void DeConvNet::train() {
 
     m_loss = lossLayer->getLoss();
 
-    lossLayer->m_prevLayer->m_pYTensor->print();
-
 }
 
 float DeConvNet::test() {

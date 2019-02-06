@@ -1,8 +1,6 @@
 
 #include <Cudnn.h>
 
-#include "Cudnn.h"
-
 Cudnn::Cudnn(Layer* pLayer){
     m_pLayer = pLayer;
     d_pX = nullptr;
@@ -57,6 +55,7 @@ void Cudnn::allocateDeviceX() {
 
     const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
     cudaMalloc(&d_pX, xSize);
+
     cudaMemcpy(d_pX, m_pLayer->m_prevLayer->m_pYTensor->getData(), xSize, cudaMemcpyHostToDevice);
 }
 
@@ -116,6 +115,13 @@ void Cudnn::freeDevicedY() {
         cudaFree(d_pdY);
         d_pdY = nullptr;
     }
+}
+
+void Cudnn::checkDeviceTensor(float *d_pA, const vector<int>  tensorSize) {
+    Tensor<float> A(tensorSize);
+    const int N = length(tensorSize);
+    cudaMemcpy(A.getData(), d_pA, N* sizeof(float), cudaMemcpyDeviceToHost);
+    A.print();
 }
 
 

@@ -93,6 +93,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
 #ifdef Use_GPU
     CudnnConvolution cudnnConvolution(this);
     cudnnConvolution.backward(computeW, computeX);
+
 #else
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {

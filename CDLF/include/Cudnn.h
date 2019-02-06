@@ -8,6 +8,7 @@
 #define RL_NONCONVEX_CUDNN_H
 
 #include "cudnn.h"
+#include <cuda.h>
 #include "Layer.h"
 
 #define checkCUDNN(expression)                               \
@@ -21,7 +22,18 @@
     }                                                        \
   }
 
-
+/*
+#define checkCUDA(expression)                               \
+  {                                                          \
+    ​cudaError_t status = (expression);                     \
+    if (status != cudaSuccess) {                    \
+      std::cerr << "cuda Error: line " << __LINE__ << " of file: "<< __FILE__\
+                << std::endl                                  \
+                << cudaGetErrorString(status) << std::endl; \
+      std::exit(EXIT_FAILURE);                               \
+    }                                                        \
+  }
+*/
 
 class Cudnn{
 public:
@@ -55,6 +67,9 @@ public:
     float* d_pY;
     float* d_pdX;
     float* d_pdY;
+    
+protected:
+    void checkDeviceTensor(float* d_pA, const vector<int>  tensorSize);
 
 
 };

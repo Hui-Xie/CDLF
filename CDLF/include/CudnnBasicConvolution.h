@@ -43,7 +43,6 @@ public:
     float* d_pW;
     float* d_pdW;
 
-    ConvolutionBasicLayer* m_pLayer;
 };
 
 #endif //RL_NONCONVEX_CUDNNCONVOLUTIONBASIC_H
