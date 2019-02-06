@@ -50,6 +50,11 @@ void HNRadiomicsNet::train() {
             const string imageFilePath = m_pDataMgr->m_trainImagesVector[randSeq[nIter]];
             const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
 
+            if (m_OneSampleTrain){
+                cout<<"Image: "<<imageFilePath<<endl;
+                cout<<"Label: "<<labelFilePath<<endl;
+            }
+
             Tensor<float>* pImage = nullptr;
             m_pDataMgr->readTrainImageFile(randSeq[nIter], pImage);
             Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
