@@ -67,12 +67,12 @@ int main(int argc, char *argv[]){
 
     for (int i=0; i<epoch; ++i){
         net.train();
-        if (!net.getOneSampleTrain()){
-            net.save();
-            net.test();
+        if (net.getOneSampleTrain()){
+            cout<<"One Sample Training: "<<endl;
         }
         else{
-            cout<<"One Sample Training: "<<endl;
+            net.save();
+            net.test();
         }
         cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each test sample = "<< net.m_loss <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean dice coefficient =   "<< net.m_dice <<endl;

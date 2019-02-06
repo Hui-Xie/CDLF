@@ -30,6 +30,9 @@ void HNRadiomicsNet::train() {
     if ("SigmoidLayer" == lossLayer->m_prevLayer->m_type){
         isSoftmaxBeforeLoss = false;
     }
+    m_loss = 0;
+    m_dice =0;
+    m_TPR = 0;
 
 
     const int N =m_pDataMgr->m_NTrainFile;
