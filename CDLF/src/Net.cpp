@@ -99,7 +99,12 @@ bool Net::getJudgeLoss() {
 }
 
 int Net::getBatchSize() {
-    return m_batchSize;
+    if (m_OneSampleTrain){
+        return 1;
+    }
+    else{
+        return m_batchSize;
+    }
 }
 
 int Net::getEpoch() {
