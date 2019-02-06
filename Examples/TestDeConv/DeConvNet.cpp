@@ -24,6 +24,17 @@ void DeConvNet::train() {
     InputLayer *inputLayer = getInputLayer();
     SquareLossLayer *lossLayer = (SquareLossLayer *) getFinalLayer();
 
+    vector<int> inputSize = inputLayer->m_tensorSize;
+    Tensor<float> inputTensor(inputSize);
+    if(m_OneSampleTrain){
+        const int length = inputTensor.getLength();
+        for (int i=0; i< length; ++i){
+            inputTensor.e(i) = i/10.0;
+        }
+        inputLayer->setInputTensor(inputTensor);
+    }
+
+
     vector<int> outputSize = lossLayer->m_prevLayer->m_tensorSize;
     Tensor<float> groundTruthTensor(outputSize);
     for(int i =0; i<groundTruthTensor.getLength(); ++i){
@@ -31,7 +42,11 @@ void DeConvNet::train() {
     }
     lossLayer->setGroundTruth(groundTruthTensor);
 
-    const int N = 100;
+
+    int N = 100;
+    if (m_OneSampleTrain){
+        N = 1;
+    }
     const int batchSize = getBatchSize();
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
@@ -41,11 +56,10 @@ void DeConvNet::train() {
         zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && nIter < N; ++i) {
-            vector<int> inputSize = inputLayer->m_tensorSize;
-            Tensor<float> inputTensor(inputSize);
-            generateGaussian(&inputTensor, 0, 1);
-            inputLayer->setInputTensor(inputTensor);
-
+            if (!m_OneSampleTrain){
+                generateGaussian(&inputTensor, 0, 1);
+                inputLayer->setInputTensor(inputTensor);
+            }
 
             forwardPropagate();
             backwardPropagate(true);
@@ -53,7 +67,14 @@ void DeConvNet::train() {
         }
         sgd(learningRate, i);
         ++nBatch;
+
+        //savedYTensor();
     }
+
+    m_loss = lossLayer->getLoss();
+
+    lossLayer->m_prevLayer->m_pYTensor->print();
+
 }
 
 float DeConvNet::test() {
@@ -67,7 +88,7 @@ float DeConvNet::test() {
     }
     lossLayer->setGroundTruth(groundTruthTensor);
 
-    float loss = 0;
+    m_loss = 0;
     const int N = 20;
     int nIter = 0;
     while (nIter < N) {
@@ -77,11 +98,12 @@ float DeConvNet::test() {
         inputLayer->setInputTensor(inputTensor);
 
         forwardPropagate();
-        loss += lossLayer->getLoss();
+        m_loss += lossLayer->getLoss();
         ++nIter;
     }
     printf("output tensor as example:\n");
     lossLayer->m_prevLayer->m_pYTensor->print();
-    return loss/N;
+    m_loss /= N;
+    return m_loss;
 }
 

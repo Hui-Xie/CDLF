@@ -55,6 +55,8 @@ if (${Use_GPU})
     set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
     include_directories(Cudnn_INCLUDE_DIR)
     set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
+else(${Use_GPU})
+    message("We don't use ${Cudnn_Dir} as compiling CPU version.")
 endif(${Use_GPU})
 
 

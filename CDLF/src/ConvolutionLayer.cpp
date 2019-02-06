@@ -51,24 +51,25 @@ void ConvolutionLayer::forward() {
     cudnnConvolution.forward();
 
 #else
-    cout<<"Convolution need GPU."<<endl;
-    /*
     const int N = length(m_tensorSize) / m_numFilters;
     const vector<int> dimsSpanBeforeCollpase = genDimsSpan(m_tensorSizeBeforeCollapse);
     const int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
     const int NRange = (N +nThread -1)/nThread;
 
+    const vector<int> filterSize = (1 == m_numInputFeatures)? m_filterSize : m_feature_filterSize;
+    const vector<int> stride = (1 == m_numInputFeatures)? m_stride : m_feature_stride;
+
     vector<std::thread> threadVec;
     for (int idxF = 0; idxF < m_numFilters; ++idxF) {
         for (int t = 0; t < nThread; ++t) {
             threadVec.push_back(thread(
-                    [this, idxF, t, N, &dimsSpanBeforeCollpase, NRange]() {
-                        Tensor<float> subX = Tensor<float>(m_filterSize);
+                    [this, idxF, t, N, &dimsSpanBeforeCollpase, NRange, filterSize, stride]() {
+                        Tensor<float> subX = Tensor<float>(filterSize);
                         const int offseti = idxF * N;
-                        const vector<int> stride1(m_filterSize.size(),1);
+                        const vector<int> stride1(filterSize.size(),1);
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             m_prevLayer->m_pYTensor->subTensorFromTopLeft(
-                                    m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * m_stride, &subX, stride1);
+                                    m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * stride, &subX, stride1);
                             m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]);
                         }
                     }
@@ -78,7 +79,7 @@ void ConvolutionLayer::forward() {
     for (int t = 0; t < threadVec.size(); ++t) {
         threadVec[t].join();
     }
-    */
+
 #endif
 
 }
@@ -93,9 +94,6 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
     CudnnConvolution cudnnConvolution(this);
     cudnnConvolution.backward(computeW, computeX);
 #else
-
-    cout<<"Convolution need GPU."<<endl;
-    /*
     // dX needs to consider the accumulation of different filters
     if (1 != m_numFilters) {
         //==============Single Thread computation==========================
@@ -138,7 +136,7 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
                         if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
                         if (computeX){
-                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_filterSize, m_stride);
+                            pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_feature_filterSize, m_feature_stride);
                             this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
                         }
                     }
@@ -185,42 +183,44 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         }
 
     }
-*/
+
 #endif
 
 }
 
 
 void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
-
-   /*
-    * const int N = pdW->getLength();  // the N of DW is small, it does not need thread.
+    const int N = pdW->getLength();  // the N of DW is small, it does not need thread.
     Tensor<float> subX = Tensor<float>(m_tensorSizeBeforeCollapse);
     const int nThreads = (CPUAttr::m_numCPUCore + m_numFilters - 1)/m_numFilters;
     for (int i = 0; i < N; ++i) {
-        m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), &subX, m_stride);
+        if (1 == m_numInputFeatures){
+            m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), &subX, m_stride);
+        }
+        else{
+            m_prevLayer->m_pYTensor->subTensorFromTopLeft(pdW->offset2Index(i), &subX, m_feature_stride);
+        }
         pdW->e(i) += subX.conv(*pdY, nThreads); // + is for batch processing
     }
-    */
+
 }
 
 //Note: dx need to accumulate along filters
 void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float> *pdX) {
-
-    /*
     if (nullptr == pdX) {
         pdX = m_prevLayer->m_pdYTensor;
     }
     const int N = pdX->getLength();
     const int nThread = (CPUAttr::m_numCPUCore+ m_numFilters-1)/m_numFilters;
     const int NRange = (N +nThread -1)/nThread;
+    const vector<int> filterSize = (1 == m_numInputFeatures)? m_filterSize : m_feature_filterSize;
 
     vector<std::thread> threadVec;
     for (int t = 0; t < nThread; ++t) {
         threadVec.push_back(thread(
-                [this, t, pExpandDY, pdX, N, pW, NRange]() {
-                    Tensor<float> subExpandDy = Tensor<float>(m_filterSize);
-                    const vector<int> stride1(m_filterSize.size(),1);
+                [this, t, pExpandDY, pdX, N, pW, NRange, filterSize]() {
+                    Tensor<float> subExpandDy = Tensor<float>(filterSize);
+                    const vector<int> stride1(filterSize.size(), 1);
                     for (int i = NRange * t; i < NRange * (t + 1) && i < N; ++i) {
                         pExpandDY->subTensorFromTopLeft(pdX->offset2Index(i), &subExpandDy, stride1);
                         pdX->e(i) += pW->flipConv(subExpandDy);
@@ -232,5 +232,4 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
     for (int t = 0; t < threadVec.size(); ++t) {
         threadVec[t].join();
     }
-    */
 }
