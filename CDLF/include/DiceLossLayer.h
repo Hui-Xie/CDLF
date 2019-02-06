@@ -16,12 +16,13 @@
  *      = 1 - 2 |x.* g|/(|x| + |g|)
  * where x is the output vector of previous layer
  *       g is the corresponding binary groundtruth vector containing only 0 or 1 elements
- *       prim indicate transpose vector;
- *       But this formula is not a correct correspondence with its set-version of Dice.
+ *       bars indicate L1 norm
  *
- *
- * further deduction:
- *  Loss = 1 - 2 sqrt((x .* g)'*(x .*g))/ (sqrt(x'*x)+ sqrt(g'*g))
+ * Notes:
+ * 1  Dice computation formula is not a exact match with its set-version formula;
+ * 2  the above computing formula is an approximation of set-version formula;
+ * 3  In x_i = {0,1} binary case, L1 norm is better than L2 norm in computing dice coefficient;
+ * 4  In x_i= (0,1) real number case,  Dice computed by above dice computation formula may be greater or lesser than the real set-version dice;
  *
  * */
 

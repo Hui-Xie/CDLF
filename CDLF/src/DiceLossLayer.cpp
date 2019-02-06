@@ -8,6 +8,11 @@
 
 DiceLossLayer::DiceLossLayer(const int id, const string &name, Layer *prevLayer) : LossLayer(id, name, prevLayer) {
     m_type = "DiceLossLayer";
+
+    if ("SigmoidLayer" != prevLayer->m_type){
+        cout<<"Error: DiceLossLayer should follow with SigmoidLayer"<<endl;
+        std:exit(EXIT_FAILURE);
+    }
 }
 
 DiceLossLayer::~DiceLossLayer() {
@@ -17,8 +22,10 @@ DiceLossLayer::~DiceLossLayer() {
 float DiceLossLayer::lossCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     const int N = X.getLength();
-    const float xDotg_norm = X.hadamard(*m_pGroundTruth).L2Norm();
-    const float xPlusg_norm = X.L2Norm()+ m_pGroundTruth->L2Norm();
+
+    // here nom is L1 norm, when x>0, g>0, L1norm = sum
+    const float xDotg_norm = X.hadamard(*m_pGroundTruth).sum();
+    const float xPlusg_norm = X.sum()+ m_pGroundTruth->sum();
     if (0 == xPlusg_norm) {
         return 1;
     }
@@ -30,23 +37,14 @@ void DiceLossLayer::gradientCompute() {
     Tensor<float> & X = *(m_prevLayer->m_pYTensor);
     Tensor<float> & dX = *(m_prevLayer->m_pdYTensor);
     Tensor<float> & G = *m_pGroundTruth;
-    Tensor<float> xDotg = X.hadamard(G);
+
+    // here norm is L1 norm, when x>0, g>0, L1norm = sum
     const int N = X.getLength();
-
-    const float xnorm = X.L2Norm();
-    const float xDotg_norm = X.hadamard(*m_pGroundTruth).L2Norm();
-    const float xPlusg_norm = X.L2Norm()+ m_pGroundTruth->L2Norm();
-
-    if (0 == xnorm || 0 == xDotg_norm || 0 == xPlusg_norm){
-        return ;
-    }
-
-    float a = xDotg_norm/xnorm;
-    float b = xPlusg_norm/xDotg_norm;
-    float xPlusg_norm2 = xPlusg_norm*xPlusg_norm;
-
+    const float xDotg_norm = X.hadamard(*m_pGroundTruth).sum();
+    const float xPlusg_norm = X.sum()+ m_pGroundTruth->sum();
+    const float xPlusg_norm2 = 2.0/(xPlusg_norm * xPlusg_norm);
     for (int i=0; i<N; ++i){
-        dX[i] += 2.0*(a*X.e(i)-b*xDotg.e(i))/xPlusg_norm2;
+        dX[i] += (xDotg_norm - G.e(i)*xPlusg_norm)*xPlusg_norm2;
     }
 }
 
