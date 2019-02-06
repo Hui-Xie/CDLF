@@ -36,6 +36,8 @@ public:
     Net(const string& name, const string& saveDir);
     ~Net();
 
+    float m_loss;
+
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);
     void setJudgeLoss(const bool judgeLoss);
@@ -43,6 +45,7 @@ public:
     void setEpoch(const int epoch);
     void setDir(const string dir);
     void setUnlearningLayerID(const int id);
+    void setOneSampleTrain(bool oneSample);
 
     string getName();
 
@@ -54,6 +57,7 @@ public:
     map<int, Layer*> getLayersMap();
     string getDir();
     int getUnlearningLayerID();
+    bool getOneSampleTrain();
 
     int getNumParameters();
 
@@ -101,6 +105,10 @@ protected:
     // check whether layer pointer and name are duplicated
     bool layerExist(const Layer* layer);
     string m_directory;
+
+    // One Sample Train to verify whether network converge
+    bool m_OneSampleTrain;
+
 
     // layer with layerID < m_unlearningLayerID will not learn;
     // layer with layerID = m_unlearningLayerID will not compute dx of its previous layer

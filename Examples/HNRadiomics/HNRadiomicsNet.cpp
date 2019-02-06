@@ -26,8 +26,17 @@ void HNRadiomicsNet::train() {
     InputLayer *inputLayer = getInputLayer();
     AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
 
+    bool isSoftmaxBeforeLoss = true;
+    if ("SigmoidLayer" == lossLayer->m_prevLayer->m_type){
+        isSoftmaxBeforeLoss = false;
+    }
+
+
     const int N =m_pDataMgr->m_NTrainFile;
-    const int batchSize = getBatchSize();
+    int batchSize = getBatchSize(); // const after OneSampleTrain
+    if (m_OneSampleTrain){
+        batchSize = 1;
+    }
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
     int nIter = 0;
@@ -102,6 +111,23 @@ void HNRadiomicsNet::train() {
         ++nBatch;
 
     }
+
+    if (m_OneSampleTrain){
+         m_loss = lossLayer->getLoss();
+
+        // for softmax preceeds over loss layer
+        if (isSoftmaxBeforeLoss){
+            m_dice = lossLayer->diceCoefficient();
+            m_TPR  = lossLayer->getTPR();
+        }
+        else{
+            m_dice = lossLayer->diceCoefficient(0.5);
+            m_TPR  = lossLayer->getTPR(0.5);
+        }
+
+
+    }
+
 }
 
 float HNRadiomicsNet::test() {
@@ -286,6 +312,7 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
             m_dice += lossLayer->diceCoefficient(0.5);
             m_TPR  += lossLayer->getTPR(0.5);
         }
+
     }
     return loss;
 }

@@ -23,6 +23,8 @@ Net::Net(const string &name, const string& saveDir) {
     m_epoch = 0;
     setDir(saveDir);
     m_unlearningLayerID = 0;
+    m_OneSampleTrain = false;
+    m_loss = 0.0;
 }
 
 Net::~Net() {
@@ -75,6 +77,11 @@ void Net::setUnlearningLayerID(const int id){
     m_unlearningLayerID = id;
 }
 
+void Net::setOneSampleTrain(bool oneSample){
+    m_OneSampleTrain = oneSample;
+    cout<<"Info: network is running at One Sample Training mode."<<endl;
+}
+
 string Net::getName() {
     return m_name;
 }
@@ -105,6 +112,10 @@ string Net::getDir() {
 
 int Net::getUnlearningLayerID(){
     return m_unlearningLayerID;
+}
+
+bool Net::getOneSampleTrain(){
+    return m_OneSampleTrain;
 }
 
 map<int, Layer *> Net::getLayersMap() {

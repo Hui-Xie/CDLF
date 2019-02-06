@@ -39,8 +39,8 @@ int main(int argc, char *argv[]){
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    HNRadiomicsNet net("HNSCC_matrix", netDir);
-    //HNRadiomicsNet net("HNSCC_convV", netDir);
+    //HNRadiomicsNet net("HNSCC_matrix", netDir);
+    HNRadiomicsNet net("HNSCC_convV", netDir);
     cout<<"=========================================="<<endl;
     cout<<"Info: this "<<net.getName() <<" net."<<endl;
     cout<<"=========================================="<<endl;
@@ -56,18 +56,25 @@ int main(int argc, char *argv[]){
     net.printArchitecture();
     net.setLearningRate(learningRate);
 
+    //for one sample training
+    net.setOneSampleTrain(true);
+
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
 
+    int epoch= 15000;
+    //int epoch = 1;
 
-    //int epoch= 15000;
-    int epoch = 1;
-    float loss = 0.0;
     for (int i=0; i<epoch; ++i){
         net.train();
-        net.save();
-        loss = net.test();
-        cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each test sample = "<< loss <<endl;
+        if (!net.getOneSampleTrain()){
+            net.save();
+            net.test();
+        }
+        else{
+            cout<<"One Sample Training: "<<endl;
+        }
+        cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each test sample = "<< net.m_loss <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean dice coefficient =   "<< net.m_dice <<endl;
         cout<<"Epoch_"<<i<<": "<<" mean True Positive Rate =   "<< net.m_TPR <<endl;
 
