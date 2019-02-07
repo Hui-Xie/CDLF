@@ -73,11 +73,12 @@ void DeConvNet::train() {
 
     m_loss = lossLayer->getLoss();
 
-    cout<<"TransposedConv Output=";
-    getLayer(10)->m_pYTensor->print();
-    cout<<endl;
-    cout<<"PredictY = ";
-    lossLayer->m_prevLayer->m_pYTensor->print();
+    //debug
+    //cout<<"TransposedConv Output=";
+    // getLayer(10)->m_pYTensor->print();
+    //cout<<endl;
+    //cout<<"PredictY = ";
+    //lossLayer->m_prevLayer->m_pYTensor->print();
 
 }
 
