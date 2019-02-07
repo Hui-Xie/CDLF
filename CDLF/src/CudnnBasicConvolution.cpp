@@ -52,8 +52,8 @@ void CudnnBasicConvolution::setXDescriptor() {
 
     checkCUDNN(cudnnSetTensorNdDescriptor(m_xDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
 
-    //cout<<"In "<<m_pLayer->m_name<<": ";
-    //cout<<"xDescriptor: "<<array2Str(dimA, nbDims)<<endl;
+    cout<<"In "<<m_pLayer->m_name<<": ";
+    cout<<"xDescriptor: "<<array2Str(dimA, nbDims)<<endl;
 
     delete[] dimA;
     delete[] strideA;
