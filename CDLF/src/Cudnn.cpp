@@ -53,22 +53,21 @@ void Cudnn::setXDescriptor() {
 void Cudnn::allocateDeviceX() {
     freeDeviceX();
 
-    const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
-    cudaMalloc(&d_pX, xSize);
-
-    cudaMemcpy(d_pX, m_pLayer->m_prevLayer->m_pYTensor->getData(), xSize, cudaMemcpyHostToDevice);
+    const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize);
+    cudaMalloc(&d_pX, xSize*sizeof(float));
+    cudaMemcpy(d_pX, m_pLayer->m_prevLayer->m_pYTensor->getData(), xSize*sizeof(float), cudaMemcpyHostToDevice);
 }
 
 void Cudnn::allocateDeviceY(bool copyComputedY) {
     freeDeviceY();
 
-    const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
-    cudaMalloc(&d_pY, ySize);
+    const int ySize = length(m_pLayer->m_tensorSize);
+    cudaMalloc(&d_pY, ySize*sizeof(float));
     if (copyComputedY){
-        cudaMemcpy(d_pY, m_pLayer->m_pYTensor->getData(), ySize, cudaMemcpyHostToDevice);
+        cudaMemcpy(d_pY, m_pLayer->m_pYTensor->getData(), ySize*sizeof(float), cudaMemcpyHostToDevice);
     }
     else{
-       cudaMemset(d_pY, 0, ySize);
+       cudaMemset(d_pY, 0, ySize*sizeof(float));
     }
 }
 
@@ -76,17 +75,17 @@ void Cudnn::allocateDeviceY(bool copyComputedY) {
 void Cudnn::allocateDevicedX() {
     freeDevicedX();
 
-    const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
-    cudaMalloc(&d_pdX, xSize);
-    cudaMemset(d_pdX, 0, xSize);
+    const int xSize = length(m_pLayer->m_prevLayer->m_tensorSize);
+    cudaMalloc(&d_pdX, xSize*sizeof(float));
+    cudaMemset(d_pdX, 0, xSize*sizeof(float));
 }
 
 void Cudnn::allocateDevicedY() {
     freeDevicedY();
 
-    const int ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
-    cudaMalloc(&d_pdY, ySize);
-    cudaMemcpy(d_pdY, m_pLayer->m_pdYTensor->getData(), ySize, cudaMemcpyHostToDevice);
+    const int ySize = length(m_pLayer->m_tensorSize);
+    cudaMalloc(&d_pdY, ySize*sizeof(float));
+    cudaMemcpy(d_pdY, m_pLayer->m_pdYTensor->getData(), ySize*sizeof(float), cudaMemcpyHostToDevice);
 }
 
 void Cudnn::freeDeviceX() {

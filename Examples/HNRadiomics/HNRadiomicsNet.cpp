@@ -19,7 +19,7 @@ void HNRadiomicsNet::defineAssemblyLoss() {
     Layer* prevLayer = lossLayer->m_prevLayer;
     lossLayer->addLoss( new SquareLossLayer(-1, "SquareLoss", prevLayer, 1));
     lossLayer->addLoss( new CrossEntropyLoss(-2, "CrossEntropyLoss", prevLayer));
-    //lossLayer->addLoss( new DiceLossLayer(-3, "DiceLoss", prevLayer));
+    lossLayer->addLoss( new DiceLossLayer(-3, "DiceLoss", prevLayer));
 }
 
 void HNRadiomicsNet::train() {

@@ -29,8 +29,8 @@ void CudnnConvolution::forward() {
                             d_pWorkspace, m_workspaceSize,
                             &beta,
                             m_yDescriptor, d_pY));
-    const size_t ySize = length(m_pLayer->m_tensorSize)*sizeof(float);
-    cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
+    const size_t ySize = length(m_pLayer->m_tensorSize);
+    cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize*sizeof(float), cudaMemcpyDeviceToHost);
 
     freeWorkSpace();
     freeDeviceY();
@@ -60,7 +60,8 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                                 m_wDescriptor, d_pdW));
 
         const size_t wSize = length(((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize);
-        for (int i=0; i< ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters; ++i){
+        const int numFilters = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
+        for (int i=0; i< numFilters; ++i){
             cudaMemcpy(((ConvolutionBasicLayer*) m_pLayer)->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
         }
 
@@ -86,8 +87,8 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
                                            d_pWorkspace, m_workspaceSize,
                                            &beta,
                                            m_xDescriptor, d_pdX));
-        const size_t xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
-        cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
+        const size_t xSize = length(m_pLayer->m_prevLayer->m_tensorSize);
+        cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize*sizeof(float), cudaMemcpyDeviceToHost);
 
         freeWorkSpace();
         freeDevicedX();

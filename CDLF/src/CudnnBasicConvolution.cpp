@@ -87,19 +87,21 @@ void CudnnBasicConvolution::setDescriptors() {
 }
 
 void CudnnBasicConvolution::allocateDeviceW() {
-    const int oneFilterSize = length(((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize)*sizeof(float);
-    cudaMalloc(&d_pW, oneFilterSize*((ConvolutionBasicLayer*) m_pLayer)->m_numFilters);
-    for (int i=0; i< ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters; ++i){
-        cudaMemcpy(d_pW+i*oneFilterSize, ((ConvolutionBasicLayer*) m_pLayer)->m_pW[i]->getData(), oneFilterSize, cudaMemcpyHostToDevice);
+    const int oneFilterSize = length(((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize);
+    const int numFitlters = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
+    cudaMalloc(&d_pW, oneFilterSize*sizeof(float)*numFitlters );
+    for (int i=0; i< numFitlters; ++i){
+        cudaMemcpy(d_pW+i*oneFilterSize, ((ConvolutionBasicLayer*) m_pLayer)->m_pW[i]->getData(), oneFilterSize*sizeof(float), cudaMemcpyHostToDevice);
     }
 }
 
 //dW can accumulate
 void CudnnBasicConvolution::allocateDevicedW() {
-    const int oneFilterSize = length(((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize)*sizeof(float);
-    cudaMalloc(&d_pdW, oneFilterSize*((ConvolutionBasicLayer*) m_pLayer)->m_numFilters);
-    for (int i=0; i< ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters; ++i){
-        cudaMemcpy(d_pdW+i*oneFilterSize, ((ConvolutionBasicLayer*) m_pLayer)->m_pdW[i]->getData(), oneFilterSize, cudaMemcpyHostToDevice);
+    const int oneFilterSize = length(((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize);
+    const int numFitlters = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
+    cudaMalloc(&d_pdW, oneFilterSize*sizeof(float)*numFitlters);
+    for (int i=0; i< numFitlters; ++i){
+        cudaMemcpy(d_pdW+i*oneFilterSize, ((ConvolutionBasicLayer*) m_pLayer)->m_pdW[i]->getData(), oneFilterSize*sizeof(float), cudaMemcpyHostToDevice);
     }
 }
 
