@@ -77,8 +77,8 @@ void CudnnSoftmax::forward() {
                                    &beta,
                                    m_yDescriptor, d_pY));
 
-    const size_t ySize = length(m_pLayer->m_tensorSize) * sizeof(float);
-    cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize, cudaMemcpyDeviceToHost);
+    const size_t ySize = length(m_pLayer->m_tensorSize);
+    cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize * sizeof(float), cudaMemcpyDeviceToHost);
 
     freeDeviceX();
     freeDeviceY();
@@ -97,8 +97,8 @@ void CudnnSoftmax::backward(bool computeW, bool computeX) {
                                     &beta,
                                     m_xDescriptor, d_pdX));
 
-    const size_t xSize = length(m_pLayer->m_prevLayer->m_tensorSize)*sizeof(float);
-    cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize, cudaMemcpyDeviceToHost);
+    const size_t xSize = length(m_pLayer->m_prevLayer->m_tensorSize);
+    cudaMemcpy(m_pLayer->m_prevLayer->m_pdYTensor->getData(), d_pdX, xSize*sizeof(float), cudaMemcpyDeviceToHost);
 
     freeDeviceY();
     freeDevicedX();
