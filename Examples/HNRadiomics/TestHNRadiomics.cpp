@@ -45,9 +45,12 @@ int main(int argc, char *argv[]) {
     cout << "Info: program use CPU, instead of GPU." << endl;
 #endif
 
-    //Load MnistAutoEncoder Net
+#ifdef Use_GPU
+    HNRadiomicsNet net("HNSCC_convV", netDir);
+#else
     HNRadiomicsNet net("HNSCC_matrix", netDir);
-    //HNRadiomicsNet net("HNSCC_convV", netDir);
+#endif
+
     if (!isEmptyDir(net.getDir())) {
         net.load();
     } else {
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
-    float loss = net.test(imageFile, labelFile);
+    net.test(imageFile, labelFile);
 
     cout << "=========== End of Predict:  " << net.getName() << " ============" << endl;
     return 0;
