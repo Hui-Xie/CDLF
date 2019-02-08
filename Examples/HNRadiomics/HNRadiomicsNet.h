@@ -25,8 +25,15 @@ public:
 
     float m_TPR; // True positive Rate
     float m_dice;
+    bool m_isSoftmaxBeforeLoss;
 
     void defineAssemblyLoss();
+
+    void detectSoftmaxBeforeLoss();
+
+    void setInput(const string& filename);
+    void setGroundtruth(const string& filename);
+
 };
 
 

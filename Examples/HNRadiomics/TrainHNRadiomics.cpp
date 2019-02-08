@@ -55,6 +55,7 @@ int main(int argc, char *argv[]){
     net.defineAssemblyLoss();
     net.printArchitecture();
     net.setLearningRate(learningRate);
+    net.detectSoftmaxBeforeLoss();
 
     //for one sample training
     net.setOneSampleTrain(true);
@@ -66,21 +67,15 @@ int main(int argc, char *argv[]){
     //int epoch = 1;
 
     for (int i=0; i<epoch; ++i){
+        cout <<"Epoch "<<i<<": "<<endl;
         net.train();
         if (0 == (i+1)%5 ){
             net.save();
         }
 
-        if (net.getOneSampleTrain()){
-            cout<<"One Sample Training: "<<endl;
+        if (!net.getOneSampleTrain()){
+           net.test();
         }
-        else{
-            net.test();
-        }
-        cout<<"Epoch_"<<i<<": "<<" mean Assembly Loss for each test sample = "<< net.m_loss <<endl;
-        cout<<"Epoch_"<<i<<": "<<" mean dice coefficient =   "<< net.m_dice <<endl;
-        cout<<"Epoch_"<<i<<": "<<" mean True Positive Rate =   "<< net.m_TPR <<endl;
-
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;
