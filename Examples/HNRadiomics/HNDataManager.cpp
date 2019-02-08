@@ -21,11 +21,11 @@ HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetD
 
         getFileVector(m_trainImagesDir, m_trainImagesVector);
         m_NTrainFile = m_trainImagesVector.size();
-        cout<<"Info: totally read in "<<m_NTrainFile << " train images file. "<<endl;
+        cout<<"Info: totally read in "<<m_NTrainFile << " train image files. "<<endl;
 
         getFileVector(m_testImagesDir, m_testImagesVector);
         m_NTestFile = m_testImagesVector.size();
-        cout<<"Info: totally read in "<<m_NTestFile << " test images file. "<<endl;
+        cout<<"Info: totally read in "<<m_NTestFile << " test image files. "<<endl;
 
         //debug
         //m_NTrainFile = 1;
