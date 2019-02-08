@@ -62,22 +62,22 @@ int main(int argc, char *argv[]){
     net.detectSoftmaxBeforeLoss();
 
     //for one sample training
-    net.setOneSampleTrain(true);
+    //net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
 
-    if (isContainSubstr(net.getName(),"clip")){
+    if (isContainSubstr(net.getName(),"ROI")){
         net.m_pDataMgr->generateLabelCenterMap();
     }
 
     int epoch= 15000;
-    //int epoch = 1;
+    //int epoch = 1;  //debug
 
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
         net.train();
-        if (0 == (i+1)%5 ){
+        if (0 == (i+1)%6 ){
             net.save();
         }
 
