@@ -64,7 +64,16 @@ int main(int argc, char *argv[]) {
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
-    net.test(imageFile, labelFile);
+    if (isContainSubstr(net.getName(),"clip")){
+        net.m_pDataMgr->generateLabelCenterMap();
+    }
+
+    vector<int> center = vector<int>();
+    if (!labelFile.empty()){
+        center = net.m_pDataMgr->getLabelCenter(labelFile);
+    }
+
+    net.test(imageFile, labelFile, center);
 
     cout << "=========== End of Predict:  " << net.getName() << " ============" << endl;
     return 0;

@@ -4,6 +4,8 @@
 
 HNRadiomicsNet::HNRadiomicsNet(const string &name, const string &saveDir) : FeedForwardNet(name, saveDir) {
     m_pDataMgr = nullptr;
+
+
 }
 
 HNRadiomicsNet::~HNRadiomicsNet() {
@@ -22,13 +24,14 @@ void HNRadiomicsNet::defineAssemblyLoss() {
     lossLayer->addLoss( new DiceLossLayer(-3, "DiceLoss", prevLayer));
 }
 
-void HNRadiomicsNet::setInput(const string &filename) {
+void HNRadiomicsNet::setInput(const string &filename,const vector<int>& center) {
     InputLayer *inputLayer = getInputLayer();
     Tensor<float>* pImage = nullptr;
     m_pDataMgr->readImageFile(filename, pImage);
     Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
     const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
-    pImage->subTensorFromTopLeft((pImage->getDims() - pSubImage->getDims())/2, pSubImage, stride1);
+    const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pImage->getDims(), inputLayer->m_tensorSize, center);
+    pImage->subTensorFromTopLeft(topLeft, pSubImage, stride1);
     inputLayer->setInputTensor(*pSubImage);
     if (nullptr != pImage) {
         delete pImage;
@@ -40,20 +43,29 @@ void HNRadiomicsNet::setInput(const string &filename) {
     }
 }
 
-void HNRadiomicsNet::setGroundtruth(const string &filename) {
+void HNRadiomicsNet::setGroundtruth(const string &filename, const vector<int>& center) {
     AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
 
     Tensor<float>* pLabel = nullptr;
     m_pDataMgr->readLabelFile(filename, pLabel);
     Tensor<float>* pSubLabel = nullptr;
     pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
+
+
     //  for lossLayer->m_prevLayer is Softmax
     if (pLabel->getDims().size() +1  == lossLayer->m_prevLayer->m_tensorSize.size()){
         const int k = lossLayer->m_prevLayer->m_tensorSize[0];
         Tensor<float>* pOneHotLabel = nullptr;
         m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, k);
         const vector<int> strideOneHot = vector<int>(lossLayer->m_prevLayer->m_tensorSize.size(),1);
-        pOneHotLabel->subTensorFromTopLeft((pOneHotLabel->getDims() - pSubLabel->getDims())/2, pSubLabel, strideOneHot);
+
+        //update topLeft index
+        vector<int> subImageDims = lossLayer->m_prevLayer->m_tensorSize;
+        subImageDims.erase(subImageDims.begin());
+        vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pLabel->getDims(), subImageDims, center);
+        topLeft.insert(topLeft.begin(), 0);
+
+        pOneHotLabel->subTensorFromTopLeft(topLeft, pSubLabel, strideOneHot);
         if (nullptr != pOneHotLabel) {
             delete pOneHotLabel;
             pOneHotLabel = nullptr;
@@ -62,7 +74,8 @@ void HNRadiomicsNet::setGroundtruth(const string &filename) {
         // for lossLayer->m_prevLayer is Sigmoid
     else if (pLabel->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
         const vector<int> stride1 = vector<int>(pLabel->getDims().size(),1);
-        pLabel->subTensorFromTopLeft((pLabel->getDims() - pSubLabel->getDims())/2, pSubLabel, stride1);
+        const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pLabel->getDims(), lossLayer->m_prevLayer->m_tensorSize, center);
+        pLabel->subTensorFromTopLeft(topLeft, pSubLabel, stride1);
     }
     else{
         cout<<"Error: lossLayer->prevLayer size does not match label image size."<<endl;
@@ -100,8 +113,9 @@ void HNRadiomicsNet::train() {
         for (i = 0; i < batchSize && n < N; ++i) {
             const string imageFilePath = m_pDataMgr->m_trainImagesVector[randSeq[n]];
             const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
-            setInput(imageFilePath);
-            setGroundtruth(labelFilePath);
+            const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath);
+            setInput(imageFilePath, center);
+            setGroundtruth(labelFilePath,center);
             forwardPropagate();
             m_loss += lossLayer->getLoss();
             backwardPropagate(true);
@@ -143,8 +157,9 @@ float HNRadiomicsNet::test() {
     while (n < N) {
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
-        setInput(imageFilePath);
-        setGroundtruth(labelFilePath);
+        const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath);
+        setInput(imageFilePath, center);
+        setGroundtruth(labelFilePath,center);
         forwardPropagate();
         m_loss += lossLayer->getLoss();
 
@@ -171,7 +186,7 @@ float HNRadiomicsNet::test() {
 
 }
 
-float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFilePath) {
+float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFilePath, const vector<int>& center) {
     InputLayer *inputLayer = getInputLayer();
     AssemblyLossLayer *lossLayer = (AssemblyLossLayer *) getFinalLayer();
 
@@ -179,9 +194,9 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     m_dice = 0.0;
     m_TPR = 0.0;
 
-    setInput(imageFilePath);
+    setInput(imageFilePath, center);
     if (!labelFilePath.empty()){
-        setGroundtruth(labelFilePath);
+        setGroundtruth(labelFilePath, center);
     }
     forwardPropagate();
 

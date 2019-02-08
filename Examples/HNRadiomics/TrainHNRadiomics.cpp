@@ -67,6 +67,10 @@ int main(int argc, char *argv[]){
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
 
+    if (isContainSubstr(net.getName(),"clip")){
+        net.m_pDataMgr->generateLabelCenterMap();
+    }
+
     int epoch= 15000;
     //int epoch = 1;
 

@@ -126,6 +126,8 @@ public:
     inline vector<int> offset2Index(const int offset) const;
     inline vector<int> offset2Index(const vector<int>& dimsSpan, const int offset) const;
 
+    vector<int> getCenterOfNonZeroElements();
+
 
 private:
     vector<int> m_dims;

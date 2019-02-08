@@ -73,3 +73,47 @@ void ITKDataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const
     delete pLabel;
 }
 
+void ITKDataManager::generateLabelCenterMap() {
+    m_mapTrainLabelCenter.clear();
+    m_mapTestLabelCenter.clear();
+    int N = m_trainImagesVector.size();
+    for (int i= 0; i<N; ++i){
+        Tensor<float>* pLabel = nullptr;
+        readLabelFile(m_trainImagesVector[i], pLabel);
+        m_mapTrainLabelCenter[m_trainImagesVector[i]] = pLabel->getCenterOfNonZeroElements();
+        delete pLabel;
+    }
+    N = m_testImagesVector.size();
+    for (int i= 0; i<N; ++i){
+        Tensor<float>* pLabel = nullptr;
+        readLabelFile(m_testImagesVector[i], pLabel);
+        m_mapTestLabelCenter[m_testImagesVector[i]] = pLabel->getCenterOfNonZeroElements();
+        delete pLabel;
+    }
+}
+
+vector<int> ITKDataManager::getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,
+                                                const vector<int>&  center) {
+    assert(subImageDims <= imageDims);
+    assert(center >= subImageDims/2);
+
+    if (center.empty()){
+        return (imageDims -subImageDims)/2;
+    }
+    else {
+        return (center - subImageDims/2);
+    }
+}
+
+vector<int> ITKDataManager::getLabelCenter(const string labelFileName) {
+    if (m_mapTrainLabelCenter.count(labelFileName)){
+        return m_mapTrainLabelCenter[labelFileName];
+    }
+    else if (m_mapTestLabelCenter.count(labelFileName)){
+        return m_mapTestLabelCenter[labelFileName];
+    }
+    else{
+        return vector<int>();
+    }
+}
+

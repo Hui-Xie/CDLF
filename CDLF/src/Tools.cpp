@@ -8,6 +8,8 @@
 #include <sstream>
 #include <cctype>
 #include <cstdio>
+#include <Tools.h>
+
 
 bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
     if (vec1.size() != vec2.size()){
@@ -311,6 +313,10 @@ bool isElementEqual1(const vector<int>& vec){
         if (1 != vec[i]) return false;
     }
     return true;
+}
+
+bool isContainSubstr(const string &str, const string subStr) {
+    return (string::npos == str.find(subStr)) ? false : true;
 }
 
 

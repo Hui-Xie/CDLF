@@ -21,7 +21,7 @@ public:
 
     HNDataManager* m_pDataMgr;
 
-    float test(const string& imageFilePath, const string& labelFilePath);
+    float test(const string& imageFilePath, const string& labelFilePath, const vector<int>& center);
 
     float m_TPR; // True positive Rate
     float m_dice;
@@ -31,8 +31,10 @@ public:
 
     void detectSoftmaxBeforeLoss();
 
-    void setInput(const string& filename);
-    void setGroundtruth(const string& filename);
+
+
+    void setInput(const string& filename, const vector<int>& center = vector<int>());
+    void setGroundtruth(const string& filename, const vector<int>& center = vector<int>());
 
 };
 

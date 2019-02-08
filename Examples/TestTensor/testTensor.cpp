@@ -323,6 +323,26 @@ int main (int argc, char *argv[]) {
     printf("mean = %f, sigma = %f\n", mean, sigma);
     printf("count1 = %d \n", count1);
     */
+    
+    
+    cout<<"Test get center of nonZero elements of a Tensor"<<endl;
+    Tensor<float> tensor130({15,20});
+    tensor130.zeroInitialize();
+    tensor130.e(45) = 1;
+    tensor130.e(46) = 1;
+    tensor130.e(47) = 1;
+    tensor130.e(65) = 1;
+    tensor130.e(66) = 1;
+    tensor130.e(67) = 1;
+    tensor130.e(85) = 1;
+    tensor130.e(86) = 1;
+    tensor130.e(87) = 1;
+    vector<int> center = tensor130.getCenterOfNonZeroElements();
+    cout<<"tensor 130, size: 15*20"<<endl;
+    tensor130.print(true);
+    cout<<"center: "<<vector2Str(center)<<endl;
+    
+    
 
 }
 

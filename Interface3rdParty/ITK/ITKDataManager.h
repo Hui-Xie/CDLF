@@ -32,6 +32,9 @@ public:
     int m_NTrainFile;
     int m_NTestFile;
 
+    map<string, vector<int>> m_mapTrainLabelCenter;
+    map<string, vector<int>> m_mapTestLabelCenter;
+
 
     void readTrainImageFile(const int index, Tensor<float>*& pImage);
     void readTestImageFile(const int index, Tensor<float>*& pImage);
@@ -51,6 +54,11 @@ public:
     virtual void saveImage2File(Tensor<float>* pImage, const vector<int>& offset, const string& fullPathFileName) = 0;
     virtual void freeLabelItkImageIO() = 0;
     virtual void freeImageItkImageIO() = 0;
+
+    void generateLabelCenterMap();
+    vector<int> getLabelCenter(const string labelFileName);
+
+    vector<int> getTopLeftIndexFrom(const vector<int>& imageDims, const vector<int>& subImageDims, const vector<int>& center);
 };
 
 
