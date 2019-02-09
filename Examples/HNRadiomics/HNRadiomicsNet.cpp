@@ -81,7 +81,9 @@ void HNRadiomicsNet::setGroundtruth(const string &filename, const vector<int>& c
         cout<<"Error: lossLayer->prevLayer size does not match label image size."<<endl;
         std::exit(EXIT_FAILURE);
     }
+
     lossLayer->setGroundTruth(*pSubLabel);
+
     if (nullptr != pLabel) {
         delete pLabel;
         pLabel = nullptr;

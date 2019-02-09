@@ -74,22 +74,26 @@ void ITKDataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const
 }
 
 void ITKDataManager::generateLabelCenterMap() {
+    cout<<"Info: generating label centers...."<<endl;
     m_mapTrainLabelCenter.clear();
     m_mapTestLabelCenter.clear();
     int N = m_trainImagesVector.size();
     for (int i= 0; i<N; ++i){
         Tensor<float>* pLabel = nullptr;
-        readLabelFile(m_trainImagesVector[i], pLabel);
-        m_mapTrainLabelCenter[m_trainImagesVector[i]] = pLabel->getCenterOfNonZeroElements();
+        const string labelFile = getLabelPathFrom(m_trainImagesVector[i]);
+        readLabelFile(labelFile, pLabel);
+        m_mapTrainLabelCenter[labelFile] = pLabel->getCenterOfNonZeroElements();
         delete pLabel;
     }
     N = m_testImagesVector.size();
     for (int i= 0; i<N; ++i){
         Tensor<float>* pLabel = nullptr;
-        readLabelFile(m_testImagesVector[i], pLabel);
-        m_mapTestLabelCenter[m_testImagesVector[i]] = pLabel->getCenterOfNonZeroElements();
+        const string labelFile = getLabelPathFrom(m_testImagesVector[i]);
+        readLabelFile(labelFile, pLabel);
+        m_mapTestLabelCenter[labelFile] = pLabel->getCenterOfNonZeroElements();
         delete pLabel;
     }
+    cout<<"Info: generating label centers ends."<<endl;
 }
 
 vector<int> ITKDataManager::getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,

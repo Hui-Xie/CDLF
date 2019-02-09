@@ -40,13 +40,14 @@ int main(int argc, char *argv[]){
 #endif
 
 #ifdef Use_GPU
-    HNRadiomicsNet net("HNSCC_convV", netDir);
+    //HNRadiomicsNet net("HNSCC_convV", netDir);
+    HNRadiomicsNet net("HNSCC_ROI1", netDir);
 #else
     HNRadiomicsNet net("HNSCC_matrix", netDir);
 #endif
 
     cout<<"=========================================="<<endl;
-    cout<<"Info: this "<<net.getName() <<" net."<<endl;
+    cout<<"Info: this is "<<net.getName() <<" net."<<endl;
     cout<<"=========================================="<<endl;
 
     if (!isEmptyDir(net.getDir())) {
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]){
     net.detectSoftmaxBeforeLoss();
 
     //for one sample training
-    //net.setOneSampleTrain(true);
+    net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;

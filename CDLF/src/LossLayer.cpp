@@ -157,6 +157,7 @@ float LossLayer::diceCoefficient(){
 
 }
 
+//True Positive Rate
 float LossLayer::getTPR(){
     if (nullptr == m_pGroundTruth){
         cout<<"Error: compute TPR without groundtruth. "<<endl;
@@ -171,7 +172,7 @@ float LossLayer::getTPR(){
     Tensor<unsigned char> GTMaxPosTensor = GT.getMaxPositionSubTensor();
     const int N = predictMaxPosTensor.getLength();
     int nTP = 0; // True Positive
-    int nP = 0;// nP = nTP + nFP
+    int nP = 0;// nP = nTP + nFN
     for (int i=0; i< N; ++i)
     {
         if (GTMaxPosTensor.e(i) > 0)
@@ -182,8 +183,15 @@ float LossLayer::getTPR(){
             }
         }
     }
-    return nTP*1.0/nP;
+    float TPR = 0;
+    if (0 == nP){
+        TPR = 1;
+    }
+    else{
+        TPR = nTP*1.0/nP;
+    }
 
+    return TPR;
 }
 
 

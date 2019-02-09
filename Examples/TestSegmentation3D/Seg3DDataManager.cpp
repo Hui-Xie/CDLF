@@ -84,4 +84,8 @@ void Seg3DDataManager::saveImage2File(Tensor<float> *pImage, const vector<int> &
     floatItkImageIO.writeFileWithSameInputDim(pImage, reverseOffset, fullPathFileName);
 }
 
+string Seg3DDataManager::getLabelPathFrom(const string &imageFilePath) {
+    return std::string();
+}
+
 

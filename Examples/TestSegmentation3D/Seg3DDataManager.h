@@ -30,6 +30,7 @@ public:
     virtual void saveImage2File(Tensor<float>* pImage, const vector<int>& offset, const string& fullPathFileName);
     virtual void freeLabelItkImageIO();
     virtual void freeImageItkImageIO();
+    virtual string getLabelPathFrom(const string& imageFilePath);
 
 };
 

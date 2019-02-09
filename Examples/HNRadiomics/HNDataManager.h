@@ -28,7 +28,7 @@ public:
     virtual void freeImageItkImageIO();
 
 
-    string getLabelPathFrom(const string& imageFilePath);
+    virtual string getLabelPathFrom(const string& imageFilePath);
     string generateLabelFilePath(const string& imageFilePath);
     string generateFloatImagePath(const string& imageFilePath);
 

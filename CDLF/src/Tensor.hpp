@@ -1042,5 +1042,11 @@ vector<int> Tensor<ValueType>::getCenterOfNonZeroElements() {
         }
     }
     center = (max + min)/2;
-    return center;
+    if (center != vector<int>(size, 0)){
+        return center;
+    }
+    else{
+        cout<<"Error: can not find center of NonZeroelements"<<endl;
+        std::exit(EXIT_FAILURE);
+    }
 }
