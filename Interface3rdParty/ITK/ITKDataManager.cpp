@@ -94,15 +94,27 @@ void ITKDataManager::generateLabelCenterMap() {
 
 vector<int> ITKDataManager::getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,
                                                 const vector<int>&  center) {
-    assert(subImageDims <= imageDims);
-    assert(center >= subImageDims/2);
+    if (!(subImageDims <= imageDims)){
+        cout<<"Error: subImageDims should be less than imageDims."<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+    vector<int> topLeft;
 
     if (center.empty()){
-        return (imageDims -subImageDims)/2;
+        topLeft = (imageDims -subImageDims)/2;
     }
     else {
-        return (center - subImageDims/2);
+        topLeft = center - subImageDims/2;
     }
+
+    for(int i=0; i<topLeft.size();++i){
+        if (topLeft[i] <0 ){
+            topLeft[i] = 0;
+        }
+    }
+
+    return topLeft;
+
 }
 
 vector<int> ITKDataManager::getLabelCenter(const string labelFileName) {
