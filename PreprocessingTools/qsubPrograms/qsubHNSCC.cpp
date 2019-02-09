@@ -8,7 +8,8 @@
 using namespace std;
 
 string cmdPath = " /Users/hxie1/temp_release/Examples/HNRadiomics/TrainHNRadiomics ";
-string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 ";
+string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01 "; // for Conv-V model
+//string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 "; // for Matrix-V model
 
 void printUsage(char* argv0){
     cout<<"Train HNSCC Radiomics in HPC"<<endl;

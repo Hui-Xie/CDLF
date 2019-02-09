@@ -39,6 +39,7 @@ Net::~Net() {
 
 void Net::setLearningRate(const float learningRate) {
     m_learningRate = learningRate;
+    cout<<"Info: set learning rate = "<<m_learningRate<<endl;
 }
 
 void Net::setLossTolerance(const float tolerance) {
