@@ -89,29 +89,65 @@ int main(int argc, char *argv[]){
         pLabelImage = nullptr;
     }*/
 
-    // read a label file , crop it and save it 
+    // read a label file , crop it and save it
+    const string imageFilePath = "/home/hxie1/data/HeadNeckSCC/ExtractData/CT_Images/HNSCC-01-0017_CT.nrrd";
     const string labelFilePath = "/home/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV.nrrd"; // 512*512*130
     const string outputLabelFilePath = "/home/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV_test.nrrd";
+    const string outputCTFilePath =  "/home/hxie1/data/HeadNeckSCC/ExtractData/CT_Images/HNSCC-01-0017_CT_ROI.nrrd";
     TestITKDataMgr dataMgr("");
 
-    Tensor<float> *pImage = nullptr;
+    // test image clip according to inputSize
+    /*
+  Tensor<float> *pImage = nullptr;
 
-    dataMgr.readLabelFile(labelFilePath, pImage); // pImage with size: 130*512*512
-    Tensor<float> *pSubLabel = new Tensor<float>({90,500,500});
-    pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, {1,1,1});
+  dataMgr.readLabelFile(labelFilePath, pImage); // pImage with size: 130*512*512
 
-    Tensor<unsigned char> outputLabel({90,500,500});
-    outputLabel.valueTypeConvertFrom(*pSubLabel);
+  Tensor<float> *pSubLabel = new Tensor<float>({90,500,500});
+  pImage->subTensorFromTopLeft((pImage->getDims() - pSubLabel->getDims()) / 2, pSubLabel, {1,1,1});
 
-    dataMgr.saveLabel2File(&outputLabel, {20,6,6}, outputLabelFilePath);
+  Tensor<unsigned char> outputLabel({90,500,500});
+  outputLabel.valueTypeConvertFrom(*pSubLabel);
 
-    if (nullptr != pImage) {
+  dataMgr.saveLabel2File(&outputLabel, {20,6,6}, outputLabelFilePath);
+
+  if (nullptr != pImage) {
         delete pImage;
         pImage = nullptr;
     }
     if (nullptr != pSubLabel) {
         delete pSubLabel;
         pSubLabel = nullptr;
+    }
+   */
+
+
+    // test ROI clip with center of GTV
+
+    Tensor<float> *pLabel = nullptr;
+    dataMgr.readLabelFile(labelFilePath, pLabel); // pLabel with size: 130*512*512
+    vector<int> center = pLabel->getCenterOfNonZeroElements();
+    if (nullptr != pLabel) {
+        delete pLabel;
+        pLabel = nullptr;
+    }
+
+    Tensor<float> *pImage = nullptr;
+    dataMgr.readImageFile(imageFilePath, pImage); // pImage with size: 130*512*512
+    Tensor<float> *pSubImage = new Tensor<float>({90,255,255});
+    vector<int> topLeft = dataMgr.getTopLeftIndexFrom(pImage->getDims(), pSubImage->getDims(), center);
+
+    pImage->subTensorFromTopLeft(topLeft, pSubImage, {1,1,1});
+
+    dataMgr.saveImage2File(pSubImage, topLeft, outputCTFilePath);
+
+
+    if (nullptr != pImage) {
+        delete pImage;
+        pImage = nullptr;
+    }
+    if (nullptr != pSubImage) {
+        delete pSubImage;
+        pSubImage = nullptr;
     }
 
     cout << "============= End of TestITKImageIO =============" << endl;
