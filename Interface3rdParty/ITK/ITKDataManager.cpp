@@ -112,6 +112,9 @@ vector<int> ITKDataManager::getTopLeftIndexFrom(const vector<int> &imageDims, co
     }
 
     for(int i=0; i<topLeft.size();++i){
+        if (topLeft[i]+ subImageDims[i] > imageDims[i]){
+            topLeft[i] = imageDims[i]- subImageDims[i];
+        }
         if (topLeft[i] <0 ){
             topLeft[i] = 0;
         }
