@@ -115,7 +115,9 @@ void HNRadiomicsNet::train() {
         for (i = 0; i < batchSize && n < N; ++i) {
             const string imageFilePath = m_pDataMgr->m_trainImagesVector[randSeq[n]];
             const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
-            const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath);
+
+            // support random translation in all axes direction within 15 pixels
+            const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath, true, 15);
             setInput(imageFilePath, center);
             setGroundtruth(labelFilePath,center);
             forwardPropagate();
@@ -159,7 +161,7 @@ float HNRadiomicsNet::test() {
     while (n < N) {
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
-        const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath);
+        const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath, false , 0);
         setInput(imageFilePath, center);
         setGroundtruth(labelFilePath,center);
         forwardPropagate();

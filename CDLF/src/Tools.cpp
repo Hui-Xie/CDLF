@@ -73,6 +73,8 @@ vector<int> operator+ (const vector<int>& left, const int offset){
     return result;
 }
 
+
+
 vector<int> operator+ (const vector<int>& left, const vector<int>& right){
     assert(left.size() == right.size());
     const int N = left.size();
@@ -82,6 +84,7 @@ vector<int> operator+ (const vector<int>& left, const vector<int>& right){
     }
     return result;
 }
+
 
 vector<int> operator- (const vector<int>& left, const vector<int>& right){
     assert(left.size() == right.size());
@@ -247,6 +250,20 @@ vector<int> generateRandomSequence(const int range) {
         sequence[r2] = temp;
     }
     return sequence;
+}
+
+vector<int> generatePositiveNegativeRandomNumber(const int vectorSize, const int maxValue){
+    vector<int> result(vectorSize, 0);
+    if (maxValue <= 0 ){
+        cout<<"Error: maxValue in generatePositiveNegativeRandomNumber should be greater than 0. "<<endl;
+        return result;
+    }
+    srand (time(NULL));
+    const int range = 2*maxValue +1;
+    for (int i= 0; i<vectorSize; ++i){
+        result[i] = rand() % range - maxValue;
+    }
+    return result;
 }
 
 string getStemName(const string& filename){

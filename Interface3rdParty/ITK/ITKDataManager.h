@@ -58,7 +58,7 @@ public:
     virtual void freeImageItkImageIO() = 0;
 
     void generateLabelCenterMap();
-    vector<int> getLabelCenter(const string labelFileName);
+    vector<int> getLabelCenter(const string labelFileName, const bool randomTranslation, const int translationMaxValue);
 
     vector<int> getTopLeftIndexFrom(const vector<int>& imageDims, const vector<int>& subImageDims, const vector<int>& center);
 };

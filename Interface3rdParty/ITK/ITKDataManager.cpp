@@ -121,15 +121,28 @@ vector<int> ITKDataManager::getTopLeftIndexFrom(const vector<int> &imageDims, co
 
 }
 
-vector<int> ITKDataManager::getLabelCenter(const string labelFileName) {
+vector<int> ITKDataManager::getLabelCenter(const string labelFileName, const bool randomTranslation, const int translationMaxValue) {
+    vector<int> center;
+
     if (m_mapTrainLabelCenter.count(labelFileName)){
-        return m_mapTrainLabelCenter[labelFileName];
+        center = m_mapTrainLabelCenter[labelFileName];
     }
     else if (m_mapTestLabelCenter.count(labelFileName)){
-        return m_mapTestLabelCenter[labelFileName];
+        center = m_mapTestLabelCenter[labelFileName];
     }
     else{
-        return vector<int>();
+        return center;
     }
+
+    if (randomTranslation){
+        const int N = center.size();
+        vector<int> drift = generatePositiveNegativeRandomNumber(N, translationMaxValue);
+        for (int i =0 ;i< N; ++i){
+            center[i] += drift[i];
+        }
+    }
+    return center;
+
+
 }
 

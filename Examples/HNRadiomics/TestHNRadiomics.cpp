@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
 
     vector<int> center = vector<int>();
     if (!labelFile.empty()){
-        center = net.m_pDataMgr->getLabelCenter(labelFile);
+        center = net.m_pDataMgr->getLabelCenter(labelFile, false, 0);
     }
 
     net.test(imageFile, labelFile, center);

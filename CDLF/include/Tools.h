@@ -59,6 +59,8 @@ vector<int> str2Vector(const string& str);
 
 vector<int> generateRandomSequence(const int range);
 
+vector<int> generatePositiveNegativeRandomNumber(const int vectorSize, const int maxValue);
+
 string getStemName(const string& filename);
 
 void printCurrentLocalTime();

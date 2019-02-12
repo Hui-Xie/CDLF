@@ -341,6 +341,13 @@ int main (int argc, char *argv[]) {
     cout<<"tensor 130, size: 15*20"<<endl;
     tensor130.print(true);
     cout<<"center: "<<vector2Str(center)<<endl;
+
+
+    cout<<"Test generatePositiveNegativeRandom"<<endl;
+
+    vector<int> drift = generatePositiveNegativeRandomNumber(5, 9);
+
+    cout<<"generatePositiveNegativeRandom: "<< vector2Str(drift)<<endl;
     
     
 
