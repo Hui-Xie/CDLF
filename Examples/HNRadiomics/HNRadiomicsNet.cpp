@@ -120,8 +120,19 @@ void HNRadiomicsNet::train() {
             const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath, true, 15);
             setInput(imageFilePath, center);
             setGroundtruth(labelFilePath,center);
+
             forwardPropagate();
             m_loss += lossLayer->getLoss();
+            // for softmax preceeds over loss layer
+            if (m_isSoftmaxBeforeLoss){
+                m_dice += lossLayer->diceCoefficient();
+                m_TPR  += lossLayer->getTPR();
+            }
+            else{
+                m_dice += lossLayer->diceCoefficient(0.5);
+                m_TPR  += lossLayer->getTPR(0.5);
+            }
+
             backwardPropagate(true);
             //debug
             //saveYTensor();
@@ -131,20 +142,12 @@ void HNRadiomicsNet::train() {
         sgd(learningRate, i);
         ++nBatch;
 
-        // for softmax preceeds over loss layer
-        if (m_isSoftmaxBeforeLoss){
-            m_dice = lossLayer->diceCoefficient();
-            m_TPR  = lossLayer->getTPR();
-        }
-        else{
-            m_dice = lossLayer->diceCoefficient(0.5);
-            m_TPR  = lossLayer->getTPR(0.5);
-        }
+
 
     }
     m_loss /=n;
-    m_dice /= nBatch;
-    m_TPR /= nBatch;
+    m_dice /= n;
+    m_TPR /= n;
 
     printf("Train: loss = %f, Dice = %f, TPR = %f; \n", m_loss, m_dice, m_TPR);
 }
@@ -226,12 +229,12 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     if (!labelFilePath.empty()){
         m_loss = lossLayer->getLoss();
         if (m_isSoftmaxBeforeLoss){
-            m_dice += lossLayer->diceCoefficient();
-            m_TPR  += lossLayer->getTPR();
+            m_dice = lossLayer->diceCoefficient();
+            m_TPR  = lossLayer->getTPR();
         }
         else{
-            m_dice += lossLayer->diceCoefficient(0.5);
-            m_TPR  += lossLayer->getTPR(0.5);
+            m_dice = lossLayer->diceCoefficient(0.5);
+            m_TPR  = lossLayer->getTPR(0.5);
         }
         printf("Test: loss = %f, Dice = %f, TPR = %f; \n", m_loss, m_dice, m_TPR);
     }
