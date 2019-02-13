@@ -142,7 +142,7 @@ void HNRadiomicsNet::train() {
         }
 
     }
-    m_loss /=N;
+    m_loss /=n;
     m_dice /= nBatch;
     m_TPR /= nBatch;
 
@@ -180,9 +180,9 @@ float HNRadiomicsNet::test() {
         ++n;
 
     }
-    m_loss /=N;
-    m_dice /= N;
-    m_TPR /= N;
+    m_loss /=n;
+    m_dice /= n;
+    m_TPR /= n;
 
     printf("Test: loss = %f, Dice = %f, TPR = %f; \n", m_loss, m_dice, m_TPR);
 
