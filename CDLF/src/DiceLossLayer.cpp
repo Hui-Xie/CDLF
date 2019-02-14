@@ -81,10 +81,15 @@ void DiceLossLayer::gradientCompute() {
         const int N = pX1->getLength();
         const float xDotg_norm = pX1->hadamard(*pG1).sum();
         const float xPlusg_norm = pX1->sum() + pG1->sum();
-        const float xPlusg_norm2 = 2.0 / (xPlusg_norm * xPlusg_norm);
-        for (int i = 0; i < N; ++i) {
-            dX[i+N] += (xDotg_norm - pG1->e(i) * xPlusg_norm) * xPlusg_norm2;
-            dX[i] -= dX[i+N];
+        if (xPlusg_norm > 0 ){
+            const float xPlusg_norm2 = 2.0 / (xPlusg_norm * xPlusg_norm);
+            for (int i = 0; i < N; ++i) {
+                dX[i+N] += (xDotg_norm - pG1->e(i) * xPlusg_norm) * xPlusg_norm2;
+                dX[i] -= dX[i+N];
+            }
+        }
+        else{
+            cout<<"Error: xPlusg_norm <0 in DiceLoss Layer."<<endl;
         }
 
         delete pX1;

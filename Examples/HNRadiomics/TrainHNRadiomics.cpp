@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
         cout<<"Error: program can not load net."<<endl;
         return -2;
     }
-    net.defineAssemblyLoss();
+    //net.defineAssemblyLoss();
     net.printArchitecture();
     net.setLearningRate(learningRate);
     net.detectSoftmaxBeforeLoss();

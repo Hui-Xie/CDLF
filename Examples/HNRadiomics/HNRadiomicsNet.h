@@ -27,7 +27,7 @@ public:
     float m_dice;
     bool m_isSoftmaxBeforeLoss;
 
-    void defineAssemblyLoss();
+    //void defineAssemblyLoss();
 
     void detectSoftmaxBeforeLoss();
 
