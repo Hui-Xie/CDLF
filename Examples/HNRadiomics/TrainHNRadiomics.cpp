@@ -41,8 +41,8 @@ int main(int argc, char *argv[]){
 
 #ifdef Use_GPU
     //HNRadiomicsNet net("HNSCC_convV", netDir);
-    //HNRadiomicsNet net("HNSCC_ROI1", netDir);
-    HNRadiomicsNet net("HNSCC_ROI2", netDir);
+    HNRadiomicsNet net("HNSCC_ROI1", netDir);
+    //HNRadiomicsNet net("HNSCC_ROI2", netDir);
 #else
     HNRadiomicsNet net("HNSCC_matrix", netDir);
 #endif
@@ -77,7 +77,7 @@ int main(int argc, char *argv[]){
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
         net.train();
-        if (0 == (i+1)%20 ){
+        if (0 == (i+1)%23 ){
             net.save();
         }
 
