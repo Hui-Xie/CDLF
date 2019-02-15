@@ -11,8 +11,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  1"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.01"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01"<<endl;
 }
 
 
@@ -41,7 +41,8 @@ int main(int argc, char *argv[]){
 
 #ifdef Use_GPU
     //HNRadiomicsNet net("HNSCC_convV", netDir);
-    HNRadiomicsNet net("HNSCC_ROI1", netDir);
+    //HNRadiomicsNet net("HNSCC_ROI1", netDir);
+    HNRadiomicsNet net("HNSCC_ROI2", netDir);
 #else
     HNRadiomicsNet net("HNSCC_matrix", netDir);
 #endif
@@ -73,12 +74,10 @@ int main(int argc, char *argv[]){
     }
 
     int epoch= 15000;
-    //int epoch = 1;  //debug
-
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
         net.train();
-        if (0 == (i+1)%6 ){
+        if (0 == (i+1)%20 ){
             net.save();
         }
 
