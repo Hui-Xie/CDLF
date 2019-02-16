@@ -4,16 +4,16 @@
 
 //
 
-#ifndef CDLF_HN_RADIOMICS_H
-#define CDLF_HN_RADIOMICS_H
+#ifndef HN_SEGMENTTATIONVNET_H
+#define HN_SEGMENTTATIONVNET_H
 
 #include "CDLF.h"
 #include "HNDataManager.h"
 
-class HNRadiomicsNet : public FeedForwardNet {
+class HNSegVNet : public FeedForwardNet {
 public:
-    HNRadiomicsNet(const string& name, const string& saveDir);
-    ~HNRadiomicsNet();
+    HNSegVNet(const string &name, const string &netDir);
+    ~HNSegVNet();
 
     virtual void build();
     virtual void train();
@@ -41,4 +41,4 @@ public:
 
 
 
-#endif //CDLF_HN_RADIOMICS_H
+#endif //HN_SEGMENTTATIONVNET_H

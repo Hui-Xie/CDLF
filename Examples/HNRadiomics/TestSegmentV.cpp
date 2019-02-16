@@ -3,10 +3,10 @@
 
 //
 
-#include "HNRadiomicsNet.h"
+#include "HNSegVNet.h"
 
 void printUsage(char* argv0){
-    cout<<"Test Head&Neck Radiomics Network:"<<endl;
+    cout<<"Test Head&Neck Suqamous Cell Carcinoma Segmentation V Model:"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfCTImageFile>  [groundTruthFile]"<<endl;
     cout<<"For examples: "<<endl;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef Use_GPU
-    HNRadiomicsNet net("HNSCC_convV", netDir);
+    HNSegVNet net("HNSCC_convV", netDir);
 #else
     HNRadiomicsNet net("HNSCC_matrix", netDir);
 #endif

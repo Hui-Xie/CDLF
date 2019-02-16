@@ -1,24 +1,24 @@
 //
-// Created by Hui Xie on 12/11/18.
+// Created by Hui Xie on 02/16/19.
 // Copyright (c) 2018 Hui Xie. All rights reserved.
 
 //
 
-#include "HNRadiomicsNet.h"
+#include "HNSurvivalNet.h"
 
 void printUsage(char* argv0){
-    cout<<"Train Head&Neck Radiomics Network:"<<endl;
+    cout<<"Train Head&Neck Squamous Cell Carcinoma Survival"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate> <clinicalFilename>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.01"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.01 /home/hxie1/temp_netParameters/HNSCC_ROI_Survival/HNSCC_Clinical_survival.csv"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01 /Users/hxie1/temp_netParameters/HNSCC_ROI_Survival/HNSCC_Clinical_survival.csv"<<endl;
 }
 
 
 int main(int argc, char *argv[]){
     printCurrentLocalTime();
-    if (4 != argc){
+    if (5 != argc){
         cout<<"Error: input parameter error."<<endl;
         printUsage(argv[0]);
         return -1;
@@ -27,6 +27,7 @@ int main(int argc, char *argv[]){
     const string netDir = argv[1];
     const string dataDir = argv[2];
     const float learningRate = stof(argv[3]);
+    const string clinicalFile = argv[4];
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -40,11 +41,10 @@ int main(int argc, char *argv[]){
 #endif
 
 #ifdef Use_GPU
-    //HNRadiomicsNet net("HNSCC_convV", netDir);
-    HNRadiomicsNet net("HNSCC_ROI1", netDir);
-    //HNRadiomicsNet net("HNSCC_ROI2", netDir);
+    HNSurvivalNet net("HNSCC_ROI_Survival", netDir);
+
 #else
-    HNRadiomicsNet net("HNSCC_matrix", netDir);
+    HNSegVNet net("HNSCC_matrix", netDir);
 #endif
 
     cout<<"=========================================="<<endl;
@@ -58,16 +58,19 @@ int main(int argc, char *argv[]){
         cout<<"Error: program can not load net."<<endl;
         return -2;
     }
-    //net.defineAssemblyLoss();
     net.printArchitecture();
     net.setLearningRate(learningRate);
-    net.detectSoftmaxBeforeLoss();
+    net.setUnlearningLayerID(300);
 
     //for one sample training
-    //net.setOneSampleTrain(true);
+    net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
+
+    HNClinicalDataMgr clinicalDataMgr(clinicalFile);
+    net.m_pClinicalDataMgr =&clinicalDataMgr;
+
 
     if (isContainSubstr(net.getName(),"ROI")){
         net.m_pDataMgr->generateLabelCenterMap();
@@ -82,7 +85,7 @@ int main(int argc, char *argv[]){
         }
 
         if (!net.getOneSampleTrain()){
-           net.test();
+            net.test();
         }
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;

@@ -2,9 +2,11 @@
 #include "HNClinicalDataMgr.h"
 #include <fstream>
 #include <iostream>
+#include "FileTools.h"
 
-HNClinicalDataMgr::HNClinicalDataMgr() {
+HNClinicalDataMgr::HNClinicalDataMgr(const string& clinicalFile) {
    m_survivalVector.clear();
+   readSurvivalData(clinicalFile);
 }
 
 HNClinicalDataMgr::~HNClinicalDataMgr() {
@@ -47,26 +49,43 @@ void HNClinicalDataMgr::readSurvivalData(const string &filename) {
 }
 
 Tensor<float> HNClinicalDataMgr::getSurvivalTensor(struct Survival &survival) {
-    Tensor<float> result({10,2});
+    Tensor<float> result({2,10});
     const int survivalYears = int(survival.m_survivalMonth/12.0 +0.5);
     for(int i=0; i< survivalYears && i<10; ++i){
-        result.e({i,0}) = 0; //death
-        result.e({i,1}) = 1; //alive
+        result.e({0,i}) = 0; //death
+        result.e({1,i}) = 1; //alive
     }
     if (survival.m_isAlive){
         //use survival function sqrt(100-x)/10, where x \in [0, 100];
         for(int i=survivalYears; i<10; ++i){
             const int  age = survival.m_age+ i;
             const float s = sqrt(100.0-age)/10.0;
-            result.e({i,0}) = 1-s; //death
-            result.e({i,1}) = s; //alive
+            result.e({0,i}) = 1-s; //death
+            result.e({1,i}) = s; //alive
         }
     }
     else{
         for(int i=survivalYears; i<10; ++i){
-            result.e({i,0}) = 1; //death
-            result.e({i,1}) = 0; //alive
+            result.e({0,i}) = 1; //death
+            result.e({1,i}) = 0; //alive
         }
     }
     return result;
+}
+
+string HNClinicalDataMgr::getPatientCode(const string &imageFilename) {
+    const string filename = getFileName(imageFilename);  // get like this: HNSCC-01-0039_CT.nrrd
+    const string code = filename.substr(0, 13);
+    return code;
+}
+
+struct Survival HNClinicalDataMgr::getSurvivalData(const string &patientCode) {
+    const int N = m_survivalVector.size();
+    for (int i=0; i<N; ++i){
+        if (patientCode == m_survivalVector[i].m_patientCode){
+            return m_survivalVector[i];
+        }
+    }
+    cout<<"Error: program can not find suvival data of patientCode:"<<patientCode<<endl;
+    return Survival();
 }

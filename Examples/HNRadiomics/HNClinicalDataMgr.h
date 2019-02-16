@@ -20,13 +20,15 @@ struct Survival{
 
 class HNClinicalDataMgr {
 public:
-    HNClinicalDataMgr();
+    HNClinicalDataMgr(const string& clinicalFile);
     ~HNClinicalDataMgr();
 
     void readSurvivalData(const string & filename);
 
     // get a 2*10 tensor of 10 years (dead(0), alive(1)) probability
     Tensor<float>  getSurvivalTensor(struct Survival&  survival);
+    string getPatientCode(const string & imageFilename);
+    struct Survival getSurvivalData(const string& patientCode);
 
     vector<struct Survival> m_survivalVector;
 

@@ -1,23 +1,23 @@
 
-#include "HNRadiomicsNet.h"
+#include "HNSegVNet.h"
 
 
-HNRadiomicsNet::HNRadiomicsNet(const string &name, const string &saveDir) : FeedForwardNet(name, saveDir) {
+HNSegVNet::HNSegVNet(const string &name, const string &netDir) : FeedForwardNet(name, netDir) {
     m_pDataMgr = nullptr;
 
 
 }
 
-HNRadiomicsNet::~HNRadiomicsNet() {
+HNSegVNet::~HNSegVNet() {
   //null
 }
 
-void HNRadiomicsNet::build() {
+void HNSegVNet::build() {
    //null: use csv file to create network
 }
 
 /*
-void HNRadiomicsNet::defineAssemblyLoss() {
+void HNSegVNet::defineAssemblyLoss() {
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
     Layer* prevLayer = lossLayer->m_prevLayer;
     lossLayer->addLoss( new SquareLossLayer(-1, "SquareLoss", prevLayer, 1));
@@ -26,7 +26,7 @@ void HNRadiomicsNet::defineAssemblyLoss() {
 }
 */
 
-void HNRadiomicsNet::setInput(const string &filename,const vector<int>& center) {
+void HNSegVNet::setInput(const string &filename,const vector<int>& center) {
     InputLayer *inputLayer = getInputLayer();
     Tensor<float>* pImage = nullptr;
     m_pDataMgr->readImageFile(filename, pImage);
@@ -45,7 +45,7 @@ void HNRadiomicsNet::setInput(const string &filename,const vector<int>& center) 
     }
 }
 
-void HNRadiomicsNet::setGroundtruth(const string &filename, const vector<int>& center) {
+void HNSegVNet::setGroundtruth(const string &filename, const vector<int>& center) {
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
     Tensor<float>* pLabel = nullptr;
@@ -97,7 +97,7 @@ void HNRadiomicsNet::setGroundtruth(const string &filename, const vector<int>& c
 }
 
 
-void HNRadiomicsNet::train() {
+void HNSegVNet::train() {
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
     m_loss = 0;
@@ -109,9 +109,9 @@ void HNRadiomicsNet::train() {
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
     int n = 0;
-    int nBatch = 0;
+    int batch = 0;
     vector<int> randSeq = generateRandomSequence(N);
-    while (nBatch < numBatch) {
+    while (batch < numBatch) {
         zeroParaGradient();
         int i = 0;
         for (i = 0; i < batchSize && n < N; ++i) {
@@ -142,7 +142,7 @@ void HNRadiomicsNet::train() {
             ++n;
         }
         sgd(learningRate, i);
-        ++nBatch;
+        ++batch;
 
 
 
@@ -154,7 +154,7 @@ void HNRadiomicsNet::train() {
     printf("Train: loss = %f, Dice = %f, TPR = %f; \n", m_loss, m_dice, m_TPR);
 }
 
-float HNRadiomicsNet::test() {
+float HNSegVNet::test() {
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
     m_loss = 0.0;
@@ -195,7 +195,7 @@ float HNRadiomicsNet::test() {
 
 }
 
-float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFilePath, const vector<int>& center) {
+float HNSegVNet::test(const string &imageFilePath, const string &labelFilePath, const vector<int>& center) {
     InputLayer *inputLayer = getInputLayer();
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
@@ -243,7 +243,7 @@ float HNRadiomicsNet::test(const string &imageFilePath, const string &labelFileP
     return m_loss;
 }
 
-void HNRadiomicsNet::detectSoftmaxBeforeLoss() {
+void HNSegVNet::detectSoftmaxBeforeLoss() {
     m_isSoftmaxBeforeLoss = true;
     if ("SigmoidLayer" == getFinalLayer()->m_prevLayer->m_type){
         m_isSoftmaxBeforeLoss = false;

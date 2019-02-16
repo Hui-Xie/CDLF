@@ -6,13 +6,17 @@ if(ITK_FOUND)
     set (ITKImageIODir ../../Interface3rdParty/ITK)
     include_directories(${ITKImageIODir})
 
-    set(TrainHNRadiomicsSRC TrainHNRadiomics.cpp HNRadiomicsNet.cpp HNDataManager.cpp ${ITKImageIODir}/ITKDataManager.cpp)
-    add_executable(TrainHNRadiomics ${TrainHNRadiomicsSRC})
-    target_link_libraries(TrainHNRadiomics ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
+    set(TrainSegmentV_SRC TrainSegmentV.cpp HNSegVNet.cpp HNDataManager.cpp ${ITKImageIODir}/ITKDataManager.cpp)
+    add_executable(TrainSegmentV ${TrainSegmentV_SRC})
+    target_link_libraries(TrainSegmentV ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
 
-    set(TestHNRadiomicsSRC TestHNRadiomics.cpp HNRadiomicsNet.cpp HNDataManager.cpp  HNClinicalDataMgr.cpp ${ITKImageIODir}/ITKDataManager.cpp)
-    add_executable(TestHNRadiomics ${TestHNRadiomicsSRC})
-    target_link_libraries(TestHNRadiomics ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
+    set(TestSegmentV_SRC TestSegmentV.cpp HNSegVNet.cpp HNDataManager.cpp  ${ITKImageIODir}/ITKDataManager.cpp)
+    add_executable(TestSegmentV ${TestSegmentV_SRC})
+    target_link_libraries(TestSegmentV ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
+
+    set(TrainSurvival_SRC TrainSurvival.cpp HNSurvivalNet.cpp HNSegVNet.cpp HNDataManager.cpp  HNClinicalDataMgr.cpp ${ITKImageIODir}/ITKDataManager.cpp)
+    add_executable(TrainSurvival ${TrainSurvival_SRC})
+    target_link_libraries(TrainSurvival ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
 
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
