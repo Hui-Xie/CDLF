@@ -35,6 +35,8 @@ public:
     // in Tensor dimension order
     vector<int>  getOutputOffset(const vector<int>& outputTensorSize);
 
+    string getPatientCode(const string & imageFilename);
+
 
 };
 

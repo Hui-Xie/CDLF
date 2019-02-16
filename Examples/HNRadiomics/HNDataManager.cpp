@@ -138,3 +138,9 @@ void HNDataManager::saveImage2File(Tensor<float> *pImage, const vector<int> &off
     vector<int> reverseOffset = reverseVector(offset);
     floatItkImageIO.writeFileWithSameInputDim(pImage, reverseOffset, fullPathFileName);
 }
+
+string HNDataManager::getPatientCode(const string &imageFilename) {
+    const string filename = getFileName(imageFilename);  // get like this: HNSCC-01-0039_CT.nrrd
+    const string code = filename.substr(0, 13);
+    return code;
+}
