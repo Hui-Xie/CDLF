@@ -16,5 +16,8 @@ add_executable(qloginCPU ${qloginCPUSrc})
 set(qsubTestCudaSrc qsubTestCuda.cpp)
 add_executable(qsubTestCuda ${qsubTestCudaSrc})
 
-set(qsubHNSCCSrc qsubHNSCC.cpp)
-add_executable(qsubHNSCC ${qsubHNSCCSrc})
+set(qsubHNSegVSrc qsubHNSegV.cpp)
+add_executable(qsubHNSegV ${qsubHNSegVSrc})
+
+set(qsubHNSurvival_Src qsubHNSurvival.cpp)
+add_executable(qsubHNSurvival ${qsubHNSurvival_Src})
