@@ -251,19 +251,24 @@ bool Net::layerExist(const Layer *layer) {
 }
 
 void Net::saveLayersStruct() {
-    const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/Lambda, StartPosition, \r\n";
     string filename = m_directory + "/LayersStruct.csv";
-    FILE *pFile;
-    pFile = fopen(filename.c_str(), "w");
-    if (nullptr == pFile) {
-        printf("Error: can not open  %s  file.\n", filename.c_str());
+    if (fileExist(filename)){
         return;
     }
-    fputs(tableHead.c_str(), pFile);
-    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->saveStructLine(pFile);
+    else{
+        const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/Lambda, StartPosition, \r\n";
+        FILE *pFile;
+        pFile = fopen(filename.c_str(), "w");
+        if (nullptr == pFile) {
+            printf("Error: can not open  %s  file.\n", filename.c_str());
+            return;
+        }
+        fputs(tableHead.c_str(), pFile);
+        for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+            iter->second->saveStructLine(pFile);
+        }
+        fclose(pFile);
     }
-    fclose(pFile);
 }
 
 void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {

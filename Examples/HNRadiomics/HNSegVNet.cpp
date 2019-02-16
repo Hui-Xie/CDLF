@@ -104,7 +104,10 @@ void HNSegVNet::train() {
     m_dice =0;
     m_TPR = 0;
 
-    const int N =m_pDataMgr->m_NTrainFile;
+    int N =m_pDataMgr->m_NTrainFile;
+    if (m_OneSampleTrain){
+        N = 1;
+    }
     const int batchSize = getBatchSize();
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
@@ -162,7 +165,10 @@ float HNSegVNet::test() {
     m_TPR = 0;
 
     int n = 0;
-    const int N = m_pDataMgr->m_NTestFile;
+    int N = m_pDataMgr->m_NTestFile;
+    if (m_OneSampleTrain){
+        N = 1;
+    }
     while (n < N) {
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);

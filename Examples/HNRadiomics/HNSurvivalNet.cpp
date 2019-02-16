@@ -48,7 +48,10 @@ void HNSurvivalNet::train() {
 
     m_loss = 0;
 
-    const int N =m_pDataMgr->m_NTrainFile;
+    int N =m_pDataMgr->m_NTrainFile;
+    if (m_OneSampleTrain){
+        N = 1;
+    }
     const int batchSize = getBatchSize();
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
@@ -84,7 +87,10 @@ float HNSurvivalNet::test() {
 
     m_loss = 0.0;
     int n = 0;
-    const int N = m_pDataMgr->m_NTestFile;
+    int N = m_pDataMgr->m_NTestFile;
+    if (m_OneSampleTrain){
+        N = 1;
+    }
     while (n < N) {
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
