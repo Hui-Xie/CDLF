@@ -45,3 +45,28 @@ void HNClinicalDataMgr::readSurvivalData(const string &filename) {
     ifs.close();
 
 }
+
+Tensor<float> HNClinicalDataMgr::getSurvivalTensor(struct Survival &survival) {
+    Tensor<float> result({10,2});
+    const int survivalYears = int(survival.m_survivalMonth/12.0 +0.5);
+    for(int i=0; i< survivalYears && i<10; ++i){
+        result.e({i,0}) = 0; //death
+        result.e({i,1}) = 1; //alive
+    }
+    if (survival.m_isAlive){
+        //use survival function sqrt(100-x)/10, where x \in [0, 100];
+        for(int i=survivalYears; i<10; ++i){
+            const int  age = survival.m_age+ i;
+            const float s = sqrt(100.0-age)/10.0;
+            result.e({i,0}) = 1-s; //death
+            result.e({i,1}) = s; //alive
+        }
+    }
+    else{
+        for(int i=survivalYears; i<10; ++i){
+            result.e({i,0}) = 1; //death
+            result.e({i,1}) = 0; //alive
+        }
+    }
+    return result;
+}
