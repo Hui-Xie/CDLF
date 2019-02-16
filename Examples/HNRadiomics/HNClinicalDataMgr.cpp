@@ -4,6 +4,21 @@
 #include <iostream>
 #include "FileTools.h"
 
+
+Survival::Survival() {
+
+}
+
+Survival::~Survival() {
+
+}
+
+void Survival::print() {
+   printf("Patient=%s, Age=%d, SurvivalYeas=%f, Alive=%d, CauseOfDeath=%s \n", m_patientCode.c_str(), m_age, int(m_survivalMonth/12.0+0.5), m_isAlive, m_causeOfDeath.c_str());
+}
+
+//////////////////////////////////////////////////////
+
 HNClinicalDataMgr::HNClinicalDataMgr(const string& clinicalFile) {
    m_survivalVector.clear();
    readSurvivalData(clinicalFile);
@@ -31,7 +46,7 @@ void HNClinicalDataMgr::readSurvivalData(const string &filename) {
                 if (lineChar[i] == ',') lineChar[i] = ' ';
             }
 
-            struct Survival survival;
+            Survival survival;
             int nFills = sscanf(lineChar, "%s  %d  %f  %s  %s \r\n",
                                 patientCode, &survival.m_age, &survival.m_survivalMonth, aliveOrDead, causeofDeath);
             if (5 != nFills) {
@@ -48,7 +63,7 @@ void HNClinicalDataMgr::readSurvivalData(const string &filename) {
 
 }
 
-Tensor<float> HNClinicalDataMgr::getSurvivalTensor(struct Survival &survival) {
+Tensor<float> HNClinicalDataMgr::getSurvivalTensor(const Survival &survival) {
     Tensor<float> result({2,10});
     const int survivalYears = int(survival.m_survivalMonth/12.0 +0.5);
     for(int i=0; i< survivalYears && i<10; ++i){
@@ -89,3 +104,5 @@ struct Survival HNClinicalDataMgr::getSurvivalData(const string &patientCode) {
     cout<<"Error: program can not find suvival data of patientCode:"<<patientCode<<endl;
     return Survival();
 }
+
+

@@ -34,11 +34,14 @@ void HNSurvivalNet::setInput(const string &filename,const vector<int>& center) {
     }
 }
 
-void HNSurvivalNet::setGroundtruth(const string &filename) {
+void HNSurvivalNet::setGroundtruth(const string &filename, const bool printPredict ) {
     CrossEntropyLoss* lossLayer = (CrossEntropyLoss *) getFinalLayer();
     const string patiendCode = m_pClinicalDataMgr->getPatientCode(filename);
-    struct Survival survialData = m_pClinicalDataMgr->getSurvivalData(patiendCode);
-    Tensor<float> gt = m_pClinicalDataMgr->getSurvivalTensor(survialData);
+    Survival survivalData = m_pClinicalDataMgr->getSurvivalData(patiendCode);
+    if (printPredict){
+        survivalData.print();
+    }
+    Tensor<float> gt = m_pClinicalDataMgr->getSurvivalTensor(survivalData);
     lossLayer->setGroundTruth(gt);
 }
 
@@ -96,8 +99,11 @@ float HNSurvivalNet::test() {
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
         const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath, false , 0);
         setInput(imageFilePath, center);
-        setGroundtruth(imageFilePath);
+        setGroundtruth(imageFilePath, m_printPredict);
         forwardPropagate();
+        if (m_printPredict){
+            printPredict();
+        }
         m_loss += lossLayer->getLoss();
         ++n;
 
@@ -106,6 +112,21 @@ float HNSurvivalNet::test() {
     printf("Test: loss = %f \n", m_loss);
     return  m_loss;
 
+}
+
+void HNSurvivalNet::test(const bool printResult) {
+     m_printPredict = printResult;
+     test();
+     m_printPredict = false;
+}
+
+void HNSurvivalNet::printPredict() {
+    CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
+    SoftmaxLayer* pSoftmax = (SoftmaxLayer*)lossLayer->m_prevLayer;
+
+    Tensor<float> predict = pSoftmax->m_pYTensor->row(1);
+    cout<<"10-year survival predictation:"<<endl;
+    predict.print();
 }
 
 

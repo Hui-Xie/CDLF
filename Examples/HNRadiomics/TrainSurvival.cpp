@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
     net.setUnlearningLayerID(300);
 
     //for one sample training
-    net.setOneSampleTrain(true);
+    //net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]){
         }
 
         if (!net.getOneSampleTrain()){
-            net.test();
+            net.test(0 == (i+1)%5 ? true : false);
         }
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;

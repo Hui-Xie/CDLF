@@ -24,8 +24,14 @@ public:
     HNDataManager* m_pDataMgr;
     HNClinicalDataMgr* m_pClinicalDataMgr;
 
+    bool m_printPredict;
+
     void setInput(const string& filename, const vector<int>& center = vector<int>());
-    void setGroundtruth(const string& filename);
+    void setGroundtruth(const string& filename, const bool printPredict = false);
+
+    void printPredict();
+
+    void test(const bool printResult);
 
 };
 

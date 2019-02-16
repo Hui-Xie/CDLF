@@ -9,12 +9,17 @@ using namespace std;
 
 //TCIACode, Age, Survival(months),AliveorDead,CauseofDeath
 
-struct Survival{
+class Survival{
+public:
+    Survival();
+    ~Survival();
     string m_patientCode;
     int m_age;
     float  m_survivalMonth;
     bool m_isAlive;
     string m_causeOfDeath;
+
+    void print();
 };
 
 
@@ -26,10 +31,10 @@ public:
     void readSurvivalData(const string & filename);
 
     // get a 2*10 tensor of 10 years (dead(0), alive(1)) probability
-    Tensor<float>  getSurvivalTensor(struct Survival&  survival);
+    Tensor<float>  getSurvivalTensor(const Survival&  survival);
     string getPatientCode(const string & imageFilename);
-    struct Survival getSurvivalData(const string& patientCode);
+    Survival getSurvivalData(const string& patientCode);
 
-    vector<struct Survival> m_survivalVector;
+    vector<Survival> m_survivalVector;
 
 };
