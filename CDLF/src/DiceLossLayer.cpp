@@ -28,10 +28,12 @@ float DiceLossLayer::lossCompute() {
 
         const float xDotg_norm = X.hadamard(*m_pGroundTruth).sum();
         const float xPlusg_norm = X.sum()+ m_pGroundTruth->sum();
-        if (0 == xPlusg_norm) {
-            return 1;
+        if (xPlusg_norm < 1 ) {
+            m_loss = 1;
         }
-        m_loss = 1 -2.0* xDotg_norm/ xPlusg_norm;
+        else{
+            m_loss = 1 -2.0* xDotg_norm/ xPlusg_norm;
+        }
     }
     else {// for SoftmaxLayer as previous Layer
         Tensor<float>* pX1 = nullptr;
@@ -42,10 +44,12 @@ float DiceLossLayer::lossCompute() {
         // here nom is L1 norm, when x>0, g>0, L1norm = sum
         const float xDotg_norm = pX1->hadamard(*pG1).sum();
         const float xPlusg_norm = pX1->sum()+ pG1->sum();
-        if (0 == xPlusg_norm) {
-            return 1;
+        if (xPlusg_norm < 1) {
+            m_loss = 1;
         }
-        m_loss = 1 -2.0* xDotg_norm/ xPlusg_norm;
+        else{
+            m_loss = 1 -2.0* xDotg_norm/ xPlusg_norm;
+        }
 
         delete pX1;
         delete pG1;
@@ -64,12 +68,15 @@ void DiceLossLayer::gradientCompute() {
         const int N = X.getLength();
         const float xDotg_norm = X.hadamard(*m_pGroundTruth).sum();
         const float xPlusg_norm = X.sum() + m_pGroundTruth->sum();
-        const float xPlusg_norm2 = 2.0 / (xPlusg_norm * xPlusg_norm);
-        for (int i = 0; i < N; ++i) {
-            dX[i] += (xDotg_norm - G.e(i) * xPlusg_norm) * xPlusg_norm2;
+        if (xPlusg_norm >= 1 ){
+            const float xPlusg_norm2 = 2.0 / (xPlusg_norm * xPlusg_norm);
+            for (int i = 0; i < N; ++i) {
+                dX[i] += (xDotg_norm - G.e(i) * xPlusg_norm) * xPlusg_norm2;
+            }
         }
 
-    } else {// for SoftmaxLayer as previous Layer
+    }
+    else {// for SoftmaxLayer as previous Layer
         Tensor<float> *pX1 = nullptr;
         m_prevLayer->m_pYTensor->extractLowerDTensor(1, pX1);
         Tensor<float> *pG1 = nullptr;
@@ -81,15 +88,12 @@ void DiceLossLayer::gradientCompute() {
         const int N = pX1->getLength();
         const float xDotg_norm = pX1->hadamard(*pG1).sum();
         const float xPlusg_norm = pX1->sum() + pG1->sum();
-        if (xPlusg_norm > 0 ){
+        if (xPlusg_norm >= 1 ){
             const float xPlusg_norm2 = 2.0 / (xPlusg_norm * xPlusg_norm);
             for (int i = 0; i < N; ++i) {
                 dX[i+N] += (xDotg_norm - pG1->e(i) * xPlusg_norm) * xPlusg_norm2;
                 dX[i] -= dX[i+N];
             }
-        }
-        else{
-            cout<<"Error: xPlusg_norm <0 in DiceLoss Layer."<<endl;
         }
 
         delete pX1;
