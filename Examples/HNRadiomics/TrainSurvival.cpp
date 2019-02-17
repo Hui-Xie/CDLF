@@ -84,9 +84,7 @@ int main(int argc, char *argv[]){
             net.save();
         }
 
-        if (!net.getOneSampleTrain()){
-            net.test(0 == (i+1)%5 ? true : false);
-        }
+        net.test(0 == (i+1)%5 ? true : false);
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;

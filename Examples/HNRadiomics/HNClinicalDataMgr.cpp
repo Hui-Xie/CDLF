@@ -14,7 +14,7 @@ Survival::~Survival() {
 }
 
 void Survival::print() {
-   printf("Patient=%s, Age=%d, SurvivalYeas=%f, Alive=%d, CauseOfDeath=%s \n", m_patientCode.c_str(), m_age, int(m_survivalMonth/12.0+0.5), m_isAlive, m_causeOfDeath.c_str());
+   printf("Patient=%s, Age=%d, SurvivalYeas=%d, Alive=%d, CauseOfDeath=%s \n", m_patientCode.c_str(), m_age, int(m_survivalMonth/12.0+0.5), m_isAlive?1:0, m_causeOfDeath.c_str());
 }
 
 //////////////////////////////////////////////////////
@@ -45,9 +45,8 @@ void HNClinicalDataMgr::readSurvivalData(const string &filename) {
             for (int i = 0; i < 80; ++i) {
                 if (lineChar[i] == ',') lineChar[i] = ' ';
             }
-
             Survival survival;
-            int nFills = sscanf(lineChar, "%s  %d  %f  %s  %s \r\n",
+            int nFills = sscanf(lineChar, "%s %d %f %s %s\r\n",
                                 patientCode, &survival.m_age, &survival.m_survivalMonth, aliveOrDead, causeofDeath);
             if (5 != nFills) {
                 cout << "Error: sscanf survival data in readSurvivalData at line: " << string(lineChar) << endl;

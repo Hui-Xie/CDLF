@@ -81,9 +81,8 @@ int main(int argc, char *argv[]){
             net.save();
         }
 
-        if (!net.getOneSampleTrain()){
-           net.test();
-        }
+        net.test();
+
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
     return 0;

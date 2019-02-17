@@ -124,9 +124,8 @@ void HNSurvivalNet::printPredict() {
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
     SoftmaxLayer* pSoftmax = (SoftmaxLayer*)lossLayer->m_prevLayer;
 
-    Tensor<float> predict = pSoftmax->m_pYTensor->row(1);
     cout<<"10-year survival predictation:"<<endl;
-    predict.print();
+    pSoftmax->m_pYTensor->row(1).print();
 }
 
 
