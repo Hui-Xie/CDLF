@@ -30,8 +30,8 @@ public:
 
     void readSurvivalData(const string & filename);
 
-    // get a 2*10 tensor of 10 years (dead(0), alive(1)) probability
-    Tensor<float>  getSurvivalTensor(const Survival&  survival);
+    // get a {2*years} tensor of survival rate (dead(0), alive(1)) probability
+    Tensor<float>  getSurvivalTensor(const Survival&  survival, const int years);
     string getPatientCode(const string & imageFilename);
     Survival getSurvivalData(const string& patientCode);
 

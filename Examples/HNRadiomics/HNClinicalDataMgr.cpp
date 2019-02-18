@@ -62,16 +62,16 @@ void HNClinicalDataMgr::readSurvivalData(const string &filename) {
 
 }
 
-Tensor<float> HNClinicalDataMgr::getSurvivalTensor(const Survival &survival) {
-    Tensor<float> result({2,10});
+Tensor<float> HNClinicalDataMgr::getSurvivalTensor(const Survival &survival, const int years) {
+    Tensor<float> result({2,years});
     const int survivalYears = int(survival.m_survivalMonth/12.0 +0.5);
-    for(int i=0; i< survivalYears && i<10; ++i){
+    for(int i=0; i< survivalYears && i<years; ++i){
         result.e({0,i}) = 0; //death
         result.e({1,i}) = 1; //alive
     }
     if (survival.m_isAlive){
         //use survival function sqrt(100-x)/10, where x \in [0, 100];
-        for(int i=survivalYears; i<10; ++i){
+        for(int i=survivalYears; i<years; ++i){
             const int  age = survival.m_age+ i;
             const float s = sqrt(100.0-age)/10.0;
             result.e({0,i}) = 1-s; //death
@@ -79,7 +79,7 @@ Tensor<float> HNClinicalDataMgr::getSurvivalTensor(const Survival &survival) {
         }
     }
     else{
-        for(int i=survivalYears; i<10; ++i){
+        for(int i=survivalYears; i<years; ++i){
             result.e({0,i}) = 1; //death
             result.e({1,i}) = 0; //alive
         }

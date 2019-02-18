@@ -41,7 +41,8 @@ void HNSurvivalNet::setGroundtruth(const string &filename, const bool printPredi
     if (printPredict){
         survivalData.print();
     }
-    Tensor<float> gt = m_pClinicalDataMgr->getSurvivalTensor(survivalData);
+    const int years = lossLayer->m_prevLayer->m_pYTensor->getDims()[1];
+    Tensor<float> gt = m_pClinicalDataMgr->getSurvivalTensor(survivalData, years);
     lossLayer->setGroundTruth(gt);
 }
 
@@ -124,7 +125,8 @@ void HNSurvivalNet::printPredict() {
     CrossEntropyLoss *lossLayer = (CrossEntropyLoss *) getFinalLayer();
     SoftmaxLayer* pSoftmax = (SoftmaxLayer*)lossLayer->m_prevLayer;
 
-    cout<<"10-year survival prediction:"<<endl;
+    const int years = pSoftmax->m_pYTensor->getDims()[1];
+    cout<<years<<"-year Survival Rate Prediction:"<<endl;
     pSoftmax->m_pYTensor->row(1).print();
 }
 
