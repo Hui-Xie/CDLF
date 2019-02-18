@@ -178,6 +178,14 @@ float HNSegVNet::test() {
         forwardPropagate();
         m_loss += lossLayer->getLoss();
 
+        //debug
+        cout<<"Image: "<<imageFilePath<<endl;
+        cout<<"Label: "<<labelFilePath<<endl;
+        cout<<"losss = "<<lossLayer->getLoss()<<", center = "<<vector2Str(center)<<endl;
+        cout<<endl;
+
+
+
         // for softmax preceeds over loss layer
         if (m_isSoftmaxBeforeLoss){
             m_dice += lossLayer->diceCoefficient();

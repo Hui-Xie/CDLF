@@ -41,8 +41,8 @@ int main(int argc, char *argv[]){
 
 #ifdef Use_GPU
     //HNSegVNet net("HNSCC_convV", netDir);
-    //HNSegVNet net("HNSCC_ROI1", netDir);
-    HNSegVNet net("HNSCC_ROI2", netDir);
+    HNSegVNet net("HNSCC_ROI1", netDir);
+    //HNSegVNet net("HNSCC_ROI2", netDir);
 #else
     HNSegVNet net("HNSCC_matrix", netDir);
 #endif
@@ -82,6 +82,9 @@ int main(int argc, char *argv[]){
         }
 
         net.test();
+
+        //debug
+        break;
 
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;

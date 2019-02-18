@@ -1021,27 +1021,21 @@ template<class ValueType>
 vector<int> Tensor<ValueType>::getCenterOfNonZeroElements() {
     const int size = getDims().size();
     vector<int> center(size,0 );
-    vector<int> min(size, 0);
-    vector<int> max(size, 0);
+    vector<int> sumPos(size, 0);
     const int N = getLength();
-    bool foundFirstNonZero = false;
+    int nCount = 0;
     for(int i=0; i< N; ++i){
         if (e(i)>0){
             vector<int> index = offset2Index(i);
-            if (!foundFirstNonZero){
-                min = index;
-                max = index;
-                foundFirstNonZero = true;
-            }
-            else{
-                for(int j= 0; j<size; ++j){
-                    min[j] = (index[j]<min[j])? index[j]: min[j];
-                    max[j] = (index[j]>max[j])? index[j]: max[j];
-                }
-            }           
+            sumPos = sumPos + index;
+            ++nCount;
         }
     }
-    center = (max + min)/2;
+    
+    if (0 != nCount){
+        center = sumPos/nCount;
+    }
+
     if (center != vector<int>(size, 0)){
         return center;
     }
