@@ -164,11 +164,11 @@ float HNSegVNet::test() {
     m_dice = 0;
     m_TPR = 0;
 
-    int n = 0;
     int N = m_pDataMgr->m_NTestFile;
     if (m_OneSampleTrain){
         N = 1;
     }
+    int n = 0;
     while (n < N) {
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
@@ -191,9 +191,9 @@ float HNSegVNet::test() {
         ++n;
 
     }
-    m_loss /=n;
-    m_dice /= n;
-    m_TPR /= n;
+    m_loss /=N;
+    m_dice /= N;
+    m_TPR /= N;
 
     printf("Test: loss = %f, Dice = %f, TPR = %f; \n", m_loss, m_dice, m_TPR);
 
