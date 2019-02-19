@@ -61,6 +61,8 @@ vector<int> generateRandomSequence(const int range);
 
 vector<int> generatePositiveNegativeRandomNumber(const int vectorSize, const int maxValue);
 
+vector<float> generatePositiveNegativeRandomRadian(const int vectorSize, const float maxRadian);
+
 string getStemName(const string& filename);
 
 void printCurrentLocalTime();
@@ -77,6 +79,9 @@ bool isElementBiggerThan0(const vector<int>& vec);
 bool isElementEqual1(const vector<int>& vec);
 
 bool isContainSubstr(const string& str, const string subStr);
+
+// radianVec indicating rotating angle about axis 0,1,2;  R[3][4] are rotation matrix without translation,
+void getRotationMatrix(const vector<float> radianVec, double R[3][4]);
 
 
 #endif //RL_NONCONVEX_TOOLS_H

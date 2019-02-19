@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
 #ifdef Use_GPU
     HNSegVNet net("HNSCC_convV", netDir);
 #else
-    HNRadiomicsNet net("HNSCC_matrix", netDir);
+    HNSegVNet net("HNSCC_matrix", netDir);
 #endif
 
     if (!isEmptyDir(net.getDir())) {

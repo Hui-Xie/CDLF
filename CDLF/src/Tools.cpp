@@ -9,6 +9,7 @@
 #include <cctype>
 #include <cstdio>
 #include <Tools.h>
+#include <math.h>
 
 
 bool sameVector(const vector<int>& vec1, const vector<int>& vec2){
@@ -266,6 +267,19 @@ vector<int> generatePositiveNegativeRandomNumber(const int vectorSize, const int
     return result;
 }
 
+vector<float> generatePositiveNegativeRandomRadian(const int vectorSize, const float maxRadian){
+    vector<float> result(vectorSize, 0);
+    if (maxRadian <= 0 ){
+        cout<<"Error: maxRadian in generatePositiveNegativeRandomRadian should be greater than 0. "<<endl;
+        return result;
+    }
+    srand (time(NULL));
+    for (int i= 0; i<vectorSize; ++i){
+        result[i] = -maxRadian + static_cast <float> (rand()) /static_cast <float> (RAND_MAX)* 2.0*maxRadian;
+    }
+    return result;
+}
+
 string getStemName(const string& filename){
     int pos = filename.rfind('.');
     return filename.substr(0, pos);
@@ -334,6 +348,31 @@ bool isElementEqual1(const vector<int>& vec){
 
 bool isContainSubstr(const string &str, const string subStr) {
     return (string::npos == str.find(subStr)) ? false : true;
+}
+
+// radianVec indicating rotating angle about axis 0,1,2;  R[3][4] are a rotation matrix without translation,
+void getRotationMatrix(const vector<float> radianVec, double R[3][4]){
+
+    const float a = radianVec[0];
+    const float b = radianVec[1];
+    const float c = radianVec[2];
+
+    // translation =0
+    R[0][3] = 0;
+    R[1][3] = 0;
+    R[2][3] = 0;
+
+    R[0][0] = cos(b)*cos(c);
+    R[0][1] = -cos(b)*sin(c);
+    R[0][2] = sin(b);
+
+    R[1][0] = sin(a)*sin(b)*cos(c)+ cos(a)*sin(c);
+    R[1][1] = -sin(a)*sin(b)*sin(c)+ cos(a)*cos(c);
+    R[1][2] = -sin(a)*cos(b);
+
+    R[2][0] = -cos(a)*sin(b)*cos(c)+ sin(a)*sin(c);
+    R[2][1] = cos(a)*sin(b)*sin(c)+ sin(a)*cos(c);
+    R[2][2] = cos(a)*cos(b);
 }
 
 

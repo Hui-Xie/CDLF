@@ -129,6 +129,8 @@ public:
     vector<int> getCenterOfNonZeroElements();
 
 
+
+
 private:
     vector<int> m_dims;
     vector<int> m_dimsSpan; //express change of index leads how many data storage span.

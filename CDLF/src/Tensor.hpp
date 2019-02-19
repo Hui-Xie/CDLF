@@ -1044,3 +1044,4 @@ vector<int> Tensor<ValueType>::getCenterOfNonZeroElements() {
         std::exit(EXIT_FAILURE);
     }
 }
+
