@@ -1,11 +1,27 @@
-if (${Use_GPU})
-   project (CDLF_Framework LANGUAGES CXX CUDA)
-else(${Use_GPU})
-   project (CDLF_Framework LANGUAGES CXX)
-endif(${Use_GPU})
-
 cmake_minimum_required (VERSION 3.12)
 set(CMAKE_CXX_STANDARD 11)
+
+message("General Notes:")
+message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
+message("1  you need to set the directory including CDLFLib into your environment variable.")
+message("2  you need to install intel MKL library and set MKL directory.")
+message("3  you need to install intel IPP library and set IPP directory.")
+message("4  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
+message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
+-DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
+-DTIPL_Dir=/Users/hxie1/Projects/TIPL
+-DINTEL_Dir=/home/hxie1/intel
+-DUse_GPU=1
+-DDev_Debug=0")
+message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
+message("*************************************")
+
+
+if (${Use_GPU})
+    project (CDLF_Framework LANGUAGES CXX CUDA)
+else(${Use_GPU})
+    project (CDLF_Framework LANGUAGES CXX)
+endif(${Use_GPU})
 
 # set(Use_GPU TRUE) # already configed in Clion File/Setting/Build/CMake/CMakeOptions config,
 
@@ -48,12 +64,10 @@ set(MKL_LINK_FlAGS  "  -L${MKLROOT}/lib/intel64 -lmkl_rt -lpthread -lm -ldl  ")
 set(IPPROOT ${INTEL_Dir}/ipp)
 set(IPP_INCLUDE_DIR ${IPPROOT}/include)
 include_directories(${IPP_INCLUDE_DIR})
-set(IPP_LINK_FlAGS  "  -L ${IPPROOT}/lib/intel64 ")
-
-message("==============" ${IPP_INCLUDE_DIR})
+set(IPP_LINK_FlAGS  "  -L ${IPPROOT}/lib/intel64")
 
 
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${MKL_LINK_FlAGS}  ${IPP_LINK_FlAGS}")
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${IPP_LINK_FlAGS} ${MKL_LINK_FlAGS}  ")
 
 
 # for dynamic link MKL library
@@ -63,9 +77,9 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
                 ${MKLROOT}/lib/intel64/libmkl_rt.so)
 
 
-set(IPP_LIBRARY ${IPPROOT}/lib/intel64/libippvm.a
-                ${IPPROOT}/lib/intel64/libippcore.a
-                ${IPPROOT}/lib/intel64/libipps.a)
+set(IPP_LIBRARY  ${IPPROOT}/lib/intel64/libippvm.so
+                 ${IPPROOT}/lib/intel64/libippcore.so
+                 ${IPPROOT}/lib/intel64/libipps.so)
 
 
 
@@ -79,23 +93,9 @@ else(${Use_GPU})
 endif(${Use_GPU})
 
 
-message("General Notes:")
-message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
-message("1  you need to set the directory including CDLFLib into your environment variable.")
-message("2  you need to install intel MKL library and set MKL directory.")
-message("3  you need to install intel IPP library and set IPP directory.")
-message("4  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
-message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
--DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
--DTIPL_Dir=/Users/hxie1/Projects/TIPL
--DINTEL_Dir=/home/hxie1/intel
--DUse_GPU=1
--DDev_Debug=0")
-message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
-message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
-set(CDLFLib libCDLF.so pthread ${MKL_LIBRARY} ${Cudnn_LIBRARY}  ${IPP_LIBRARY})    # for Linux
+set(CDLFLib libCDLF.so pthread  ${IPP_LIBRARY} ${MKL_LIBRARY} ${Cudnn_LIBRARY} )    # for Linux
 
 add_subdirectory(CDLF)
 add_subdirectory(Examples)
