@@ -1031,7 +1031,7 @@ vector<int> Tensor<ValueType>::getCenterOfNonZeroElements() {
             ++nCount;
         }
     }
-    
+
     if (0 != nCount){
         center = sumPos/nCount;
     }
