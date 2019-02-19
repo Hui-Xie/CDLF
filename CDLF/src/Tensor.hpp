@@ -20,6 +20,18 @@
 #endif
 
 
+#define checkIPP(expression)                               \
+  {                                                          \
+    IppStatus status = (expression);                     \
+    if (status != ippStsNoErr) {                    \
+      std::cerr << "Intel IPP Error: line " << __LINE__ << " of file: "<< __FILE__\
+                << std::endl                                  \
+                << ippGetStatusString(status) << std::endl; \
+      std::exit(EXIT_FAILURE);                               \
+    }                                                        \
+  }
+
+
 
 template<class ValueType>
 void Tensor<ValueType>::initializeMember() {
@@ -1050,9 +1062,40 @@ template<class ValueType>
 void
 Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float> *&pRotatedTensor) {
 
-    IppStatus ipprWarpAffine_32f_C1V(const Ipp32f* pSrc, IpprVolume srcVolume, int srcStep,
-                                     int srcPlaneStep, IpprCuboid srcVoi, Ipp32f* pDst, int dstStep, int dstPlaneStep,
-                                     IpprCuboid dstVoi, const double coeffs[3][4], int interpolation, Ipp8u* pBuffer );
+    const Ipp32f* pSrc = m_data;
+    IpprVolume srcVolume;
+    srcVolume.width = m_dims[2]; srcVolume.height = m_dims[1];  srcVolume.depth = m_dims[0];
+    int srcStep = sizeof(ValueType)* srcVolume.width;
+    int srcPlaneStep = sizeof(ValueType)* srcVolume.width * srcVolume.height;
+
+    IpprCuboid srcVoi;
+    srcVoi.x = 0; srcVoi.y = 0; srcVoi.z = 0;
+    srcVoi.width = srcVolume.width; srcVoi.height = srcVolume.height; srcVoi.depth = srcVolume.depth;
+
+
+    pRotatedTensor = new Tensor<float>(m_dims);
+    Ipp32f* pDst = pRotatedTensor->m_data;
+    int dstStep = srcStep;
+    int dstPlaneStep = srcPlaneStep;
+    IpprCuboid dstVoi;
+    dstVoi = srcVoi;
+
+    double coeffs[3][4];
+    getRotationMatrix(radianVec, coeffs);
+
+
+    checkIPP(ippInit());
+
+    const int nChannel  =1 ;
+    int bufferSize = 0;
+    checkIPP(ipprWarpAffineGetBufSize(srcVolume, srcVoi, dstVoi, coeffs, nChannel, interpolation, &bufferSize));
+    Ipp8u* pBuffer = (Ipp8u*)ippMalloc(bufferSize);
+
+    checkIPP(ipprWarpAffine_32f_C1V(pSrc, srcVolume, srcStep, srcPlaneStep, srcVoi,
+                                    pDst, dstStep, dstPlaneStep,dstVoi,
+                                    coeffs, interpolation, pBuffer));
+
+    ippFree(pBuffer);
 
 }
 

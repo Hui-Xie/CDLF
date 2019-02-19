@@ -132,13 +132,11 @@ public:
     /* Type of interpolation, the following values are possible:
      * IPPI_INTER_NN - nearest neighbor interpolation,
        IPPI_INTER_LINEAR - trilinear interpolation,
-      PPI_INTER_CUBIC - tricubic interpolation,
-            IPPI_INTER_CUBIC2P_BSPLINE - B-spline,
-IPPI_INTER_CUBIC2P_CATMULLROM - Catmull-Rom spline,
-IPPI_INTER_CUBIC2P_B05C03 - special two-parameters filter (1/2,
-3/10)
+       IPPI_INTER_CUBIC - tricubic interpolation,
+       IPPI_INTER_CUBIC2P_BSPLINE - B-spline,
+       IPPI_INTER_CUBIC2P_CATMULLROM - Catmull-Rom spline,
+       IPPI_INTER_CUBIC2P_B05C03 - special two-parameters filter (1/2,3/10)
      * */
-
     void rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float>* & pRotatedTensor);
 
 
