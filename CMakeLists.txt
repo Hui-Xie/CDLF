@@ -43,12 +43,29 @@ include_directories(${MKL_INCLUDE_DIR})
 # for single dynamic library with intel ICC and intel64 architeture
 set(MKL_LINK_FlAGS  "  -L${MKLROOT}/lib/intel64 -lmkl_rt -lpthread -lm -ldl  ")
 
-set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${MKL_LINK_FlAGS}")
+
+#for Intel IPP library
+set(IPPROOT ${INTEL_Dir}/ipp)
+set(IPP_INCLUDE_DIR ${IPPROOT}/include)
+include_directories(${IPP_INCLUDE_DIR})
+set(IPP_LINK_FlAGS  "  -L${IPPROOT}/lib/intel64/threaded ")
+
+
+set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${MKL_LINK_FlAGS}  ${IPP_LINK_FlAGS}")
+
+
 # for dynamic link MKL library
 set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
                 ${MKLROOT}/lib/intel64/libmkl_core.so
                 ${MKLROOT}/lib/intel64/libmkl_sequential.so
                 ${MKLROOT}/lib/intel64/libmkl_rt.so)
+
+
+set(IPP_LIBRARY ${IPPROOT}/lib/intel64/threaded/libippvm.a
+                ${IPPROOT}/lib/intel64/threaded/libippcore.a
+                ${IPPROOT}/lib/intel64/threaded/libipps.a)
+
+
 
 if (${Use_GPU})
     # for cudnn
@@ -75,7 +92,7 @@ message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
-set(CDLFLib libCDLF.so pthread ${MKL_LIBRARY} ${Cudnn_LIBRARY})    # for Linux
+set(CDLFLib libCDLF.so pthread ${MKL_LIBRARY} ${Cudnn_LIBRARY}  ${IPP_LIBRARY})    # for Linux
 
 add_subdirectory(CDLF)
 add_subdirectory(Examples)
