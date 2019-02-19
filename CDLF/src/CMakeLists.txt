@@ -66,5 +66,5 @@ endif(${Use_GPU})
 
 add_library(CDLF SHARED ${CDLF_CXX_Src} ${CDLF_CUDA_Src})
 set_target_properties(CDLF PROPERTIES CUDA_SEPARABLE_COMPILATION ON )
-target_link_libraries(CDLF ${MKL_LIBRARY})
+target_link_libraries(CDLF ${MKL_LIBRARY} ${IPP_LIBRARY})
 

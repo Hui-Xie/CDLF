@@ -1080,9 +1080,8 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     IpprCuboid dstVoi;
     dstVoi = srcVoi;
 
-    double coeffs[3][4];
+    double coeffs[3][4] = {0}; //all element initialize to zeros.
     getRotationMatrix(radianVec, coeffs);
-
 
     checkIPP(ippInit());
 

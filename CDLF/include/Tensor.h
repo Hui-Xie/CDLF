@@ -129,18 +129,18 @@ public:
     vector<int> getCenterOfNonZeroElements();
 
 
-    /* Type of interpolation, the following values are possible:
-     * IPPI_INTER_NN - nearest neighbor interpolation,
-       IPPI_INTER_LINEAR - trilinear interpolation,
-       IPPI_INTER_CUBIC - tricubic interpolation,
-       IPPI_INTER_CUBIC2P_BSPLINE - B-spline,
-       IPPI_INTER_CUBIC2P_CATMULLROM - Catmull-Rom spline,
-       IPPI_INTER_CUBIC2P_B05C03 - special two-parameters filter (1/2,3/10)
+    /*  Type of interpolation, the following values are possible:
+     *  IPPI_INTER_NN - nearest neighbor interpolation,
+     *  IPPI_INTER_LINEAR - trilinear interpolation,
+     *  IPPI_INTER_CUBIC - tricubic interpolation,
+     *  IPPI_INTER_CUBIC2P_BSPLINE - B-spline,
+     *  IPPI_INTER_CUBIC2P_CATMULLROM - Catmull-Rom spline,
+     *  IPPI_INTER_CUBIC2P_B05C03 - special two-parameters filter (1/2,3/10)
+     *
+     *  and user is responsible for releasing pRotatedTensor
+     *
      * */
     void rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float>* & pRotatedTensor);
-
-
-
 
 
 private:
