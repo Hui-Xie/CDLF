@@ -11,6 +11,7 @@
 #include <iomanip>      // std::setw
 #include "CPUAttr.h"
 #include <thread>
+#include "ipp.h"
 
 #ifdef Use_GPU
   #include <cuda_runtime.h>
@@ -1043,5 +1044,15 @@ vector<int> Tensor<ValueType>::getCenterOfNonZeroElements() {
         cout<<"Error: can not find center of NonZeroelements"<<endl;
         std::exit(EXIT_FAILURE);
     }
+}
+
+template<class ValueType>
+void
+Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float> *&pRotatedTensor) {
+
+    IppStatus ipprWarpAffine_32f_C1V(const Ipp32f* pSrc, IpprVolume srcVolume, int srcStep,
+                                     int srcPlaneStep, IpprCuboid srcVoi, Ipp32f* pDst, int dstStep, int dstPlaneStep,
+                                     IpprCuboid dstVoi, const double coeffs[3][4], int interpolation, Ipp8u* pBuffer );
+
 }
 
