@@ -353,18 +353,22 @@ int main (int argc, char *argv[]) {
     //============================
     //Test rotation 3D tensor
 
+    cout<<"==========Test rotation 3D tensor =================== "<<endl;
     Tensor<float> tensor140({3,4,5});
     const int N140 = tensor140.getLength();
     for(int i=0; i<N140; ++i){
         tensor140.e(i) = i;
     }
 
-    Tensor<float>* pRotatedTensor = nullptr;
+    cout<<"Original tensor size: "<<vector2Str(tensor140.getDims())<<endl;
     cout<<"before rotation: slice(1):"<<endl;
     tensor140.slice(1).print();
 
     vector<float> radianVec = generatePositiveNegativeRandomRadian(3,M_PI/4.0);
+
+    Tensor<float>* pRotatedTensor = nullptr;
     tensor140.rotate3D(radianVec, IPPI_INTER_NN, pRotatedTensor);
+    cout<<"roatated tensor size: "<<vector2Str(pRotatedTensor->getDims())<<endl;
     cout<<"After rotation: slice(1):"<<endl;
     pRotatedTensor->slice(1).print();
 
