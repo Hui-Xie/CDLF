@@ -1063,7 +1063,7 @@ void
 Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float> *&pRotatedTensor) {
 
     if (3 != m_dims.size() || 3 != radianVec.size()){
-        cout<<"Error: rotate3D is only for 3D Tensor.Exit"<<endl;
+        cout<<"Error: rotate3D is only for 3D Tensor. Exit."<<endl;
         return;
     }
 

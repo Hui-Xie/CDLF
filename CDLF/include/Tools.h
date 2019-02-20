@@ -44,6 +44,8 @@ bool operator== (const vector<int>& left, const vector<int>& right);
 
 void deleteOnes(vector<int>& vec);
 
+int maxElement(const vector<int>& vec);
+
 vector<int> nonZeroIndex(const vector<int>& vec);
 
 void printVector(const vector<int>& vec);

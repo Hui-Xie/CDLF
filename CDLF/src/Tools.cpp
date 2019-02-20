@@ -165,6 +165,19 @@ void deleteOnes(vector<int>& vec){
     }
 }
 
+int maxElement(const vector<int>& vec){
+    const int N = vec.size();
+    if (N <= 0){
+        cout<<"Error: maxElement() must has non-zero size of vector as input."<<endl;
+        return 0;
+    }
+    int max = vec[0];
+    for (int i=1; i<N; ++i){
+        if (vec[i] > max ) max = vec[i];
+    }
+    return max;
+}
+
 vector<int> nonZeroIndex(const vector<int>& vec){
     vector<int> result;
     const int N = vec.size();
