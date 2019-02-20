@@ -64,8 +64,7 @@ set(MKL_LINK_FlAGS  "  -L${MKLROOT}/lib/intel64 -lmkl_rt -lpthread -lm -ldl  ")
 set(IPPROOT ${INTEL_Dir}/ipp)
 set(IPP_INCLUDE_DIR ${IPPROOT}/include)
 include_directories(${IPP_INCLUDE_DIR})
-set(IPP_LINK_FlAGS  "  -L ${IPPROOT}/lib/intel64")
-
+set(IPP_LINK_FlAGS  " -L${IPPROOT}/lib/intel64 -lippi -lipps -lippcore -lippvm")
 
 set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${IPP_LINK_FlAGS} ${MKL_LINK_FlAGS}  ")
 
@@ -76,10 +75,11 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
                 ${MKLROOT}/lib/intel64/libmkl_sequential.so
                 ${MKLROOT}/lib/intel64/libmkl_rt.so)
 
-
-set(IPP_LIBRARY  ${IPPROOT}/lib/intel64/libippvm.so
-                 ${IPPROOT}/lib/intel64/libippcore.so
-                 ${IPPROOT}/lib/intel64/libipps.so)
+# for dynamic link IPP library
+set(IPP_LIBRARY    ${IPPROOT}/lib/intel64/libippcore.so
+                   ${IPPROOT}/lib/intel64/libippvm.so
+                   ${IPPROOT}/lib/intel64/libipps.so
+                   ${IPPROOT}/lib/intel64/libippi.so )
 
 
 

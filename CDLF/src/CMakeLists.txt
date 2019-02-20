@@ -8,27 +8,6 @@ if (${Use_GPU})
    #set(CMAKE_CUDA_FLAGS -arch=sm_60)   #Nvidia Tesla P100 in UI-GPU
 endif(${Use_GPU})
 
-#[[ methodds of getting  GPU informaiton
-  use lspci | grep -i nvidia to get GPU information
-  use nvidia-smi -q to get more detailed information of GPU
-  use cat  /proc/driver/nvidia/gpus/0000:3b:00.0/information to get model number
-
-[hxie1@argon-itf-ca38-07 0000:3b:00.0]$ cat /proc/driver/nvidia/gpus/0000:3b:00.0/information
-Model: 		 TITAN V
-IRQ:   		 136
-GPU UUID: 	 GPU-a6cba209-8da6-6676-9415-e364f1035a3a
-Video BIOS: 	 88.00.41.00.18
-Bus Type: 	 PCIe
-DMA Size: 	 47 bits
-DMA Mask: 	 0x7fffffffffff
-Bus Location: 	 0000:3b:00.0
-Device Minor: 	 0
-
-in this case, Titan V has a compute capability 7.0
-
-]]
-
-
 message("Config StatsLab Notes:")
 message("0  Courtesy of Keith O'Hara (https://github.com/kthohr/stats) for StatsLab")
 message("1  download code from: https://github.com/kthohr/stats into your intall directory")
@@ -67,4 +46,6 @@ endif(${Use_GPU})
 add_library(CDLF SHARED ${CDLF_CXX_Src} ${CDLF_CUDA_Src})
 set_target_properties(CDLF PROPERTIES CUDA_SEPARABLE_COMPILATION ON )
 target_link_libraries(CDLF ${IPP_LIBRARY} ${MKL_LIBRARY} )
+
+
 
