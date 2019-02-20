@@ -1062,37 +1062,45 @@ template<class ValueType>
 void
 Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float> *&pRotatedTensor) {
 
+    if (3 != m_dims.size() || 3 != radianVec.size()){
+        cout<<"Error: rotate3D is only for 3D Tensor.Exit"<<endl;
+        return;
+    }
+
     const Ipp32f* pSrc = m_data;
     IpprVolume srcVolume;
     srcVolume.width = m_dims[2]; srcVolume.height = m_dims[1];  srcVolume.depth = m_dims[0];
     int srcStep = sizeof(ValueType)* srcVolume.width;
     int srcPlaneStep = sizeof(ValueType)* srcVolume.width * srcVolume.height;
 
-    IpprCuboid srcVoi;
+    IpprCuboid srcVoi; // Volume of Interest
     srcVoi.x = 0; srcVoi.y = 0; srcVoi.z = 0;
     srcVoi.width = srcVolume.width; srcVoi.height = srcVolume.height; srcVoi.depth = srcVolume.depth;
 
+    double c[3][4] = {0}; //Ratation Matrix, all element initialize to zeros.
+    getRotationMatrix(radianVec, c);
 
-    pRotatedTensor = new Tensor<float>(m_dims);
-    Ipp32f* pDst = pRotatedTensor->m_data;
-    int dstStep = srcStep;
-    int dstPlaneStep = srcPlaneStep;
     IpprCuboid dstVoi;
-    dstVoi = srcVoi;
+    dstVoi.x = 0; dstVoi.y = 0;dstVoi.z = 0;
+    dstVoi.depth  = c[0][0]*srcVolume.depth;
+    dstVoi.height = c[1][1]*srcVolume.height;
+    dstVoi.width = c[2][2]*srcVolume.width;
 
-    double coeffs[3][4] = {0}; //all element initialize to zeros.
-    getRotationMatrix(radianVec, coeffs);
+    pRotatedTensor = new Tensor<float>({dstVoi.depth, dstVoi.height, dstVoi.width});
+    Ipp32f* pDst = pRotatedTensor->m_data;
+    int dstStep = sizeof(float)* dstVoi.width;
+    int dstPlaneStep = sizeof(float)* dstVoi.width * dstVoi.height;
 
     checkIPP(ippInit());
 
     const int nChannel  =1 ;
     int bufferSize = 0;
-    checkIPP(ipprWarpAffineGetBufSize(srcVolume, srcVoi, dstVoi, coeffs, nChannel, interpolation, &bufferSize));
+    checkIPP(ipprWarpAffineGetBufSize(srcVolume, srcVoi, dstVoi, c, nChannel, interpolation, &bufferSize));
     Ipp8u* pBuffer = (Ipp8u*)ippMalloc(bufferSize);
 
     checkIPP(ipprWarpAffine_32f_C1V(pSrc, srcVolume, srcStep, srcPlaneStep, srcVoi,
                                     pDst, dstStep, dstPlaneStep,dstVoi,
-                                    coeffs, interpolation, pBuffer));
+                                    c, interpolation, pBuffer));
 
     ippFree(pBuffer);
 
