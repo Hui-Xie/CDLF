@@ -1070,8 +1070,9 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     const Ipp32f* pSrc = m_data;
     IpprVolume srcVolume;
     srcVolume.width = m_dims[2]; srcVolume.height = m_dims[1];  srcVolume.depth = m_dims[0];
+    //srcVolume.width = m_dims[1]; srcVolume.height = m_dims[0];  srcVolume.depth = m_dims[2];
     int srcStep = sizeof(ValueType)* srcVolume.width;
-    int srcPlaneStep = sizeof(ValueType)* srcVolume.width * srcVolume.height;
+    int srcPlaneStep = sizeof(ValueType)* srcVolume.width* srcVolume.height;
 
     IpprCuboid srcVoi; // Volume of Interest
     srcVoi.x = 0; srcVoi.y = 0; srcVoi.z = 0;
@@ -1080,16 +1081,17 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     double c[3][4] = {0}; //Ratation Matrix, all element initialize to zeros.
     getRotationMatrix(radianVec, c);
 
+    const vector<int> dimRange = getMaxRangeOfHingeRotation(c, m_dims);
     IpprCuboid dstVoi;
     dstVoi.x = 0; dstVoi.y = 0;dstVoi.z = 0;
-    dstVoi.depth  = c[0][0]*srcVolume.depth;
-    dstVoi.height = c[1][1]*srcVolume.height;
-    dstVoi.width = c[2][2]*srcVolume.width;
+    dstVoi.width  = dimRange[2];
+    dstVoi.height = dimRange[1];
+    dstVoi.depth = dimRange[0];
 
-    pRotatedTensor = new Tensor<float>({dstVoi.depth, dstVoi.height, dstVoi.width});
+    pRotatedTensor = new Tensor<float>(dimRange);
     Ipp32f* pDst = pRotatedTensor->m_data;
     int dstStep = sizeof(float)* dstVoi.width;
-    int dstPlaneStep = sizeof(float)* dstVoi.width * dstVoi.height;
+    int dstPlaneStep = sizeof(float)* dstVoi.width* dstVoi.height;
 
     checkIPP(ippInit());
 
@@ -1104,5 +1106,30 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
 
     ippFree(pBuffer);
 
+}
+
+template<class ValueType>
+void Tensor<ValueType>::rotate3D_NearestNeighbor(const vector<float> radianVec, Tensor<float> *&pRotatedTensor) {
+
+    if (3 != m_dims.size() || 3 != radianVec.size()){
+        cout<<"Error: rotate3D_naive is only for 3D Tensor. Exit."<<endl;
+        return;
+    }
+    double c[3][4] = {0}; //Ratation Matrix, all element initialize to zeros.
+    getRotationMatrix(radianVec, c);
+
+    const vector<int> dimRange = getMaxRangeOfHingeRotation(c, m_dims);
+    pRotatedTensor = new Tensor<float>(dimRange);
+    pRotatedTensor->zeroInitialize();
+    int n =0;
+    for (int x= 0; x<m_dims[0]; ++x)
+        for (int y=0; y<m_dims[1]; ++y)
+            for (int z=0; z<m_dims[2]; ++z){
+                int x1 = abs(c[0][0]*x+ c[0][1]*y + c[0][2]*z) +0.5;
+                int y1 = abs(c[1][0]*x+ c[1][1]*y + c[1][2]*z) +0.5;
+                int z1 = abs(c[2][0]*x+ c[2][1]*y + c[2][2]*z) +0.5;
+
+                pRotatedTensor->e({x1,y1,z1}) = e(n++);
+            }
 }
 

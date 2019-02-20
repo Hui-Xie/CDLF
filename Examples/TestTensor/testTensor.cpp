@@ -364,13 +364,21 @@ int main (int argc, char *argv[]) {
     cout<<"before rotation: slice(1):"<<endl;
     tensor140.slice(1).print();
 
-    vector<float> radianVec = generatePositiveNegativeRandomRadian(3,M_PI/4.0);
+    //vector<float> radianVec = generatePositiveNegativeRandomRadian(3,M_PI/4.0);
 
+    vector<float> radianVec = {M_PI/2.0, 0, 0};
     Tensor<float>* pRotatedTensor = nullptr;
     tensor140.rotate3D(radianVec, IPPI_INTER_NN, pRotatedTensor);
+    //tensor140.rotate3D_NearestNeighbor(radianVec, pRotatedTensor);
     cout<<"roatated tensor size: "<<vector2Str(pRotatedTensor->getDims())<<endl;
+    cout<<"After rotation: slice(0):"<<endl;
+    pRotatedTensor->slice(0).print();
+
     cout<<"After rotation: slice(1):"<<endl;
     pRotatedTensor->slice(1).print();
+
+    cout<<"After rotation: slice(2):"<<endl;
+    pRotatedTensor->slice(2).print();
 
     delete pRotatedTensor;
     

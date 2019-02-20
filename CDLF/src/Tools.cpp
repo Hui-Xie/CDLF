@@ -388,6 +388,29 @@ void getRotationMatrix(const vector<float> radianVec, double R[3][4]){
     R[2][2] = cos(a)*cos(b);
 }
 
+vector<int> getMaxRangeOfHingeRotation(const double c[3][4], vector<int> dims){
+    const int N = dims.size();
+    if (N != 3){
+        cout<<"Error: Hinge Rotation needs dims.size == 3. Exit "<<endl;
+        return vector<int>();
+    }
+    int maxx =0, maxy=0, maxz=0;
+    for (int x= 0; x<dims[0]; x+=(dims[0]-1))
+        for (int y=0; y<dims[1]; y += (dims[1]-1))
+            for (int z=0; z<dims[2]; z += (dims[2]-1)){
+                if (0 == x && 0 == y && 0 ==z)  continue;
+                int x1 = abs(c[0][0]*x+ c[0][1]*y + c[0][2]*z)+0.5;
+                int y1 = abs(c[1][0]*x+ c[1][1]*y + c[1][2]*z)+0.5;
+                int z1 = abs(c[2][0]*x+ c[2][1]*y + c[2][2]*z)+0.5;
+
+                maxx = (x1> maxx) ? x1 : maxx;
+                maxy = (y1> maxy) ? y1 : maxy;
+                maxz = (z1> maxz) ? z1 : maxz;
+            }
+
+    return {maxx+1, maxy+1, maxz+1}; //Size = maxIndex +1
+}
+
 
 
 

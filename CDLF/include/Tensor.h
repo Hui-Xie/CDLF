@@ -139,8 +139,12 @@ public:
      *
      *  and user is responsible for releasing pRotatedTensor
      *
+     *  arbitrary rotation hinged at  original (0,0,0)
+     *
      * */
     void rotate3D(const vector<float> radianVec, const int interpolation, Tensor<float>* & pRotatedTensor);
+
+    void rotate3D_NearestNeighbor(const vector<float> radianVec, Tensor<float>* & pRotatedTensor);
 
 
 private:
