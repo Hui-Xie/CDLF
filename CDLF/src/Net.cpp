@@ -511,6 +511,14 @@ void Net::save() {
         cout<<"Error: net has 0 layer. Exit"<<endl;
         std::exit(EXIT_FAILURE);
     }
+
+    LossLayer* lossLayer= (LossLayer*)getFinalLayer();
+    if (isinf(lossLayer->getLoss()) || isnan(lossLayer->getLoss())){
+        cout<<"Error: net loss is nan or inf. net exit."<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+
+
     cout<<"Net parameters start to save ....."<<endl;
     saveLayersStruct();
     saveNetParameters();
