@@ -22,6 +22,8 @@ bool sameLength(const vector<int>& vec1, const vector<int>& vec2);
 
 vector<int> reverseVector(const vector<int>& src);
 
+vector<float> reverseVector(const vector<float>& src);
+
 vector<int> operator+ (const vector<int>& left, const int offset);
 
 vector<int> operator+ (const vector<int>& left, const vector<int>& right);
@@ -88,5 +90,5 @@ void getRotationMatrix(const vector<float> radianVec, double R[3][4]);
 // After Hinge rotation, translate the object into first quadrant with all index >0
 vector<int> getRotatedDims_UpdateTranslation(const vector<int> dims, double R[3][4]);
 
-
+vector<int> getIppRotatedDims_UpdateTranslation(const vector<int> ippDims, double ippR[3][4]);
 #endif //RL_NONCONVEX_TOOLS_H

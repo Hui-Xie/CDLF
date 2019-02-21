@@ -354,7 +354,7 @@ int main (int argc, char *argv[]) {
     //Test rotation 3D tensor
 
     cout<<"==========Test rotation 3D tensor =================== "<<endl;
-    Tensor<float> tensor140({3,4,5});
+    Tensor<float> tensor140({3,6,7});
     const int N140 = tensor140.getLength();
     for(int i=0; i<N140; ++i){
         tensor140.e(i) = i;
@@ -368,7 +368,7 @@ int main (int argc, char *argv[]) {
 
     vector<float> radianVec = {M_PI/2.0, 0, 0};
     Tensor<float>* pRotatedTensor = nullptr;
-    tensor140.rotate3D(radianVec, IPPI_INTER_NN, pRotatedTensor);
+    tensor140.rotate3D(radianVec, IPPI_INTER_CUBIC, pRotatedTensor);
     //tensor140.rotate3D_NearestNeighbor(radianVec, pRotatedTensor);
     cout<<"roatated tensor size: "<<vector2Str(pRotatedTensor->getDims())<<endl;
     cout<<"After rotation: slice(0):"<<endl;

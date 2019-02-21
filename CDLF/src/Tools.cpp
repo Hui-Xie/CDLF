@@ -65,6 +65,15 @@ vector<int> reverseVector(const vector<int>& src){
     return target;
 }
 
+vector<float> reverseVector(const vector<float>& src){
+    int size = src.size();
+    vector<float> target;
+    for(int i = size-1; i>=0; --i){
+        target.push_back(src[i]);
+    }
+    return target;
+}
+
 vector<int> operator+ (const vector<int>& left, const int offset){
     const int N = left.size();
     vector<int> result(left);
@@ -425,6 +434,7 @@ vector<int> getRotatedDims_UpdateTranslation(const vector<int> dims, double R[3]
 
     return rotatedDims;
 }
+
 
 
 
