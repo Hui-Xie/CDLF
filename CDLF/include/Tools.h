@@ -85,7 +85,8 @@ bool isContainSubstr(const string& str, const string subStr);
 // radianVec indicating rotating angle about axis 0,1,2;  R[3][4] are rotation matrix without translation,
 void getRotationMatrix(const vector<float> radianVec, double R[3][4]);
 
-vector<int> getMaxRangeOfHingeRotation(const double c[3][4], vector<int> dims);
+// After Hinge rotation, translate the object into first quadrant with all index >0
+vector<int> getRotatedDims_UpdateTranslation(const vector<int> dims, double R[3][4]);
 
 
 #endif //RL_NONCONVEX_TOOLS_H

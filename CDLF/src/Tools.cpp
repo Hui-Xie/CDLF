@@ -388,27 +388,42 @@ void getRotationMatrix(const vector<float> radianVec, double R[3][4]){
     R[2][2] = cos(a)*cos(b);
 }
 
-vector<int> getMaxRangeOfHingeRotation(const double c[3][4], vector<int> dims){
+vector<int> getRotatedDims_UpdateTranslation(const vector<int> dims, double R[3][4]){
     const int N = dims.size();
     if (N != 3){
         cout<<"Error: Hinge Rotation needs dims.size == 3. Exit "<<endl;
         return vector<int>();
     }
     int maxx =0, maxy=0, maxz=0;
+    int minx =0, miny=0, minz=0;
+    
     for (int x= 0; x<dims[0]; x+=(dims[0]-1))
         for (int y=0; y<dims[1]; y += (dims[1]-1))
             for (int z=0; z<dims[2]; z += (dims[2]-1)){
                 if (0 == x && 0 == y && 0 ==z)  continue;
-                int x1 = abs(c[0][0]*x+ c[0][1]*y + c[0][2]*z)+0.5;
-                int y1 = abs(c[1][0]*x+ c[1][1]*y + c[1][2]*z)+0.5;
-                int z1 = abs(c[2][0]*x+ c[2][1]*y + c[2][2]*z)+0.5;
+                float x1 = R[0][0]*x+ R[0][1]*y + R[0][2]*z;
+                float y1 = R[1][0]*x+ R[1][1]*y + R[1][2]*z;
+                float z1 = R[2][0]*x+ R[2][1]*y + R[2][2]*z;
 
                 maxx = (x1> maxx) ? x1 : maxx;
                 maxy = (y1> maxy) ? y1 : maxy;
                 maxz = (z1> maxz) ? z1 : maxz;
+
+                minx = (x1< minx) ? x1 : minx;
+                miny = (y1< miny) ? y1 : miny;
+                minz = (z1< minz) ? z1 : minz;
             }
 
-    return {maxx+1, maxy+1, maxz+1}; //Size = maxIndex +1
+    R[0][3] = (minx<0) ? abs(minx) : 0;
+    R[1][3] = (miny<0) ? abs(miny) : 0;
+    R[2][3] = (minz<0) ? abs(minz) : 0;
+
+    vector<int> rotatedDims(3,0);
+    rotatedDims[0] = int(maxx- minx +1.5); // 0.5 is round; Size = maxIndex +1
+    rotatedDims[1] = int(maxy- miny +1.5);
+    rotatedDims[2] = int(maxz- minz +1.5);
+
+    return rotatedDims;
 }
 
 

@@ -1070,7 +1070,6 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     const Ipp32f* pSrc = m_data;
     IpprVolume srcVolume;
     srcVolume.width = m_dims[2]; srcVolume.height = m_dims[1];  srcVolume.depth = m_dims[0];
-    //srcVolume.width = m_dims[1]; srcVolume.height = m_dims[0];  srcVolume.depth = m_dims[2];
     int srcStep = sizeof(ValueType)* srcVolume.width;
     int srcPlaneStep = sizeof(ValueType)* srcVolume.width* srcVolume.height;
 
@@ -1081,7 +1080,7 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     double c[3][4] = {0}; //Ratation Matrix, all element initialize to zeros.
     getRotationMatrix(radianVec, c);
 
-    const vector<int> dimRange = getMaxRangeOfHingeRotation(c, m_dims);
+    const vector<int> dimRange = getRotatedDims_UpdateTranslation(m_dims, c);
     IpprCuboid dstVoi;
     dstVoi.x = 0; dstVoi.y = 0;dstVoi.z = 0;
     dstVoi.width  = dimRange[2];
@@ -1089,7 +1088,7 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     dstVoi.depth = dimRange[0];
 
     pRotatedTensor = new Tensor<float>(dimRange);
-    Ipp32f* pDst = pRotatedTensor->m_data;
+    Ipp32f*  pDst = pRotatedTensor->m_data;
     int dstStep = sizeof(float)* dstVoi.width;
     int dstPlaneStep = sizeof(float)* dstVoi.width* dstVoi.height;
 
@@ -1100,10 +1099,16 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
     checkIPP(ipprWarpAffineGetBufSize(srcVolume, srcVoi, dstVoi, c, nChannel, interpolation, &bufferSize));
     Ipp8u* pBuffer = (Ipp8u*)ippMalloc(bufferSize);
 
-    checkIPP(ipprWarpAffine_32f_C1V(pSrc, srcVolume, srcStep, srcPlaneStep, srcVoi,
-                                    pDst, dstStep, dstPlaneStep,dstVoi,
-                                    c, interpolation, pBuffer));
 
+    checkIPP(ipprWarpAffine_32f_C1V(pSrc, srcVolume, srcStep, srcPlaneStep, srcVoi,
+                                    pDst, dstStep, dstPlaneStep, dstVoi,
+                                    c, interpolation, pBuffer));
+     
+  /*
+    checkIPP(ipprWarpAffine_32f_C1PV(&pSrc,  srcVolume, srcStep, srcVoi,
+                                     &pDst,  dstStep,  dstVoi,
+                                     c, interpolation, pBuffer) );
+*/
     ippFree(pBuffer);
 
 }
@@ -1118,16 +1123,16 @@ void Tensor<ValueType>::rotate3D_NearestNeighbor(const vector<float> radianVec, 
     double c[3][4] = {0}; //Ratation Matrix, all element initialize to zeros.
     getRotationMatrix(radianVec, c);
 
-    const vector<int> dimRange = getMaxRangeOfHingeRotation(c, m_dims);
+    const vector<int> dimRange = getRotatedDims_UpdateTranslation(m_dims, c);
     pRotatedTensor = new Tensor<float>(dimRange);
     pRotatedTensor->zeroInitialize();
     int n =0;
     for (int x= 0; x<m_dims[0]; ++x)
         for (int y=0; y<m_dims[1]; ++y)
             for (int z=0; z<m_dims[2]; ++z){
-                int x1 = abs(c[0][0]*x+ c[0][1]*y + c[0][2]*z) +0.5;
-                int y1 = abs(c[1][0]*x+ c[1][1]*y + c[1][2]*z) +0.5;
-                int z1 = abs(c[2][0]*x+ c[2][1]*y + c[2][2]*z) +0.5;
+                int x1 = c[0][0]*x+ c[0][1]*y + c[0][2]*z +c[0][3] +0.5;
+                int y1 = c[1][0]*x+ c[1][1]*y + c[1][2]*z +c[1][3] +0.5;
+                int z1 = c[2][0]*x+ c[2][1]*y + c[2][2]*z +c[2][3] +0.5;
 
                 pRotatedTensor->e({x1,y1,z1}) = e(n++);
             }
