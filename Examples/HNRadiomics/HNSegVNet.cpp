@@ -26,45 +26,37 @@ void HNSegVNet::defineAssemblyLoss() {
 }
 */
 
-void HNSegVNet::setInput(const string &filename,const vector<int>& center) {
-    InputLayer *inputLayer = getInputLayer();
-    Tensor<float>* pImage = nullptr;
-    m_pDataMgr->readImageFile(filename, pImage);
-    Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
-    const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
-    const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pImage->getDims(), inputLayer->m_tensorSize, center);
-    pImage->subTensorFromTopLeft(topLeft, pSubImage, stride1);
-    inputLayer->setInputTensor(*pSubImage);
-    if (nullptr != pImage) {
-        delete pImage;
-        pImage = nullptr;
-    }
-    if (nullptr != pSubImage) {
-        delete pSubImage;
-        pSubImage = nullptr;
-    }
-}
-
-void HNSegVNet::setGroundtruth(const string &filename, const vector<int>& center) {
+void HNSegVNet::setGroundtruth(const string &filename, const vector<float>& radianVec, vector<int>& center, const int translationMaxValue) {
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
-    Tensor<float>* pLabel = nullptr;
+    Tensor<float> *pLabel = nullptr;
     m_pDataMgr->readLabelFile(filename, pLabel);
-    Tensor<float>* pSubLabel = nullptr;
+
+    Tensor<float> *pRotatedLabel = nullptr;
+    pLabel->rotate3D(radianVec, IPPI_INTER_NN, pRotatedLabel);
+    center = pRotatedLabel->getCenterOfNonZeroElements();
+    randomTranslate(center, translationMaxValue); // support random translation in all axes direction within 15 pixels
+
+    if (nullptr != pLabel) {
+        delete pLabel;
+        pLabel = nullptr;
+    }
+
+
+    Tensor<float> *pSubLabel = nullptr;
     pSubLabel = new Tensor<float>(lossLayer->m_prevLayer->m_tensorSize);
 
-
     //  for lossLayer->m_prevLayer is Softmax
-    if (pLabel->getDims().size() +1  == lossLayer->m_prevLayer->m_tensorSize.size()){
+    if (pRotatedLabel->getDims().size() + 1 == lossLayer->m_prevLayer->m_tensorSize.size()) {
         const int k = lossLayer->m_prevLayer->m_tensorSize[0];
-        Tensor<float>* pOneHotLabel = nullptr;
-        m_pDataMgr->oneHotEncodeLabel(pLabel, pOneHotLabel, k);
-        const vector<int> strideOneHot = vector<int>(lossLayer->m_prevLayer->m_tensorSize.size(),1);
+        Tensor<float> *pOneHotLabel = nullptr;
+        m_pDataMgr->oneHotEncodeLabel(pRotatedLabel, pOneHotLabel, k);
+        const vector<int> strideOneHot = vector<int>(lossLayer->m_prevLayer->m_tensorSize.size(), 1);
 
         //update topLeft index
         vector<int> subImageDims = lossLayer->m_prevLayer->m_tensorSize;
         subImageDims.erase(subImageDims.begin());
-        vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pLabel->getDims(), subImageDims, center);
+        vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pRotatedLabel->getDims(), subImageDims, center);
         topLeft.insert(topLeft.begin(), 0);
 
         pOneHotLabel->subTensorFromTopLeft(topLeft, pSubLabel, strideOneHot);
@@ -74,25 +66,58 @@ void HNSegVNet::setGroundtruth(const string &filename, const vector<int>& center
         }
     }
         // for lossLayer->m_prevLayer is Sigmoid
-    else if (pLabel->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()){
-        const vector<int> stride1 = vector<int>(pLabel->getDims().size(),1);
-        const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pLabel->getDims(), lossLayer->m_prevLayer->m_tensorSize, center);
-        pLabel->subTensorFromTopLeft(topLeft, pSubLabel, stride1);
-    }
-    else{
-        cout<<"Error: lossLayer->prevLayer size does not match label image size."<<endl;
+    else if (pRotatedLabel->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()) {
+        const vector<int> stride1 = vector<int>(pRotatedLabel->getDims().size(), 1);
+        const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pRotatedLabel->getDims(),
+                                                                    lossLayer->m_prevLayer->m_tensorSize, center);
+        pRotatedLabel->subTensorFromTopLeft(topLeft, pSubLabel, stride1);
+    } else {
+        cout << "Error: lossLayer->prevLayer size does not match label image size." << endl;
         std::exit(EXIT_FAILURE);
     }
 
     lossLayer->setGroundTruth(*pSubLabel);
 
-    if (nullptr != pLabel) {
-        delete pLabel;
-        pLabel = nullptr;
+
+    if (nullptr != pRotatedLabel) {
+        delete pRotatedLabel;
+        pRotatedLabel = nullptr;
     }
+
     if (nullptr != pSubLabel) {
         delete pSubLabel;
         pSubLabel = nullptr;
+    }
+}
+
+
+void HNSegVNet::setInput(const string &filename, const vector<float>& radianVec, const vector<int>& center) {
+    InputLayer *inputLayer = getInputLayer();
+    Tensor<float>* pImage = nullptr;
+    m_pDataMgr->readImageFile(filename, pImage);
+
+    Tensor<float>* pRotatedImage = nullptr;
+    pImage->rotate3D(radianVec, IPPI_INTER_CUBIC, pRotatedImage);
+
+    if (nullptr != pImage) {
+        delete pImage;
+        pImage = nullptr;
+    }
+
+    Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
+    const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
+    const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pRotatedImage->getDims(), inputLayer->m_tensorSize, center);
+    pRotatedImage->subTensorFromTopLeft(topLeft, pSubImage, stride1);
+    inputLayer->setInputTensor(*pSubImage);
+
+    if (nullptr != pRotatedImage) {
+        delete pRotatedImage;
+        pRotatedImage = nullptr;
+    }
+
+    if (nullptr != pSubImage) {
+        delete pSubImage;
+        pSubImage = nullptr;
     }
 }
 
@@ -121,10 +146,10 @@ void HNSegVNet::train() {
             const string imageFilePath = m_pDataMgr->m_trainImagesVector[randSeq[n]];
             const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
 
-            // support random translation in all axes direction within 15 pixels
-            const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath, true, 15);
-            setInput(imageFilePath, center);
-            setGroundtruth(labelFilePath,center);
+            const vector<float> radianVec = generatePositiveNegativeRandomRadian(3, M_PI/4);
+            vector<int>  center;
+            setGroundtruth(labelFilePath,radianVec, center, 15);
+            setInput(imageFilePath, radianVec, center);
 
             forwardPropagate();
             m_loss += lossLayer->getLoss();
@@ -172,9 +197,12 @@ float HNSegVNet::test() {
     while (n < N) {
         const string imageFilePath = m_pDataMgr->m_testImagesVector[n];
         const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
-        const vector<int> center = m_pDataMgr->getLabelCenter(labelFilePath, false , 0);
-        setInput(imageFilePath, center);
-        setGroundtruth(labelFilePath,center);
+
+        const vector<float> radianVec = {0,0,0};
+        vector<int> center;
+        setGroundtruth(labelFilePath, radianVec, center, 0);
+        setInput(imageFilePath, radianVec, center);
+
         forwardPropagate();
         m_loss += lossLayer->getLoss();
 
@@ -183,8 +211,6 @@ float HNSegVNet::test() {
         cout<<"Label: "<<labelFilePath<<endl;
         cout<<"losss = "<<lossLayer->getLoss()<<", center = "<<vector2Str(center)<<endl;
         cout<<endl;
-
-
 
         // for softmax preceeds over loss layer
         if (m_isSoftmaxBeforeLoss){
@@ -209,7 +235,7 @@ float HNSegVNet::test() {
 
 }
 
-float HNSegVNet::test(const string &imageFilePath, const string &labelFilePath, const vector<int>& center) {
+float HNSegVNet::test(const string &imageFilePath, const string &labelFilePath) {
     InputLayer *inputLayer = getInputLayer();
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
@@ -217,10 +243,10 @@ float HNSegVNet::test(const string &imageFilePath, const string &labelFilePath, 
     m_dice = 0.0;
     m_TPR = 0.0;
 
-    setInput(imageFilePath, center);
-    if (!labelFilePath.empty()){
-        setGroundtruth(labelFilePath, center);
-    }
+    vector<int> center;
+    setGroundtruth(labelFilePath, {0,0,0}, center, 0);
+    setInput(imageFilePath, {0,0,0}, center);
+
     forwardPropagate();
 
     vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);

@@ -435,6 +435,19 @@ vector<int> getRotatedDims_UpdateTranslation(const vector<int> dims, double R[3]
     return rotatedDims;
 }
 
+void randomTranslate(vector<int>& vec, const int translationMaxValue){
+    if ( 0 == translationMaxValue) {
+        return;
+    }
+    else{
+        const int N = vec.size();
+        vector<int> drift = generatePositiveNegativeRandomNumber(N, translationMaxValue);
+        for (int i =0 ;i< N; ++i){
+            vec[i] += drift[i];
+        }
+    }
+}
+
 
 
 

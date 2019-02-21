@@ -8,7 +8,7 @@
 void printUsage(char* argv0){
     cout<<"Test Head&Neck Suqamous Cell Carcinoma Segmentation V Model:"<<endl;
     cout<<"Usage: "<<endl;
-    cout<<argv0<<"<netDir> <fullPathOfCTImageFile>  [groundTruthFile]"<<endl;
+    cout<<argv0<<"<netDir> <fullPathOfCTImageFile>  <groundTruthFile>"<<endl;
     cout<<"For examples: "<<endl;
     cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData/CT_Images/HNSCC-01-0017_CT.nrrd "
                  " /home/hxie1/data/HeadNeckSCC/ExtractData/GTV_Images/HNSCC-01-0017_GTV.nrrd"<<endl;
@@ -21,7 +21,7 @@ void printUsage(char* argv0){
 
 int main(int argc, char *argv[]) {
     printCurrentLocalTime();
-    if (4 != argc && 3 != argc) {
+    if (4 != argc) {
         cout << "Error: input parameter error." << endl;
         printUsage(argv[0]);
         return -1;
@@ -29,10 +29,7 @@ int main(int argc, char *argv[]) {
 
     const string netDir = argv[1];
     const string imageFile = argv[2];
-    string labelFile = "";
-    if (4 == argc) {
-        labelFile = argv[3];
-    }
+    string labelFile = argv[3];
 
     CPUAttr cpuAttr;
     cpuAttr.getCPUAttr();
@@ -64,16 +61,7 @@ int main(int argc, char *argv[]) {
     HNDataManager dataMgr("");
     net.m_pDataMgr = &dataMgr;
 
-    if (isContainSubstr(net.getName(),"clip")){
-        net.m_pDataMgr->generateLabelCenterMap();
-    }
-
-    vector<int> center = vector<int>();
-    if (!labelFile.empty()){
-        center = net.m_pDataMgr->getLabelCenter(labelFile, false, 0);
-    }
-
-    net.test(imageFile, labelFile, center);
+    net.test(imageFile, labelFile);
 
     cout << "=========== End of Predict:  " << net.getName() << " ============" << endl;
     return 0;

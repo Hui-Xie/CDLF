@@ -138,11 +138,7 @@ vector<int> ITKDataManager::getLabelCenter(const string labelFileName, const boo
     }
 
     if (randomTranslation){
-        const int N = center.size();
-        vector<int> drift = generatePositiveNegativeRandomNumber(N, translationMaxValue);
-        for (int i =0 ;i< N; ++i){
-            center[i] += drift[i];
-        }
+        randomTranslate(center, translationMaxValue);
     }
     return center;
 

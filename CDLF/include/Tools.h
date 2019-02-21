@@ -91,4 +91,7 @@ void getRotationMatrix(const vector<float> radianVec, double R[3][4]);
 vector<int> getRotatedDims_UpdateTranslation(const vector<int> dims, double R[3][4]);
 
 vector<int> getIppRotatedDims_UpdateTranslation(const vector<int> ippDims, double ippR[3][4]);
+
+void randomTranslate(vector<int>& vec, const int translationMaxValue);
+
 #endif //RL_NONCONVEX_TOOLS_H

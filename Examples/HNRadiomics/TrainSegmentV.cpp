@@ -69,10 +69,6 @@ int main(int argc, char *argv[]){
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
 
-    if (isContainSubstr(net.getName(),"ROI")){
-        net.m_pDataMgr->generateLabelCenterMap();
-    }
-
     int epoch= 15000;
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
