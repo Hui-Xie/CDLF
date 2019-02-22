@@ -30,6 +30,10 @@ void LossLayer::printGroundTruth() {
 }
 
 float LossLayer::getLoss(){
+    if (isinf(m_loss) || isnan(m_loss)){
+        cout<<"Error: net loss is nan or inf. Net exit."<<endl;
+        std::exit(EXIT_FAILURE);
+    }
     return m_loss;
 }
 
