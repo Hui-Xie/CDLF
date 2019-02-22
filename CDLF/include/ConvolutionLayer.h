@@ -36,7 +36,6 @@ public:
 
 private:
     void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
-    void computeDb(const Tensor<float>* pdY, const int filterIndex);
 
     //Note: dx need to accumulate along filters
     // if pdx == nullptr, computeDx will use previousLayer->pdY;

@@ -35,6 +35,7 @@ public:
 
     bool checkFilterSize(Layer* prevLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters);
     void constructFiltersAndY();
+    void computeDb(const Tensor<float>* pdY, const int filterIndex);
 
     void computeOneFiterN();
 

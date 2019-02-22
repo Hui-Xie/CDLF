@@ -153,6 +153,11 @@ void ConvolutionBasicLayer::zeroParaGradient() {
 }
 
 
+void ConvolutionBasicLayer::computeDb(const Tensor<float> *pdY, const int filterIndex) {
+    m_pdB->e(filterIndex) += pdY->sum(); // + is for batch processing
+}
+
+
 void ConvolutionBasicLayer::updateParameters(const float lr, const string &method, const int batchSize) {
     if ("sgd" == method) {
         float learningRate = lr / batchSize;

@@ -6,6 +6,8 @@
 
 #include "TransposedConvolutionLayer.h"
 #include <thread>
+#include <TransposedConvolutionLayer.h>
+
 #ifdef Use_GPU
    #include <CudnnTransposedConvolution.h>
 #endif
@@ -48,7 +50,7 @@ void TransposedConvolutionLayer::updateTensorSize() {
 }
 
 
-// Y = W*X
+// Y = W*X+b
 void TransposedConvolutionLayer::forward() {
 
 #ifdef Use_GPU
@@ -76,9 +78,10 @@ void TransposedConvolutionLayer::forward() {
                         Tensor<float> subX(filterSize);
                         const int offseti = idxF*N;
                         const vector<int> stride1(filterSize.size(),1);
+                        const float bias = m_pB->e(idxF);
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             pExtendX->subTensorFromTopLeft(m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i), &subX, stride1);
-                            m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]);
+                            m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]) + bias;
                         }
 
                     }
@@ -129,7 +132,10 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, computeX, pdX]() {
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
-                        if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
+                        if (computeW) {
+                            this->computeDW(pdY[idxF], this->m_pdW[idxF]);
+                            this->computeDb(pdY[idxF], idxF);
+                        }
                         const vector<int> stride1(m_filterSize.size(),1);
                         if (computeX){
                             pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_feature_filterSize, m_feature_stride);
@@ -171,7 +177,10 @@ void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
 
     } else {
         // single thread compute
-        if (computeW) computeDW(m_pdYTensor, m_pdW[0]);
+        if (computeW) {
+            computeDW(m_pdYTensor, m_pdW[0]);
+            computeDb(m_pdYTensor, 0);
+        }
         Tensor<float> *pExpandDY = nullptr;
         m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize, m_stride);
         computeDX(pExpandDY, m_pW[0]);
@@ -211,6 +220,7 @@ void TransposedConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<floa
 
 }
 
+
 //Note: dx need to accumulate along filters
 void
 TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float> *pdX) {
@@ -246,5 +256,7 @@ TransposedConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tens
     }
 
 }
+
+
 
 

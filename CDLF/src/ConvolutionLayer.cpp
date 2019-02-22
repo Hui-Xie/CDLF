@@ -73,10 +73,11 @@ void ConvolutionLayer::forward() {
                         Tensor<float> subX = Tensor<float>(filterSize);
                         const int offseti = idxF * N;
                         const vector<int> stride1(filterSize.size(),1);
+                        const float bias = m_pB->e(idxF);
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             m_prevLayer->m_pYTensor->subTensorFromTopLeft(
                                     m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * stride, &subX, stride1);
-                            m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]) + m_pB->e(idxF);
+                            m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]) + bias;
                         }
                     }
             ));
@@ -219,9 +220,6 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
 
 }
 
-void ConvolutionLayer::computeDb(const Tensor<float> *pdY, const int filterIndex) {
-    m_pdB->e(filterIndex) += pdY->sum(); // + is for batch processing
-}
 
 //Note: dx need to accumulate along filters
 void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float> *pdX) {
