@@ -64,7 +64,22 @@ void CudnnBasicConvolution::setXDescriptor() {
 }
 
 void CudnnBasicConvolution::setBDescriptor() {
+    const int numFilters = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
+    const int nbDims = ((ConvolutionBasicLayer*) m_pLayer)->m_filterSize.size()+2;
+    int* dimA = new int [nbDims];
+    dimA[0] = 1;
+    dimA[1] = numFilters;
+    for(int i=2; i< nbDims; ++i ){
+        dimA[i] = 1;
+    }
 
+    int* strideA = new int[nbDims];
+    dimA2SpanA(dimA, nbDims,strideA);
+
+    checkCUDNN(cudnnSetTensorNdDescriptor(m_bDescriptor, CUDNN_DATA_FLOAT, nbDims, dimA, strideA));
+
+    delete[] strideA;
+    delete[] dimA;
 }
 
 
@@ -115,11 +130,16 @@ void CudnnBasicConvolution::allocateDevicedW() {
 }
 
 void CudnnBasicConvolution::allocateDeviceB() {
-
+   const int N = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
+   cudaMalloc(&d_pB, N*sizeof(float));
+   cudaMemcpy(d_pB, ((ConvolutionBasicLayer*) m_pLayer)->m_pB->getData(), N*sizeof(float), cudaMemcpyHostToDevice);
 }
 
+//dB can accumulate
 void CudnnBasicConvolution::allocateDevicedB() {
-
+    const int N = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
+    cudaMalloc(&d_pdB, N*sizeof(float));
+    cudaMemcpy(d_pdB, ((ConvolutionBasicLayer*) m_pLayer)->m_pdB->getData(), N*sizeof(float), cudaMemcpyHostToDevice);
 }
 
 void CudnnBasicConvolution::freeDeviceW(){
@@ -144,11 +164,17 @@ void CudnnBasicConvolution::freeWorkSpace(){
 }
 
 void CudnnBasicConvolution::freeDeviceB() {
-
+    if (nullptr != d_pB)  {
+        cudaFree(d_pB);
+        d_pB= nullptr;
+    }
 }
 
 void CudnnBasicConvolution::freeDevicedB() {
-
+    if (nullptr != d_pdB)  {
+        cudaFree(d_pdB);
+        d_pdB= nullptr;
+    }
 }
 
 

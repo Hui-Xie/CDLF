@@ -11,10 +11,12 @@ CudnnConvolution::~CudnnConvolution(){
     //null
 }
 
+//Y = W*X+b
 void CudnnConvolution::forward() {
     allocateDeviceY();
     allocateDeviceX();
     allocateDeviceW();
+    allocateDeviceB();
     setForwardAlg();
     checkCUDNN(cudnnGetConvolutionForwardWorkspaceSize(m_cudnnContext, m_xDescriptor, m_wDescriptor, m_convDescriptor, m_yDescriptor,
                                                        m_fwdAlg, &m_workspaceSize));
@@ -28,7 +30,13 @@ void CudnnConvolution::forward() {
                             m_convDescriptor, m_fwdAlg,
                             d_pWorkspace, m_workspaceSize,
                             &beta,
-                            m_yDescriptor, d_pY));
+                            m_yDescriptor, d_pY));  // Y = W*X
+    beta = 1;
+    checkCUDNN(cudnnAddTensor(m_cudnnContext, &alpha,
+                              m_bDescriptor, d_pB,
+                              &beta,
+                              m_yDescriptor, d_pY)); // Y += b
+
     const size_t ySize = length(m_pLayer->m_tensorSize);
     cudaMemcpy(m_pLayer->m_pYTensor->getData(), d_pY, ySize*sizeof(float), cudaMemcpyDeviceToHost);
 
@@ -36,6 +44,7 @@ void CudnnConvolution::forward() {
     freeDeviceY();
     freeDeviceX();
     freeDeviceW();
+    freeDeviceB();
 }
 
 void CudnnConvolution::backward(bool computeW, bool computeX) {
@@ -44,6 +53,7 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
     if (computeW){
         allocateDeviceX();
         allocateDevicedW();
+        allocateDevicedB();
         setBackWardFilterAlg();
         checkCUDNN(cudnnGetConvolutionBackwardFilterWorkspaceSize(m_cudnnContext, m_xDescriptor, m_yDescriptor, m_convDescriptor, m_wDescriptor,
                                                                  m_bwdFilterAlg, &m_workspaceSize));
@@ -64,10 +74,17 @@ void CudnnConvolution::backward(bool computeW, bool computeX) {
         for (int i=0; i< numFilters; ++i){
             cudaMemcpy(((ConvolutionBasicLayer*) m_pLayer)->m_pdW[i]->getData(), d_pdW+i*wSize, wSize* sizeof(float), cudaMemcpyDeviceToHost);
         }
-
-        freeWorkSpace();
         freeDeviceX();
         freeDevicedW();
+
+        checkCUDNN(cudnnConvolutionBackwardBias(m_cudnnContext, &alpha,
+                                                m_yDescriptor, d_pdY,
+                                                &beta,
+                                                m_bDescriptor, d_pdB));
+        cudaMemcpy(((ConvolutionBasicLayer*) m_pLayer)->m_pdB->getData(), d_pdB,  numFilters*sizeof(float), cudaMemcpyDeviceToHost);
+
+        freeWorkSpace();
+        freeDevicedB();
     }
 
     if (computeX){
