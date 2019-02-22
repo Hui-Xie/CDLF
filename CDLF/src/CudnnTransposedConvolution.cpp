@@ -109,7 +109,7 @@ void CudnnTransposedConvolution::setWDescriptor() {
 
     int* filterDimA = new int[nbDims];
     filterDimA[0] = ((ConvolutionBasicLayer*) m_pLayer)->m_numInputFeatures;
-    filterDimA[1] = ((ConvolutionBasicLayer*) m_pLayer)->m_numOutputFeatures;
+    filterDimA[1] = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
     for (int i=2; i< nbDims; ++i){
         filterDimA[i]  = ((ConvolutionBasicLayer*) m_pLayer)->m_filterSize[i-2];
     }
@@ -128,7 +128,7 @@ void CudnnTransposedConvolution::setYDescriptor() {
 
     //The first dimension of the tensor defines the batch size n, and the second dimension defines the number of features maps c.
     int nbDims = tensorSize.size();
-    if (1 == ((ConvolutionBasicLayer*) m_pLayer)->m_numOutputFeatures){
+    if (1 == ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters){
         nbDims = nbDims+2;
     }
     else {
@@ -137,7 +137,7 @@ void CudnnTransposedConvolution::setYDescriptor() {
 
     int* dimA = new int[nbDims];
     dimA[0] = 1;
-    if (1 == ((ConvolutionBasicLayer*) m_pLayer)->m_numOutputFeatures){
+    if (1 == ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters){
         dimA[1] = 1;
         for (int i=2; i< nbDims; ++i){
             dimA[i]  = tensorSize[i-2];

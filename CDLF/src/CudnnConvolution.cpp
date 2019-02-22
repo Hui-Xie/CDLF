@@ -103,7 +103,7 @@ void CudnnConvolution::setWDescriptor() {
     const int nbDims = filterDim+1;
 
     int* filterDimA = new int[nbDims];
-    filterDimA[0] = ((ConvolutionBasicLayer*) m_pLayer)->m_numOutputFeatures;
+    filterDimA[0] = ((ConvolutionBasicLayer*) m_pLayer)->m_numFilters;
     for (int i=1; i< nbDims; ++i){
         filterDimA[i]  = ((ConvolutionBasicLayer*) m_pLayer)->m_feature_filterSize[i-1];
     }

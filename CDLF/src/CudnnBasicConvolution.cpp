@@ -7,9 +7,12 @@ CudnnBasicConvolution::CudnnBasicConvolution(ConvolutionBasicLayer *pLayer): Cud
     d_pWorkspace = nullptr;
     d_pW = nullptr;
     d_pdW = nullptr;
+    d_pB = nullptr;
+    d_pdB = nullptr;
     m_workspaceSize = 0;
 
     checkCUDNN(cudnnCreateFilterDescriptor(&m_wDescriptor));
+    checkCUDNN(cudnnCreateTensorDescriptor(&m_bDescriptor));
     checkCUDNN(cudnnCreateConvolutionDescriptor(&m_convDescriptor));
 }
 
@@ -20,6 +23,7 @@ CudnnBasicConvolution::~CudnnBasicConvolution(){
     freeDevicedW();
 
     cudnnDestroyFilterDescriptor(m_wDescriptor);
+    cudnnDestroyTensorDescriptor(m_bDescriptor);
     cudnnDestroyConvolutionDescriptor(m_convDescriptor);
 }
 
@@ -59,6 +63,10 @@ void CudnnBasicConvolution::setXDescriptor() {
     delete[] strideA;
 }
 
+void CudnnBasicConvolution::setBDescriptor() {
+
+}
+
 
 void CudnnBasicConvolution::setConvDescriptor() {
     // That same convolution descriptor can be reused in the backward path provided it corresponds to the same layer.
@@ -81,6 +89,7 @@ void CudnnBasicConvolution::setConvDescriptor() {
 
 void CudnnBasicConvolution::setDescriptors() {
     setXDescriptor();
+    setBDescriptor();
     setWDescriptor();
     setConvDescriptor();
     setYDescriptor();
@@ -105,6 +114,14 @@ void CudnnBasicConvolution::allocateDevicedW() {
     }
 }
 
+void CudnnBasicConvolution::allocateDeviceB() {
+
+}
+
+void CudnnBasicConvolution::allocateDevicedB() {
+
+}
+
 void CudnnBasicConvolution::freeDeviceW(){
     if (nullptr != d_pW)  {
         cudaFree(d_pW);
@@ -125,5 +142,15 @@ void CudnnBasicConvolution::freeWorkSpace(){
         d_pWorkspace= nullptr;
     }
 }
+
+void CudnnBasicConvolution::freeDeviceB() {
+
+}
+
+void CudnnBasicConvolution::freeDevicedB() {
+
+}
+
+
 
 
