@@ -8,17 +8,17 @@
 
 
 /** Convolution layer
- * Y = W*X
+ * Y = W*X + b
  * where Y is the output at each voxel;
  *       W is the convolution filter, which is uniform in entire input;
  *       X is the receipt region of original input image;
+ *       b is the different bias for each filter
  *       * indicate convolution
  *
  * Notes:
- * 1  in convolution layer, we do not consider bias, as there is a separate LinearLayer for use;
- * 2  Size changes: |Y| = (|X|-|W|)/stride + 1, in their different dimension;
- * 3  it is a good design if all numFilter is odd;
- * 4  Currently we supports 1D, 2D, 3D, 4D, 5D, 6D convolution; It is easy to extend to 7D or more.
+ * 1  Size changes: |Y| = (|X|-|W|)/stride + 1, in their different dimension;
+ * 2  it is a good design if all numFilter is odd;
+ * 3  Currently we supports 1D, 2D, 3D, 4D, 5D, 6D convolution; It is easy to extend to 7D or more.
  *
  * */
 
@@ -36,6 +36,7 @@ public:
 
 private:
     void computeDW(const Tensor<float>* pdY, Tensor<float>* pdW);
+    void computeDb(const Tensor<float>* pdY, const int filterIndex);
 
     //Note: dx need to accumulate along filters
     // if pdx == nullptr, computeDx will use previousLayer->pdY;

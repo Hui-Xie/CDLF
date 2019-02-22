@@ -18,7 +18,6 @@ ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, L
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
-        m_numOutputFeatures = m_numFilters;
         addPreviousLayer(prevLayer);
         updateFeatureFilterSize();
         computeOneFiterN();
@@ -40,8 +39,17 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
             m_pdW[i] = nullptr;
         }
     }
-    delete[] m_pW;
-    delete[] m_pdW;
+    delete[] m_pW; m_pW = nullptr;
+    delete[] m_pdW; m_pdW = nullptr;
+
+    if (nullptr != m_pB){
+        delete m_pB;
+        m_pB = nullptr;
+    }
+    if (nullptr != m_pdB){
+        delete m_pdB;
+        m_pdB = nullptr;
+    }
 }
 
 // the filterSize in each dimension should be odd,
@@ -122,6 +130,10 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
         }
 
     }
+
+    m_pB = new Tensor<float>({m_numFilters,1});
+    m_pdB = new Tensor<float>({m_numFilters,1});
+
     allocateYdYTensor();
 }
 
@@ -130,37 +142,33 @@ void ConvolutionBasicLayer::initialize(const string &initialMethod) {
     for (int i = 0; i < m_numFilters; ++i) {
         generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
     }
+    generateGaussian(m_pB, 0, sqrt(1.0 / m_numFilters));
 }
 
 void ConvolutionBasicLayer::zeroParaGradient() {
     for (int i = 0; i < m_numFilters; ++i) {
         m_pdW[i]->zeroInitialize();
     }
+    m_pdB->zeroInitialize();
 }
 
 
 void ConvolutionBasicLayer::updateParameters(const float lr, const string &method, const int batchSize) {
-    //cout<<"Layer name: "<<m_name<<endl;
     if ("sgd" == method) {
+        float learningRate = lr / batchSize;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            *m_pW[idxF] -= *m_pdW[idxF] * (lr / batchSize);
-
-            //debug
-            //cout<<"W"<<idxF<<" = ";
-            //m_pW[idxF]->print();
-            //cout<<"dW"<<idxF<<" = ";
-            //m_pdW[idxF]->print();
+            *m_pW[idxF] -= *m_pdW[idxF] * learningRate;
         }
+        *m_pB -= *m_pdB * learningRate;
     }
 }
 
 
 int ConvolutionBasicLayer::getNumParameters(){
-    return m_pW[0]->getLength()*m_numFilters;
+    return m_pW[0]->getLength()*m_numFilters + m_pB->getLength();
 }
 
 void ConvolutionBasicLayer::save(const string &netDir) {
-    FILE * pFile = nullptr;
     string filename = "";
 
     string layerDir = netDir + "/" + to_string(m_id);
@@ -170,10 +178,12 @@ void ConvolutionBasicLayer::save(const string &netDir) {
         filename= layerDir + "/W"+to_string(i)+".csv";
         m_pW[i]->save(filename);
     }
+
+    filename= layerDir + "/B.csv";
+    m_pB->save(filename);
 }
 
 void ConvolutionBasicLayer::load(const string &netDir) {
-    FILE *pFile = nullptr;
     string filename = "";
 
     string layerDir = netDir + "/" + to_string(m_id);
@@ -187,6 +197,11 @@ void ConvolutionBasicLayer::load(const string &netDir) {
             if (! m_pW[i]->load(filename)){
                 generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
             }
+        }
+
+        filename = layerDir + "/B.csv";
+        if (! m_pB->load(filename)){
+            generateGaussian(m_pB, 0, sqrt(1.0 / m_numFilters));
         }
     }
 }

@@ -4,9 +4,15 @@
 
 #include "ConvolutionLayer.h"
 #include <thread>
+#include <ConvolutionLayer.h>
+
 #ifdef Use_GPU
    #include "CudnnConvolution.h"
 #endif
+
+/*
+ * Y = W*X +b
+ * */
 
 ConvolutionLayer::ConvolutionLayer(const int id, const string &name, Layer *prevLayer, const vector<int> &filterSize,
                                    const vector<int>& stride, const int numFilters)
@@ -44,7 +50,7 @@ void ConvolutionLayer::updateTensorSize() {
 }
 
 
-// Y = W*X
+// Y = W*X +b
 void ConvolutionLayer::forward() {
 #ifdef Use_GPU
     CudnnConvolution cudnnConvolution(this);
@@ -70,7 +76,7 @@ void ConvolutionLayer::forward() {
                         for (int i = NRange*t; i<NRange*(t+1) && i < N; ++i) {
                             m_prevLayer->m_pYTensor->subTensorFromTopLeft(
                                     m_pYTensor->offset2Index(dimsSpanBeforeCollpase, i) * stride, &subX, stride1);
-                            m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]);
+                            m_pYTensor->e(offseti+i) = subX.conv(*m_pW[idxF]) + m_pB->e(idxF);
                         }
                     }
             ));
@@ -84,9 +90,10 @@ void ConvolutionLayer::forward() {
 
 }
 
-// Y =W*X
+// Y =W*X + b
 // dL/dW = dL/dY * dY/dW;
 // dL/dX = dL/dY * dY/dX;
+// dL/db = sum(dL/dy_i) cross over a feature map(One filter)
 // algorithm ref: https://becominghuman.ai/back-propagation-in-convolutional-neural-networks-intuition-and-code-714ef1c38199
 void ConvolutionLayer::backward(bool computeW, bool computeX) {
 
@@ -135,7 +142,10 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
             threadVec.push_back(thread(
                     [this, idxF, pdY, pExpandDY, computeW, computeX, pdX]() {
                         this->m_pdYTensor->extractLowerDTensor(idxF, pdY[idxF]);
-                        if (computeW) this->computeDW(pdY[idxF], this->m_pdW[idxF]);
+                        if (computeW) {
+                            this->computeDW(pdY[idxF], this->m_pdW[idxF]);
+                            this->computeDb(pdY[idxF], idxF);
+                        }
                         if (computeX){
                             pdY[idxF]->dilute(pExpandDY[idxF], m_tensorSizeBeforeCollapse, m_feature_filterSize, m_feature_stride);
                             this->computeDX(pExpandDY[idxF], this->m_pW[idxF], pdX[idxF]); //as pdX needs to accumulate, pass pointer
@@ -174,7 +184,10 @@ void ConvolutionLayer::backward(bool computeW, bool computeX) {
         delete[] pExpandDY;
     } else {
         // single thread compute
-        if (computeW) computeDW(m_pdYTensor, m_pdW[0]);
+        if (computeW) {
+            computeDW(m_pdYTensor, m_pdW[0]);
+            computeDb(m_pdYTensor, 0);
+        }
         Tensor<float> *pExpandDY = nullptr;
         m_pdYTensor->dilute(pExpandDY, m_tensorSizeBeforeCollapse, m_filterSize, m_stride);
         computeDX(pExpandDY, m_pW[0]);
@@ -206,6 +219,10 @@ void ConvolutionLayer::computeDW(const Tensor<float> *pdY, Tensor<float> *pdW) {
 
 }
 
+void ConvolutionLayer::computeDb(const Tensor<float> *pdY, const int filterIndex) {
+    m_pdB->e(filterIndex) += pdY->sum(); // + is for batch processing
+}
+
 //Note: dx need to accumulate along filters
 void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<float> *pW, Tensor<float> *pdX) {
     if (nullptr == pdX) {
@@ -234,3 +251,5 @@ void ConvolutionLayer::computeDX(const Tensor<float> *pExpandDY, const Tensor<fl
         threadVec[t].join();
     }
 }
+
+

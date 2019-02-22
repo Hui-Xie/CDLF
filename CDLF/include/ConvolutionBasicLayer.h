@@ -17,12 +17,12 @@ public:
 
     Tensor<float>**  m_pW;
     Tensor<float>**  m_pdW;
+    Tensor<float>* m_pB;  //Bias column vector, size of {numFilter,1}
+    Tensor<float>* m_pdB; //the gradient of Bias, same size with m_pB
     int m_numFilters;
     vector<int> m_filterSize;
     vector<int> m_feature_filterSize;  //include feature dimension, even 1.
     int m_numInputFeatures;
-    int m_numOutputFeatures;
-
 
     vector<int> m_stride;
     vector<int> m_feature_stride;

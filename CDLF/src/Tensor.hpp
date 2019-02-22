@@ -513,7 +513,7 @@ Tensor<ValueType> &Tensor<ValueType>::operator/=(const float divisor) {
 
 
 template<class ValueType>
-float Tensor<ValueType>::sum() {
+float Tensor<ValueType>::sum() const {
     int N = getLength();
     float sum = 0;
     //todo: sum use GPU will implement in the future, which will speed up from N to log(N)
@@ -524,7 +524,7 @@ float Tensor<ValueType>::sum() {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::average() {
+float Tensor<ValueType>::average() const {
     int N = getLength();
     if (0 == N) return 0;
     else {
@@ -533,7 +533,7 @@ float Tensor<ValueType>::average() {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::variance() {
+float Tensor<ValueType>::variance() const{
     float mu = average();
     int N = getLength();
     if (1 == N || 0 == N) return 0;
@@ -545,7 +545,7 @@ float Tensor<ValueType>::variance() {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::max() {
+float Tensor<ValueType>::max() const {
     int N = getLength();
     float maxValue = (float) e(0);
     for (int i = 1; i < N; ++i) {
@@ -555,7 +555,7 @@ float Tensor<ValueType>::max() {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::min() {
+float Tensor<ValueType>::min() const {
     int N = getLength();
     float minValue = (float) e(0);
     for (int i = 1; i < N; ++i) {
@@ -565,7 +565,7 @@ float Tensor<ValueType>::min() {
 }
 
 template<class ValueType>
-void Tensor<ValueType>::getMinMax(ValueType& min, ValueType& max){
+void Tensor<ValueType>::getMinMax(ValueType& min, ValueType& max) const {
     const int N = getLength();
     min = e(0);
     max = e(0);
@@ -576,7 +576,7 @@ void Tensor<ValueType>::getMinMax(ValueType& min, ValueType& max){
 }
 
 template<class ValueType>
-int Tensor<ValueType>::maxPosition() {
+int Tensor<ValueType>::maxPosition() const {
     int N = getLength();
     ValueType maxValue = e(0);
     int maxPos = 0;
@@ -594,7 +594,7 @@ int Tensor<ValueType>::maxPosition() {
  *
  * */
 template<class ValueType>
-Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() {
+Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() const {
     vector<int> subTensorDims = m_dims;
     subTensorDims.erase(subTensorDims.begin());
     Tensor<unsigned  char> subTensor(subTensorDims);
@@ -615,7 +615,7 @@ Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() {
 }
 
 template<class ValueType>
-float Tensor<ValueType>::L2Norm(){
+float Tensor<ValueType>::L2Norm() const {
     const int N = getLength();
     float sum = 0.0;
     for (int i=0; i<N; ++i){

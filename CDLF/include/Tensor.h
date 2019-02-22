@@ -79,16 +79,16 @@ public:
     void zeroInitialize();
     void uniformInitialize(const ValueType x);
 
-    float sum();
-    float average();
-    float variance();
-    float max();
-    float min();
-    void getMinMax(ValueType& min, ValueType& max);
-    int maxPosition();
-    Tensor<unsigned char> getMaxPositionSubTensor();
+    float sum() const;
+    float average() const;
+    float variance() const;
+    float max() const;
+    float min() const;
+    void getMinMax(ValueType& min, ValueType& max) const;
+    int maxPosition() const;
+    Tensor<unsigned char> getMaxPositionSubTensor() const;
 
-    float L2Norm();
+    float L2Norm() const;
 
     void save(const string& fullFilename, bool matrix2D=false);
     bool load(const string& fullFilename, bool matrix2D=false);
