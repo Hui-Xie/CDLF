@@ -4,9 +4,11 @@ set(CMAKE_CXX_STANDARD 11)
 message("General Notes:")
 message("0  you need to set " ${CMAKE_BINARY_DIR}/CDLF " into your path environmental variable. ")
 message("1  you need to set the directory including CDLFLib into your environment variable.")
-message("2  you need to install intel MKL library and set MKL directory.")
-message("3  you need to install intel IPP library and set IPP directory.")
-message("4  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
+message("2  you need to install Intel MKL and IPP library and set their directory from  https://software.intel.com/en-us/parallel-studio-xe")
+message("3  you need to download ITK source code and build its binary version from https://itk.org/ITK/resources/software.html")
+message("4  you need to get stats library source code from https://github.com/kthohr/stats.git")
+message("5  you need to get TIPL library source code from https://github.com/frankyeh/TIPL")
+message("6  in Clion File/Setting/Build/CMake/CMakeOptions config, there should be something like:")
 message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DSTATS_INCLUDE_DIR=/Users/hxie1/Projects/stats/include
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
