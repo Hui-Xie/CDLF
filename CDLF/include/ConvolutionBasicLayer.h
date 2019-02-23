@@ -49,6 +49,10 @@ public:
 protected:
     void updateFeatureFilterSize();
 
+    /*  for Bias cudnn test
+    void beforeGPUCheckdBAnddY();
+    void afterGPUCheckdB();
+    */
 
 };
 

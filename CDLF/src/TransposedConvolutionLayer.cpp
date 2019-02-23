@@ -110,8 +110,10 @@ void TransposedConvolutionLayer::forward() {
 void TransposedConvolutionLayer::backward(bool computeW, bool computeX) {
 
 #ifdef Use_GPU
+
     CudnnTransposedConvolution cudnnTConvolution(this);
     cudnnTConvolution.backward(computeW, computeX);
+
 #else
 
     // dX needs to consider the accumulation of different filters

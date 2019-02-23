@@ -222,4 +222,32 @@ void ConvolutionBasicLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
 }
 
+/*  for bias cudnn test
+void ConvolutionBasicLayer::beforeGPUCheckdBAnddY() {
+    cout<<m_name<<endl;
+    cout<<"dB : "<<endl;
+     m_pdB->print();
+     Tensor<float> dYSum({m_numFilters,1});
+     const int N= length(m_tensorSize)/m_numFilters;
+     for (int i=0; i<m_numFilters; ++i){
+         dYSum.e(i) =0;
+         for(int j=0; j<N; ++j){
+             dYSum.e(i) += m_pdYTensor->e(i*N+j);
+         }
+     }
+     cout<<"dYSum: "<<endl;
+     dYSum.print();
+     cout<<"updated db should be: "<<endl;
+    (*m_pdB+ dYSum).print();
+
+}
+
+void ConvolutionBasicLayer::afterGPUCheckdB() {
+    cout<<"After GPU, dB : "<<endl;
+    m_pdB->print();
+    cout<<"================="<<endl;
+}
+
+*/
+
 

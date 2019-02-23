@@ -53,6 +53,7 @@ void ConvolutionLayer::updateTensorSize() {
 // Y = W*X +b
 void ConvolutionLayer::forward() {
 #ifdef Use_GPU
+
     CudnnConvolution cudnnConvolution(this);
     cudnnConvolution.forward();
 
