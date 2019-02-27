@@ -106,8 +106,8 @@ float DeConvNet::test() {
         m_loss += lossLayer->getLoss();
         ++nIter;
     }
-    printf("output tensor as example:\n");
-    lossLayer->m_prevLayer->m_pYTensor->print();
+    //printf("output tensor as example:\n");
+    //lossLayer->m_prevLayer->m_pYTensor->print();
     m_loss /= N;
     return m_loss;
 }
