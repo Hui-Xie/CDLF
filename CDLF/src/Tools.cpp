@@ -368,6 +368,14 @@ bool isElementEqual1(const vector<int>& vec){
     return true;
 }
 
+bool isElementEqual0(const vector<float>& vec){
+    const int N = vec.size();
+    for(int i=0; i<N; ++i){
+        if (0 != vec[i]) return false;
+    }
+    return true;
+}
+
 bool isContainSubstr(const string &str, const string subStr) {
     return (string::npos == str.find(subStr)) ? false : true;
 }

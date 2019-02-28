@@ -249,18 +249,17 @@ float HNSegVNet::test(const string &imageFilePath, const string &labelFilePath) 
 
     forwardPropagate();
 
-    vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);
-
     // output float image for debug
-    if (!m_isSoftmaxBeforeLoss) {
-        const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
-        m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
-    }
+    //if (!m_isSoftmaxBeforeLoss) {
+    //    const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
+    //    m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
+    // }
 
     //Output network predicted label
     string outputLabelFilePath = m_pDataMgr->generateLabelFilePath(imageFilePath);
+    vector<int> offset = m_pDataMgr->getOutputOffset(inputLayer->m_tensorSize);
     if (m_isSoftmaxBeforeLoss){
-       m_pDataMgr->saveOneHotCode2LabelFile(lossLayer->m_prevLayer->m_pYTensor, outputLabelFilePath, inputLayer->m_tensorSize);
+        m_pDataMgr->saveOneHotCode2LabelFile(lossLayer->m_prevLayer->m_pYTensor, outputLabelFilePath, offset);
     }
     else{
         Tensor<unsigned char> predictResult(lossLayer->m_prevLayer->m_tensorSize);

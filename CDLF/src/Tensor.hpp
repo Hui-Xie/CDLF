@@ -1072,6 +1072,11 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
         cout<<"Error: rotate3D is only for 3D Tensor. Exit."<<endl;
         return;
     }
+    if (isElementEqual0(radianVec)){
+        pRotatedTensor = new Tensor<float> (m_dims);
+        *pRotatedTensor = *this;
+        return;
+    }
 
     const Ipp32f* pSrc = m_data;
     IpprVolume srcVolume;

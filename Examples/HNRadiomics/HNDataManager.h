@@ -32,7 +32,7 @@ public:
     string generateLabelFilePath(const string& imageFilePath);
     string generateFloatImagePath(const string& imageFilePath);
 
-    // in Tensor dimension order
+    //return value is in Tensor dimension order
     vector<int>  getOutputOffset(const vector<int>& outputTensorSize);
 
 

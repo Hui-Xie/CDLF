@@ -81,6 +81,7 @@ void dimA2SpanA(const int* dimA, const int N, int * spanA);
 
 bool isElementBiggerThan0(const vector<int>& vec);
 bool isElementEqual1(const vector<int>& vec);
+bool isElementEqual0(const vector<float>& vec);
 
 bool isContainSubstr(const string& str, const string subStr);
 

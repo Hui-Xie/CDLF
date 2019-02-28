@@ -65,10 +65,9 @@ void ITKDataManager::oneHot2Label(Tensor<float>* pOneHotLabel, Tensor<unsigned c
     *pLabel= pOneHotLabel->getMaxPositionSubTensor();
 }
 
-void ITKDataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<int>& originalImageTensorSize){
+void ITKDataManager::saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<int>& offset){
     Tensor<unsigned char>* pLabel = nullptr;
     oneHot2Label(pOneHotLabel, pLabel);
-    vector<int> offset = (originalImageTensorSize - pLabel->getDims())/2;
     saveLabel2File(pLabel, offset, fullPathFileName);
     delete pLabel;
 }
