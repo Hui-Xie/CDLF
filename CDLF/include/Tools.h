@@ -95,4 +95,6 @@ vector<int> getIppRotatedDims_UpdateTranslation(const vector<int> ippDims, doubl
 
 void randomTranslate(vector<int>& vec, const int translationMaxValue);
 
+vector<int> getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,
+                                const vector<int>&  center);
 #endif //RL_NONCONVEX_TOOLS_H

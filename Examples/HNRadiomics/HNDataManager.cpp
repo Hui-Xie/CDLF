@@ -123,12 +123,12 @@ string HNDataManager::generateFloatImagePath(const string& imageFilePath){
     return floatFilePath;
 }
 
-vector<int> HNDataManager::getOutputOffset(const vector<int> &outputTensorSize) {
+vector<int> HNDataManager::getOutputOffset(const vector<int>& outputTensorSize, const vector<int>& center ) {
     if (nullptr != m_labelItkImageIO){
-        return  m_labelItkImageIO->getOutputOffset(outputTensorSize);
+        return  m_labelItkImageIO->getOutputOffset(outputTensorSize, center);
     }
     else{
-        return m_imageItkImageIO->getOutputOffset(outputTensorSize);
+        return m_imageItkImageIO->getOutputOffset(outputTensorSize, center);
     }
 }
 

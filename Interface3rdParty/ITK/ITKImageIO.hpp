@@ -252,12 +252,12 @@ void ITKImageIO<VoxelType, Dimension>::extendLabelFileVolume(const string &label
 }
 
 template<typename VoxelType, int Dimension>
-vector<int> ITKImageIO<VoxelType, Dimension>::getOutputOffset(const vector<int> outputTensorSize) {
-    vector<int> offset(Dimension, 0);
-    for(int i=0; i< Dimension; ++i){
-        offset[i] = (m_imageSize[Dimension-1-i] - outputTensorSize[i])/2;
-    }
-    return offset;
+vector<int> ITKImageIO<VoxelType, Dimension>::getOutputOffset(const vector<int>& outputTensorSize, const vector<int>& center) {
+    vector<int> bigImageSize(Dimension, 0);
+    for(int i=0; i< Dimension; ++i) {
+        bigImageSize[i] = m_imageSize[Dimension-1-i];
+    }   
+    return getTopLeftIndexFrom(bigImageSize, outputTensorSize, center);
 }
 
 template<typename VoxelType, int Dimension>

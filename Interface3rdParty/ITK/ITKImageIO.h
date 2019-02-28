@@ -31,7 +31,7 @@ public:
 
     //make label file has same volume with original intensity file
     void extendLabelFileVolume(const string & labelFilename, Tensor<VoxelType>*& pTensor);
-    vector<int> getOutputOffset(const vector<int> outputTensorSize);
+    vector<int> getOutputOffset(const vector<int>& outputTensorSize, const vector<int>& center);
 
     template<typename OtherVoxelType> void copyImagePropertyFrom(ITKImageIO<OtherVoxelType, Dimension> &other);
 

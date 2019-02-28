@@ -33,7 +33,7 @@ public:
     string generateFloatImagePath(const string& imageFilePath);
 
     //return value is in Tensor dimension order
-    vector<int>  getOutputOffset(const vector<int>& outputTensorSize);
+    vector<int>  getOutputOffset(const vector<int>& outputTensorSize, const vector<int>& center);
 
 
 
