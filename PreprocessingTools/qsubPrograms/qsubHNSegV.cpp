@@ -10,15 +10,17 @@ using namespace std;
 string cmdPath = " /Users/hxie1/temp_release/Examples/HNRadiomics/TrainSegmentV ";
 //string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01 "; // for Conv-V model
 //string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 "; // for Matrix-V model
-string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01 "; // for ROI1-V model
+//string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.005 "; // for ROI1-V model
+string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/CATonsil 0.01 "; // for CATonsil-V model
+
 
 void printUsage(char* argv0){
     cout<<"Train HNSCC Radiomics in HPC"<<endl;
     cout<<"Usage: "<<endl;
     cout<<argv0<<" <jobName> <Queue> <numSlots>  <0/1>"<<endl;
     cout<<"jobName: it will specify the output file in the ~/temp_qsub directory."<<endl;
-    cout<<"GPU Queue: COE-GPU, UI-DEVELOP, UI-GPU, COE, UI-DEVELOP, UI-HM, UI-MPI, all.q;  Choose only one." <<endl;
-    cout<<"CPU Queue: COE, UI-DEVELOP, UI-HM, UI-MPI, all.q;  Choose only one." <<endl;
+    cout<<"GPUQueue: COE-GPU, UI-DEVELOP, UI-GPU, INFORMATICS-GPU, INFORMATICS-HM-GPU, all.q;  Choose only one." <<endl;
+    cout<<"CPUQueue: COE, UI-DEVELOP, UI-HM, UI-MPI, INFORMATICS, all.q;  Choose only one." <<endl;
     cout<<"numSlots: number of slots"<<endl;
     cout<<"<0/1> indicates Not Use GPU(0), or Use GPU(1)"<<endl;
 }

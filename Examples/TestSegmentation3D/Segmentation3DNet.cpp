@@ -180,7 +180,7 @@ float Segmentation3DNet::testG(bool outputFile){
         if (outputFile){
             string filename = getFileName(m_pDataMgr->m_testImagesVector[i]);
             string outputFilename = m_pDataMgr->m_outputLabelsDir+ "/" + filename;
-            m_pDataMgr->saveOneHotCode2LabelFile(m_pGNet->m_pGxLayer->m_pYTensor, outputFilename, m_pGNet->m_pInputXLayer->m_tensorSize);
+            m_pDataMgr->saveOneHotCode2LabelFile(m_pGNet->m_pGxLayer->m_pYTensor, outputFilename, {0,0,0});
          }
     }
     cout<<"Test "<<N<<" files: "<<endl;

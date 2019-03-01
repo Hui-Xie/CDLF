@@ -31,7 +31,7 @@ public:
 
     string getLabelPathFrom(const string& imageFilePath);
     string generateLabelFilePath(const string& imageFilePath);
-    vector<int>  getOutputOffset(const vector<int>& outputTensorSize);
+    vector<int>  getOutputOffset(const vector<int>& outputTensorSize, const vector<int>& center);
 
 
 };

@@ -368,6 +368,14 @@ bool isElementEqual1(const vector<int>& vec){
     return true;
 }
 
+bool isElementEqual0(const vector<float>& vec){
+    const int N = vec.size();
+    for(int i=0; i<N; ++i){
+        if (0 != vec[i]) return false;
+    }
+    return true;
+}
+
 bool isContainSubstr(const string &str, const string subStr) {
     return (string::npos == str.find(subStr)) ? false : true;
 }
@@ -446,6 +454,34 @@ void randomTranslate(vector<int>& vec, const int translationMaxValue){
             vec[i] += drift[i];
         }
     }
+}
+
+vector<int> getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,
+                                const vector<int>&  center) {
+    if (!(subImageDims <= imageDims)){
+        cout<<"Error: subImageDims should be less than imageDims."<<endl;
+        std::exit(EXIT_FAILURE);
+    }
+    vector<int> topLeft;
+
+    if (center.empty()){
+        topLeft = (imageDims -subImageDims)/2;
+    }
+    else {
+        topLeft = center - subImageDims/2;
+    }
+
+    for(int i=0; i<topLeft.size();++i){
+        if (topLeft[i]+ subImageDims[i] > imageDims[i]){
+            topLeft[i] = imageDims[i]- subImageDims[i];
+        }
+        if (topLeft[i] <0 ){
+            topLeft[i] = 0;
+        }
+    }
+
+    return topLeft;
+
 }
 
 

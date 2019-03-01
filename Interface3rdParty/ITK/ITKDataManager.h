@@ -43,7 +43,7 @@ public:
     void readTestLabelFile(const int index, Tensor<float>*& pLabel);
 
     void oneHotEncodeLabel(const Tensor<float>* pLabel, Tensor<float>*& pOneHotLabel, const int k);
-    void saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<int>& originalImageTensorSize);
+    void saveOneHotCode2LabelFile(Tensor<float>* pOneHotLabel, const string& fullPathFileName, const vector<int>& offset);
 
     void oneHot2Label(Tensor<float>* pOneHotLabel,Tensor<unsigned char>*& pLabel);
 
@@ -60,7 +60,6 @@ public:
     void generateLabelCenterMap();
     vector<int> getLabelCenter(const string labelFileName, const bool randomTranslation, const int translationMaxValue);
 
-    vector<int> getTopLeftIndexFrom(const vector<int>& imageDims, const vector<int>& subImageDims, const vector<int>& center);
 };
 
 

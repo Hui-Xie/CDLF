@@ -56,7 +56,7 @@ void HNSegVNet::setGroundtruth(const string &filename, const vector<float>& radi
         //update topLeft index
         vector<int> subImageDims = lossLayer->m_prevLayer->m_tensorSize;
         subImageDims.erase(subImageDims.begin());
-        vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pRotatedLabel->getDims(), subImageDims, center);
+        vector<int> topLeft = getTopLeftIndexFrom(pRotatedLabel->getDims(), subImageDims, center);
         topLeft.insert(topLeft.begin(), 0);
 
         pOneHotLabel->subTensorFromTopLeft(topLeft, pSubLabel, strideOneHot);
@@ -68,7 +68,7 @@ void HNSegVNet::setGroundtruth(const string &filename, const vector<float>& radi
         // for lossLayer->m_prevLayer is Sigmoid
     else if (pRotatedLabel->getDims().size() == lossLayer->m_prevLayer->m_tensorSize.size()) {
         const vector<int> stride1 = vector<int>(pRotatedLabel->getDims().size(), 1);
-        const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pRotatedLabel->getDims(),
+        const vector<int> topLeft = getTopLeftIndexFrom(pRotatedLabel->getDims(),
                                                                     lossLayer->m_prevLayer->m_tensorSize, center);
         pRotatedLabel->subTensorFromTopLeft(topLeft, pSubLabel, stride1);
     } else {
@@ -106,7 +106,7 @@ void HNSegVNet::setInput(const string &filename, const vector<float>& radianVec,
 
     Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
     const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
-    const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pRotatedImage->getDims(), inputLayer->m_tensorSize, center);
+    const vector<int> topLeft = getTopLeftIndexFrom(pRotatedImage->getDims(), inputLayer->m_tensorSize, center);
     pRotatedImage->subTensorFromTopLeft(topLeft, pSubImage, stride1);
     inputLayer->setInputTensor(*pSubImage);
 
@@ -249,18 +249,17 @@ float HNSegVNet::test(const string &imageFilePath, const string &labelFilePath) 
 
     forwardPropagate();
 
-    vector<int> offset = m_pDataMgr->getOutputOffset(lossLayer->m_prevLayer->m_tensorSize);
-
     // output float image for debug
-    if (!m_isSoftmaxBeforeLoss) {
-        const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
-        m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
-    }
+    //if (!m_isSoftmaxBeforeLoss) {
+    //    const string floatImageOutput = m_pDataMgr->generateFloatImagePath(imageFilePath);
+    //    m_pDataMgr->saveImage2File(lossLayer->m_prevLayer->m_pYTensor, offset, floatImageOutput);
+    // }
 
     //Output network predicted label
     string outputLabelFilePath = m_pDataMgr->generateLabelFilePath(imageFilePath);
+    vector<int> offset = m_pDataMgr->getOutputOffset(inputLayer->m_tensorSize, center);
     if (m_isSoftmaxBeforeLoss){
-       m_pDataMgr->saveOneHotCode2LabelFile(lossLayer->m_prevLayer->m_pYTensor, outputLabelFilePath, inputLayer->m_tensorSize);
+        m_pDataMgr->saveOneHotCode2LabelFile(lossLayer->m_prevLayer->m_pYTensor, outputLabelFilePath, offset);
     }
     else{
         Tensor<unsigned char> predictResult(lossLayer->m_prevLayer->m_tensorSize);

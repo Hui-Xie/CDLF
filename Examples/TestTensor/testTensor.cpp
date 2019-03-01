@@ -196,15 +196,22 @@ int main (int argc, char *argv[]) {
         delete pTensor23;
     }
 
+    cout <<"===================================="<<endl;
     cout <<"Test 3D Tensor{6,8,9} with element orderly increasging by 1"<<endl;
     Tensor<float> matrix3D({6,8,9});
     for(int i=0; i<matrix3D.getLength(); ++i){
         matrix3D.e(i) = i;
     }
+    for (int i=0; i<6; ++i){
+        cout<<"slice "<<i<<" in matrix3D"<<endl;
+        matrix3D.slice(i).print();
+    }
+
+
     Tensor<float> subMatrix3D({2,3,3});
-    matrix3D.subTensorFromTopLeft(0, &subMatrix3D, {1,1,1});
+    matrix3D.subTensorFromTopLeft({1,1,1}, &subMatrix3D, {1,2,2});
     for (int i=0; i<2;++i){
-        printf("the %d slice of subMatrix3D(2,3,3)\n", i);
+        printf("the %d slice of subMatrix3D(2,3,3) with stride{1,2,2}, offset {1,1,1}\n", i);
         subMatrix3D.slice(i).print();
     }
 

@@ -136,7 +136,7 @@ int main(int argc, char *argv[]){
     Tensor<float> *pSubImage = new Tensor<float>({65,121, 121});
 
     // clip from GTV center
-    vector<int> topLeft = dataMgr.getTopLeftIndexFrom(pImage->getDims(), pSubImage->getDims(), center);
+    vector<int> topLeft = getTopLeftIndexFrom(pImage->getDims(), pSubImage->getDims(), center);
 
     // clip from image center
     //vector<int> topLeft = (pImage->getDims()- pSubImage->getDims())/2;

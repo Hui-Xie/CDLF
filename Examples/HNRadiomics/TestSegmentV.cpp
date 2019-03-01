@@ -43,7 +43,8 @@ int main(int argc, char *argv[]) {
 #endif
 
 #ifdef Use_GPU
-    HNSegVNet net("HNSCC_convV", netDir);
+    //HNSegVNet net("HNSCC_convV", netDir);
+    HNSegVNet net("CATonsil", netDir);
 #else
     HNSegVNet net("HNSCC_matrix", netDir);
 #endif

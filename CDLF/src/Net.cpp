@@ -39,7 +39,7 @@ Net::~Net() {
 
 void Net::setLearningRate(const float learningRate) {
     m_learningRate = learningRate;
-    cout<<"Info: set learning rate = "<<m_learningRate<<endl;
+    cout<<"Info: now set learning rate = "<<m_learningRate<<endl;
 }
 
 void Net::setLossTolerance(const float tolerance) {
@@ -133,7 +133,7 @@ map<int, Layer *> Net::getLayersMap() {
 int Net::getNumParameters() {
     int num = 0;
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        if (iter->second->m_id > m_unlearningLayerID){
+        if (iter->second->m_id >= m_unlearningLayerID){
             num += iter->second->getNumParameters();
         }
     }
@@ -218,14 +218,20 @@ void Net::printIteration(LossLayer *lossLayer, const int nIter, const bool trans
 }
 
 void Net::printLayersY() {
+    LossLayer* lossLayer = (LossLayer*) getFinalLayer();
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->printY();
+        if (iter->second->m_id != lossLayer->m_id) {
+            iter->second->printY();
+        }
     }
 }
 
 void Net::printLayersDY() {
+    LossLayer* lossLayer = (LossLayer*) getFinalLayer();
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->printDY();
+        if (iter->second->m_id != lossLayer->m_id){
+            iter->second->printDY();
+        }
     }
 }
 

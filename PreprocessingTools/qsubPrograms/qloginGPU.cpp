@@ -16,7 +16,7 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<" <jobName> <GPUQueue> <numSlots>"<<endl;
     cout<<"jobName: it specify the output file in the ~/temp_qsub directory."<<endl;
-    cout<<"GPUQueue: COE-GPU, UI-DEVELOP, UI-GPU, all.q;  Choose only one." <<endl;
+    cout<<"GPUQueue: COE-GPU, UI-DEVELOP, UI-GPU, INFORMATICS-GPU, INFORMATICS-HM-GPU, all.q;  Choose only one." <<endl;
     cout<<"numSlots: number of slots"<<endl;
 }
 

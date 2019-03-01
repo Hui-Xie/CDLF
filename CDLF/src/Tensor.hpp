@@ -615,6 +615,16 @@ Tensor<unsigned  char> Tensor<ValueType>::getMaxPositionSubTensor() const {
 }
 
 template<class ValueType>
+int Tensor<ValueType>::countNonZero() const{
+    const int N = getLength();
+    int nCount = 0;
+    for (int i=0; i<N; ++i){
+        nCount += (0 != e(i))? 1: 0;
+    }
+    return nCount;
+}
+
+template<class ValueType>
 float Tensor<ValueType>::L2Norm() const {
     const int N = getLength();
     float sum = 0.0;
@@ -652,7 +662,7 @@ void Tensor<ValueType>::save(const string& fullFilename, bool matrix2D){
 }
 
 template<class ValueType>
-void Tensor<ValueType>::print(bool fixWidth){
+void Tensor<ValueType>::print(bool fixWidth) const {
     if (2 == m_dims.size()){
         for (int i= 0; i< m_dims[0]; ++i){
             for (int j=0; j<m_dims[1]; ++j){
@@ -1070,6 +1080,11 @@ Tensor<ValueType>::rotate3D(const vector<float> radianVec, const int interpolati
 
     if (3 != m_dims.size() || 3 != radianVec.size()){
         cout<<"Error: rotate3D is only for 3D Tensor. Exit."<<endl;
+        return;
+    }
+    if (isElementEqual0(radianVec)){
+        pRotatedTensor = new Tensor<float> (m_dims);
+        *pRotatedTensor = *this;
         return;
     }
 

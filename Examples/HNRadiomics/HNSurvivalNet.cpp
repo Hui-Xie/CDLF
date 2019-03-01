@@ -21,7 +21,7 @@ void HNSurvivalNet::setInput(const string &filename,const vector<int>& center) {
     m_pDataMgr->readImageFile(filename, pImage);
     Tensor<float>* pSubImage = new Tensor<float>(inputLayer->m_tensorSize);
     const vector<int> stride1 = vector<int>(inputLayer->m_tensorSize.size(),1);
-    const vector<int> topLeft = m_pDataMgr->getTopLeftIndexFrom(pImage->getDims(), inputLayer->m_tensorSize, center);
+    const vector<int> topLeft = getTopLeftIndexFrom(pImage->getDims(), inputLayer->m_tensorSize, center);
     pImage->subTensorFromTopLeft(topLeft, pSubImage, stride1);
     inputLayer->setInputTensor(*pSubImage);
     if (nullptr != pImage) {
