@@ -49,6 +49,7 @@ endif(${Dev_Debug})
 message("*************************************")
 set(CDLF_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/CDLF/include)
 include_directories(${CDLF_INCLUDE_DIR})
+
 link_directories(${CMAKE_BINARY_DIR}/CDLF/src)
 
 # for Intel MKL library
@@ -86,10 +87,14 @@ set(IPP_LIBRARY    ${IPPROOT}/lib/intel64/libippcore.so
 
 
 if (${Use_GPU})
-    # for cudnn
-    set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
+    # for cudnn in argon
+    #set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
     include_directories(Cudnn_INCLUDE_DIR)
     set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
+
+    # for cudnn in local lab c-xwu000.iibi.uiowa.edu
+    set(Cudnn_INCLUDE_DIR ${Cudnn_Dir})
+
 else(${Use_GPU})
     message("We don't use ${Cudnn_Dir} as compiling CPU version.")
 endif(${Use_GPU})
