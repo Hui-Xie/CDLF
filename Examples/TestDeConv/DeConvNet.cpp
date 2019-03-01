@@ -47,7 +47,12 @@ void DeConvNet::train() {
     if (m_OneSampleTrain){
         N = 1;
     }
-    const int batchSize = getBatchSize();
+    int batchSize = getBatchSize();
+
+    //debug
+    batchSize = 1;
+
+
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
     int nIter = 0;
@@ -74,11 +79,29 @@ void DeConvNet::train() {
     m_loss = lossLayer->getLoss();
 
     //debug
-    //cout<<"TransposedConv Output=";
-    // getLayer(10)->m_pYTensor->print();
-    //cout<<endl;
-    //cout<<"PredictY = ";
-    //lossLayer->m_prevLayer->m_pYTensor->print();
+    TransposedConvolutionLayer * tConv = (TransposedConvolutionLayer *) getLayer(10);
+    ConvolutionLayer* conv = (ConvolutionLayer*) getLayer(20);
+
+    cout<<"TConv dW : "<<endl;
+    for (int i= 0; i< tConv->m_numFilters;++i){
+        tConv->m_pdW[i]->print();
+    }
+    cout<<"TConv dB : "<<endl;
+    tConv->m_pdB->print();
+
+    cout<<"TConv dY.sum = "<<tConv->m_pdYTensor->sum() <<endl;
+    cout<<"==============================="<<endl;
+
+    cout<<"Conv dW : "<<endl;
+    for (int i= 0; i< conv->m_numFilters;++i){
+        conv->m_pdW[i]->print();
+    }
+    cout<<"conv dB : "<<endl;
+    conv->m_pdB->print();
+    cout<<"conv dY.sum = "<<conv->m_pdYTensor->sum() <<endl;
+    cout<<"==============================="<<endl;
+    //printLayersY();
+    //printLayersDY();
 
 }
 
