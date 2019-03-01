@@ -81,6 +81,7 @@ void dimA2SpanA(const int* dimA, const int N, int * spanA);
 
 bool isElementBiggerThan0(const vector<int>& vec);
 bool isElementEqual1(const vector<int>& vec);
+bool isElementEqual0(const vector<float>& vec);
 
 bool isContainSubstr(const string& str, const string subStr);
 
@@ -94,4 +95,6 @@ vector<int> getIppRotatedDims_UpdateTranslation(const vector<int> ippDims, doubl
 
 void randomTranslate(vector<int>& vec, const int translationMaxValue);
 
+vector<int> getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,
+                                const vector<int>&  center);
 #endif //RL_NONCONVEX_TOOLS_H
