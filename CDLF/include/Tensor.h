@@ -87,12 +87,14 @@ public:
     void getMinMax(ValueType& min, ValueType& max) const;
     int maxPosition() const;
     Tensor<unsigned char> getMaxPositionSubTensor() const;
+    int countNonZero() const;
 
     float L2Norm() const;
 
     void save(const string& fullFilename, bool matrix2D=false);
     bool load(const string& fullFilename, bool matrix2D=false);
-    void print(bool fixWidth = false);
+    void print(bool fixWidth = false) const;
+
 
     Tensor ln();//natural logarithm
     Tensor expon();//exponential

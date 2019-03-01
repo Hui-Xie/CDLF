@@ -142,7 +142,7 @@ void ConvolutionBasicLayer::initialize(const string &initialMethod) {
     for (int i = 0; i < m_numFilters; ++i) {
         generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
     }
-    generateGaussian(m_pB, 0, sqrt(1.0 / m_numFilters));
+    generateGaussian(m_pB, 0, 1.0 / m_numFilters);
 }
 
 void ConvolutionBasicLayer::zeroParaGradient() {

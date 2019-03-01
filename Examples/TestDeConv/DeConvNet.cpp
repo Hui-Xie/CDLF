@@ -48,11 +48,6 @@ void DeConvNet::train() {
         N = 1;
     }
     int batchSize = getBatchSize();
-
-    //debug
-    batchSize = 1;
-
-
     const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
     int nIter = 0;
@@ -78,6 +73,7 @@ void DeConvNet::train() {
 
     m_loss = lossLayer->getLoss();
 
+/*
     //debug
     TransposedConvolutionLayer * tConv = (TransposedConvolutionLayer *) getLayer(10);
     ConvolutionLayer* conv = (ConvolutionLayer*) getLayer(20);
@@ -100,8 +96,17 @@ void DeConvNet::train() {
     conv->m_pdB->print();
     cout<<"conv dY.sum = "<<conv->m_pdYTensor->sum() <<endl;
     cout<<"==============================="<<endl;
-    //printLayersY();
-    //printLayersDY();
+
+    printLayersDY();
+
+    cout<<"==============================="<<endl;
+    cout<<"==============================="<<endl;
+
+
+    printLayersY();
+*/
+
+
 
 }
 
