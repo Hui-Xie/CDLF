@@ -14,29 +14,42 @@ message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 -DTIPL_Dir=/Users/hxie1/Projects/TIPL
 -DINTEL_Dir=/home/hxie1/intel
 -DUse_GPU=1
--DDev_Debug=0")
-message("4  if you use CPU, instead of GPU, above -DUse_GPU=0")
+-DDev_Debug=0
+-DLab_Server=0")
+message("7  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
-
 if (${Use_GPU})
-    project (CDLF_Framework LANGUAGES CXX CUDA)
+    if (${Lab_Server})
+        project (CDLF_Framework LANGUAGES CXX)
+        set(CUDA_INCLUDE_DIRECTORIES /usr/include)
+        include_directories (${CUDA_INCLUDE_DIRECTORIES})
+        set(CUDA_Library /usr/lib/x86_64-linux-gnu/libcudart.so)
+
+        # for cudnn in local lab c-xwu000.iibi.uiowa.edu
+        set(Cudnn_INCLUDE_DIR ${Cudnn_Include_Dir})
+        include_directories(Cudnn_INCLUDE_DIR)
+        set(Cudnn_LIBRARY ${Cudnn_Lib_Dir}/libcudnn.so)
+    else (${Lab_Server})
+        project (CDLF_Framework LANGUAGES CXX CUDA)
+        include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+        set(CUDA_TOOLKIT_INCLUDE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+        set(CMAKE_LIBRARY_PATH ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}/../lib64)
+        find_package(CUDA REQUIRED)
+
+        # for cudnn in argon
+        set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
+        include_directories(Cudnn_INCLUDE_DIR)
+        set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
+    endif(${Lab_Server})
+    add_compile_definitions(Use_GPU)
+    message("Info: Program compile with Cuda GPU.")
+
 else(${Use_GPU})
     project (CDLF_Framework LANGUAGES CXX)
-endif(${Use_GPU})
-
-# set(Use_GPU TRUE) # already configed in Clion File/Setting/Build/CMake/CMakeOptions config,
-
-if (${Use_GPU})
-    add_compile_definitions(Use_GPU)
-    include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-    set(CUDA_TOOLKIT_INCLUDE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-    set(CMAKE_LIBRARY_PATH ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}/../lib64)
-    find_package(CUDA QUIET)
-    message("Info: Program compile with Cuda GPU.")
-else(${Use_GPU})
     message("Info: Program compile with CPU, without GPU.")
 endif(${Use_GPU})
+
 
 if (${Dev_Debug})
     add_compile_definitions(Dev_Debug)
@@ -85,24 +98,8 @@ set(IPP_LIBRARY    ${IPPROOT}/lib/intel64/libippcore.so
                    ${IPPROOT}/lib/intel64/libippi.so )
 
 
-
-if (${Use_GPU})
-    # for cudnn in argon
-    #set(Cudnn_INCLUDE_DIR ${Cudnn_Dir}/include)
-    include_directories(Cudnn_INCLUDE_DIR)
-    set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
-
-    # for cudnn in local lab c-xwu000.iibi.uiowa.edu
-    set(Cudnn_INCLUDE_DIR ${Cudnn_Dir})
-
-else(${Use_GPU})
-    message("We don't use ${Cudnn_Dir} as compiling CPU version.")
-endif(${Use_GPU})
-
-
-
 #set(CDLFLib libCDLF.dll)  # for windows dll
-set(CDLFLib libCDLF.so pthread  ${IPP_LIBRARY} ${MKL_LIBRARY} ${Cudnn_LIBRARY} )    # for Linux
+set(CDLFLib libCDLF.so pthread  ${IPP_LIBRARY} ${MKL_LIBRARY} ${Cudnn_LIBRARY} ${CUDA_Library})    # for Linux
 
 add_subdirectory(CDLF)
 add_subdirectory(Examples)
