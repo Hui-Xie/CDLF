@@ -20,6 +20,8 @@ message("7  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
 if (${Use_GPU})
+    add_compile_definitions(Use_GPU)
+    message("Info: Program compile with Cuda GPU.")
     if (${Lab_Server})
         project (CDLF_Framework LANGUAGES CXX)
         set(CUDA_INCLUDE_DIRECTORIES /usr/include)
@@ -42,12 +44,11 @@ if (${Use_GPU})
         include_directories(Cudnn_INCLUDE_DIR)
         set(Cudnn_LIBRARY ${Cudnn_Dir}/lib64/libcudnn.so)
     endif(${Lab_Server})
-    add_compile_definitions(Use_GPU)
-    message("Info: Program compile with Cuda GPU.")
 
 else(${Use_GPU})
     project (CDLF_Framework LANGUAGES CXX)
     message("Info: Program compile with CPU, without GPU.")
+
 endif(${Use_GPU})
 
 
