@@ -15,6 +15,7 @@ int GPUAttr::m_numDevices = 0;
 int GPUAttr::m_numSMs = 0;
 int GPUAttr::m_maxThreadsPerBlock = 0;
 int GPUAttr::m_blocksPerGrid = 0;
+int GPUAttr::m_driverVersion = 0;
 
 
 void cudaPrintError(){
@@ -37,6 +38,9 @@ GPUAttr::~GPUAttr() {
 void GPUAttr::getGPUAttr() {
 #ifdef Use_GPU
     cudaDeviceReset();
+
+    cudaRuntimeGetVersion(&m_driverVersion);
+    cout<<"GPU driver verison ((1000 major + 10 minor):  "<< m_driverVersion <<endl;
 
     cudaGetDeviceCount(&m_numDevices);
     cout<<"This host has "<< m_numDevices <<" GPUs"<<endl;

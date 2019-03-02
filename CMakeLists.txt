@@ -19,6 +19,8 @@ message("-DITK_DIR=/Users/hxie1/Projects/ITK_build
 message("7  if you use CPU, instead of GPU, above -DUse_GPU=0")
 message("*************************************")
 
+
+
 if (${Use_GPU})
     add_compile_definitions(Use_GPU)
     message("Info: Program compile with Cuda GPU.")
@@ -29,9 +31,9 @@ if (${Use_GPU})
         set(CUDA_Library /usr/lib/x86_64-linux-gnu/libcudart.so)
 
         # for cudnn in local lab c-xwu000.iibi.uiowa.edu
-        set(Cudnn_INCLUDE_DIR ${Cudnn_Include_Dir})
+        set(Cudnn_INCLUDE_DIR /usr/include)
         include_directories(Cudnn_INCLUDE_DIR)
-        set(Cudnn_LIBRARY ${Cudnn_Lib_Dir}/libcudnn.so)
+        set(Cudnn_LIBRARY /usr/lib/x86_64-linux-gnu/libcudnn.so)
     else (${Lab_Server})
         project (CDLF_Framework LANGUAGES CXX CUDA)
         include_directories (${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
