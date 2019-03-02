@@ -91,12 +91,17 @@ void HNDataManager::saveLabel2File(Tensor<unsigned char>* pLabel, const vector<i
 }
 
 string HNDataManager::getLabelPathFrom(const string &imageFilePath) {
-    if (m_trainLabelsDir.empty()){
+    if (m_trainLabelsDir.empty() &&  m_testLabelsDir.empty()){
+        cout<<"Error: program can not find correct label directory  for "<<imageFilePath<<endl;
         return "";
     }
     else{
         string imageFileName = getFileName(imageFilePath);
         size_t pos = imageFileName.find("_CT.nrrd");
+        if (string::npos == pos){
+            cout<<"Error: program can not find correct CT file, in "<<imageFilePath<<endl;
+            std::exit(EXIT_FAILURE);
+        }
         string labelFileName = imageFileName.replace(pos,string::npos, "_GTV.nrrd");
 
         if (string::npos != imageFilePath.find("trainImages")){

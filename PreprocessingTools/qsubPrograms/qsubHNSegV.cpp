@@ -11,7 +11,7 @@ string cmdPath = " /Users/hxie1/temp_release/Examples/HNRadiomics/TrainSegmentV 
 //string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.01 "; // for Conv-V model
 //string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 1 "; // for Matrix-V model
 //string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.005 "; // for ROI1-V model
-string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/CATonsil 0.01 "; // for CATonsil-V model
+string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/CATonsil 0.005 "; // for CATonsil-V model
 
 
 void printUsage(char* argv0){
