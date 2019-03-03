@@ -40,7 +40,7 @@ void GPUAttr::getGPUAttr() {
     cudaDeviceReset();
 
     cudaRuntimeGetVersion(&m_driverVersion);
-    cout<<"GPU driver verison ((1000 major + 10 minor):  "<< m_driverVersion <<endl;
+    cout<<"GPU driver version ((1000 major + 10 minor):  "<< m_driverVersion <<endl;
 
     cudaGetDeviceCount(&m_numDevices);
     cout<<"This host has "<< m_numDevices <<" GPUs"<<endl;
