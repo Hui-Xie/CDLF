@@ -75,14 +75,14 @@ int main(int argc, char *argv[]){
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
         net.train();
-        if (0 == (i+1)%23 ){
+        if (0 == (i+1)%5 ){ // 18min/epoch, about 1.5 hour/saving
             net.save();
         }
 
         net.test();
 
         //decay learning rate
-        if ( 0 == (i+1)%300){
+        if ( 0 == (i+1)%30){
             float r = net.getLearningRate();
             net.setLearningRate(r*0.85);
         }
