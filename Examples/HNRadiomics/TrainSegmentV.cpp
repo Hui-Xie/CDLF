@@ -43,7 +43,8 @@ int main(int argc, char *argv[]){
     //HNSegVNet net("HNSCC_convV", netDir);
     //HNSegVNet net("HNSCC_ROI1", netDir);
     //HNSegVNet net("HNSCC_ROI2", netDir);
-    HNSegVNet net("CATonsil", netDir);
+    //HNSegVNet net("CATonsil", netDir);
+    HNSegVNet net("R21CTSeg", netDir);
 #else
     HNSegVNet net("HNSCC_matrix", netDir);
 #endif

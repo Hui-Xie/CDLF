@@ -507,7 +507,9 @@ void Net::loadNetParameters() {
             cout << "Error: sscanf netParameterChar in loadNetParameters." << endl;
         }
     }
-    m_name = string(name);
+    if (m_name != string(name)){
+        cout<<"The name in NetParameters.csv will be changed to "<< m_name<<endl;
+    }
     m_judgeLoss = (judgeLoss == 1) ? true : false;
     ifs.close();
 }
