@@ -55,11 +55,12 @@ void GPUAttr::getGPUAttr() {
 
     int deviceID = 0;
     if (cudaSuccess == cudaGetDevice(&deviceID)){
-        cout<<"Currently use GPU device ID: "<<deviceID<<endl;
+        cout<<"At beginning, currently use GPU device ID: "<<deviceID<<endl;
     }
     else{
         cudaPrintError();
     }
+    cout<<"Proram will use the GPU with maximum free memory in the following."<<endl;
 
     cudaDeviceProp deviceProp;
     cudaGetDeviceProperties(&deviceProp, deviceID);

@@ -35,6 +35,13 @@
   }
 */
 
+
+struct GPUUsage{
+    int m_deviceID;
+    size_t m_freeMem; //in bytes;
+    size_t m_totalMem; // in bytes;
+};
+
 class Cudnn{
 public:
     Cudnn(Layer* pLayer);
@@ -45,6 +52,8 @@ public:
     cudnnTensorDescriptor_t m_yDescriptor;
 
     Layer* m_pLayer;
+
+    int chooseIdleGPU();
 
     void allocateDeviceX();
     void allocateDeviceY(bool copyComputedY = false);
