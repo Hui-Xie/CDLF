@@ -7,7 +7,7 @@
 #include <fstream>
 
 
-DNet::DNet(const string& name, const string& saveDir):FeedForwardNet(name, saveDir){
+DNet::DNet(const string& saveDir):FeedForwardNet(saveDir){
     m_pGTLayer = nullptr;
     m_pGxLayer = nullptr;
     m_pInputXLayer = nullptr;

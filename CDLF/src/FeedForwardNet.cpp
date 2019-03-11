@@ -13,7 +13,7 @@
 #include "statisTool.h"
 #include "ConvolutionLayer.h"
 
-FeedForwardNet::FeedForwardNet(const string &name, const string &saveDir) : Net(name, saveDir) {
+FeedForwardNet::FeedForwardNet(const string &saveDir) : Net(saveDir) {
 
 }
 

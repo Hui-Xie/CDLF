@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     mnist.loadData();
 
     //Load MnistAutoEncoder Net
-    MnistAutoEncoder net("MnistAutoEncoder", netDir, &mnist);
+    MnistAutoEncoder net(netDir, &mnist);
     if (!isEmptyDir(net.getDir())) {
         net.load();  //at Jan  3th,2018, the trained G net has an accuracy of 97.43%
     }

@@ -10,7 +10,7 @@ using namespace std;
 
 class FeedForwardNet : public Net {
 public:
-    FeedForwardNet(const string& name, const string& saveDir);
+    FeedForwardNet(const string& saveDir);
     ~FeedForwardNet();
 
     void forwardPropagate();

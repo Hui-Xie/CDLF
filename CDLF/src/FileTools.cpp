@@ -34,7 +34,7 @@ string getFileName(const string& fullPathFileName){
         result = fullPathFileName.substr(pos+1);
     }
     else{
-        result = "";
+        result = fullPathFileName;
     }
     return result;
 

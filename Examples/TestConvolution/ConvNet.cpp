@@ -6,7 +6,7 @@
 #include "ConvNet.h"
 
 
-ConvNet::ConvNet(const string& name, const string& saveDir): FeedForwardNet(name, saveDir){
+ConvNet::ConvNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
 
 }
 ConvNet::~ConvNet(){

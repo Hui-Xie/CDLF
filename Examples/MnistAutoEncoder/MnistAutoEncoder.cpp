@@ -6,7 +6,7 @@
 
 #include "MnistAutoEncoder.h"
 
-MnistAutoEncoder::MnistAutoEncoder(const string &name, const string &saveDir,  MNIST* pMnistData) : FeedForwardNet(name, saveDir) {
+MnistAutoEncoder::MnistAutoEncoder(const string &saveDir,  MNIST* pMnistData) : FeedForwardNet(saveDir) {
   m_pMnistData = pMnistData;
 }
 

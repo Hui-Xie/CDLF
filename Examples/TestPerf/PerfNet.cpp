@@ -6,7 +6,7 @@
 #include "CDLF.h"
 #include "PerfNet.h"
 
-PerfNet::PerfNet(const string& name, const string& saveDir): FeedForwardNet(name, saveDir){
+PerfNet::PerfNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
 
 }
 PerfNet::~PerfNet(){

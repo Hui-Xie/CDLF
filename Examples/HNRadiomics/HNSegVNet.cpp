@@ -2,7 +2,7 @@
 #include "HNSegVNet.h"
 
 
-HNSegVNet::HNSegVNet(const string &name, const string &netDir) : FeedForwardNet(name, netDir) {
+HNSegVNet::HNSegVNet(const string &netDir) : FeedForwardNet(netDir) {
     m_pDataMgr = nullptr;
 
 

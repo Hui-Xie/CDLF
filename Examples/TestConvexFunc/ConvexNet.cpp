@@ -5,7 +5,7 @@
 
 #include "ConvexNet.h"
 
-ConvexNet::ConvexNet(const string &name, const string& saveDir) : FeedForwardNet(name, saveDir) {
+ConvexNet::ConvexNet(const string &name, const string& saveDir) : FeedForwardNet(saveDir) {
 
 }
 

@@ -7,7 +7,7 @@
 #include "AdverMnistNet.h"
 #include "CDLF.h"
 
-AdverMnistNet::AdverMnistNet(const string &name, const string &saveDir) : FeedForwardNet(name, saveDir) {
+AdverMnistNet::AdverMnistNet(const string &saveDir) : FeedForwardNet(saveDir) {
 
 }
 

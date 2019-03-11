@@ -33,7 +33,7 @@ struct LayerStruct{
 
 class Net {
 public:
-    Net(const string& name, const string& saveDir);
+    Net(const string& saveDir);
     ~Net();
 
     float m_loss;

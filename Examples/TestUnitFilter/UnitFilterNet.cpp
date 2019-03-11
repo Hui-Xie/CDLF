@@ -6,7 +6,7 @@
 #include "UnitFilterNet.h"
 #include "LossConvexExample1.h"
 
-UnitFilterNet::UnitFilterNet(const string& name, const string& saveDir): FeedForwardNet(name, saveDir){
+UnitFilterNet::UnitFilterNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
 
 }
 

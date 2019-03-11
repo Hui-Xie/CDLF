@@ -7,7 +7,7 @@
 #include "CDLF.h"
 #include "SegmentGNet.h"
 
-SegmentGNet::SegmentGNet(const string& name, const string& saveDir): GNet(name, saveDir){
+SegmentGNet::SegmentGNet(const string& saveDir): GNet(saveDir){
 
 }
 

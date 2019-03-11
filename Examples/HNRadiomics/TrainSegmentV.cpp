@@ -11,8 +11,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.005"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.005"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters/CATonsil /home/hxie1/data/HeadNeckSCC/CATonsil  0.005"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters/CATonsil  /Users/hxie1/data/HeadNeckSCC/CATonsil 0.005"<<endl;
 }
 
 
@@ -40,11 +40,7 @@ int main(int argc, char *argv[]){
 #endif
 
 #ifdef Use_GPU
-    //HNSegVNet net("HNSCC_convV", netDir);
-    //HNSegVNet net("HNSCC_ROI1", netDir);
-    //HNSegVNet net("HNSCC_ROI2", netDir);
-    //HNSegVNet net("CATonsil", netDir);
-    HNSegVNet net("R21CTSeg", netDir);
+    HNSegVNet net(netDir);
 #else
     HNSegVNet net("HNSCC_matrix", netDir);
 #endif

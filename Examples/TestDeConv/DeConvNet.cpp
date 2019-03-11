@@ -8,7 +8,7 @@
 #include "DeConvNet.h"
 
 
-DeConvNet::DeConvNet(const string &name, const string &saveDir) : FeedForwardNet(name, saveDir) {
+DeConvNet::DeConvNet(const string &saveDir) : FeedForwardNet(saveDir) {
 
 }
 

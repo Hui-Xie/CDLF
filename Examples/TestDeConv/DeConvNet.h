@@ -12,7 +12,7 @@
 
 class DeConvNet : public FeedForwardNet {
 public:
-    DeConvNet(const string& name, const string& saveDir);
+    DeConvNet(const string& saveDir);
     ~DeConvNet();
 
     virtual void build();

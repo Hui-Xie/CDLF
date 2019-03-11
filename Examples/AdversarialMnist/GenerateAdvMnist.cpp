@@ -48,7 +48,7 @@ int main(int argc, char *argv[]){
     mnist.loadData();
 
     //Load Mnist Net
-    AdverMnistNet net("MnistNet", netDir);
+    AdverMnistNet net(netDir);
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }

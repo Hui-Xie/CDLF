@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 #endif
 
     //Load MnistAutoEncoder Net
-    DeConvNet net("DeConvNet", netDir);
+    DeConvNet net(netDir);
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }

@@ -17,7 +17,7 @@
 
 class GNet  : public FeedForwardNet {
 public:
-    GNet(const string& name, const string& saveDir);
+    GNet(const string& saveDir);
     ~GNet();
 
     InputLayer* m_pInputXLayer;

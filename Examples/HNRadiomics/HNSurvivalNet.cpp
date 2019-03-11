@@ -2,7 +2,7 @@
 #include "HNSurvivalNet.h"
 
 
-HNSurvivalNet::HNSurvivalNet(const string &name, const string &netDir) : FeedForwardNet(name, netDir) {
+HNSurvivalNet::HNSurvivalNet(const string &netDir) : FeedForwardNet(netDir) {
     m_pDataMgr = nullptr;
     m_pClinicalDataMgr = nullptr;
 }

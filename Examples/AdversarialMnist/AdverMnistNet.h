@@ -13,7 +13,7 @@
 
 class AdverMnistNet: public FeedForwardNet {
 public:
-    AdverMnistNet(const string& name, const string& saveDir);
+    AdverMnistNet(const string& saveDir);
     ~AdverMnistNet();
 
     void constructGroundTruth(const int labelValue, Tensor<float>& groundTruth);

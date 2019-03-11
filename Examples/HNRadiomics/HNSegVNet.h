@@ -12,7 +12,7 @@
 
 class HNSegVNet : public FeedForwardNet {
 public:
-    HNSegVNet(const string &name, const string &netDir);
+    HNSegVNet(const string &netDir);
     ~HNSegVNet();
 
     virtual void build();

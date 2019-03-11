@@ -14,7 +14,7 @@
 
 class HNSurvivalNet : public FeedForwardNet {
 public:
-    HNSurvivalNet(const string &name, const string &netDir);
+    HNSurvivalNet(const string &netDir);
     ~HNSurvivalNet();
 
     virtual void build();

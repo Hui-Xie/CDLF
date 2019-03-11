@@ -14,7 +14,7 @@
 
 class MnistAutoEncoder: public FeedForwardNet {
 public:
-    MnistAutoEncoder(const string& name, const string& saveDir, MNIST* pMnistData);
+    MnistAutoEncoder(const string& saveDir, MNIST* pMnistData);
     ~MnistAutoEncoder();
 
     MNIST* m_pMnistData;
