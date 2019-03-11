@@ -97,7 +97,6 @@ int main(int argc, char *argv[]) {
         writer->SetInput(resampleFilter->GetOutput());
         writer->Update();
 
-        break; // For single image process for test
     }
 
     cout<<"All converted files have been output to "<<outputDir<<endl;
