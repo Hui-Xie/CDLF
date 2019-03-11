@@ -65,11 +65,10 @@ void Net::setDir(const string dir) {
         char* result = getcwd(cwd, sizeof(cwd));
         if (nullptr == result){
             cout<<"Error: program can not correctly get current working directory. Promram only support Linux."<<endl;
-            return;
+            std::exit(-1);
         }
         netDir = string(cwd);
     }
-    netDir += "/" + m_name;
     createDir(netDir);
     m_directory = netDir;
 }
