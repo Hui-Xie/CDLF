@@ -59,7 +59,8 @@ string array2Str(const int array[], const int  N);
 //users needs to delete[] array after use.
 void vector2Array(const vector<int>& vec, int & N, int array[]);
 
-vector<int> str2Vector(const string& str);
+vector<int> str2IntVector(const string &str);
+vector<float> str2FloatVector(const string &str);
 
 vector<int> generateRandomSequence(const int range);
 

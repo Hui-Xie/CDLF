@@ -307,14 +307,14 @@ void Net::readLayesStruct(vector<struct LayerStruct> &layersStructVec) {
             } else {
                 layerStruct.m_type = string(type);
                 layerStruct.m_name = string(name);
-                layerStruct.m_preLayersIDs = str2Vector(string(preLayersIDsChar));
+                layerStruct.m_preLayersIDs = str2IntVector(string(preLayersIDsChar));
                 if (0 < layerStruct.m_preLayersIDs.size()){
                     layerStruct.m_preLayerID = layerStruct.m_preLayersIDs[0];
                 }
-                layerStruct.m_outputTensorSize = str2Vector(string(outputTensorSizeChar));
-                layerStruct.m_filterSize = str2Vector(string(filterSizeChar));
-                layerStruct.m_stride = str2Vector(string(strideChar));
-                layerStruct.m_startPosition = str2Vector(string(startPosition));
+                layerStruct.m_outputTensorSize = str2IntVector(string(outputTensorSizeChar));
+                layerStruct.m_filterSize = str2IntVector(string(filterSizeChar));
+                layerStruct.m_stride = str2IntVector(string(strideChar));
+                layerStruct.m_startPosition = str2IntVector(string(startPosition));
 
                 layersStructVec.push_back(layerStruct);
             }

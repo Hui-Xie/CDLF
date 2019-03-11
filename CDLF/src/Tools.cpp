@@ -242,7 +242,7 @@ void vector2Array(const vector<int>& vec, int & N, int array[]){
     }
 }
 
-vector<int> str2Vector(const string& str){
+vector<int> str2IntVector(const string &str){
     string tempStr = str;
     int N = tempStr.size();
     for (int i=0; i<N; ++i){
@@ -251,6 +251,21 @@ vector<int> str2Vector(const string& str){
     vector<int> vec;
     stringstream stream(tempStr);
     int num;
+    while (stream >> num){
+        vec.push_back(num);
+    }
+    return vec;
+}
+
+vector<float> str2FloatVector(const string &str){
+    string tempStr = str;
+    int N = tempStr.size();
+    for (int i=0; i<N; ++i){
+        if (!isdigit(tempStr[i]) && tempStr[i] != '.') tempStr[i] = ' ';
+    }
+    vector<float> vec;
+    stringstream stream(tempStr);
+    float num;
     while (stream >> num){
         vec.push_back(num);
     }

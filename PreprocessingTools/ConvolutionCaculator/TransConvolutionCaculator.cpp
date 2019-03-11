@@ -25,9 +25,9 @@ int main(int argc, char *argv[]) {
     const int numFilters = atoi(argv[4]);
 
 
-    const vector<int> inputTensorSize = str2Vector(preTensorSizeStr);
-    const vector<int> filterSize = str2Vector(filterSizeStr);
-    const vector<int> stride =  str2Vector(strideStr);
+    const vector<int> inputTensorSize = str2IntVector(preTensorSizeStr);
+    const vector<int> filterSize = str2IntVector(filterSizeStr);
+    const vector<int> stride = str2IntVector(strideStr);
 
     cout<<"Info: it is a good practice to keep the output in each dimension odd."<<endl<<endl;
 
