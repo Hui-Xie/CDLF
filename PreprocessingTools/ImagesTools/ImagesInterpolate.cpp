@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     vector<string> imagesVector;
     getFileVector(inputDir, imagesVector);
-    int numFiles = imagesVector.size();
+    const int numFiles = imagesVector.size();
     cout<<"Totally read "<<numFiles <<"  image files in directory "<<inputDir<<endl;
     for (int i=0;i<numFiles; ++i){
         const string inputImagePath = imagesVector[i];
