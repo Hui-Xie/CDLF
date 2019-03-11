@@ -11,8 +11,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfRadiomicsDataDir>  <learningRate>"<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.05"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.05"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/data/HeadNeckSCC/ExtractData  0.005"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.005"<<endl;
 }
 
 
@@ -82,9 +82,13 @@ int main(int argc, char *argv[]){
         net.test();
 
         //decay learning rate
-        if ( 0 == (i+1)%30){
-            float r = net.getLearningRate();
-            net.setLearningRate(r*0.85);
+        if ( 0 == (i+1)%9){
+            float R = net.getLearningRate();
+            float newR = R*0.6;
+            if (newR < 1e-7){
+                newR = 1e-7;
+            }
+            net.setLearningRate(newR);
         }
 
     }
