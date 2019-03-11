@@ -60,7 +60,7 @@ void GPUAttr::getGPUAttr() {
     else{
         cudaPrintError();
     }
-    cout<<"Proram will use the GPU with maximum free memory in the following."<<endl;
+    cout<<"Program will use the GPU with maximum free memory in the following."<<endl;
 
     cudaDeviceProp deviceProp;
     cudaGetDeviceProperties(&deviceProp, deviceID);
