@@ -6,7 +6,7 @@
 using namespace std;
 
 string cmdPath = "/Users/hxie1/temp_release/Examples/TestMnist/TestMnist";
-string cmdPara = "/Users/hxie1/temp_netParameters  /Users/hxie1/Projects/mnist";
+string cmdPara = "/Users/hxie1/temp_netParameters/MnistNet  /Users/hxie1/Projects/mnist";
 
 
 void printUsage(char* argv0){

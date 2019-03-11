@@ -8,7 +8,7 @@
 using namespace std;
 
 string cmdPath = " /Users/hxie1/temp_release/Examples/HNRadiomics/TrainSurvival ";
-string cmdPara = " /Users/hxie1/temp_netParameters  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.05 /Users/hxie1/temp_netParameters/HNSCC_ROI_Survival/HNSCC_Clinical_survival.csv ";
+string cmdPara = " /Users/hxie1/temp_netParameters/CATonsil  /Users/hxie1/data/HeadNeckSCC/ExtractData 0.05 /Users/hxie1/temp_netParameters/HNSCC_ROI_Survival/HNSCC_Clinical_survival.csv ";
 // for ROI1-V model
 
 void printUsage(char* argv0){
