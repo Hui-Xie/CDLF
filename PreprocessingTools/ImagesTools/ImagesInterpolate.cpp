@@ -72,31 +72,39 @@ int main(int argc, char *argv[]) {
             newImageSize[i] = oldImageSize[i] * ((float)oldSpacing[i])/newSpacing[i];
         }
 
-        typedef itk::IdentityTransform<double, Dimension> Transform;
-        Transform::Pointer transform = Transform::New();
-        transform->SetIdentity();
+        if (newSpacing == oldSpacing){
+            string cmdStr = string("cp ") + inputImagePath + " " +  outpuImagePath;
+            int result = system(cmdStr.c_str());
+            if (0 != result){
+                cout<<cmdStr << ": runs error"<<endl;
+            }
+        }
+        else{
+            typedef itk::IdentityTransform<double, Dimension> Transform;
+            Transform::Pointer transform = Transform::New();
+            transform->SetIdentity();
 
-        typedef itk::BSplineInterpolateImageFunction<ImageType, double, double > Interpolator;
-        Interpolator::Pointer interpolator = Interpolator::New();
-        interpolator->SetSplineOrder(interpolationMethod);
+            typedef itk::BSplineInterpolateImageFunction<ImageType, double, double > Interpolator;
+            Interpolator::Pointer interpolator = Interpolator::New();
+            interpolator->SetSplineOrder(interpolationMethod);
 
-        typedef itk::ResampleImageFilter<ImageType, ImageType> ResampleFilter;
-        ResampleFilter::Pointer resampleFilter = ResampleFilter::New();
-        resampleFilter->SetTransform(transform);
-        resampleFilter->SetInterpolator(interpolator);
-        resampleFilter->SetOutputOrigin(origin);
-        resampleFilter->SetOutputSpacing(newSpacing);
-        resampleFilter->SetSize(newImageSize);
-        resampleFilter->SetInput(image);
+            typedef itk::ResampleImageFilter<ImageType, ImageType> ResampleFilter;
+            ResampleFilter::Pointer resampleFilter = ResampleFilter::New();
+            resampleFilter->SetTransform(transform);
+            resampleFilter->SetInterpolator(interpolator);
+            resampleFilter->SetOutputOrigin(origin);
+            resampleFilter->SetOutputSpacing(newSpacing);
+            resampleFilter->SetSize(newImageSize);
+            resampleFilter->SetInput(image);
 
-        // Write the result
+            // Write the result
 
-        typedef itk::ImageFileWriter<ImageType> WriterType;
-        typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName(outpuImagePath);
-        writer->SetInput(resampleFilter->GetOutput());
-        writer->Update();
-
+            typedef itk::ImageFileWriter<ImageType> WriterType;
+            typename WriterType::Pointer writer = WriterType::New();
+            writer->SetFileName(outpuImagePath);
+            writer->SetInput(resampleFilter->GetOutput());
+            writer->Update();
+        }
     }
 
     cout<<"All converted files have been output to "<<outputDir<<endl;
