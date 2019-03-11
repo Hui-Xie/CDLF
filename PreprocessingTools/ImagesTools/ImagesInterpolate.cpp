@@ -100,6 +100,6 @@ int main(int argc, char *argv[]) {
         break; // For single image process for test
     }
 
-    cout<<"All converted files has been output to "<<outputDir<<endl;
+    cout<<"All converted files have been output to "<<outputDir<<endl;
     return 0;
 }
