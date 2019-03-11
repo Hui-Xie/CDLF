@@ -46,7 +46,6 @@ int main(int argc, char *argv[]) {
     getFileVector(inputDir, imagesVector);
     int numFiles = imagesVector.size();
     cout<<"Totally read "<<numFiles <<"  image files in directory "<<inputDir<<endl;
-
     for (int i=0;i<numFiles; ++i){
         const string inputImagePath = imagesVector[i];
         const string filename = getFileName(inputImagePath);
@@ -100,5 +99,7 @@ int main(int argc, char *argv[]) {
 
         break; // For single image process for test
     }
+
+    cout<<"All converted files has been output to "<<outputDir<<endl;
     return 0;
 }
