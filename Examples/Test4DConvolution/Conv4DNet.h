@@ -10,7 +10,7 @@
 
 class Conv4DNet  : public FeedForwardNet {
 public:
-    Conv4DNet(const string& name, const string& saveDir);
+    Conv4DNet(const string& saveDir);
     ~Conv4DNet();
 
     virtual void build();

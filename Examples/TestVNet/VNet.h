@@ -10,7 +10,7 @@
 
 class VNet : public FeedForwardNet {
 public:
-    VNet(const string& name, const string& saveDir);
+    VNet(const string& saveDir);
     ~VNet();
 
     virtual void build();

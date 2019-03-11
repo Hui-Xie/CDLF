@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 #ifdef Use_GPU
     HNSegVNet net(netDir);
 #else
-    HNSegVNet net("HNSCC_matrix", netDir);
+    HNSegVNet net(netDir);
 #endif
 
     cout<<"=========================================="<<endl;

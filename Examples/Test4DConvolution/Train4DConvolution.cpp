@@ -26,7 +26,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    Conv4DNet net("Conv4DNet", "/home/hxie1/temp_netParameters");
+    Conv4DNet net("/home/hxie1/temp_netParameters/ConvNet");
 
     if (isEmptyDir(net.getDir())) {
         net.build();

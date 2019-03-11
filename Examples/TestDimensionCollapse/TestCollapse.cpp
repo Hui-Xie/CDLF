@@ -19,9 +19,9 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    string netDir = "/home/hxie1/temp_netParameters";
+    string netDir = "/home/hxie1/temp_netParameters/CollapseNet";
 
-    CollapseNet net("CollapseNet", netDir);
+    CollapseNet net(netDir);
 
     if (isEmptyDir(net.getDir())) {
         net.build();

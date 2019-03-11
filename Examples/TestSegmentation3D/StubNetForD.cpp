@@ -10,7 +10,7 @@
 #include "statisTool.h"
 
 
-StubNetForD::StubNetForD(const string& name, const string& saveDir): FeedForwardNet(saveDir){
+StubNetForD::StubNetForD(const string& saveDir): FeedForwardNet(saveDir){
 
 }
 

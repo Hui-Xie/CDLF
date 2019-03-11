@@ -13,7 +13,7 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfMnistDataDir>  <fullPathAdvData>"<<endl;
     cout<<"for examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist  /home/hxie1/temp_advData"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters/MnistNet /home/hxie1/Projects/mnist  /home/hxie1/temp_advData"<<endl;
 }
 
 

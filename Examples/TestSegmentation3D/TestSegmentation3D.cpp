@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
     string dataSetDir = argv[2];
     Seg3DDataManager dataMgr(dataSetDir);
 
-    SegmentGNet Gnet(netDir);
+    SegmentGNet Gnet(netDir+"/GNet");
     if (isEmptyDir(Gnet.getDir())) {
         Gnet.build();
         Gnet.initialize();
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     Gnet.setUnlearningLayerID(30);
     Gnet.printArchitecture();
 
-    SegmentDNet Dnet(netDir);
+    SegmentDNet Dnet(netDir +"/DNet");
     if (isEmptyDir(Dnet.getDir())) {
         Dnet.build();
         Dnet.initialize();
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
     Dnet.printArchitecture();
 
 
-    StubNetForD stubNet("StubNet", netDir);
+    StubNetForD stubNet(netDir+"/StubNet");
     if (isEmptyDir(stubNet.getDir())) {
         stubNet.build();
         stubNet.initialize();

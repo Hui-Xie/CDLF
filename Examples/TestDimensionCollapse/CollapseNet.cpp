@@ -6,7 +6,7 @@
 #include "CollapseNet.h"
 #include "LossConvexExample1.h"
 
-CollapseNet::CollapseNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
+CollapseNet::CollapseNet(const string& saveDir): FeedForwardNet(saveDir){
 
 }
 CollapseNet::~CollapseNet(){

@@ -8,8 +8,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> "<<endl;
     cout<<"For examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters "<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters  "<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters/ConvNet "<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters/ConvNet  "<<endl;
 }
 
 
@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    ConvNet net("ConvNet", netDir);
+    ConvNet net(netDir);
 
     net.load();
 

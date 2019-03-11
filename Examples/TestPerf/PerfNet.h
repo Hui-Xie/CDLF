@@ -10,7 +10,7 @@
 
 class PerfNet : public FeedForwardNet {
 public:
-    PerfNet(const string& name, const string& saveDir);
+    PerfNet(const string& saveDir);
     ~PerfNet();
 
     virtual void build();

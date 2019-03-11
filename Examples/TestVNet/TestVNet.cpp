@@ -17,7 +17,7 @@ int main (int argc, char *argv[])
 #endif
 
 
-    VNet net("VNet", "/home/hxie1/temp_netParameters");
+    VNet net("/home/hxie1/temp_netParameters/VNet");
 
     if (isEmptyDir(net.getDir())) {
         net.build();

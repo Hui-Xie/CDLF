@@ -11,7 +11,7 @@
 
 class StubNetForD: public FeedForwardNet {
 public:
-    StubNetForD(const string& name, const string& saveDir);
+    StubNetForD(const string& saveDir);
     ~StubNetForD();
 
     virtual void build();

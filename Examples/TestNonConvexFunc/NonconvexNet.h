@@ -10,7 +10,7 @@
 
 class NonconvexNet : public FeedForwardNet {
 public:
-    NonconvexNet(const string& name, const string& saveDir, const vector<int>& layerWidthVector);
+    NonconvexNet(const string& saveDir, const vector<int>& layerWidthVector);
     ~NonconvexNet();
 
     virtual void build();

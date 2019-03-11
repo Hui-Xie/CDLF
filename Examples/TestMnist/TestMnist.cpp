@@ -10,8 +10,8 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <learningRate>"<<endl;
     cout<<"for examples: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist  0.0001"<<endl;
-    cout<<argv0<<" /Users/hxie1/temp_netParameters /Users/hxie1/Projects/mnist  0.0001"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters/MnistNet /home/hxie1/Projects/mnist  0.0001"<<endl;
+    cout<<argv0<<" /Users/hxie1/temp_netParameters/MnistNet /Users/hxie1/Projects/mnist  0.0001"<<endl;
 }
 
 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
     //cout<<"Image is "<<(int)(mnist.m_pTrainLabelsPart->e(index))<<endl;
 
     // Construct FeedForwardNet and Train, Test
-    MnistConvNet net("MnistNet", netDir, &mnist);
+    MnistConvNet net(netDir, &mnist);
     if (isEmptyDir(net.getDir())) {
         net.build();
         net.initialize();

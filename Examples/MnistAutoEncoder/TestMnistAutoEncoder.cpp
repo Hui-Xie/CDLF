@@ -11,7 +11,7 @@ void printUsage(char* argv0){
     cout<<"Usage: "<<endl;
     cout<<argv0<<"<netDir> <fullPathOfMnistDataDir> <outputImageDir> <nImages> <0|1>"<<endl;
     cout<<"For example: "<<endl;
-    cout<<argv0<<" /home/hxie1/temp_netParameters /home/hxie1/Projects/mnist /home/hxie1/temp_DecoderOutput 40  0"<<endl;
+    cout<<argv0<<" /home/hxie1/temp_netParameters/MnistAutoEncoder /home/hxie1/Projects/mnist /home/hxie1/temp_DecoderOutput 40  0"<<endl;
     cout<<"<0|1> 0: indicate general reconstruction with correct label prediction; 1: indicate only using incorrectly recognized image for reconstruction"<<endl;
 }
 

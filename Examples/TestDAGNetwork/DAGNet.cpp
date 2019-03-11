@@ -14,7 +14,7 @@
  * */
 
 
-DAGNet::DAGNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
+DAGNet::DAGNet(const string& saveDir): FeedForwardNet(saveDir){
 
 }
 

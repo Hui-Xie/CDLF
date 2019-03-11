@@ -5,7 +5,7 @@
 
 #include "ConvCudaNet.h"
 
-ConvCudaNet::ConvCudaNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
+ConvCudaNet::ConvCudaNet(const string& saveDir): FeedForwardNet(saveDir){
 
 }
 ConvCudaNet::~ConvCudaNet(){

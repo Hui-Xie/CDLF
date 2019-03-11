@@ -27,7 +27,7 @@ int main (int argc, char *argv[])
     cout<<"Info: program use CPU, instead of GPU."<<endl;
 #endif
 
-    DAGNet net("DAGNet", "/home/hxie1/temp_netParameters");
+    DAGNet net("/home/hxie1/temp_netParameters/DAGNet");
 
     if (isEmptyDir(net.getDir())) {
         net.build();

@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
     HNSurvivalNet net(netDir);
 
 #else
-    HNSurvivalNet net("HNSCC_ROI_Survival", netDir);
+    HNSurvivalNet net(netDir);
 #endif
 
     cout<<"=========================================="<<endl;

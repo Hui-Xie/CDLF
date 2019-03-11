@@ -6,7 +6,7 @@
 #include "CDLF.h"
 #include "VNet.h"
 
-VNet::VNet(const string& name, const string& saveDir): FeedForwardNet(saveDir){
+VNet::VNet(const string& saveDir): FeedForwardNet(saveDir){
 
 }
 VNet::~VNet(){

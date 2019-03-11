@@ -57,7 +57,7 @@ int main (int argc, char *argv[])
     }
     string netDir= string(argv[1]);
 
-    ConvexNet net("ConvexNet", netDir);
+    ConvexNet net(netDir);
 
     net.load();
     //net.setLearningRate(0.01);
