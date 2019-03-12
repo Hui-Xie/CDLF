@@ -51,6 +51,10 @@ int main(int argc, char *argv[]) {
         const string filename = getFileName(inputImagePath);
         const string outpuImagePath = outputDir+ "/"+ filename;
 
+        if (fileExist(outpuImagePath)) {
+            continue;
+        }
+
         using ReaderType = itk::ImageFileReader< ImageType >;
         typename ReaderType::Pointer reader = ReaderType::New();
         reader->SetFileName( inputImagePath );
