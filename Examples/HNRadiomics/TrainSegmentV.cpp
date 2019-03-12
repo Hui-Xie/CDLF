@@ -78,7 +78,7 @@ int main(int argc, char *argv[]){
         net.test();
 
         //decay learning rate
-        if ( 0 == (i+1)%9){
+        if ( 0 == (i+1)%10){
             float R = net.getLearningRate();
             float newR = R*0.6;
             if (newR < 1e-7){
