@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 01/29/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_CUDNNACTIVATION_H
-#define RL_NONCONVEX_CUDNNACTIVATION_H
+#ifndef CDLF_FRAME_CUDNNACTIVATION_H
+#define CDLF_FRAME_CUDNNACTIVATION_H
 
 #include "Cudnn.h"
 
@@ -40,4 +40,4 @@ public:
 
 };
 
-#endif //RL_NONCONVEX_CUDNNACTIVATION_H
+#endif //CDLF_FRAME_CUDNNACTIVATION_H

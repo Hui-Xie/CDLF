@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 7/28/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_MAXPOOLINGLAYER_H
-#define RL_NONCONVEX_MAXPOOLINGLAYER_H
+#ifndef CDLF_FRAME_MAXPOOLINGLAYER_H
+#define CDLF_FRAME_MAXPOOLINGLAYER_H
 
 #include "Layer.h"
 
@@ -45,4 +45,4 @@ private:
 };
 
 
-#endif //RL_NONCONVEX_MAXPOOLINGLAYER_H
+#endif //CDLF_FRAME_MAXPOOLINGLAYER_H

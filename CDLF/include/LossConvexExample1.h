@@ -2,8 +2,8 @@
 // Created by Hui Xie on 6/13/2018.
 //
 
-#ifndef RL_NONCONVEX_LOSSCONVEXEXAMPLE1_H
-#define RL_NONCONVEX_LOSSCONVEXEXAMPLE1_H
+#ifndef CDLF_FRAME_LOSSCONVEXEXAMPLE1_H
+#define CDLF_FRAME_LOSSCONVEXEXAMPLE1_H
 #include "LossLayer.h"
 
 class LossConvexExample1 : public LossLayer {
@@ -21,4 +21,4 @@ private:
 };
 
 
-#endif //RL_NONCONVEX_LOSSCONVEXEXAMPLE1_H
+#endif //CDLF_FRAME_LOSSCONVEXEXAMPLE1_H

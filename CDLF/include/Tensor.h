@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 7/16/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_TENSOR_H
-#define RL_NONCONVEX_TENSOR_H
+#ifndef CDLF_FRAME_TENSOR_H
+#define CDLF_FRAME_TENSOR_H
 
 #include <vector>
 #include <string>
@@ -168,4 +168,4 @@ private:
 #include "../src/Tensor.hpp"
 
 
-#endif //RL_NONCONVEX_TENSOR_H
+#endif //CDLF_FRAME_TENSOR_H

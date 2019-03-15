@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 7/16/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_TOOLS_H
-#define RL_NONCONVEX_TOOLS_H
+#ifndef CDLF_FRAME_TOOLS_H
+#define CDLF_FRAME_TOOLS_H
 #include <vector>
 #include <string>
 
@@ -98,4 +98,4 @@ void randomTranslate(vector<int>& vec, const int translationMaxValue);
 
 vector<int> getTopLeftIndexFrom(const vector<int> &imageDims, const vector<int> &subImageDims,
                                 const vector<int>&  center);
-#endif //RL_NONCONVEX_TOOLS_H
+#endif //CDLF_FRAME_TOOLS_H

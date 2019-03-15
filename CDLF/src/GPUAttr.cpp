@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 10/2/18.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 //
 
 #include "GPUAttr.h"

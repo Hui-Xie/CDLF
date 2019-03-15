@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 11/7/18.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
 //
 
@@ -25,6 +25,7 @@
 #include "MaxPoolingLayer.h"
 #include "MergerLayer.h"
 #include "NormalizationLayer.h"
+#include "ClipLayer.h"
 #include "ReLU.h"
 #include "SigmoidLayer.h"
 #include "SoftmaxLayer.h"

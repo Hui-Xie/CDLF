@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 12/11/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
 #include <ReshapeLayer.h>
 

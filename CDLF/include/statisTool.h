@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 6/7/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_STATISTOOL_H
-#define RL_NONCONVEX_STATISTOOL_H
+#ifndef CDLF_FRAME_STATISTOOL_H
+#define CDLF_FRAME_STATISTOOL_H
 
 //#include  <blaze/Math.h>
 #include "Tensor.h"
@@ -15,4 +15,4 @@ void xavierInitialize(Tensor<float>* pW);
 
 
 
-#endif //RL_NONCONVEX_STATISTOOL_H
+#endif //CDLF_FRAME_STATISTOOL_H

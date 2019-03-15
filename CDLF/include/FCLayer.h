@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 6/5/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_FCLAYER_H
-#define RL_NONCONVEX_FCLAYER_H
+#ifndef CDLF_FRAME_FCLAYER_H
+#define CDLF_FRAME_FCLAYER_H
 
 #include "Layer.h"
 #include <map>
@@ -43,4 +43,4 @@ public:
 };
 
 
-#endif //RL_NONCONVEX_FCLAYER_H
+#endif //CDLF_FRAME_FCLAYER_H

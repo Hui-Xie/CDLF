@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 8/4/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_SUMLAYER_H
-#define RL_NONCONVEX_SUMLAYER_H
+#ifndef CDLF_FRAME_SUMLAYER_H
+#define CDLF_FRAME_SUMLAYER_H
 
 #include "Layer.h"
 
@@ -41,4 +41,4 @@ private:
 };
 
 
-#endif //RL_NONCONVEX_SUMLAYER_H
+#endif //CDLF_FRAME_SUMLAYER_H

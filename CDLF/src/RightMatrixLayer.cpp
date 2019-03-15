@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 1/19/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
 #include "statisTool.h"
 #include <iostream>

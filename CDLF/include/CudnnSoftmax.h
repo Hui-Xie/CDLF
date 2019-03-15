@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 02/04/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_CUDNNSOFTMAX_H
-#define RL_NONCONVEX_CUDNNSOFTMAX_H
+#ifndef CDLF_FRAME_CUDNNSOFTMAX_H
+#define CDLF_FRAME_CUDNNSOFTMAX_H
 
 #include "Cudnn.h"
 
@@ -40,4 +40,4 @@ public:
 
 };
 
-#endif //RL_NONCONVEX_CUDNNSOFTMAX_H
+#endif //CDLF_FRAME_CUDNNSOFTMAX_H

@@ -1,10 +1,10 @@
 
 //
 // Created by Hui Xie on 01/24/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_CUDNNCONVOLUTION_H
-#define RL_NONCONVEX_CUDNNCONVOLUTION_H
+#ifndef CDLF_FRAME_CUDNNCONVOLUTION_H
+#define CDLF_FRAME_CUDNNCONVOLUTION_H
 
 #include "CudnnBasicConvolution.h"
 #include "ConvolutionLayer.h"
@@ -26,4 +26,4 @@ public:
     virtual void backward(bool computeW, bool computeX);
 };
 
-#endif //RL_NONCONVEX_CUDNNCONVOLUTION_H
+#endif //CDLF_FRAME_CUDNNCONVOLUTION_H

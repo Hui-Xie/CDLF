@@ -1,30 +1,33 @@
 //
-// Created by Hui Xie on 12/17/2018.
+// Created by Hui Xie on 03/15/2019.
 // Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_RESCALELAYER_H
-#define RL_RESCALELAYER_H
+#ifndef CDLF_FRAME_CLIPLAYER_H
+#define CDLF_FRAME_CLIPLAYER_H
+
 #include "Layer.h"
 
 /*
- *  Y = k*(X- Xmin)/(Xmax -Xmin);
- *  dL/dX = dL/dY * k/(Xmax -Xmin)
+ * Clip[x,{min,max}]
+ * gives x for min≤x≤max, min for x<min and max for x>max.
  *
  * */
-
-class RescaleLayer : public Layer {
+class ClipLayer :  public Layer{
 public:
-    RescaleLayer(const int id, const string& name,Layer* prevLayer, float k = 1);
-    ~RescaleLayer();
+    ClipLayer(const int id, const string& name, Layer* prevLayer, const int min, const int max);
+    ~ClipLayer();
 
-    float m_k;
+    int m_min;
+    int m_max;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
-    virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
+    virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
+
     virtual  int getNumParameters();
+
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);
     virtual  void saveStructLine(FILE* pFile);
@@ -32,4 +35,4 @@ public:
 };
 
 
-#endif //RL_RESCALELAYER_H
+#endif //CDLF_FRAME_CLIPLAYER_H

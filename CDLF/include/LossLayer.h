@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 6/6/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_LOSSLAYER_H
-#define RL_NONCONVEX_LOSSLAYER_H
+#ifndef CDLF_FRAME_LOSSLAYER_H
+#define CDLF_FRAME_LOSSLAYER_H
 
 #include "Layer.h"
 #include "Tensor.h"
@@ -77,4 +77,4 @@ void LossLayer::getPredictTensor(Tensor<ValueType>& predictResult, const float t
 }
 
 
-#endif //RL_NONCONVEX_LOSSLAYER_H
+#endif //CDLF_FRAME_LOSSLAYER_H

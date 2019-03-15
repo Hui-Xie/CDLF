@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 6/7/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_RELU_H
-#define RL_NONCONVEX_RELU_H
+#ifndef CDLF_FRAME_RELU_H
+#define CDLF_FRAME_RELU_H
 #include "Layer.h"
 
 /*  parameter ReLU
@@ -32,4 +32,4 @@ public:
 };
 
 
-#endif //RL_NONCONVEX_RELU_H
+#endif //CDLF_FRAME_RELU_H

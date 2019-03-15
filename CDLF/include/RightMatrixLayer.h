@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 1/19/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_RIGHTMATRIXCONVERT_H
-#define RL_NONCONVEX_RIGHTMATRIXCONVERT_H
+#ifndef CDLF_FRAME_RIGHTMATRIXCONVERT_H
+#define CDLF_FRAME_RIGHTMATRIXCONVERT_H
 
 #include "MatrixLayer.h"
 
@@ -24,4 +24,4 @@ public:
 };
 
 
-#endif //RL_NONCONVEX_RIGHTMATRIXCONVERT_H
+#endif //CDLF_FRAME_RIGHTMATRIXCONVERT_H

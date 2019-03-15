@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 12/11/18.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
 //
 
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
     net.detectSoftmaxBeforeLoss();
 
     //for one sample training
-    //net.setOneSampleTrain(true);
+    net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;

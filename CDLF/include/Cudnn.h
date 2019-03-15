@@ -1,11 +1,11 @@
 
 //
 // Created by Hui Xie on 01/24/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
 
-#ifndef RL_NONCONVEX_CUDNN_H
-#define RL_NONCONVEX_CUDNN_H
+#ifndef CDLF_FRAME_CUDNN_H
+#define CDLF_FRAME_CUDNN_H
 
 #include "cudnn.h"
 #include <cuda.h>
@@ -84,4 +84,4 @@ protected:
 };
 
 
-#endif //RL_NONCONVEX_CUDNN_H
+#endif //CDLF_FRAME_CUDNN_H

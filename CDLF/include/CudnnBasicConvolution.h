@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 01/28/2019.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_CUDNNCONVOLUTIONBASIC_H
-#define RL_NONCONVEX_CUDNNCONVOLUTIONBASIC_H
+#ifndef CDLF_FRAME_CUDNNCONVOLUTIONBASIC_H
+#define CDLF_FRAME_CUDNNCONVOLUTIONBASIC_H
 
 #include "Cudnn.h"
 #include <ConvolutionBasicLayer.h>
@@ -53,4 +53,4 @@ public:
 
 };
 
-#endif //RL_NONCONVEX_CUDNNCONVOLUTIONBASIC_H
+#endif //CDLF_FRAME_CUDNNCONVOLUTIONBASIC_H

@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 8/4/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_BRANCHLAYER_H
-#define RL_NONCONVEX_BRANCHLAYER_H
+#ifndef CDLF_FRAME_BRANCHLAYER_H
+#define CDLF_FRAME_BRANCHLAYER_H
 
 #include "Layer.h"
 
@@ -37,4 +37,4 @@ public:
 
 
 
-#endif //RL_NONCONVEX_BRANCHLAYER_H
+#endif //CDLF_FRAME_BRANCHLAYER_H

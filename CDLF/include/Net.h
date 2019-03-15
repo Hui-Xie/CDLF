@@ -1,6 +1,6 @@
 //
 // Created by Hui Xie on 9/15/18.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
 //
 
@@ -27,6 +27,7 @@ struct LayerStruct{
     // k in SigmoidLayer and RescaleLayer and ReLU, lambda in SquareLossLayer, initialValue in PaddingLayer
     float m_k;
 
+    // startPosition or min_max
     vector<int> m_startPosition;
 };
 

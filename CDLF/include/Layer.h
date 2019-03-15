@@ -1,9 +1,9 @@
 //
 // Created by Hui Xie on 6/5/2018.
-// Copyright (c) 2018 Hui Xie. All rights reserved.
+// Copyright (c) 2019 Hui Xie. All rights reserved.
 
-#ifndef RL_NONCONVEX_LAYER_H
-#define RL_NONCONVEX_LAYER_H
+#ifndef CDLF_FRAME_LAYER_H
+#define CDLF_FRAME_LAYER_H
 
 #include <string>
 //#include  <blaze/Math.h>
@@ -72,4 +72,4 @@ private:
 };
 
 
-#endif //RL_NONCONVEX_LAYER_H
+#endif //CDLF_FRAME_LAYER_H
