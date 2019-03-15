@@ -3,6 +3,7 @@
 using namespace std;
 
 // the characters description of target file vector
+/*
 const vector<string> fileCharacVec= {
         "HNSCC-01-0001",
         "HNSCC-01-0002",
@@ -89,9 +90,37 @@ const vector<string> fileCharacVec= {
         "HNSCC-01-0147",
         "HNSCC-01-0149"
 };
+*/
+
+const vector<string> fileCharacVec={
+"HNSCC-01-0151",
+"HNSCC-01-0155",
+"HNSCC-01-0158",
+//"HNSCC-01-0159",
+"HNSCC-01-0160",
+"HNSCC-01-0161",
+//"HNSCC-01-0163",
+"HNSCC-01-0166",
+"HNSCC-01-0168",
+"HNSCC-01-0171",
+"HNSCC-01-0172",
+"HNSCC-01-0173",
+"HNSCC-01-0177",
+"HNSCC-01-0178",
+//"HNSCC-01-0181",
+"HNSCC-01-0182",
+"HNSCC-01-0192",
+"HNSCC-01-0199",
+"HNSCC-01-0201",
+"HNSCC-01-0205",
+"HNSCC-01-0210",
+//"HNSCC-01-0211",
+"HNSCC-01-0213",
+"HNSCC-01-0214"
+};
 
 string getFilename(const string& characStr){
-    return characStr+"_CT.nrrd";
+    return characStr+"_GTV.nrrd";
 }
 
 
