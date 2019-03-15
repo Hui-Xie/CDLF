@@ -33,11 +33,7 @@ void FeedForwardNet::forwardPropagate() {
 #ifdef Dev_Debug
         printf("  ==> Foward layer of %s, finished at ", iter->second->m_name.c_str());
         printCurrentLocalTime();
-        
-        //debug
-        if ("NormalizationLayer" == iter->second->m_type){
-            printf("Norm layer= %d, mu=%f, sigma=%f \n", iter->second->m_id, iter->second->m_prevLayer->m_pYTensor->average(), ((NormalizationLayer*)iter->second)->m_sigma );
-        }
+
 #endif
     }
 }
