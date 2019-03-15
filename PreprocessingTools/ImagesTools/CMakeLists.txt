@@ -14,3 +14,8 @@ if(ITK_FOUND)
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
 endif(ITK_FOUND)
+
+
+set(CopyImagesSrc CopyImages.cpp)
+add_executable(CopyImages ${CopyImagesSrc})
+target_link_libraries(CopyImages)
