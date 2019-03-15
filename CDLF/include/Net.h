@@ -27,7 +27,7 @@ struct LayerStruct{
     // k in SigmoidLayer and RescaleLayer and ReLU, lambda in SquareLossLayer, initialValue in PaddingLayer
     float m_k;
 
-    // startPosition or min_max
+    // startPosition in SubTensorLayer,  or min_max in ClipLayer
     vector<int> m_startPosition;
 };
 

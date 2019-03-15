@@ -261,7 +261,7 @@ void Net::saveLayersStruct() {
         return;
     }
     else{
-        const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/Lambda, StartPosition, \r\n";
+        const string tableHead = "ID, Type, Name, PreviousLayerIDs, OutputTensorSize, FilterSize, Stride, NumFilter, k/Lambda, StartPosition/min_max, \r\n";
         FILE *pFile;
         pFile = fopen(filename.c_str(), "w");
         if (nullptr == pFile) {
@@ -353,6 +353,9 @@ void Net::createLayers(const vector<struct LayerStruct> &layersStructVec) {
         }
         else if ("NormalizationLayer" == s.m_type) {
             pLayer = new NormalizationLayer(s.m_id, s.m_name, pPreLayer, s.m_outputTensorSize);
+        }
+        else if  ("ClipLayer" == s.m_type){
+            pLayer = new ClipLayer(s.m_id, s.m_name, pPreLayer,s.m_startPosition[0], s.m_startPosition[1]);
         }
         else if ("SoftmaxLayer" == s.m_type) {
             pLayer = new SoftmaxLayer(s.m_id, s.m_name, pPreLayer);

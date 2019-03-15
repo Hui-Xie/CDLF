@@ -246,7 +246,7 @@ vector<int> str2IntVector(const string &str){
     string tempStr = str;
     int N = tempStr.size();
     for (int i=0; i<N; ++i){
-        if (!isdigit(tempStr[i])) tempStr[i] = ' ';
+        if (!isdigit(tempStr[i]) && '-' != tempStr[i] && '+' != tempStr[i]) tempStr[i] = ' ';
     }
     vector<int> vec;
     stringstream stream(tempStr);
