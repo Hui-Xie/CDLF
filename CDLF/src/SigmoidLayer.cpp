@@ -104,3 +104,15 @@ void SigmoidLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, k=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
 }
+
+void SigmoidLayer::initializeLRs(const float lr) {
+
+}
+
+void SigmoidLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void SigmoidLayer::updateParameters(const string &method, const int batchSize) {
+
+}

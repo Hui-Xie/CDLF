@@ -21,9 +21,13 @@ public:
     int m_m; //output width
     int m_n; //input width
     Tensor<float>*  m_pW;
-    Tensor<float>*  m_pBTensor;
+    Tensor<float>*  m_pB;
     Tensor<float>*  m_pdW;
-    Tensor<float>*  m_pdBTensor;
+    Tensor<float>*  m_pdB;
+
+    //Learning Rates
+    Tensor<float>*  m_pWLr;
+    Tensor<float>*  m_pBLr;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
@@ -31,6 +35,9 @@ public:
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
+    virtual  void initializeLRs(const float lr);
+    virtual  void updateLRs(const float deltaLoss, const int batchSize = 1);
+    virtual  void updateParameters(const string& method, const int batchSize=1);
 
     void printWandBVector();
     void printdWanddBVector();

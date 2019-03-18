@@ -10,6 +10,8 @@
 #include "NormalizationLayer.h"
 #include <iostream>
 #include <cmath> //for isinf()
+#include <FeedForwardNet.h>
+
 #include "statisTool.h"
 #include "ConvolutionLayer.h"
 
@@ -72,5 +74,28 @@ void FeedForwardNet::sgd(const float lr, const int batchSize) {
         if (iter->second->m_id >= m_unlearningLayerID) {
             iter->second->updateParameters(lr, "sgd", batchSize);
         }
+    }
+}
+
+void FeedForwardNet::sgd(const int batchSize) {
+    if (0 == batchSize) return;
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        if (iter->second->m_id >= m_unlearningLayerID) {
+            iter->second->updateParameters("sgd", batchSize);
+        }
+    }
+
+}
+
+void FeedForwardNet::initializeLRs(const float lr){
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->initializeLRs(lr);
+    }
+}
+
+void FeedForwardNet::updateLearingRates(const float deltaLoss, const int batchSize) {
+    if (0 == deltaLoss || 0 == batchSize) return;
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->updateLRs(deltaLoss, batchSize);
     }
 }

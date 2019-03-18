@@ -100,3 +100,15 @@ void RescaleLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s,  PrevLayer=%s, k=%f, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
 }
+
+void RescaleLayer::initializeLRs(const float lr) {
+
+}
+
+void RescaleLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void RescaleLayer::updateParameters(const string &method, const int batchSize) {
+
+}

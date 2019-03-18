@@ -198,4 +198,16 @@ float LossLayer::getTPR(){
     return TPR;
 }
 
+void LossLayer::initializeLRs(const float lr) {
+
+}
+
+void LossLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void LossLayer::updateParameters(const string &method, const int batchSize) {
+
+}
+
 

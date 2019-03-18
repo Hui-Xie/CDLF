@@ -24,6 +24,10 @@ public:
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
+    virtual  void initializeLRs(const float lr);
+    virtual  void updateLRs(const float deltaLoss, const int batchSize = 1);
+    virtual  void updateParameters(const string& method, const int batchSize=1);
+
     virtual float lossCompute()=0;
     virtual void  gradientCompute()=0;
     virtual void  printGroundTruth();

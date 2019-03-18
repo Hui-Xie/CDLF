@@ -21,6 +21,11 @@ public:
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
+
+    virtual  void initializeLRs(const float lr);
+    virtual  void updateLRs(const float deltaLoss, const int batchSize = 1);
+    virtual  void updateParameters(const string& method, const int batchSize=1);
+
     virtual  int getNumParameters();
     virtual  void save(const string& netDir);
     virtual  void load(const string& netDir);

@@ -112,4 +112,16 @@ void MaxPoolingLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), vector2Str(m_tensorSize).c_str());
 }
 
+void MaxPoolingLayer::initializeLRs(const float lr) {
+
+}
+
+void MaxPoolingLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void MaxPoolingLayer::updateParameters(const string &method, const int batchSize) {
+
+}
+
 

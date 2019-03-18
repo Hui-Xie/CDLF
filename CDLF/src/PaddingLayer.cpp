@@ -4,6 +4,8 @@
 
 //
 
+#include <PaddingLayer.h>
+
 #include "PaddingLayer.h"
 
 
@@ -81,4 +83,16 @@ void PaddingLayer::saveStructLine(FILE *pFile) {
 void PaddingLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, StartPosition=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_start).c_str(), vector2Str(m_tensorSize).c_str());
+}
+
+void PaddingLayer::initializeLRs(const float lr) {
+
+}
+
+void PaddingLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void PaddingLayer::updateParameters(const string &method, const int batchSize) {
+
 }

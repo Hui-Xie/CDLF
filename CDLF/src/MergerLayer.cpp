@@ -117,3 +117,15 @@ void MergerLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PreviousBranchList=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),   branchList.c_str(), vector2Str(m_tensorSize).c_str());
 }
+
+void MergerLayer::initializeLRs(const float lr) {
+
+}
+
+void MergerLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void MergerLayer::updateParameters(const string &method, const int batchSize) {
+
+}

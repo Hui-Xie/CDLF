@@ -222,6 +222,18 @@ void ConvolutionBasicLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
 }
 
+void ConvolutionBasicLayer::initializeLRs(const float lr) {
+
+}
+
+void ConvolutionBasicLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void ConvolutionBasicLayer::updateParameters(const string &method, const int batchSize) {
+
+}
+
 /*  for bias cudnn test
 void ConvolutionBasicLayer::beforeGPUCheckdBAnddY() {
     cout<<m_name<<endl;

@@ -78,3 +78,15 @@ void ClipLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, min=%d, max=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), m_min, m_max, vector2Str(m_tensorSize).c_str());
 }
+
+void ClipLayer::initializeLRs(const float lr) {
+
+}
+
+void ClipLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void ClipLayer::updateParameters(const string &method, const int batchSize) {
+
+}

@@ -75,3 +75,15 @@ void BranchLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, BranchList=%s , OutputSize=%s; \n",
            m_id, m_name.c_str(), m_type.c_str(),   m_prevLayer->m_name.c_str(), branchList.c_str(), vector2Str(m_tensorSize).c_str());
 }
+
+void BranchLayer::initializeLRs(const float lr) {
+
+}
+
+void BranchLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void BranchLayer::updateParameters(const string &method, const int batchSize) {
+
+}

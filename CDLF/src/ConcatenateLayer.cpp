@@ -115,3 +115,15 @@ float& ConcatenateLayer::dX(const int index) const {
     }
     return m_layersVec[i]->m_pdYTensor->e(index- m_layerOffsetVec[i]);
 }
+
+void ConcatenateLayer::initializeLRs(const float lr) {
+
+}
+
+void ConcatenateLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void ConcatenateLayer::updateParameters(const string &method, const int batchSize) {
+
+}

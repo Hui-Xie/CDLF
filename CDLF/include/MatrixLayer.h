@@ -25,6 +25,10 @@ public:
     virtual  void zeroParaGradient();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
+    virtual  void initializeLRs(const float lr);
+    virtual  void updateLRs(const float deltaLoss, const int batchSize = 1);
+    virtual  void updateParameters(const string& method, const int batchSize=1);
+
     virtual  int getNumParameters();
 
     virtual  void save(const string& netDir);

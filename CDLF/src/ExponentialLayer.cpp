@@ -71,3 +71,15 @@ void ExponentialLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
 }
+
+void ExponentialLayer::initializeLRs(const float lr) {
+
+}
+
+void ExponentialLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void ExponentialLayer::updateParameters(const string &method, const int batchSize) {
+
+}

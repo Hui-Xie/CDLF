@@ -33,6 +33,10 @@ public:
     virtual  void zeroParaGradient();
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
+    virtual  void initializeLRs(const float lr);
+    virtual  void updateLRs(const float deltaLoss, const int batchSize = 1);
+    virtual  void updateParameters(const string& method, const int batchSize=1);
+
     bool checkFilterSize(Layer* prevLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters);
     void constructFiltersAndY();
     void computeDb(const Tensor<float>* pdY, const int filterIndex);

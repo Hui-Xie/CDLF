@@ -127,3 +127,15 @@ void MatrixLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_pW->getDims()).c_str(), "{}", 0, vector2Str(m_tensorSize).c_str());
 }
 
+void MatrixLayer::initializeLRs(const float lr) {
+
+}
+
+void MatrixLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void MatrixLayer::updateParameters(const string &method, const int batchSize) {
+
+}
+

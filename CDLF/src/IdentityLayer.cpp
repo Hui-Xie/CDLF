@@ -59,3 +59,15 @@ void IdentityLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
 }
+
+void IdentityLayer::initializeLRs(const float lr) {
+
+}
+
+void IdentityLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void IdentityLayer::updateParameters(const string &method, const int batchSize) {
+
+}
