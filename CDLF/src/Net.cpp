@@ -25,6 +25,8 @@ Net::Net(const string& saveDir) {
     m_unlearningLayerID = 0;
     m_OneSampleTrain = false;
     m_loss = 0.0;
+    m_batchLoss = 0.0;
+    m_lastBatchLoss = 0.0;
 }
 
 Net::~Net() {
@@ -39,7 +41,7 @@ Net::~Net() {
 
 void Net::setLearningRate(const float learningRate) {
     m_learningRate = learningRate;
-    cout<<"Info: now set learning rate = "<<m_learningRate<<endl;
+    cout<<"Info: now set global learning rate = "<<m_learningRate<<endl;
 }
 
 void Net::setLossTolerance(const float tolerance) {

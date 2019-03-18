@@ -88,6 +88,7 @@ void FeedForwardNet::sgd(const int batchSize) {
 }
 
 void FeedForwardNet::initializeLRs(const float lr){
+    setLearningRate(lr);
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         iter->second->initializeLRs(lr);
     }

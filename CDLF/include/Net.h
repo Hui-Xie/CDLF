@@ -38,6 +38,8 @@ public:
     ~Net();
 
     float m_loss;
+    float m_batchLoss;
+    float m_lastBatchLoss;
 
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);

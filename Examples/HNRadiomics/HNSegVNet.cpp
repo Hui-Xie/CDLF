@@ -125,6 +125,7 @@ void HNSegVNet::setInput(const string &filename, const vector<float>& radianVec,
 void HNSegVNet::train() {
     DiceLossLayer *lossLayer = (DiceLossLayer *) getFinalLayer();
 
+
     m_loss = 0;
     m_dice =0;
     m_TPR = 0;
@@ -134,14 +135,17 @@ void HNSegVNet::train() {
         N = 1;
     }
     const int batchSize = getBatchSize();
-    const float learningRate = getLearningRate();
+    //const float learningRate = getLearningRate();
     const int numBatch = (N + batchSize -1) / batchSize;
     int n = 0;
     int batch = 0;
     vector<int> randSeq = generateRandomSequence(N);
+
+    m_lastBatchLoss = m_batchLoss;
     while (batch < numBatch) {
         zeroParaGradient();
         int i = 0;
+        m_batchLoss = 0.0;
         for (i = 0; i < batchSize && n < N; ++i) {
             const string imageFilePath = m_pDataMgr->m_trainImagesVector[randSeq[n]];
             const string labelFilePath = m_pDataMgr->getLabelPathFrom(imageFilePath);
@@ -153,6 +157,7 @@ void HNSegVNet::train() {
 
             forwardPropagate();
             m_loss += lossLayer->getLoss();
+            m_batchLoss += lossLayer->getLoss();
             // for softmax preceeds over loss layer
             if (m_isSoftmaxBeforeLoss){
                 m_dice += lossLayer->diceCoefficient();
@@ -169,15 +174,28 @@ void HNSegVNet::train() {
             //savedYTensor();
             ++n;
         }
-        sgd(learningRate, i);
+        m_batchLoss /= i;
+
+        //for parameter-wise learning rates
+        float deltaLoss = 0.0;
+        if (0.0 != m_lastBatchLoss){
+            deltaLoss = m_batchLoss - m_lastBatchLoss;
+            updateLearingRates(deltaLoss, i);
+        }
+        m_lastBatchLoss = m_batchLoss;
+        sgd(i);
+
+        // for global learning rate
+        //sgd(learningRate, i)
+
         ++batch;
-
-
 
     }
     m_loss /=n;
     m_dice /= n;
     m_TPR /= n;
+
+
 
     printf("Train: loss = %f, Dice = %f, TPR = %f; \n", m_loss, m_dice, m_TPR);
 }
