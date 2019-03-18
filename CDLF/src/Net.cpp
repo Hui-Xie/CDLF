@@ -147,6 +147,12 @@ void Net::zeroParaGradient() {
     }
 }
 
+void Net::averageParaGradient(const int batchSize){
+    for (map<int, Layer *>::reverse_iterator rit = m_layers.rbegin(); rit != m_layers.rend(); ++rit) {
+        rit->second->averageParaGradient(batchSize);
+    }
+}
+
 void Net::addLayer(Layer *layer) {
     if (nullptr == layer) return;
     if (layer->m_id <= 0){

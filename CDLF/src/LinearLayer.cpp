@@ -145,3 +145,7 @@ void LinearLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void LinearLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void LinearLayer::averageParaGradient(const int batchSize) {
+
+}

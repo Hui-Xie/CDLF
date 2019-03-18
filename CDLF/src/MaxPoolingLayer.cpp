@@ -124,4 +124,8 @@ void MaxPoolingLayer::updateParameters(const string &method, const int batchSize
 
 }
 
+void MaxPoolingLayer::averageParaGradient(const int batchSize) {
+
+}
+
 

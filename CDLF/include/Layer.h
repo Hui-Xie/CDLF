@@ -61,6 +61,7 @@ public:
 
     virtual  void initialize(const string& initialMethod)=0;
     virtual  void zeroParaGradient() = 0;
+    virtual  void averageParaGradient(const int batchSize) = 0;
     void zeroYTensor();
     void zeroDYTensor(); //ConvolutionLayer, MaxPoolLayer, ReLu all needs dX =0;
     virtual  void forward()=0;

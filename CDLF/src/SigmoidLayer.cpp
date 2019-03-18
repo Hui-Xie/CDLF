@@ -116,3 +116,7 @@ void SigmoidLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void SigmoidLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void SigmoidLayer::averageParaGradient(const int batchSize) {
+
+}

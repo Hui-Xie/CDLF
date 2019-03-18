@@ -99,3 +99,7 @@ void NormalizationLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void NormalizationLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void NormalizationLayer::averageParaGradient(const int batchSize) {
+
+}

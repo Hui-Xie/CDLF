@@ -210,4 +210,8 @@ void LossLayer::updateParameters(const string &method, const int batchSize) {
 
 }
 
+void LossLayer::averageParaGradient(const int batchSize) {
+
+}
+
 

@@ -23,6 +23,7 @@ public:
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
+    virtual  void averageParaGradient(const int batchSize);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
     virtual  void initializeLRs(const float lr);

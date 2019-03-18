@@ -71,3 +71,7 @@ void IdentityLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void IdentityLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void IdentityLayer::averageParaGradient(const int batchSize) {
+
+}

@@ -139,3 +139,7 @@ void MatrixLayer::updateParameters(const string &method, const int batchSize) {
 
 }
 
+void MatrixLayer::averageParaGradient(const int batchSize) {
+
+}
+

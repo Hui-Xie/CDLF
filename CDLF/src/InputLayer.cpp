@@ -32,6 +32,18 @@ void InputLayer::backward(bool computeW, bool computeX){
     //null
 }
 
+void InputLayer::initializeLRs(const float lr) {
+    //null
+}
+
+void InputLayer::updateLRs(const float deltaLoss, const int batchSize) {
+    //null
+}
+
+void InputLayer::updateParameters(const string &method, const int batchSize) {
+    //null
+}
+
 void InputLayer::updateParameters(const float lr, const string& method, const int batchSize){
     //null
 }
@@ -58,14 +70,8 @@ void InputLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(), vector2Str(m_tensorSize).c_str());
 }
 
-void InputLayer::initializeLRs(const float lr) {
+void InputLayer::averageParaGradient(const int batchSize) {
 
 }
 
-void InputLayer::updateLRs(const float deltaLoss, const int batchSize) {
 
-}
-
-void InputLayer::updateParameters(const string &method, const int batchSize) {
-
-}

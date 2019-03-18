@@ -96,3 +96,7 @@ void PaddingLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void PaddingLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void PaddingLayer::averageParaGradient(const int batchSize) {
+
+}

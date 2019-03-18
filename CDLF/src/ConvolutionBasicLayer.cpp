@@ -50,6 +50,21 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
         delete m_pdB;
         m_pdB = nullptr;
     }
+
+    // for parameter-wise learning rate
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (nullptr != m_pWLr[i]) {
+            delete m_pWLr[i];
+            m_pWLr[i] = nullptr;
+        }
+    }
+    delete[] m_pWLr; m_pWLr = nullptr;
+
+    if (nullptr != m_pBLr){
+        delete m_pBLr;
+        m_pBLr = nullptr;
+    }
+
 }
 
 // the filterSize in each dimension should be odd,
@@ -135,6 +150,18 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
     m_pdB = new Tensor<float>({m_numFilters,1});
 
     allocateYdYTensor();
+
+    //for parameter-wise learning rates
+    m_pBLr = new Tensor<float>({m_numFilters,1});
+    m_pWLr = (Tensor<float> **) new void *[m_numFilters];
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (1 != m_numInputFeatures){
+            m_pWLr[i] = new Tensor<float>(m_feature_filterSize);
+        }
+        else{
+            m_pWLr[i] = new Tensor<float>(m_filterSize);
+        }
+    }
 }
 
 
@@ -157,6 +184,20 @@ void ConvolutionBasicLayer::computeDb(const Tensor<float> *pdY, const int filter
     m_pdB->e(filterIndex) += pdY->sum(); // + is for batch processing
 }
 
+void ConvolutionBasicLayer::initializeLRs(const float lr) {
+    for (int i = 0; i < m_numFilters; ++i) {
+        m_pWLr[i]->uniformInitialize(lr);
+    }
+    m_pBLr->uniformInitialize(lr);
+}
+
+void ConvolutionBasicLayer::updateLRs(const float deltaLoss, const int batchSize) {
+
+}
+
+void ConvolutionBasicLayer::updateParameters(const string &method, const int batchSize) {
+
+}
 
 void ConvolutionBasicLayer::updateParameters(const float lr, const string &method, const int batchSize) {
     if ("sgd" == method) {
@@ -222,17 +263,11 @@ void ConvolutionBasicLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
 }
 
-void ConvolutionBasicLayer::initializeLRs(const float lr) {
+void ConvolutionBasicLayer::averageParaGradient(const int batchSize) {
 
 }
 
-void ConvolutionBasicLayer::updateLRs(const float deltaLoss, const int batchSize) {
 
-}
-
-void ConvolutionBasicLayer::updateParameters(const string &method, const int batchSize) {
-
-}
 
 /*  for bias cudnn test
 void ConvolutionBasicLayer::beforeGPUCheckdBAnddY() {

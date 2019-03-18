@@ -87,3 +87,7 @@ void BranchLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void BranchLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void BranchLayer::averageParaGradient(const int batchSize) {
+
+}

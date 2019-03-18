@@ -94,3 +94,7 @@ void SubTensorLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void SubTensorLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void SubTensorLayer::averageParaGradient(const int batchSize) {
+
+}

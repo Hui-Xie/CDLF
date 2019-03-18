@@ -124,3 +124,7 @@ void SoftmaxLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void SoftmaxLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void SoftmaxLayer::averageParaGradient(const int batchSize) {
+
+}

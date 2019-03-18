@@ -77,6 +77,7 @@ public:
 
     void initialize();
     void zeroParaGradient();
+    void averageParaGradient(const int batchSize);
 
     void printIteration(LossLayer* lossLayer,const int nIter, const bool transpose = false);
     void printLayersY();

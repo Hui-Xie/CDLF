@@ -24,6 +24,9 @@ public:
     vector<int> m_feature_filterSize;  //include feature dimension, even 1.
     int m_numInputFeatures;
 
+    Tensor<float>**  m_pWLr;
+    Tensor<float>* m_pBLr;
+
     vector<int> m_stride;
     vector<int> m_feature_stride;
     int m_OneFilterN;
@@ -31,6 +34,7 @@ public:
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
+    virtual  void averageParaGradient(const int batchSize);
     virtual  void updateParameters(const float lr, const string& method, const int batchSize=1);
 
     virtual  void initializeLRs(const float lr);

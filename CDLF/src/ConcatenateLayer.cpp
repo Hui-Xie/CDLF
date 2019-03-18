@@ -127,3 +127,7 @@ void ConcatenateLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void ConcatenateLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void ConcatenateLayer::averageParaGradient(const int batchSize) {
+
+}

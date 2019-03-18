@@ -103,13 +103,38 @@ void FCLayer::backward(bool computeW, bool computeX) {
     }
 }
 
-void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {
-    if ("sgd" == method) {
-        //*m_pW -= (*m_pdW) * (lr / batchSize);
-        matAdd(1.0, m_pW, -(lr / batchSize), m_pdW, m_pW);
-        //*m_pB -= (*m_pdB) * (lr / batchSize);
-        axpy(-(lr/batchSize), m_pdB, m_pB);
+void FCLayer::initializeLRs(const float lr) {
+    m_pWLr->uniformInitialize(lr);
+    m_pBLr->uniformInitialize(lr);
+}
+
+void FCLayer::updateLRs(const float deltaLoss, const int batchSize) {
+    float deltaLossBatch = deltaLoss* batchSize* batchSize;
+
+    int N = m_pWLr->getLength();
+    Tensor<float> squareGradientInv = m_pdW->hadamard(*m_pdW);
+    vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
+    axpy(-deltaLossBatch, &squareGradientInv, m_pWLr);
+    /*  Naive implementation
+    for (int i=0; i<N; ++i){
+        if (0 != m_pdW->e(i)){
+            m_pWLr->e(i) -= deltaLossBatch/(m_pdW->e(i)*m_pdW->e(i));
+        }
     }
+    */
+
+    N =  m_pBLr->getLength();
+    squareGradientInv = m_pdB->hadamard(*m_pdB);
+    vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
+    axpy(-deltaLossBatch, &squareGradientInv, m_pBLr);
+
+    /* Naive imeplemenation
+    for (int i=0; i<N; ++i){
+         if (0 != m_pdB->e(i)){
+             m_pBLr->e(i) -= deltaLossBatch/(m_pdB->e(i)*m_pdB->e(i));
+         }
+     }
+    */
 }
 
 void FCLayer::updateParameters(const string &method, const int batchSize) {
@@ -130,6 +155,17 @@ void FCLayer::updateParameters(const string &method, const int batchSize) {
         axpy(-1.0, &gradientB, m_pB);
     }
 }
+
+void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+    if ("sgd" == method) {
+        //*m_pW -= (*m_pdW) * (lr / batchSize);
+        matAdd(1.0, m_pW, -(lr / batchSize), m_pdW, m_pW);
+        //*m_pB -= (*m_pdB) * (lr / batchSize);
+        axpy(-(lr/batchSize), m_pdB, m_pB);
+    }
+}
+
+
 
 
 void FCLayer::printWandBVector() {
@@ -199,36 +235,8 @@ void FCLayer::printStruct() {
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
 }
 
-void FCLayer::initializeLRs(const float lr) {
-    m_pWLr->uniformInitialize(lr);
-    m_pBLr->uniformInitialize(lr);
+void FCLayer::averageParaGradient(const int batchSize) {
+
 }
 
-void FCLayer::updateLRs(const float deltaLoss, const int batchSize) {
-   float deltaLossBatch = deltaLoss* batchSize* batchSize;
 
-   int N = m_pWLr->getLength();
-   Tensor<float> squareGradientInv = m_pdW->hadamard(*m_pdW);
-   vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
-   axpy(-deltaLossBatch, &squareGradientInv, m_pWLr);
-   /*  Naive implementation
-   for (int i=0; i<N; ++i){
-       if (0 != m_pdW->e(i)){
-           m_pWLr->e(i) -= deltaLossBatch/(m_pdW->e(i)*m_pdW->e(i));
-       }
-   }
-   */
-
-   N =  m_pBLr->getLength();
-   squareGradientInv = m_pdB->hadamard(*m_pdB);
-   vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
-   axpy(-deltaLossBatch, &squareGradientInv, m_pBLr);
-
-   /* Naive imeplemenation
-   for (int i=0; i<N; ++i){
-        if (0 != m_pdB->e(i)){
-            m_pBLr->e(i) -= deltaLossBatch/(m_pdB->e(i)*m_pdB->e(i));
-        }
-    }
-   */
-}

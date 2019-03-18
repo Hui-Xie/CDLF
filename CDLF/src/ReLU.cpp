@@ -111,3 +111,7 @@ void ReLU::updateLRs(const float deltaLoss, const int batchSize) {
 void ReLU::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void ReLU::averageParaGradient(const int batchSize) {
+
+}

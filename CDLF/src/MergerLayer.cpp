@@ -129,3 +129,7 @@ void MergerLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void MergerLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void MergerLayer::averageParaGradient(const int batchSize) {
+
+}

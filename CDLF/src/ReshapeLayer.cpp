@@ -78,3 +78,7 @@ void ReshapeLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void ReshapeLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void ReshapeLayer::averageParaGradient(const int batchSize) {
+
+}

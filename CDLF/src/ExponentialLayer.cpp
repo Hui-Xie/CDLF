@@ -83,3 +83,7 @@ void ExponentialLayer::updateLRs(const float deltaLoss, const int batchSize) {
 void ExponentialLayer::updateParameters(const string &method, const int batchSize) {
 
 }
+
+void ExponentialLayer::averageParaGradient(const int batchSize) {
+
+}
