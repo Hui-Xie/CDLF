@@ -36,7 +36,7 @@ void BranchLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void BranchLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void BranchLayer::updateParameters(const float lr, const string& method){
     //null
 }
 
@@ -80,11 +80,11 @@ void BranchLayer::initializeLRs(const float lr) {
 
 }
 
-void BranchLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void BranchLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void BranchLayer::updateParameters(const string &method, const int batchSize) {
+void BranchLayer::updateParameters(const string &method) {
 
 }
 

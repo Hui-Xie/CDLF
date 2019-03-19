@@ -40,7 +40,7 @@ void MnistConvNet::train(){
             backwardPropagate(true);
             ++nIter;
         }
-        sgd(learningRate, i);
+        sgd(learningRate);
         ++nBatch;
     }
 }

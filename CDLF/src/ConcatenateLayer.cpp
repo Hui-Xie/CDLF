@@ -70,7 +70,7 @@ void ConcatenateLayer::zeroParaGradient(){
     //null
 }
 
-void ConcatenateLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void ConcatenateLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -120,11 +120,11 @@ void ConcatenateLayer::initializeLRs(const float lr) {
 
 }
 
-void ConcatenateLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void ConcatenateLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ConcatenateLayer::updateParameters(const string &method, const int batchSize) {
+void ConcatenateLayer::updateParameters(const string &method) {
 
 }
 

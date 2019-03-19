@@ -73,7 +73,7 @@ void ReLU::zeroParaGradient(){
     //null
 }
 
-void ReLU::updateParameters(const float lr, const string& method, const int batchSize) {
+void ReLU::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -104,11 +104,11 @@ void ReLU::initializeLRs(const float lr) {
 
 }
 
-void ReLU::updateLRs(const float deltaLoss, const int batchSize) {
+void ReLU::updateLRs(const float deltaLoss) {
 
 }
 
-void ReLU::updateParameters(const string &method, const int batchSize) {
+void ReLU::updateParameters(const string &method) {
 
 }
 

@@ -108,13 +108,11 @@ void FCLayer::initializeLRs(const float lr) {
     m_pBLr->uniformInitialize(lr);
 }
 
-void FCLayer::updateLRs(const float deltaLoss, const int batchSize) {
-    float deltaLossBatch = deltaLoss* batchSize* batchSize;
-
+void FCLayer::updateLRs(const float deltaLoss) {
     int N = m_pWLr->getLength();
     Tensor<float> squareGradientInv = m_pdW->hadamard(*m_pdW);
     vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
-    axpy(-deltaLossBatch, &squareGradientInv, m_pWLr);
+    axpy(-deltaLoss, &squareGradientInv, m_pWLr);
     /*  Naive implementation
     for (int i=0; i<N; ++i){
         if (0 != m_pdW->e(i)){
@@ -126,7 +124,7 @@ void FCLayer::updateLRs(const float deltaLoss, const int batchSize) {
     N =  m_pBLr->getLength();
     squareGradientInv = m_pdB->hadamard(*m_pdB);
     vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
-    axpy(-deltaLossBatch, &squareGradientInv, m_pBLr);
+    axpy(-deltaLoss, &squareGradientInv, m_pBLr);
 
     /* Naive imeplemenation
     for (int i=0; i<N; ++i){
@@ -137,31 +135,26 @@ void FCLayer::updateLRs(const float deltaLoss, const int batchSize) {
     */
 }
 
-void FCLayer::updateParameters(const string &method, const int batchSize) {
+void FCLayer::updateParameters(const string &method) {
     if ("sgd" == method) {
-        const float batchSizeInv = 1.0/batchSize;
-        Tensor<float> gradientW(m_pdW->getDims());
-        gradientW.zeroInitialize();
-        axpy(batchSizeInv, m_pdW, &gradientW);
+        Tensor<float> lrdw(m_pdW->getDims());
         int N = m_pW->getLength();
-        vsMul(N, m_pWLr->getData(), gradientW.getData(), gradientW.getData());
-        axpy(-1.0, &gradientW, m_pW);
+        vsMul(N, m_pWLr->getData(), m_pdW->getData(), lrdw.getData());
+        axpy(-1.0, &lrdw, m_pW);
 
-        Tensor<float> gradientB(m_pdB->getDims());
-        gradientB.zeroInitialize();
-        axpy(batchSizeInv, m_pdB, &gradientB);
+        Tensor<float> lrdB(m_pdB->getDims());
         N = m_pB->getLength();
-        vsMul(N, m_pBLr->getData(), gradientB.getData(), gradientB.getData());
-        axpy(-1.0, &gradientB, m_pB);
+        vsMul(N, m_pBLr->getData(), m_pdB->getData(), lrdB.getData());
+        axpy(-1.0, &lrdB, m_pB);
     }
 }
 
-void FCLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void FCLayer::updateParameters(const float lr, const string &method) {
     if ("sgd" == method) {
-        //*m_pW -= (*m_pdW) * (lr / batchSize);
-        matAdd(1.0, m_pW, -(lr / batchSize), m_pdW, m_pW);
-        //*m_pB -= (*m_pdB) * (lr / batchSize);
-        axpy(-(lr/batchSize), m_pdB, m_pB);
+        //*m_pW -= (*m_pdW) * lr;
+        matAdd(1.0, m_pW, -lr, m_pdW, m_pW);
+        //*m_pB -= (*m_pdB) * lr;
+        axpy(-lr, m_pdB, m_pB);
     }
 }
 

@@ -61,7 +61,7 @@ void NormalizationLayer::backward(bool computeW, bool computeX){
         // dX += dY/(m_sigma);
     }
 }
-void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void NormalizationLayer::updateParameters(const float lr, const string& method){
     //null
 }
 
@@ -92,11 +92,11 @@ void NormalizationLayer::initializeLRs(const float lr) {
 
 }
 
-void NormalizationLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void NormalizationLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void NormalizationLayer::updateParameters(const string &method, const int batchSize) {
+void NormalizationLayer::updateParameters(const string &method) {
 
 }
 

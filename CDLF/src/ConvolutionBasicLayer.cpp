@@ -191,21 +191,20 @@ void ConvolutionBasicLayer::initializeLRs(const float lr) {
     m_pBLr->uniformInitialize(lr);
 }
 
-void ConvolutionBasicLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void ConvolutionBasicLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ConvolutionBasicLayer::updateParameters(const string &method, const int batchSize) {
+void ConvolutionBasicLayer::updateParameters(const string &method) {
 
 }
 
-void ConvolutionBasicLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void ConvolutionBasicLayer::updateParameters(const float lr, const string &method) {
     if ("sgd" == method) {
-        float learningRate = lr / batchSize;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            *m_pW[idxF] -= *m_pdW[idxF] * learningRate;
+            *m_pW[idxF] -= *m_pdW[idxF] * lr;
         }
-        *m_pB -= *m_pdB * learningRate;
+        *m_pB -= *m_pdB * lr;
     }
 }
 

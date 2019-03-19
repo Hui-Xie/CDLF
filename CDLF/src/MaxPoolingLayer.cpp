@@ -85,7 +85,7 @@ void MaxPoolingLayer::backward(bool computeW, bool computeX) {
     }
 }
 
-void MaxPoolingLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void MaxPoolingLayer::updateParameters(const float lr, const string &method) {
     //null
 }
 
@@ -116,11 +116,11 @@ void MaxPoolingLayer::initializeLRs(const float lr) {
 
 }
 
-void MaxPoolingLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void MaxPoolingLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void MaxPoolingLayer::updateParameters(const string &method, const int batchSize) {
+void MaxPoolingLayer::updateParameters(const string &method) {
 
 }
 

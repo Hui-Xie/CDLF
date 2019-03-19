@@ -78,7 +78,7 @@ void SigmoidLayer::zeroParaGradient(){
     //null
 }
 
-void SigmoidLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void SigmoidLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -109,11 +109,11 @@ void SigmoidLayer::initializeLRs(const float lr) {
 
 }
 
-void SigmoidLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void SigmoidLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SigmoidLayer::updateParameters(const string &method, const int batchSize) {
+void SigmoidLayer::updateParameters(const string &method) {
 
 }
 

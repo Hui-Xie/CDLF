@@ -39,7 +39,7 @@ void MergerLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void MergerLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void MergerLayer::updateParameters(const float lr, const string& method){
   //null
 }
 
@@ -122,11 +122,11 @@ void MergerLayer::initializeLRs(const float lr) {
 
 }
 
-void MergerLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void MergerLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void MergerLayer::updateParameters(const string &method, const int batchSize) {
+void MergerLayer::updateParameters(const string &method) {
 
 }
 

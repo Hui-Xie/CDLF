@@ -33,7 +33,7 @@ void IdentityLayer::zeroParaGradient(){
     //null
 }
 
-void IdentityLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void IdentityLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -64,11 +64,11 @@ void IdentityLayer::initializeLRs(const float lr) {
 
 }
 
-void IdentityLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void IdentityLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void IdentityLayer::updateParameters(const string &method, const int batchSize) {
+void IdentityLayer::updateParameters(const string &method) {
 
 }
 

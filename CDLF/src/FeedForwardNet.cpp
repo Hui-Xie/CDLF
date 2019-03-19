@@ -68,20 +68,18 @@ void FeedForwardNet::backwardPropagate(bool computeW) {
     }
 }
 
-void FeedForwardNet::sgd(const float lr, const int batchSize) {
-    if (0 == batchSize) return;
+void FeedForwardNet::sgd(const float lr) {
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id >= m_unlearningLayerID) {
-            iter->second->updateParameters(lr, "sgd", batchSize);
+            iter->second->updateParameters(lr, "sgd");
         }
     }
 }
 
-void FeedForwardNet::sgd(const int batchSize) {
-    if (0 == batchSize) return;
+void FeedForwardNet::sgd() {
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id >= m_unlearningLayerID) {
-            iter->second->updateParameters("sgd", batchSize);
+            iter->second->updateParameters("sgd");
         }
     }
 
@@ -94,9 +92,9 @@ void FeedForwardNet::initializeLRs(const float lr){
     }
 }
 
-void FeedForwardNet::updateLearingRates(const float deltaLoss, const int batchSize) {
-    if (0 == deltaLoss || 0 == batchSize) return;
+void FeedForwardNet::updateLearingRates(const float deltaLoss) {
+    if (0 == deltaLoss) return;
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        iter->second->updateLRs(deltaLoss, batchSize);
+        iter->second->updateLRs(deltaLoss);
     }
 }

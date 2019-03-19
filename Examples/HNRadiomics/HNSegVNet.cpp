@@ -174,13 +174,14 @@ void HNSegVNet::train() {
             //savedYTensor();
             ++n;
         }
+        averageParaGradient(i);
         m_batchLoss /= i;
 
         //for parameter-wise learning rates
         float deltaLoss = 0.0;
         if (0.0 != m_lastBatchLoss){
             deltaLoss = m_batchLoss - m_lastBatchLoss;
-            updateLearingRates(deltaLoss, i);
+            updateLearingRates(deltaLoss);
         }
         m_lastBatchLoss = m_batchLoss;
         sgd(i);

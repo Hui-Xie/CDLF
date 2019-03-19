@@ -74,7 +74,7 @@ void RescaleLayer::zeroParaGradient(){
     //null
 }
 
-void RescaleLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void RescaleLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -105,11 +105,11 @@ void RescaleLayer::initializeLRs(const float lr) {
 
 }
 
-void RescaleLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void RescaleLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void RescaleLayer::updateParameters(const string &method, const int batchSize) {
+void RescaleLayer::updateParameters(const string &method) {
 
 }
 

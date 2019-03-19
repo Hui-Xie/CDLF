@@ -59,15 +59,15 @@ void ClipLayer::initializeLRs(const float lr) {
    //null
 }
 
-void ClipLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void ClipLayer::updateLRs(const float deltaLoss) {
   //null
 }
 
-void ClipLayer::updateParameters(const string &method, const int batchSize) {
+void ClipLayer::updateParameters(const string &method) {
   //null
 }
 
-void ClipLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void ClipLayer::updateParameters(const float lr, const string& method) {
   //null
 }
 

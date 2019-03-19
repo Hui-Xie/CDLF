@@ -36,15 +36,15 @@ void InputLayer::initializeLRs(const float lr) {
     //null
 }
 
-void InputLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void InputLayer::updateLRs(const float deltaLoss) {
     //null
 }
 
-void InputLayer::updateParameters(const string &method, const int batchSize) {
+void InputLayer::updateParameters(const string &method) {
     //null
 }
 
-void InputLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void InputLayer::updateParameters(const float lr, const string& method){
     //null
 }
 

@@ -86,7 +86,7 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
 #endif
 
 }
-void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void SoftmaxLayer::updateParameters(const float lr, const string& method){
     //Null
 }
 
@@ -117,11 +117,11 @@ void SoftmaxLayer::initializeLRs(const float lr) {
 
 }
 
-void SoftmaxLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void SoftmaxLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SoftmaxLayer::updateParameters(const string &method, const int batchSize) {
+void SoftmaxLayer::updateParameters(const string &method) {
 
 }
 

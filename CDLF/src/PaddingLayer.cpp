@@ -56,7 +56,7 @@ void PaddingLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void PaddingLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void PaddingLayer::updateParameters(const float lr, const string& method){
     //null
 }
 
@@ -89,11 +89,11 @@ void PaddingLayer::initializeLRs(const float lr) {
 
 }
 
-void PaddingLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void PaddingLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void PaddingLayer::updateParameters(const string &method, const int batchSize) {
+void PaddingLayer::updateParameters(const string &method) {
 
 }
 

@@ -31,11 +31,11 @@ public:
     virtual  void averageParaGradient(const int batchSize);
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
-    virtual  void updateParameters(const float lr, const string& method, const int batchSize =1);
+    virtual  void updateParameters(const float lr, const string& method);
 
     virtual  void initializeLRs(const float lr);
-    virtual  void updateLRs(const float deltaLoss, const int batchSize = 1);
-    virtual  void updateParameters(const string& method, const int batchSize=1);
+    virtual  void updateLRs(const float deltaLoss);
+    virtual  void updateParameters(const string& method);
 
     virtual  int getNumParameters();
 

@@ -40,7 +40,7 @@ void ReshapeLayer::zeroParaGradient(){
     //null
 }
 
-void ReshapeLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void ReshapeLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -71,11 +71,11 @@ void ReshapeLayer::initializeLRs(const float lr) {
 
 }
 
-void ReshapeLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void ReshapeLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ReshapeLayer::updateParameters(const string &method, const int batchSize) {
+void ReshapeLayer::updateParameters(const string &method) {
 
 }
 

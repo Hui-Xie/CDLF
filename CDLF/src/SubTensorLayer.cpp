@@ -54,7 +54,7 @@ void SubTensorLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void SubTensorLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void SubTensorLayer::updateParameters(const float lr, const string& method){
     //null
 }
 
@@ -87,11 +87,11 @@ void SubTensorLayer::initializeLRs(const float lr) {
 
 }
 
-void SubTensorLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void SubTensorLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SubTensorLayer::updateParameters(const string &method, const int batchSize) {
+void SubTensorLayer::updateParameters(const string &method) {
 
 }
 

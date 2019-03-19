@@ -15,11 +15,11 @@ public:
 
     void forwardPropagate();
     void backwardPropagate(bool computeW);
-    void sgd(const float lr, const int batchSize);
+    void sgd(const float lr);
 
     void initializeLRs(const float lr);
-    void updateLearingRates(const float deltaLoss, const int batchSize);
-    void sgd(const int batchSize); // sgd with various learning rates
+    void updateLearingRates(const float deltaLoss);
+    void sgd(); // sgd with various learning rates
 
 
     virtual void build() = 0;

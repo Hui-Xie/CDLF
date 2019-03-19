@@ -73,7 +73,7 @@ void NonconvexNet::train(){
             backwardPropagate(true);
             ++nIter;
         }
-        sgd(lr,i);
+        sgd(lr);
         printIteration(lossLayer, nIter);
         ++nBatch;
     }

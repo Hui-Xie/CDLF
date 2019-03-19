@@ -76,10 +76,10 @@ void LinearLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void LinearLayer::updateParameters(const float lr, const string& method, const int batchSize){
+void LinearLayer::updateParameters(const float lr, const string& method){
     if ("sgd" == method){
-        *m_pBTensor -=  (*m_pdBTensor)*(lr/batchSize);
-        *m_pKTensor -=  (*m_pdKTensor)*(lr/batchSize);
+        *m_pBTensor -=  (*m_pdBTensor)*lr;
+        *m_pKTensor -=  (*m_pdKTensor)*lr;
     }
 }
 
@@ -138,11 +138,11 @@ void LinearLayer::initializeLRs(const float lr) {
 
 }
 
-void LinearLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void LinearLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void LinearLayer::updateParameters(const string &method, const int batchSize) {
+void LinearLayer::updateParameters(const string &method) {
 
 }
 

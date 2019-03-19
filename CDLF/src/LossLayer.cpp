@@ -53,7 +53,7 @@ void LossLayer::zeroParaGradient(){
     //null
 }
 
-void LossLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void LossLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -202,11 +202,11 @@ void LossLayer::initializeLRs(const float lr) {
 
 }
 
-void LossLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void LossLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void LossLayer::updateParameters(const string &method, const int batchSize) {
+void LossLayer::updateParameters(const string &method) {
 
 }
 

@@ -45,7 +45,7 @@ void ExponentialLayer::zeroParaGradient(){
     //null
 }
 
-void ExponentialLayer::updateParameters(const float lr, const string& method, const int batchSize) {
+void ExponentialLayer::updateParameters(const float lr, const string& method) {
     //null
 }
 
@@ -76,11 +76,11 @@ void ExponentialLayer::initializeLRs(const float lr) {
 
 }
 
-void ExponentialLayer::updateLRs(const float deltaLoss, const int batchSize) {
+void ExponentialLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ExponentialLayer::updateParameters(const string &method, const int batchSize) {
+void ExponentialLayer::updateParameters(const string &method) {
 
 }
 
