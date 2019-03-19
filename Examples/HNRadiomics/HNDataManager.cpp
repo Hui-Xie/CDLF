@@ -28,9 +28,9 @@ HNDataManager::HNDataManager(const string& dataSetDir) : ITKDataManager(dataSetD
         cout<<"Info: totally read in "<<m_NTestFile << " test image files. "<<endl;
 
         //debug
-        //m_NTrainFile = 1;
-        //m_NTestFile = 1;
-        //cout<<"Info: For debug, set m_NTrainFile = 1 and m_NTestFile = 1 in HNDataManager" <<endl;
+        m_NTrainFile = 1;
+        m_NTestFile = 1;
+        cout<<"Info: For debug, set m_NTrainFile = 1 and m_NTestFile = 1 in HNDataManager" <<endl;
 
     }
 

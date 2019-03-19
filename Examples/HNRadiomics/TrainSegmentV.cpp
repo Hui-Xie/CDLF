@@ -62,7 +62,7 @@ int main(int argc, char *argv[]){
     net.detectSoftmaxBeforeLoss();
 
     //for one sample training
-    //net.setOneSampleTrain(true);
+    net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
@@ -86,6 +86,8 @@ int main(int argc, char *argv[]){
             }
             net.setLearningRate(newR);
         }
+
+        if (net.getOneSampleTrain()) break;
 
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
