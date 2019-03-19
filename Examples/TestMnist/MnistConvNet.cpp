@@ -40,6 +40,7 @@ void MnistConvNet::train(){
             backwardPropagate(true);
             ++nIter;
         }
+        averageParaGradient(i);
         sgd(learningRate);
         ++nBatch;
     }

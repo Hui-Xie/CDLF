@@ -65,6 +65,7 @@ void DeConvNet::train() {
             backwardPropagate(true);
             ++nIter;
         }
+        averageParaGradient(i);
         sgd(learningRate);
         ++nBatch;
 

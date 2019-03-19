@@ -61,6 +61,8 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
             }
             ++nIter;
         }
+        m_pGNet->averageParaGradient(i);
+        m_pDNet->averageParaGradient(i*2-ignoreGx);
         m_pGNet->sgd(m_pGNet->getLearningRate());
         m_pDNet->sgd(m_pDNet->getLearningRate());
         ++batch;
@@ -99,6 +101,7 @@ void Segmentation3DNet::trainG(){
 
             ++nIter;
         }
+        m_pGNet->averageParaGradient(i);
         m_pGNet->sgd(m_pGNet->getLearningRate());
         ++batch;
     }
@@ -148,6 +151,7 @@ void Segmentation3DNet::trainD(){
             }
             ++nIter;
         }
+        m_pDNet->averageParaGradient(i*2-ignoreGx);
         m_pDNet->sgd(m_pDNet->getLearningRate());
         ++batch;
     }

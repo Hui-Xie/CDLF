@@ -54,6 +54,7 @@ void UnitFilterNet::train(){
             backwardPropagate(true);
             ++nIter;
         }
+        averageParaGradient(i);
         sgd(lr);
         printIteration(lossLayer, nIter);
         ++nBatch;

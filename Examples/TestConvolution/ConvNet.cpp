@@ -39,6 +39,7 @@ void ConvNet::train(){
             forwardPropagate();
             backwardPropagate(true);
         }
+        averageParaGradient(batchSize);
         sgd(getLearningRate());
         printIteration(lossLayer, i);
         ++i;

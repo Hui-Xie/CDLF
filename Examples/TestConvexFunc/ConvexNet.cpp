@@ -53,6 +53,7 @@ void ConvexNet::train() {
             backwardPropagate(true);
             ++nIter;
         }
+        averageParaGradient(i);
         sgd(lr);
         printIteration(lossLayer, nIter, true);
         ++nBatch;
