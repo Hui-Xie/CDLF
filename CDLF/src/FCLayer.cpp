@@ -172,7 +172,7 @@ void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
         adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
     }
     else{
-
+        cout<<"Error: incorrect optimizer name."<<endl;
     }
 }
 
@@ -276,11 +276,22 @@ void FCLayer::allocateOptimizerMem(const string method) {
 }
 
 void FCLayer::freeOptimizerMem() {
-    delete m_pWM;
-    delete m_pBM;
-    delete m_pWR;
-    delete m_pBR;
-
+    if (nullptr != m_pWM) {
+        delete m_pWM;
+        m_pWM = nullptr;
+    }
+    if (nullptr != m_pBM) {
+        delete m_pBM;
+        m_pBM = nullptr;
+    }
+    if (nullptr != m_pWR) {
+        delete m_pWR;
+        m_pWR = nullptr;
+    }
+    if (nullptr != m_pBR) {
+        delete m_pBR;
+        m_pBR = nullptr;
+    }
 }
 
 

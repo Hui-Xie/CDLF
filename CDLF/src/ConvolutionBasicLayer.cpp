@@ -18,6 +18,12 @@ ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, L
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
+
+        m_pWM = nullptr;
+        m_pWR = nullptr;
+        m_pBM = nullptr;
+        m_pBR = nullptr;
+
         addPreviousLayer(prevLayer);
         updateFeatureFilterSize();
         computeOneFiterN();
@@ -213,10 +219,14 @@ void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pO
         sgdOptimizer->sgd(m_pdB, m_pB);
     }
     else if ("Adam" == method){
-
+        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
+        for (int idxF = 0; idxF < m_numFilters; ++idxF) {
+            adamOptimizer->adam(m_pWM[idxF], m_pWR[idxF], m_pdW[idxF], m_pW[idxF]);
+        }
+        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
     }
     else {
-
+        cout<<"Error: incorrect optimizer name."<<endl;
     }
 }
 
@@ -312,8 +322,14 @@ void ConvolutionBasicLayer::freeOptimizerMem() {
     delete m_pBM;
     delete m_pBR;
     for (int i = 0; i < m_numFilters; ++i) {
-        delete m_pWM[i];
-        delete m_pWR[i];
+        if (nullptr != m_pWM[i]){
+            delete m_pWM[i];
+            m_pWM[i] = nullptr;
+        }
+        if (nullptr != m_pWR[i]){
+            delete m_pWR[i];
+            m_pWR[i] = nullptr;
+        }
     }
     delete[] m_pWM;
     delete[] m_pWR;

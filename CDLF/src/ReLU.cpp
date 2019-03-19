@@ -107,9 +107,9 @@ void ReLU::updateLRs(const float deltaLoss) {
 }
 
 void ReLU::updateParameters(const string& method, Optimizer* pOptimizer) {
-
+  //null
 }
 
 void ReLU::averageParaGradient(const int batchSize) {
-
+  //null
 }

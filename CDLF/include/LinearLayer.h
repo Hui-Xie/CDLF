@@ -23,10 +23,15 @@ public:
     LinearLayer(const int id, const string& name, Layer* prevLayer);
     ~LinearLayer();
 
-    Tensor<float>*  m_pKTensor;
-    Tensor<float>*  m_pBTensor;
-    Tensor<float>*  m_pdKTensor;
-    Tensor<float>*  m_pdBTensor;
+    Tensor<float>*  m_pK;
+    Tensor<float>*  m_pB;
+    Tensor<float>*  m_pdK;
+    Tensor<float>*  m_pdB;
+
+    Tensor<float>*  m_pKM;
+    Tensor<float>*  m_pKR;
+    Tensor<float>*  m_pBM;
+    Tensor<float>*  m_pBR;
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
@@ -35,8 +40,10 @@ public:
     virtual  void backward(bool computeW, bool computeX = true);
 
 
-    virtual  void initializeLRs(const float lr);
-    virtual  void updateLRs(const float deltaLoss);
+    //virtual  void initializeLRs(const float lr);
+    //virtual  void updateLRs(const float deltaLoss);
+    virtual void allocateOptimizerMem(const string method);
+    virtual void freeOptimizerMem();
     virtual  void updateParameters(const string& method, Optimizer* pOptimizer);
 
     virtual  int getNumParameters();

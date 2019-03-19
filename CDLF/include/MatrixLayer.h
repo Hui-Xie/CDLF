@@ -20,14 +20,23 @@ public:
     Tensor<float>*  m_pdW;
     Tensor<float>*  m_pdB;
 
+    // Adam
+    Tensor<float>*  m_pWM;  //1st moment
+    Tensor<float>*  m_pBM;
+    Tensor<float>*  m_pWR;
+    Tensor<float>*  m_pBR; //2nd moment
+
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void averageParaGradient(const int batchSize);
 
 
-    virtual  void initializeLRs(const float lr);
-    virtual  void updateLRs(const float deltaLoss);
+    virtual void allocateOptimizerMem(const string method);
+    virtual void freeOptimizerMem();
+
+    //virtual  void initializeLRs(const float lr);
+    //virtual  void updateLRs(const float deltaLoss);
     virtual  void updateParameters(const string& method, Optimizer* pOptimizer);
 
     virtual  int getNumParameters();
