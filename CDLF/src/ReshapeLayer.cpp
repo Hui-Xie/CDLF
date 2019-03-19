@@ -40,9 +40,7 @@ void ReshapeLayer::zeroParaGradient(){
     //null
 }
 
-void ReshapeLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
+
 
 int  ReshapeLayer::getNumParameters(){
     return 0;
@@ -75,7 +73,7 @@ void ReshapeLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ReshapeLayer::updateParameters(const string &method) {
+void ReshapeLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

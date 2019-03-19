@@ -76,10 +76,17 @@ void LinearLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void LinearLayer::updateParameters(const float lr, const string& method){
+void LinearLayer::updateParameters( const string& method, Optimizer* pOptimizer){
     if ("sgd" == method){
-        *m_pBTensor -=  (*m_pdBTensor)*lr;
-        *m_pKTensor -=  (*m_pdKTensor)*lr;
+        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
+        sgdOptimizer->sgd(m_pdBTensor, m_pBTensor);
+        sgdOptimizer->sgd(m_pdKTensor, m_pKTensor);
+    }
+    else if ("Adam" == method){
+
+    }
+    else{
+
     }
 }
 
@@ -142,9 +149,6 @@ void LinearLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void LinearLayer::updateParameters(const string &method) {
-
-}
 
 void LinearLayer::averageParaGradient(const int batchSize) {
 

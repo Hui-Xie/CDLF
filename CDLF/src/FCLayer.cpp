@@ -26,8 +26,8 @@ FCLayer::FCLayer(const int id, const string &name,  Layer *prevLayer, const int 
     m_pdW = new Tensor<float>({m_m, m_n});
     m_pdB = new Tensor<float>({m_m, 1});
 
-    m_pWLr = new Tensor<float>({m_m, m_n});
-    m_pBLr = new Tensor<float>({m_m, 1});
+    //m_pWLr = new Tensor<float>({m_m, m_n});
+    //m_pBLr = new Tensor<float>({m_m, 1});
 
     addPreviousLayer(prevLayer);
 }
@@ -50,6 +50,7 @@ FCLayer::~FCLayer() {
         m_pdB = nullptr;
     }
 
+    /*
     if (nullptr != m_pWLr) {
         delete m_pWLr;
         m_pWLr = nullptr;
@@ -58,6 +59,8 @@ FCLayer::~FCLayer() {
         delete m_pBLr;
         m_pBLr = nullptr;
     }
+
+    */
 }
 
 void FCLayer::initialize(const string &initialMethod) {
@@ -103,6 +106,7 @@ void FCLayer::backward(bool computeW, bool computeX) {
     }
 }
 
+/*
 void FCLayer::initializeLRs(const float lr) {
     m_pWLr->uniformInitialize(lr);
     m_pBLr->uniformInitialize(lr);
@@ -113,30 +117,34 @@ void FCLayer::updateLRs(const float deltaLoss) {
     Tensor<float> squareGradientInv = m_pdW->hadamard(*m_pdW);
     vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
     axpy(-deltaLoss, &squareGradientInv, m_pWLr);
-    /*  Naive implementation
-    for (int i=0; i<N; ++i){
-        if (0 != m_pdW->e(i)){
-            m_pWLr->e(i) -= deltaLossBatch/(m_pdW->e(i)*m_pdW->e(i));
-        }
-    }
-    */
+    //  Naive implementation
+    //for (int i=0; i<N; ++i){
+     //   if (0 != m_pdW->e(i)){
+     //       m_pWLr->e(i) -= deltaLossBatch/(m_pdW->e(i)*m_pdW->e(i));
+     //   }
+    //}
+
 
     N =  m_pBLr->getLength();
     squareGradientInv = m_pdB->hadamard(*m_pdB);
     vsInv(N, squareGradientInv.getData(), squareGradientInv.getData());
     axpy(-deltaLoss, &squareGradientInv, m_pBLr);
 
-    /* Naive imeplemenation
-    for (int i=0; i<N; ++i){
-         if (0 != m_pdB->e(i)){
-             m_pBLr->e(i) -= deltaLossBatch/(m_pdB->e(i)*m_pdB->e(i));
-         }
-     }
-    */
+    // Naive imeplemenation
+    //for (int i=0; i<N; ++i){
+    //     if (0 != m_pdB->e(i)){
+    //         m_pBLr->e(i) -= deltaLossBatch/(m_pdB->e(i)*m_pdB->e(i));
+    //     }
+    // }
+
 }
 
-void FCLayer::updateParameters(const string &method) {
+*/
+
+
+void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
     if ("sgd" == method) {
+        /*  for parameter-wise learning rate
         Tensor<float> lrdw(m_pdW->getDims());
         int N = m_pW->getLength();
         vsMul(N, m_pWLr->getData(), m_pdW->getData(), lrdw.getData());
@@ -146,10 +154,25 @@ void FCLayer::updateParameters(const string &method) {
         N = m_pB->getLength();
         vsMul(N, m_pBLr->getData(), m_pdB->getData(), lrdB.getData());
         axpy(-1.0, &lrdB, m_pB);
+        */
+
+        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
+        sgdOptimizer->sgd(m_pdW, m_pW);
+        sgdOptimizer->sgd(m_pdB, m_pB);
+
+    }
+    else if ("Adam" == method){
+        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
+        adamOptimizer->adam(m_pWM, m_pWR, m_pdW, m_pW);
+        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
+    }
+    else{
+
     }
 }
 
-void FCLayer::updateParameters(const float lr, const string &method) {
+/*
+void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
     if ("sgd" == method) {
         //*m_pW -= (*m_pdW) * lr;
         matAdd(1.0, m_pW, -lr, m_pdW, m_pW);
@@ -157,9 +180,7 @@ void FCLayer::updateParameters(const float lr, const string &method) {
         axpy(-lr, m_pdB, m_pB);
     }
 }
-
-
-
+*/
 
 void FCLayer::printWandBVector() {
     cout << "LayerType: " << m_type << "; MatrixSize " << m_m << "*" << m_n << "; W: " << endl;

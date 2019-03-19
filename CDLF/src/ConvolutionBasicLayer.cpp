@@ -51,6 +51,7 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
         m_pdB = nullptr;
     }
 
+    /*
     // for parameter-wise learning rate
     for (int i = 0; i < m_numFilters; ++i) {
         if (nullptr != m_pWLr[i]) {
@@ -64,7 +65,7 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
         delete m_pBLr;
         m_pBLr = nullptr;
     }
-
+*/
 }
 
 // the filterSize in each dimension should be odd,
@@ -151,6 +152,7 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
 
     allocateYdYTensor();
 
+    /*
     //for parameter-wise learning rates
     m_pBLr = new Tensor<float>({m_numFilters,1});
     m_pWLr = (Tensor<float> **) new void *[m_numFilters];
@@ -162,6 +164,7 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
             m_pWLr[i] = new Tensor<float>(m_filterSize);
         }
     }
+    */
 }
 
 
@@ -184,6 +187,7 @@ void ConvolutionBasicLayer::computeDb(const Tensor<float> *pdY, const int filter
     m_pdB->e(filterIndex) += pdY->sum(); // + is for batch processing
 }
 
+/*
 void ConvolutionBasicLayer::initializeLRs(const float lr) {
     for (int i = 0; i < m_numFilters; ++i) {
         m_pWLr[i]->uniformInitialize(lr);
@@ -195,16 +199,24 @@ void ConvolutionBasicLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ConvolutionBasicLayer::updateParameters(const string &method) {
+void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
+*/
 
-void ConvolutionBasicLayer::updateParameters(const float lr, const string &method) {
+void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
     if ("sgd" == method) {
+        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            *m_pW[idxF] -= *m_pdW[idxF] * lr;
+            sgdOptimizer->sgd(m_pdW[idxF], m_pW[idxF]);
         }
-        *m_pB -= *m_pdB * lr;
+        sgdOptimizer->sgd(m_pdB, m_pB);
+    }
+    else if ("Adam" == method){
+
+    }
+    else {
+
     }
 }
 

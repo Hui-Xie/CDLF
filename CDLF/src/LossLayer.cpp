@@ -53,10 +53,6 @@ void LossLayer::zeroParaGradient(){
     //null
 }
 
-void LossLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
-
 
 
 int LossLayer::getNumParameters(){
@@ -206,7 +202,7 @@ void LossLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void LossLayer::updateParameters(const string &method) {
+void LossLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

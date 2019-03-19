@@ -56,9 +56,6 @@ void PaddingLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void PaddingLayer::updateParameters(const float lr, const string& method){
-    //null
-}
 
 
 int  PaddingLayer::getNumParameters(){
@@ -84,7 +81,7 @@ void PaddingLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, StartPosition=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_start).c_str(), vector2Str(m_tensorSize).c_str());
 }
-
+/*
 void PaddingLayer::initializeLRs(const float lr) {
 
 }
@@ -92,8 +89,8 @@ void PaddingLayer::initializeLRs(const float lr) {
 void PaddingLayer::updateLRs(const float deltaLoss) {
 
 }
-
-void PaddingLayer::updateParameters(const string &method) {
+*/
+void PaddingLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

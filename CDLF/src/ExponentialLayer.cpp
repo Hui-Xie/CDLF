@@ -45,9 +45,6 @@ void ExponentialLayer::zeroParaGradient(){
     //null
 }
 
-void ExponentialLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
 
 int ExponentialLayer::getNumParameters(){
     return 0;
@@ -80,7 +77,7 @@ void ExponentialLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ExponentialLayer::updateParameters(const string &method) {
+void ExponentialLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

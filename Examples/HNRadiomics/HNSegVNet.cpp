@@ -181,10 +181,10 @@ void HNSegVNet::train() {
         float deltaLoss = 0.0;
         if (0.0 != m_lastBatchLoss){
             deltaLoss = m_batchLoss - m_lastBatchLoss;
-            updateLearingRates(deltaLoss);
+            //updateLearingRates(deltaLoss);
         }
         m_lastBatchLoss = m_batchLoss;
-        sgd(i);
+        optimize("sgd");
 
         // for global learning rate
         //sgd(learningRate, i)

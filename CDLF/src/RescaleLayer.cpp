@@ -74,9 +74,7 @@ void RescaleLayer::zeroParaGradient(){
     //null
 }
 
-void RescaleLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
+
 
 int  RescaleLayer::getNumParameters(){
     return 0;
@@ -109,7 +107,7 @@ void RescaleLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void RescaleLayer::updateParameters(const string &method) {
+void RescaleLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

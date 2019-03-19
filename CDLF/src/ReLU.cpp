@@ -73,9 +73,7 @@ void ReLU::zeroParaGradient(){
     //null
 }
 
-void ReLU::updateParameters(const float lr, const string& method) {
-    //null
-}
+
 
 int  ReLU::getNumParameters(){
     return 0;
@@ -108,7 +106,7 @@ void ReLU::updateLRs(const float deltaLoss) {
 
 }
 
-void ReLU::updateParameters(const string &method) {
+void ReLU::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

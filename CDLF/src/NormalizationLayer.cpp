@@ -61,9 +61,7 @@ void NormalizationLayer::backward(bool computeW, bool computeX){
         // dX += dY/(m_sigma);
     }
 }
-void NormalizationLayer::updateParameters(const float lr, const string& method){
-    //null
-}
+
 
 int  NormalizationLayer::getNumParameters(){
     return 0;
@@ -96,7 +94,7 @@ void NormalizationLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void NormalizationLayer::updateParameters(const string &method) {
+void NormalizationLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

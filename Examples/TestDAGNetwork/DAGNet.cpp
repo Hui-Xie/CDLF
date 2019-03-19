@@ -133,7 +133,7 @@ void DAGNet::train(){
             ++nIter;
         }
         averageParaGradient(i);
-        sgd(lr);
+        optimize("sgd");
         printIteration(lossLayer, nIter);
         ++nBatch;
     }

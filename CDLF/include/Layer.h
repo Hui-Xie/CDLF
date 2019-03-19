@@ -11,6 +11,7 @@
 #include "Tensor.h"
 #include <cstdio>
 #include "FileTools.h"
+#include "Optimizer.h"
 
 #ifdef Use_GPU
   #include "LayerCuda.h"
@@ -66,11 +67,11 @@ public:
     void zeroDYTensor(); //ConvolutionLayer, MaxPoolLayer, ReLu all needs dX =0;
     virtual  void forward()=0;
     virtual  void backward(bool computeW, bool computeX = true)=0;
-    virtual  void updateParameters(const float lr, const string& method) = 0;
 
-    virtual  void initializeLRs(const float lr) = 0;  // initialize all various learning rates
-    virtual  void updateLRs(const float deltaLoss) = 0;
-    virtual  void updateParameters(const string& method) = 0;
+
+    //virtual  void initializeLRs(const float lr) = 0;  // initialize all various learning rates
+    //virtual  void updateLRs(const float deltaLoss) = 0;
+    virtual  void updateParameters(const string& method, Optimizer* pOptimizer) = 0;
 
     virtual  int getNumParameters() = 0; // return the number of learning parameters
 

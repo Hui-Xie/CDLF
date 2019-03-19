@@ -39,9 +39,7 @@ void MergerLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void MergerLayer::updateParameters(const float lr, const string& method){
-  //null
-}
+
 
 void MergerLayer::addPreviousLayer(Layer* prevLayer)
 {
@@ -126,7 +124,7 @@ void MergerLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void MergerLayer::updateParameters(const string &method) {
+void MergerLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

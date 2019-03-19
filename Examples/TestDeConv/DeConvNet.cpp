@@ -66,7 +66,7 @@ void DeConvNet::train() {
             ++nIter;
         }
         averageParaGradient(i);
-        sgd(learningRate);
+        optimize("sgd");
         ++nBatch;
 
         //savedYTensor();

@@ -78,9 +78,6 @@ void SigmoidLayer::zeroParaGradient(){
     //null
 }
 
-void SigmoidLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
 
 int  SigmoidLayer::getNumParameters(){
     return 0;
@@ -113,7 +110,7 @@ void SigmoidLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SigmoidLayer::updateParameters(const string &method) {
+void SigmoidLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

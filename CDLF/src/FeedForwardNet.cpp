@@ -68,23 +68,15 @@ void FeedForwardNet::backwardPropagate(bool computeW) {
     }
 }
 
-void FeedForwardNet::sgd(const float lr) {
+void FeedForwardNet::optimize(const string& method){
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id >= m_unlearningLayerID) {
-            iter->second->updateParameters(lr, "sgd");
+            iter->second->updateParameters(method,m_optimizer);
         }
     }
 }
 
-void FeedForwardNet::sgd() {
-    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
-        if (iter->second->m_id >= m_unlearningLayerID) {
-            iter->second->updateParameters("sgd");
-        }
-    }
-
-}
-
+/*
 void FeedForwardNet::initializeLRs(const float lr){
     setLearningRate(lr);
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
@@ -98,3 +90,5 @@ void FeedForwardNet::updateLearingRates(const float deltaLoss) {
         iter->second->updateLRs(deltaLoss);
     }
 }
+
+*/

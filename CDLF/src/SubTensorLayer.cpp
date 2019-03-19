@@ -54,9 +54,7 @@ void SubTensorLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void SubTensorLayer::updateParameters(const float lr, const string& method){
-    //null
-}
+
 
 
 int  SubTensorLayer::getNumParameters(){
@@ -91,7 +89,7 @@ void SubTensorLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SubTensorLayer::updateParameters(const string &method) {
+void SubTensorLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

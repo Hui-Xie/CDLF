@@ -86,9 +86,7 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
 #endif
 
 }
-void SoftmaxLayer::updateParameters(const float lr, const string& method){
-    //Null
-}
+
 
 int  SoftmaxLayer::getNumParameters(){
     return 0;
@@ -121,7 +119,7 @@ void SoftmaxLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SoftmaxLayer::updateParameters(const string &method) {
+void SoftmaxLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

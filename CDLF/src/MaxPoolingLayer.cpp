@@ -4,8 +4,6 @@
 
 #include <MaxPoolingLayer.h>
 
-#include "MaxPoolingLayer.h"
-
 
 MaxPoolingLayer::MaxPoolingLayer(const int id, const string &name, Layer *prevLayer, const vector<int> &filterSize,
                                  const vector<int>& stride)
@@ -85,7 +83,7 @@ void MaxPoolingLayer::backward(bool computeW, bool computeX) {
     }
 }
 
-void MaxPoolingLayer::updateParameters(const float lr, const string &method) {
+void MaxPoolingLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
     //null
 }
 
@@ -117,10 +115,6 @@ void MaxPoolingLayer::initializeLRs(const float lr) {
 }
 
 void MaxPoolingLayer::updateLRs(const float deltaLoss) {
-
-}
-
-void MaxPoolingLayer::updateParameters(const string &method) {
 
 }
 

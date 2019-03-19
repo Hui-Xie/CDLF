@@ -26,19 +26,24 @@ public:
     Tensor<float>*  m_pdB;
 
     //Learning Rates
-    Tensor<float>*  m_pWLr;
-    Tensor<float>*  m_pBLr;
+    //Tensor<float>*  m_pWLr;
+    //Tensor<float>*  m_pBLr;
+
+    // Adam
+    Tensor<float>*  m_pWM;  //1st momentum
+    Tensor<float>*  m_pBM;
+    Tensor<float>*  m_pWR;
+    Tensor<float>*  m_pBR; //2nd momentum
 
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void averageParaGradient(const int batchSize);
     virtual  void forward();
     virtual  void backward(bool computeW, bool computeX = true);
-    virtual  void updateParameters(const float lr, const string& method);
 
-    virtual  void initializeLRs(const float lr);
-    virtual  void updateLRs(const float deltaLoss);
-    virtual  void updateParameters(const string& method);
+    //virtual  void initializeLRs(const float lr);
+    //virtual  void updateLRs(const float deltaLoss);
+    virtual  void updateParameters(const string& method, Optimizer* pOptimizer);
 
     void printWandBVector();
     void printdWanddBVector();

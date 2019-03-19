@@ -58,8 +58,8 @@ int main(int argc, char *argv[]){
     }
     //net.defineAssemblyLoss();
     net.printArchitecture();
-    //net.setLearningRate(learningRate);
-    net.initializeLRs(learningRate);
+    net.setLearningRate(learningRate);
+    //net.initializeLRs(learningRate);
     net.detectSoftmaxBeforeLoss();
 
     //for one sample training

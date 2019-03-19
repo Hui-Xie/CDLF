@@ -36,9 +36,7 @@ void BranchLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void BranchLayer::updateParameters(const float lr, const string& method){
-    //null
-}
+
 
 void BranchLayer::addNextLayer(Layer* nextLayer){
     if (nullptr != nextLayer){
@@ -84,7 +82,7 @@ void BranchLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void BranchLayer::updateParameters(const string &method) {
+void BranchLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

@@ -33,10 +33,6 @@ void IdentityLayer::zeroParaGradient(){
     //null
 }
 
-void IdentityLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
-
 int IdentityLayer::getNumParameters(){
     return 0;
 }
@@ -68,7 +64,7 @@ void IdentityLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void IdentityLayer::updateParameters(const string &method) {
+void IdentityLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

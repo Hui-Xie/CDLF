@@ -28,17 +28,18 @@ public:
 };
 
 
-class AdamOptmizer : public Optimizer {
+class AdamOptimizer : public Optimizer {
 public:
-    AdamOptmizer(const float lr, const float beta1,  const float beta2);
-    ~AdamOptmizer();
+    AdamOptimizer(const float lr, const float beta1,  const float beta2);
+    ~AdamOptimizer();
 
-    void adam(int t, Tensor<float>* pM, Tensor<float>* pR, const Tensor<float>* pG,  Tensor<float>* pW);
-
+    void setIteration(const int t);
+    void adam(Tensor<float>* pM, Tensor<float>* pR, const Tensor<float>* pG,  Tensor<float>* pW);
 
     float m_beta1;
     float m_beta2;
     float m_epsilon;
+    int m_t;
 };
 
 

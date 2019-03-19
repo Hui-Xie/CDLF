@@ -24,8 +24,8 @@ public:
     vector<int> m_feature_filterSize;  //include feature dimension, even 1.
     int m_numInputFeatures;
 
-    Tensor<float>**  m_pWLr;
-    Tensor<float>* m_pBLr;
+    //Tensor<float>**  m_pWLr;
+    //Tensor<float>* m_pBLr;
 
     vector<int> m_stride;
     vector<int> m_feature_stride;
@@ -35,11 +35,11 @@ public:
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void averageParaGradient(const int batchSize);
-    virtual  void updateParameters(const float lr, const string& method);
 
-    virtual  void initializeLRs(const float lr);
-    virtual  void updateLRs(const float deltaLoss);
-    virtual  void updateParameters(const string& method);
+
+    //virtual  void initializeLRs(const float lr);
+    //virtual  void updateLRs(const float deltaLoss);
+    virtual  void updateParameters(const string& method, Optimizer* pOptimizer);
 
     bool checkFilterSize(Layer* prevLayer, const vector<int>& filterSize, const vector<int>& stride, const int numFilters);
     void constructFiltersAndY();

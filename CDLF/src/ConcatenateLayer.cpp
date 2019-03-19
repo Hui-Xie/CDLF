@@ -70,9 +70,7 @@ void ConcatenateLayer::zeroParaGradient(){
     //null
 }
 
-void ConcatenateLayer::updateParameters(const float lr, const string& method) {
-    //null
-}
+
 
 int  ConcatenateLayer::getNumParameters(){
     return 0;
@@ -124,7 +122,7 @@ void ConcatenateLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ConcatenateLayer::updateParameters(const string &method) {
+void ConcatenateLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 }
 

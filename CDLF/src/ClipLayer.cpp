@@ -63,13 +63,11 @@ void ClipLayer::updateLRs(const float deltaLoss) {
   //null
 }
 
-void ClipLayer::updateParameters(const string &method) {
+void ClipLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
   //null
 }
 
-void ClipLayer::updateParameters(const float lr, const string& method) {
-  //null
-}
+
 
 int  ClipLayer::getNumParameters(){
     return 0;
