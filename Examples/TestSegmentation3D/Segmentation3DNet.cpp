@@ -233,7 +233,8 @@ void Segmentation3DNet::pretrainD() {
             }
             ++nIter;
         }
-        m_pDNet->sgd(m_pDNet->getLearningRate());// original batchsize: i*2-ignoreStub
+        m_pDNet->averageParaGradient(i*2-ignoreStub);
+        m_pDNet->sgd(m_pDNet->getLearningRate());
         ++batch;
     }
 }
