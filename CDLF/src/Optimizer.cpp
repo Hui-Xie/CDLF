@@ -38,6 +38,7 @@ AdamOptimizer::AdamOptimizer(const float lr, const float beta1, const float beta
    m_beta1 = beta1;
    m_beta2 = beta2;
    m_epsilon = 1e-8;
+   m_t = 1;
 }
 
 AdamOptimizer::~AdamOptimizer() {
@@ -45,7 +46,7 @@ AdamOptimizer::~AdamOptimizer() {
 }
 
 void AdamOptimizer::adam(Tensor<float> *pM, Tensor<float> *pR, const Tensor<float> *pG, Tensor<float> *pW) {
-    int t = m_t +1;
+    int t = m_t;
     matAdd(m_beta1, pM, 1-m_beta1, pG, pM);
 
     Tensor<float> G2(pG->getDims());
@@ -66,6 +67,14 @@ void AdamOptimizer::adam(Tensor<float> *pM, Tensor<float> *pR, const Tensor<floa
 
 void AdamOptimizer::setIteration(const int t) {
     m_t = t;
+}
+
+int AdamOptimizer::getIteration() {
+    return m_t;
+}
+
+void AdamOptimizer::increaseIteration() {
+   ++m_t;
 }
 
 

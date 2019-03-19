@@ -45,6 +45,9 @@ int main(int argc, char *argv[]){
     HNSegVNet net(netDir);
 #endif
 
+    AdamOptimizer adamOptimizer(0.01,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
     cout<<"=========================================="<<endl;
     cout<<"Info: this is "<<net.getName() <<" net."<<endl;
     cout<<"=========================================="<<endl;
@@ -61,8 +64,7 @@ int main(int argc, char *argv[]){
     net.setLearningRate(learningRate);
     //net.initializeLRs(learningRate);
     net.detectSoftmaxBeforeLoss();
-    AdamOptimizer adamOptimizer(0.01,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+
     net.allocateOptimizerMem("Adam");
 
     //for one sample training
@@ -74,7 +76,6 @@ int main(int argc, char *argv[]){
     int epoch= 15000;
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
-        adamOptimizer.setIteration(i);
         net.train();
         if (0 == (i+1)%5 ){ // 18min/epoch, about 1.5 hour/saving
             net.save();

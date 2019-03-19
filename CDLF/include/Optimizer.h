@@ -34,6 +34,8 @@ public:
     ~AdamOptimizer();
 
     void setIteration(const int t);
+    int  getIteration();
+    void increaseIteration();
     void adam(Tensor<float>* pM, Tensor<float>* pR, const Tensor<float>* pG,  Tensor<float>* pW);
 
     float m_beta1;

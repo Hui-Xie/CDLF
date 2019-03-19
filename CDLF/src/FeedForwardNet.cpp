@@ -74,6 +74,10 @@ void FeedForwardNet::optimize(const string& method){
             iter->second->updateParameters(method,m_optimizer);
         }
     }
+    if ("Adam" == method){
+        AdamOptimizer* adamOptimizer = (AdamOptimizer*) m_optimizer;
+        adamOptimizer->increaseIteration();
+    }
 }
 
 void FeedForwardNet::allocateOptimizerMem(const string method) {
