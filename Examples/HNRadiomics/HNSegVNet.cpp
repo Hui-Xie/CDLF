@@ -157,7 +157,7 @@ void HNSegVNet::train() {
 
             forwardPropagate();
             m_loss += lossLayer->getLoss();
-            m_batchLoss += lossLayer->getLoss();
+            //m_batchLoss += lossLayer->getLoss();
             // for softmax preceeds over loss layer
             if (m_isSoftmaxBeforeLoss){
                 m_dice += lossLayer->diceCoefficient();
@@ -175,8 +175,9 @@ void HNSegVNet::train() {
             ++n;
         }
         averageParaGradient(i);
-        m_batchLoss /= i;
+        //m_batchLoss /= i;
 
+        /*
         //for parameter-wise learning rates
         float deltaLoss = 0.0;
         if (0.0 != m_lastBatchLoss){
@@ -184,7 +185,9 @@ void HNSegVNet::train() {
             //updateLearingRates(deltaLoss);
         }
         m_lastBatchLoss = m_batchLoss;
-        optimize("sgd");
+
+        */
+        optimize("Adam");
 
         // for global learning rate
         //sgd(learningRate, i)

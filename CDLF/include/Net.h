@@ -50,6 +50,7 @@ public:
     void setDir(const string dir);
     void setUnlearningLayerID(const int id);
     void setOneSampleTrain(bool oneSample);
+    void setOptimizer(Optimizer* optimizer);
 
     string getName();
 

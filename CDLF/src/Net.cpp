@@ -38,10 +38,6 @@ Net::~Net() {
         }
     }
     m_layers.clear();
-
-    if (nullptr != m_optimizer){
-        delete m_optimizer;
-    }
 }
 
 void Net::setLearningRate(const float learningRate) {
@@ -89,6 +85,10 @@ void Net::setOneSampleTrain(bool oneSample){
     if (m_OneSampleTrain){
         cout<<"Info: network is running at One Sample Training mode."<<endl;
     }
+}
+
+void Net::setOptimizer(Optimizer* optimizer){
+    m_optimizer = optimizer;
 }
 
 string Net::getName() {
