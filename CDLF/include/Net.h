@@ -12,6 +12,7 @@
 #include <vector>
 #include "InputLayer.h"
 #include "LossLayer.h"
+#include "Optimizer.h"
 
 struct LayerStruct{
     int m_id;
@@ -100,7 +101,6 @@ public:
 
 protected:
     string m_name;
-    float m_learningRate;
     float m_lossTolerance;
     bool m_judgeLoss;
     int m_batchSize;
@@ -113,6 +113,7 @@ protected:
     // One Sample Train to verify whether network converge
     bool m_OneSampleTrain;
 
+    Optimizer * m_optimizer;
 
     // layer with layerID < m_unlearningLayerID will not learn;
     // layer with layerID = m_unlearningLayerID will not compute dx of its previous layer
