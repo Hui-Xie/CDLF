@@ -86,9 +86,7 @@ void SoftmaxLayer::backward(bool computeW, bool computeX){
 #endif
 
 }
-void SoftmaxLayer::updateParameters(const float lr, const string& method, const int batchSize){
-    //Null
-}
+
 
 int  SoftmaxLayer::getNumParameters(){
     return 0;
@@ -111,4 +109,20 @@ void SoftmaxLayer::saveStructLine(FILE *pFile) {
 void SoftmaxLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s,  PrevLayer=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
+}
+/*
+void SoftmaxLayer::initializeLRs(const float lr) {
+
+}
+
+void SoftmaxLayer::updateLRs(const float deltaLoss) {
+
+}
+*/
+void SoftmaxLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void SoftmaxLayer::averageParaGradient(const int batchSize) {
+
 }

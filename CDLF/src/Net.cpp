@@ -16,7 +16,6 @@
 Net::Net(const string& saveDir) {
     m_name = eraseAllSpaces(getFileName(saveDir));
     m_layers.clear();
-    m_learningRate = 0.001;
     m_lossTolerance = 0.02;
     m_judgeLoss = true;
     m_batchSize = 1;
@@ -25,6 +24,10 @@ Net::Net(const string& saveDir) {
     m_unlearningLayerID = 0;
     m_OneSampleTrain = false;
     m_loss = 0.0;
+    m_batchLoss = 0.0;
+    m_lastBatchLoss = 0.0;
+    m_optimizer = nullptr;
+
 }
 
 Net::~Net() {
@@ -38,8 +41,8 @@ Net::~Net() {
 }
 
 void Net::setLearningRate(const float learningRate) {
-    m_learningRate = learningRate;
-    cout<<"Info: now set learning rate = "<<m_learningRate<<endl;
+    m_optimizer->m_lr = learningRate;
+    cout<<"Info: now set global learning rate = "<<learningRate<<endl;
 }
 
 void Net::setLossTolerance(const float tolerance) {
@@ -84,12 +87,16 @@ void Net::setOneSampleTrain(bool oneSample){
     }
 }
 
+void Net::setOptimizer(Optimizer* optimizer){
+    m_optimizer = optimizer;
+}
+
 string Net::getName() {
     return m_name;
 }
 
 float Net::getLearningRate() {
-    return m_learningRate;
+    return m_optimizer->m_lr;
 }
 
 float Net::getLossTolerance() {
@@ -142,6 +149,12 @@ int Net::getNumParameters() {
 void Net::zeroParaGradient() {
     for (map<int, Layer *>::reverse_iterator rit = m_layers.rbegin(); rit != m_layers.rend(); ++rit) {
         rit->second->zeroParaGradient();
+    }
+}
+
+void Net::averageParaGradient(const int batchSize){
+    for (map<int, Layer *>::reverse_iterator rit = m_layers.rbegin(); rit != m_layers.rend(); ++rit) {
+        rit->second->averageParaGradient(batchSize);
     }
 }
 
@@ -486,7 +499,7 @@ void Net::saveNetParameters() {
         return;
     }
     fputs(tableHead.c_str(), pFile);
-    fprintf(pFile, "%s, %f, %d, %d, %f, %d, %d, \r\n", m_name.c_str(), m_learningRate, m_batchSize, m_epoch,
+    fprintf(pFile, "%s, %f, %d, %d, %f, %d, %d, \r\n", m_name.c_str(), getLearningRate(), m_batchSize, m_epoch,
             m_lossTolerance, m_judgeLoss ? 1 : 0, m_unlearningLayerID);
     fclose(pFile);
 }
@@ -497,17 +510,19 @@ void Net::loadNetParameters() {
     char netParameterChar[200];
     int judgeLoss = 0;
     char name[100];
+    float lr = 0;
     if (ifs.good()) {
         ifs.ignore(200, '\n'); // ignore the table head
         ifs.getline(netParameterChar, 200, '\n');
         for (int i = 0; i < 100; ++i) {
             if (netParameterChar[i] == ',') netParameterChar[i] = ' ';
         }
-        int nFills = sscanf(netParameterChar, "%s  %f  %d  %d  %f  %d  %d \r\n", name, &m_learningRate, &m_batchSize,
+        int nFills = sscanf(netParameterChar, "%s  %f  %d  %d  %f  %d  %d \r\n", name, &lr, &m_batchSize,
                             &m_epoch, &m_lossTolerance, &judgeLoss, &m_unlearningLayerID);
         if (7 != nFills) {
             cout << "Error: sscanf netParameterChar in loadNetParameters." << endl;
         }
+        setLearningRate(lr);
     }
     if (m_name != string(name)){
         cout<<"The name in NetParameters.csv will be changed to "<< m_name<<endl;

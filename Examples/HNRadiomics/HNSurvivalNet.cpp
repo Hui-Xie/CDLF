@@ -79,7 +79,8 @@ void HNSurvivalNet::train() {
             backwardPropagate(true);
             ++n;
         }
-        sgd(learningRate, i);
+        averageParaGradient(i);
+        optimize("sgd");
         ++batch;
     }
     m_loss /=n;

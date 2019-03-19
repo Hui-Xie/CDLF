@@ -51,9 +51,23 @@ void ClipLayer::zeroParaGradient(){
     //null
 }
 
-void ClipLayer::updateParameters(const float lr, const string& method, const int batchSize) {
-    //null
+void ClipLayer::averageParaGradient(const int batchSize) {
+
 }
+
+void ClipLayer::initializeLRs(const float lr) {
+   //null
+}
+
+void ClipLayer::updateLRs(const float deltaLoss) {
+  //null
+}
+
+void ClipLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+  //null
+}
+
+
 
 int  ClipLayer::getNumParameters(){
     return 0;
@@ -78,3 +92,6 @@ void ClipLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, min=%d, max=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), m_min, m_max, vector2Str(m_tensorSize).c_str());
 }
+
+
+

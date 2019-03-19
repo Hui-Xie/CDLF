@@ -73,7 +73,8 @@ void NonconvexNet::train(){
             backwardPropagate(true);
             ++nIter;
         }
-        sgd(lr,i);
+        averageParaGradient(i);
+        optimize("sgd");
         printIteration(lossLayer, nIter);
         ++nBatch;
     }

@@ -59,7 +59,11 @@ int main(int argc, char *argv[]){
     //net.defineAssemblyLoss();
     net.printArchitecture();
     net.setLearningRate(learningRate);
+    //net.initializeLRs(learningRate);
     net.detectSoftmaxBeforeLoss();
+    AdamOptimizer adamOptimizer(0.01,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+    net.allocateOptimizerMem("Adam");
 
     //for one sample training
     net.setOneSampleTrain(true);
@@ -70,6 +74,7 @@ int main(int argc, char *argv[]){
     int epoch= 15000;
     for (int i=0; i<epoch; ++i){
         cout <<"Epoch "<<i<<": "<<endl;
+        adamOptimizer.setIteration(i);
         net.train();
         if (0 == (i+1)%5 ){ // 18min/epoch, about 1.5 hour/saving
             net.save();
@@ -91,5 +96,6 @@ int main(int argc, char *argv[]){
 
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
+
     return 0;
 }

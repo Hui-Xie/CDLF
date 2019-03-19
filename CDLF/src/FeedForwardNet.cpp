@@ -10,6 +10,8 @@
 #include "NormalizationLayer.h"
 #include <iostream>
 #include <cmath> //for isinf()
+#include <FeedForwardNet.h>
+
 #include "statisTool.h"
 #include "ConvolutionLayer.h"
 
@@ -18,7 +20,7 @@ FeedForwardNet::FeedForwardNet(const string &saveDir) : Net(saveDir) {
 }
 
 FeedForwardNet::~FeedForwardNet() {
-
+    freeOptimizerMem();
 }
 
 void FeedForwardNet::forwardPropagate() {
@@ -66,11 +68,43 @@ void FeedForwardNet::backwardPropagate(bool computeW) {
     }
 }
 
-void FeedForwardNet::sgd(const float lr, const int batchSize) {
-    if (0 == batchSize) return;
+void FeedForwardNet::optimize(const string& method){
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id >= m_unlearningLayerID) {
-            iter->second->updateParameters(lr, "sgd", batchSize);
+            iter->second->updateParameters(method,m_optimizer);
         }
     }
 }
+
+void FeedForwardNet::allocateOptimizerMem(const string method) {
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        if (iter->second->m_id >= m_unlearningLayerID) {
+            iter->second->allocateOptimizerMem(method);
+        }
+    }
+}
+
+void FeedForwardNet::freeOptimizerMem() {
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        if (iter->second->m_id >= m_unlearningLayerID) {
+            iter->second->freeOptimizerMem();
+        }
+    }
+}
+
+/*
+void FeedForwardNet::initializeLRs(const float lr){
+    setLearningRate(lr);
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->initializeLRs(lr);
+    }
+}
+
+void FeedForwardNet::updateLearingRates(const float deltaLoss) {
+    if (0 == deltaLoss) return;
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        iter->second->updateLRs(deltaLoss);
+    }
+}
+
+*/

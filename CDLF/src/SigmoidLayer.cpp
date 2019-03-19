@@ -78,9 +78,6 @@ void SigmoidLayer::zeroParaGradient(){
     //null
 }
 
-void SigmoidLayer::updateParameters(const float lr, const string& method, const int batchSize) {
-    //null
-}
 
 int  SigmoidLayer::getNumParameters(){
     return 0;
@@ -103,4 +100,20 @@ void SigmoidLayer::saveStructLine(FILE *pFile) {
 void SigmoidLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, k=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), m_k, vector2Str(m_tensorSize).c_str());
+}
+
+void SigmoidLayer::initializeLRs(const float lr) {
+
+}
+
+void SigmoidLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void SigmoidLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void SigmoidLayer::averageParaGradient(const int batchSize) {
+
 }

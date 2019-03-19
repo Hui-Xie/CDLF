@@ -53,10 +53,6 @@ void LossLayer::zeroParaGradient(){
     //null
 }
 
-void LossLayer::updateParameters(const float lr, const string& method, const int batchSize) {
-    //null
-}
-
 
 
 int LossLayer::getNumParameters(){
@@ -196,6 +192,22 @@ float LossLayer::getTPR(){
     }
 
     return TPR;
+}
+
+void LossLayer::initializeLRs(const float lr) {
+
+}
+
+void LossLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void LossLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void LossLayer::averageParaGradient(const int batchSize) {
+
 }
 
 

@@ -36,7 +36,7 @@ set(CDLF_CXX_Src  Layer.cpp FCLayer.cpp
         SubTensorLayer.cpp GAN.cpp Net.cpp GNet.cpp DNet.cpp GPUAttr.cpp CPUAttr.cpp FileTools.cpp
         LossConvexExample1.cpp LossConvexExample2.cpp LossNonConvexExample1.cpp LossNonConvexExample2.cpp
         PaddingLayer.cpp SquareLossLayer.cpp DiceLossLayer.cpp AssemblyLossLayer.cpp
-        ReshapeLayer.cpp ConcatenateLayer.cpp ClipLayer.cpp
+        ReshapeLayer.cpp ConcatenateLayer.cpp ClipLayer.cpp Optimizer.cpp
         )
 
 if (${Use_GPU})

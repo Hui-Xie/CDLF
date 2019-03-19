@@ -4,6 +4,8 @@
 
 #include "Layer.h"
 #include <iostream>
+#include <Layer.h>
+
 #include "Tools.h"
 using namespace std;
 
@@ -94,4 +96,12 @@ void Layer::addPreviousLayer(Layer* prevLayer){
     if (nullptr != prevLayer){
         m_prevLayer = prevLayer;
     }
+}
+
+void Layer::allocateOptimizerMem(const string method) {
+    //null
+}
+
+void Layer::freeOptimizerMem() {
+   //null
 }

@@ -70,9 +70,7 @@ void ConcatenateLayer::zeroParaGradient(){
     //null
 }
 
-void ConcatenateLayer::updateParameters(const float lr, const string& method, const int batchSize) {
-    //null
-}
+
 
 int  ConcatenateLayer::getNumParameters(){
     return 0;
@@ -114,4 +112,20 @@ float& ConcatenateLayer::dX(const int index) const {
         --i;
     }
     return m_layersVec[i]->m_pdYTensor->e(index- m_layerOffsetVec[i]);
+}
+
+void ConcatenateLayer::initializeLRs(const float lr) {
+
+}
+
+void ConcatenateLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void ConcatenateLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void ConcatenateLayer::averageParaGradient(const int batchSize) {
+
 }

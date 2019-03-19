@@ -11,6 +11,7 @@
 #include "AllLayers.h"
 
 #include "Net.h"
+#include "Optimizer.h"
 #include "FeedForwardNet.h"
 #include "GAN.h"
 

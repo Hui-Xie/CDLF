@@ -12,6 +12,7 @@
 #include <vector>
 #include "InputLayer.h"
 #include "LossLayer.h"
+#include "Optimizer.h"
 
 struct LayerStruct{
     int m_id;
@@ -38,6 +39,8 @@ public:
     ~Net();
 
     float m_loss;
+    float m_batchLoss;
+    float m_lastBatchLoss;
 
     void setLearningRate(const float learningRate);
     void setLossTolerance(const float tolerance);
@@ -47,6 +50,7 @@ public:
     void setDir(const string dir);
     void setUnlearningLayerID(const int id);
     void setOneSampleTrain(bool oneSample);
+    void setOptimizer(Optimizer* optimizer);
 
     string getName();
 
@@ -75,6 +79,7 @@ public:
 
     void initialize();
     void zeroParaGradient();
+    void averageParaGradient(const int batchSize);
 
     void printIteration(LossLayer* lossLayer,const int nIter, const bool transpose = false);
     void printLayersY();
@@ -97,7 +102,6 @@ public:
 
 protected:
     string m_name;
-    float m_learningRate;
     float m_lossTolerance;
     bool m_judgeLoss;
     int m_batchSize;
@@ -110,6 +114,7 @@ protected:
     // One Sample Train to verify whether network converge
     bool m_OneSampleTrain;
 
+    Optimizer * m_optimizer;
 
     // layer with layerID < m_unlearningLayerID will not learn;
     // layer with layerID = m_unlearningLayerID will not compute dx of its previous layer

@@ -40,7 +40,8 @@ void VNet::train(){
             backwardPropagate(true);
             cout<<"Inf: finished one forward and backward propragation at "<<getCurTimeStr()<<endl;
         }
-        sgd(getLearningRate(), batchSize);
+        averageParaGradient(batchSize);
+        optimize("sgd");
         ++i;
 
     }

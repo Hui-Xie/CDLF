@@ -61,9 +61,7 @@ void NormalizationLayer::backward(bool computeW, bool computeX){
         // dX += dY/(m_sigma);
     }
 }
-void NormalizationLayer::updateParameters(const float lr, const string& method, const int batchSize){
-    //null
-}
+
 
 int  NormalizationLayer::getNumParameters(){
     return 0;
@@ -86,4 +84,20 @@ void NormalizationLayer::saveStructLine(FILE *pFile) {
 void NormalizationLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
+}
+
+void NormalizationLayer::initializeLRs(const float lr) {
+
+}
+
+void NormalizationLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void NormalizationLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void NormalizationLayer::averageParaGradient(const int batchSize) {
+
 }

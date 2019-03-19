@@ -61,8 +61,10 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
             }
             ++nIter;
         }
-        m_pGNet->sgd(m_pGNet->getLearningRate(), i);
-        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreGx);
+        m_pGNet->averageParaGradient(i);
+        m_pDNet->averageParaGradient(i*2-ignoreGx);
+        m_pGNet->optimize("sgd");
+        m_pDNet->optimize("sgd");
         ++batch;
     }
 }
@@ -99,7 +101,8 @@ void Segmentation3DNet::trainG(){
 
             ++nIter;
         }
-        m_pGNet->sgd(m_pGNet->getLearningRate(), i);
+        m_pGNet->averageParaGradient(i);
+        m_pGNet->optimize("sgd");
         ++batch;
     }
 }
@@ -148,7 +151,8 @@ void Segmentation3DNet::trainD(){
             }
             ++nIter;
         }
-        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreGx);
+        m_pDNet->averageParaGradient(i*2-ignoreGx);
+        m_pDNet->optimize("sgd");
         ++batch;
     }
 }
@@ -229,7 +233,8 @@ void Segmentation3DNet::pretrainD() {
             }
             ++nIter;
         }
-        m_pDNet->sgd(m_pDNet->getLearningRate(), i*2-ignoreStub);
+        m_pDNet->averageParaGradient(i*2-ignoreStub);
+        m_pDNet->optimize("sgd");
         ++batch;
     }
 }

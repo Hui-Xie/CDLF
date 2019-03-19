@@ -40,9 +40,7 @@ void ReshapeLayer::zeroParaGradient(){
     //null
 }
 
-void ReshapeLayer::updateParameters(const float lr, const string& method, const int batchSize) {
-    //null
-}
+
 
 int  ReshapeLayer::getNumParameters(){
     return 0;
@@ -65,4 +63,20 @@ void ReshapeLayer::saveStructLine(FILE *pFile) {
 void ReshapeLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_tensorSize).c_str());
+}
+
+void ReshapeLayer::initializeLRs(const float lr) {
+
+}
+
+void ReshapeLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void ReshapeLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void ReshapeLayer::averageParaGradient(const int batchSize) {
+
 }

@@ -11,6 +11,7 @@
 #include <iomanip>      // std::setw
 #include "CPUAttr.h"
 #include <thread>
+#include <mkl.h>
 #include "ipp.h"
 
 #ifdef Use_GPU
@@ -96,17 +97,22 @@ void Tensor<ValueType>::freeMem() {
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize() {
     int N = getLength();
+    ippsSet_32f(0, m_data, N);
+    /*
     for (int i = 0; i < N; ++i) {
         e(i) = 0;
     }
+    */
 }
 
 template<class ValueType>
 void Tensor<ValueType>::uniformInitialize(const ValueType x) {
     int N = getLength();
+    ippsSet_32f(x, m_data, N);
+    /*
     for (int i = 0; i < N; ++i) {
         e(i) = x;
-    }
+    }*/
 }
 
 
@@ -516,10 +522,14 @@ template<class ValueType>
 float Tensor<ValueType>::sum() const {
     int N = getLength();
     float sum = 0;
-    //todo: sum use GPU will implement in the future, which will speed up from N to log(N)
-    for (int i = 0; i < N; ++i) {
+    sum = cblas_sasum(N, m_data, 1);
+
+    //naive implementaion
+    /*
+     * for (int i = 0; i < N; ++i) {
         sum += e(i);
-    }
+       }
+    */
     return sum;
 }
 
@@ -757,9 +767,13 @@ Tensor<ValueType> Tensor<ValueType>::hadamard(const Tensor &right) {
     assert(sameVector(m_dims, right.m_dims));
     Tensor tensor(m_dims);
     int N = getLength();
-    for (int i = 0; i < N; ++i) {
+    //MKL Performs element by element multiplication of vector a and vector b.
+    vsMul(N, this->getData(), right.getData(), tensor.getData());
+    // naive implementation is replaced by vsMul
+    /*for (int i = 0; i < N; ++i) {
         tensor.e(i) = e(i) * right.e(i);
     }
+    */
     return tensor;
 }
 

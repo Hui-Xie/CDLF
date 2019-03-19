@@ -39,9 +39,7 @@ void MergerLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void MergerLayer::updateParameters(const float lr, const string& method, const int batchSize){
-  //null
-}
+
 
 void MergerLayer::addPreviousLayer(Layer* prevLayer)
 {
@@ -116,4 +114,20 @@ void MergerLayer::printStruct() {
 
     printf("id=%d, Name=%s, Type=%s, PreviousBranchList=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),   branchList.c_str(), vector2Str(m_tensorSize).c_str());
+}
+
+void MergerLayer::initializeLRs(const float lr) {
+
+}
+
+void MergerLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void MergerLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void MergerLayer::averageParaGradient(const int batchSize) {
+
 }

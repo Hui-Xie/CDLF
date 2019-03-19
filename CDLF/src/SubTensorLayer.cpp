@@ -54,9 +54,7 @@ void SubTensorLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void SubTensorLayer::updateParameters(const float lr, const string& method, const int batchSize){
-    //null
-}
+
 
 
 int  SubTensorLayer::getNumParameters(){
@@ -81,4 +79,20 @@ void SubTensorLayer::saveStructLine(FILE *pFile) {
 void SubTensorLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s,  PrevLayer=%s, StartPosition=%s, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),   m_prevLayer->m_name.c_str(), vector2Str(m_start).c_str(), vector2Str(m_tensorSize).c_str());
+}
+
+void SubTensorLayer::initializeLRs(const float lr) {
+
+}
+
+void SubTensorLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void SubTensorLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void SubTensorLayer::averageParaGradient(const int batchSize) {
+
 }

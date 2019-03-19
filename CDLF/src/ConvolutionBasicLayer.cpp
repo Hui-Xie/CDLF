@@ -18,6 +18,12 @@ ConvolutionBasicLayer::ConvolutionBasicLayer(const int id, const string &name, L
         m_stride = stride;
         m_filterSize = filterSize;
         m_numFilters = numFilters;
+
+        m_pWM = nullptr;
+        m_pWR = nullptr;
+        m_pBM = nullptr;
+        m_pBR = nullptr;
+
         addPreviousLayer(prevLayer);
         updateFeatureFilterSize();
         computeOneFiterN();
@@ -50,6 +56,22 @@ ConvolutionBasicLayer::~ConvolutionBasicLayer() {
         delete m_pdB;
         m_pdB = nullptr;
     }
+
+    /*
+    // for parameter-wise learning rate
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (nullptr != m_pWLr[i]) {
+            delete m_pWLr[i];
+            m_pWLr[i] = nullptr;
+        }
+    }
+    delete[] m_pWLr; m_pWLr = nullptr;
+
+    if (nullptr != m_pBLr){
+        delete m_pBLr;
+        m_pBLr = nullptr;
+    }
+*/
 }
 
 // the filterSize in each dimension should be odd,
@@ -135,6 +157,20 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
     m_pdB = new Tensor<float>({m_numFilters,1});
 
     allocateYdYTensor();
+
+    /*
+    //for parameter-wise learning rates
+    m_pBLr = new Tensor<float>({m_numFilters,1});
+    m_pWLr = (Tensor<float> **) new void *[m_numFilters];
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (1 != m_numInputFeatures){
+            m_pWLr[i] = new Tensor<float>(m_feature_filterSize);
+        }
+        else{
+            m_pWLr[i] = new Tensor<float>(m_filterSize);
+        }
+    }
+    */
 }
 
 
@@ -157,14 +193,40 @@ void ConvolutionBasicLayer::computeDb(const Tensor<float> *pdY, const int filter
     m_pdB->e(filterIndex) += pdY->sum(); // + is for batch processing
 }
 
+/*
+void ConvolutionBasicLayer::initializeLRs(const float lr) {
+    for (int i = 0; i < m_numFilters; ++i) {
+        m_pWLr[i]->uniformInitialize(lr);
+    }
+    m_pBLr->uniformInitialize(lr);
+}
 
-void ConvolutionBasicLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void ConvolutionBasicLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+*/
+
+void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
     if ("sgd" == method) {
-        float learningRate = lr / batchSize;
+        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            *m_pW[idxF] -= *m_pdW[idxF] * learningRate;
+            sgdOptimizer->sgd(m_pdW[idxF], m_pW[idxF]);
         }
-        *m_pB -= *m_pdB * learningRate;
+        sgdOptimizer->sgd(m_pdB, m_pB);
+    }
+    else if ("Adam" == method){
+        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
+        for (int idxF = 0; idxF < m_numFilters; ++idxF) {
+            adamOptimizer->adam(m_pWM[idxF], m_pWR[idxF], m_pdW[idxF], m_pW[idxF]);
+        }
+        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
+    }
+    else {
+        cout<<"Error: incorrect optimizer name."<<endl;
     }
 }
 
@@ -221,6 +283,59 @@ void ConvolutionBasicLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, Stride=%s, NumOfFilter=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_filterSize).c_str(), vector2Str(m_stride).c_str(), m_numFilters,  vector2Str(m_tensorSize).c_str());
 }
+
+void ConvolutionBasicLayer::averageParaGradient(const int batchSize) {
+    int N = m_pdW[0]->getLength();
+    for (int i = 0; i < m_numFilters; ++i){
+        cblas_saxpby(N, 1.0/batchSize, m_pdW[i]->getData(), 1, 0, m_pdW[i]->getData(), 1);
+    }
+    N = m_pdB->getLength();
+    cblas_saxpby(N, 1.0/batchSize, m_pdB->getData(), 1, 0, m_pdB->getData(), 1);
+
+}
+
+void ConvolutionBasicLayer::allocateOptimizerMem(const string method) {
+    m_pBM = new Tensor<float>({m_numFilters,1});
+    m_pBR = new Tensor<float>({m_numFilters,1});
+    m_pBM->zeroInitialize();
+    m_pBR->zeroInitialize();
+
+
+    m_pWM = (Tensor<float> **) new void *[m_numFilters];
+    m_pWR = (Tensor<float> **) new void *[m_numFilters];
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (1 != m_numInputFeatures){
+            m_pWM[i] = new Tensor<float>(m_feature_filterSize);
+            m_pWR[i] = new Tensor<float>(m_feature_filterSize);
+        }
+        else{
+            m_pWM[i] = new Tensor<float>(m_filterSize);
+            m_pWR[i] = new Tensor<float>(m_filterSize);
+        }
+
+        m_pWM[i]->zeroInitialize();
+        m_pWR[i]->zeroInitialize();
+    }
+}
+
+void ConvolutionBasicLayer::freeOptimizerMem() {
+    delete m_pBM;
+    delete m_pBR;
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (nullptr != m_pWM[i]){
+            delete m_pWM[i];
+            m_pWM[i] = nullptr;
+        }
+        if (nullptr != m_pWR[i]){
+            delete m_pWR[i];
+            m_pWR[i] = nullptr;
+        }
+    }
+    delete[] m_pWM;
+    delete[] m_pWR;
+}
+
+
 
 /*  for bias cudnn test
 void ConvolutionBasicLayer::beforeGPUCheckdBAnddY() {

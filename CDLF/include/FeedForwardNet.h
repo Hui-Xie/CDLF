@@ -15,7 +15,13 @@ public:
 
     void forwardPropagate();
     void backwardPropagate(bool computeW);
-    void sgd(const float lr, const int batchSize);
+    void optimize(const string& method);
+
+    void allocateOptimizerMem(const string method);
+    void freeOptimizerMem();
+
+    //void initializeLRs(const float lr);
+    //void updateLearingRates(const float deltaLoss);
 
     virtual void build() = 0;
     virtual void train() = 0;

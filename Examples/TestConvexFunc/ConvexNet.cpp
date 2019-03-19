@@ -53,7 +53,8 @@ void ConvexNet::train() {
             backwardPropagate(true);
             ++nIter;
         }
-        sgd(lr, i);
+        averageParaGradient(i);
+        optimize("sgd");
         printIteration(lossLayer, nIter, true);
         ++nBatch;
     }

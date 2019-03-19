@@ -26,6 +26,12 @@ MatrixLayer::MatrixLayer(const int id, const string& name, Layer* prevLayer, con
     m_pdW = new Tensor<float>(filterSize);
     m_pB = new Tensor<float>(m_pYTensor->getDims());
     m_pdB = new Tensor<float>(m_pYTensor->getDims());
+
+    m_pWM = nullptr;
+    m_pBM = nullptr;
+    m_pWR = nullptr;
+    m_pBR = nullptr;
+
     addPreviousLayer(prevLayer);
 }
 
@@ -67,12 +73,24 @@ void MatrixLayer::zeroParaGradient() {
 }
 
 
-void MatrixLayer::updateParameters(const float lr, const string &method, const int batchSize) {
+void MatrixLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
     if ("sgd" == method) {
         //*m_pW -= (*m_pdW) * (lr / batchSize);
-        matAdd(1.0, m_pW, -(lr / batchSize), m_pdW, m_pW);
+        //matAdd(1.0, m_pW, -lr, m_pdW, m_pW);
         //*m_pB -= (*m_pdB) * (lr / batchSize);
-        matAdd(1.0, m_pB, -(lr / batchSize), m_pdB, m_pB);
+        //matAdd(1.0, m_pB, -lr, m_pdB, m_pB);
+
+        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
+        sgdOptimizer->sgd(m_pdW, m_pW);
+        sgdOptimizer->sgd(m_pdB, m_pB);
+    }
+    else if ("Adam" == method){
+        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
+        adamOptimizer->adam(m_pWM, m_pWR, m_pdW, m_pW);
+        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
+    }
+    else{
+        cout<<"Error: incorrect optimizer name."<<endl;
     }
 }
 
@@ -125,5 +143,56 @@ void MatrixLayer::saveStructLine(FILE *pFile) {
 void MatrixLayer::printStruct() {
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, FilterSize=%s, Stride=%s, NumOfFilter=%d, OutputSize=%s; \n",
            m_id, m_name.c_str(),m_type.c_str(),  m_prevLayer->m_name.c_str(), vector2Str(m_pW->getDims()).c_str(), "{}", 0, vector2Str(m_tensorSize).c_str());
+}
+
+/*
+void MatrixLayer::initializeLRs(const float lr) {
+
+}
+
+void MatrixLayer::updateLRs(const float deltaLoss) {
+
+}
+
+*/
+
+void MatrixLayer::averageParaGradient(const int batchSize) {
+    int N = m_pdW->getLength();
+    cblas_saxpby(N, 1.0/batchSize, m_pdW->getData(), 1, 0, m_pdW->getData(), 1);
+    N = m_pdB->getLength();
+    cblas_saxpby(N, 1.0/batchSize, m_pdB->getData(), 1, 0, m_pdB->getData(), 1);
+}
+
+void MatrixLayer::allocateOptimizerMem(const string method) {
+    if ("Adam" == method){
+        m_pWM = new Tensor<float> (m_pW->getDims());  //1st moment
+        m_pBM = new Tensor<float> (m_pB->getDims());
+        m_pWR = new Tensor<float> (m_pW->getDims());  //2nd moment
+        m_pBR = new Tensor<float> (m_pB->getDims());
+
+        m_pWM->zeroInitialize();
+        m_pBM->zeroInitialize();
+        m_pWR->zeroInitialize();
+        m_pBR->zeroInitialize();
+    }
+}
+
+void MatrixLayer::freeOptimizerMem() {
+    if (nullptr != m_pWM) {
+        delete m_pWM;
+        m_pWM = nullptr;
+    }
+    if (nullptr != m_pBM) {
+        delete m_pBM;
+        m_pBM = nullptr;
+    }
+    if (nullptr != m_pWR) {
+        delete m_pWR;
+        m_pWR = nullptr;
+    }
+    if (nullptr != m_pBR) {
+        delete m_pBR;
+        m_pBR = nullptr;
+    }
 }
 

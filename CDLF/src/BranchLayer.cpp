@@ -36,9 +36,7 @@ void BranchLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void BranchLayer::updateParameters(const float lr, const string& method, const int batchSize){
-    //null
-}
+
 
 void BranchLayer::addNextLayer(Layer* nextLayer){
     if (nullptr != nextLayer){
@@ -74,4 +72,20 @@ void BranchLayer::printStruct() {
     branchList += "}";
     printf("id=%d, Name=%s, Type=%s, PrevLayer=%s, BranchList=%s , OutputSize=%s; \n",
            m_id, m_name.c_str(), m_type.c_str(),   m_prevLayer->m_name.c_str(), branchList.c_str(), vector2Str(m_tensorSize).c_str());
+}
+
+void BranchLayer::initializeLRs(const float lr) {
+
+}
+
+void BranchLayer::updateLRs(const float deltaLoss) {
+
+}
+
+void BranchLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+
+}
+
+void BranchLayer::averageParaGradient(const int batchSize) {
+
 }

@@ -44,7 +44,8 @@ void MnistAutoEncoder::train() {
             backwardPropagate(true);
             ++nIter;
         }
-        sgd(learningRate, i);
+        averageParaGradient(i);
+        optimize("sgd");
         ++nBatch;
 
         //debug
