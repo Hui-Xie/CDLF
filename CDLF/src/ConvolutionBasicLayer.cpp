@@ -275,7 +275,48 @@ void ConvolutionBasicLayer::printStruct() {
 }
 
 void ConvolutionBasicLayer::averageParaGradient(const int batchSize) {
+    int N = m_pdW[0]->getLength();
+    for (int i = 0; i < m_numFilters; ++i){
+        cblas_saxpby(N, 1.0/batchSize, m_pdW[i]->getData(), 1, 0, m_pdW[i]->getData(), 1);
+    }
+    N = m_pdB->getLength();
+    cblas_saxpby(N, 1.0/batchSize, m_pdB->getData(), 1, 0, m_pdB->getData(), 1);
 
+}
+
+void ConvolutionBasicLayer::allocateOptimizerMem(const string method) {
+    m_pBM = new Tensor<float>({m_numFilters,1});
+    m_pBR = new Tensor<float>({m_numFilters,1});
+    m_pBM->zeroInitialize();
+    m_pBR->zeroInitialize();
+
+
+    m_pWM = (Tensor<float> **) new void *[m_numFilters];
+    m_pWR = (Tensor<float> **) new void *[m_numFilters];
+    for (int i = 0; i < m_numFilters; ++i) {
+        if (1 != m_numInputFeatures){
+            m_pWM[i] = new Tensor<float>(m_feature_filterSize);
+            m_pWR[i] = new Tensor<float>(m_feature_filterSize);
+        }
+        else{
+            m_pWM[i] = new Tensor<float>(m_filterSize);
+            m_pWR[i] = new Tensor<float>(m_filterSize);
+        }
+
+        m_pWM[i]->zeroInitialize();
+        m_pWR[i]->zeroInitialize();
+    }
+}
+
+void ConvolutionBasicLayer::freeOptimizerMem() {
+    delete m_pBM;
+    delete m_pBR;
+    for (int i = 0; i < m_numFilters; ++i) {
+        delete m_pWM[i];
+        delete m_pWR[i];
+    }
+    delete[] m_pWM;
+    delete[] m_pWR;
 }
 
 

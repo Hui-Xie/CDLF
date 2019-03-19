@@ -29,6 +29,11 @@ FCLayer::FCLayer(const int id, const string &name,  Layer *prevLayer, const int 
     //m_pWLr = new Tensor<float>({m_m, m_n});
     //m_pBLr = new Tensor<float>({m_m, 1});
 
+    m_pWM = nullptr;
+    m_pBM = nullptr;
+    m_pWR = nullptr;
+    m_pBR = nullptr;
+
     addPreviousLayer(prevLayer);
 }
 
@@ -250,6 +255,31 @@ void FCLayer::printStruct() {
 }
 
 void FCLayer::averageParaGradient(const int batchSize) {
+    int N = m_pdW->getLength();
+    cblas_saxpby(N, 1.0/batchSize, m_pdW->getData(), 1, 0, m_pdW->getData(), 1);
+    N = m_pdB->getLength();
+    cblas_saxpby(N, 1.0/batchSize, m_pdB->getData(), 1, 0, m_pdB->getData(), 1);
+}
+
+void FCLayer::allocateOptimizerMem(const string method) {
+    if ("Adam" == method){
+        m_pWM = new Tensor<float> (m_pW->getDims());  //1st moment
+        m_pBM = new Tensor<float> (m_pB->getDims());
+        m_pWR = new Tensor<float> (m_pW->getDims());  //2nd moment
+        m_pBR = new Tensor<float> (m_pB->getDims());
+
+        m_pWM->zeroInitialize();
+        m_pBM->zeroInitialize();
+        m_pWR->zeroInitialize();
+        m_pBR->zeroInitialize();
+    }
+}
+
+void FCLayer::freeOptimizerMem() {
+    delete m_pWM;
+    delete m_pBM;
+    delete m_pWR;
+    delete m_pBR;
 
 }
 

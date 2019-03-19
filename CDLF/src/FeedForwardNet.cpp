@@ -20,7 +20,7 @@ FeedForwardNet::FeedForwardNet(const string &saveDir) : Net(saveDir) {
 }
 
 FeedForwardNet::~FeedForwardNet() {
-
+    freeOptimizerMem();
 }
 
 void FeedForwardNet::forwardPropagate() {
@@ -72,6 +72,22 @@ void FeedForwardNet::optimize(const string& method){
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id >= m_unlearningLayerID) {
             iter->second->updateParameters(method,m_optimizer);
+        }
+    }
+}
+
+void FeedForwardNet::allocateOptimizerMem(const string method) {
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        if (iter->second->m_id >= m_unlearningLayerID) {
+            iter->second->allocateOptimizerMem(method);
+        }
+    }
+}
+
+void FeedForwardNet::freeOptimizerMem() {
+    for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
+        if (iter->second->m_id >= m_unlearningLayerID) {
+            iter->second->freeOptimizerMem();
         }
     }
 }

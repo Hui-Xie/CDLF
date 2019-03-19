@@ -61,6 +61,7 @@ int main(int argc, char *argv[]){
     net.setLearningRate(learningRate);
     //net.initializeLRs(learningRate);
     net.detectSoftmaxBeforeLoss();
+    net.allocateOptimizerMem("Adam");
 
     //for one sample training
     //net.setOneSampleTrain(true);
@@ -90,5 +91,6 @@ int main(int argc, char *argv[]){
 
     }
     cout<< "=========== End of Test:  "<<net.getName() <<" ============"<<endl;
+
     return 0;
 }

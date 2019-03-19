@@ -68,6 +68,9 @@ public:
     virtual  void forward()=0;
     virtual  void backward(bool computeW, bool computeX = true)=0;
 
+    virtual void allocateOptimizerMem(const string method);
+    virtual void freeOptimizerMem();
+
 
     //virtual  void initializeLRs(const float lr) = 0;  // initialize all various learning rates
     //virtual  void updateLRs(const float deltaLoss) = 0;

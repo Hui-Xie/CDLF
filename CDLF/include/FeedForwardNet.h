@@ -17,8 +17,11 @@ public:
     void backwardPropagate(bool computeW);
     void optimize(const string& method);
 
-    void initializeLRs(const float lr);
-    void updateLearingRates(const float deltaLoss);
+    void allocateOptimizerMem(const string method);
+    void freeOptimizerMem();
+
+    //void initializeLRs(const float lr);
+    //void updateLearingRates(const float deltaLoss);
 
     virtual void build() = 0;
     virtual void train() = 0;

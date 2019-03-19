@@ -27,6 +27,11 @@ public:
     //Tensor<float>**  m_pWLr;
     //Tensor<float>* m_pBLr;
 
+    Tensor<float>**  m_pWM;  //1st moment
+    Tensor<float>*  m_pBM;
+    Tensor<float>**  m_pWR;
+    Tensor<float>*  m_pBR; //2nd moment
+
     vector<int> m_stride;
     vector<int> m_feature_stride;
     int m_OneFilterN;
@@ -35,6 +40,9 @@ public:
     virtual  void initialize(const string& initialMethod);
     virtual  void zeroParaGradient();
     virtual  void averageParaGradient(const int batchSize);
+
+    virtual void allocateOptimizerMem(const string method);
+    virtual void freeOptimizerMem();
 
 
     //virtual  void initializeLRs(const float lr);
