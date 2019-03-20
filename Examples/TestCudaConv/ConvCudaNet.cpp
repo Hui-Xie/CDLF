@@ -62,7 +62,7 @@ void ConvCudaNet::train(){
             backwardPropagate(true);
         }
         averageParaGradient(batchSize);
-        optimize("sgd");
+        optimize("SGD");
         cout<<"Info: ==============================finish batch: "<<i<<endl;
         //printIteration(lossLayer, i);
         ++i;

@@ -211,7 +211,7 @@ void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pO
 */
 
 void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("sgd" == method) {
+    if ("SGD" == method) {
         SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
             sgdOptimizer->sgd(m_pdW[idxF], m_pW[idxF]);

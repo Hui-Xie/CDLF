@@ -40,7 +40,7 @@ void ConvNet::train(){
             backwardPropagate(true);
         }
         averageParaGradient(batchSize);
-        optimize("sgd");
+        optimize("SGD");
         printIteration(lossLayer, i);
         ++i;
     }

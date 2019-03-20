@@ -74,7 +74,7 @@ void MatrixLayer::zeroParaGradient() {
 
 
 void MatrixLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("sgd" == method) {
+    if ("SGD" == method) {
         //*m_pW -= (*m_pdW) * (lr / batchSize);
         //matAdd(1.0, m_pW, -lr, m_pdW, m_pW);
         //*m_pB -= (*m_pdB) * (lr / batchSize);

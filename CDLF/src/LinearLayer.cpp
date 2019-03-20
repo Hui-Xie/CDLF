@@ -82,7 +82,7 @@ void LinearLayer::backward(bool computeW, bool computeX){
 }
 
 void LinearLayer::updateParameters( const string& method, Optimizer* pOptimizer){
-    if ("sgd" == method){
+    if ("SGD" == method){
         SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
         sgdOptimizer->sgd(m_pdB, m_pB);
         sgdOptimizer->sgd(m_pdK, m_pK);

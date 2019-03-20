@@ -148,7 +148,7 @@ void FCLayer::updateLRs(const float deltaLoss) {
 
 
 void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("sgd" == method) {
+    if ("SGD" == method) {
         /*  for parameter-wise learning rate
         Tensor<float> lrdw(m_pdW->getDims());
         int N = m_pW->getLength();
@@ -178,7 +178,7 @@ void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 
 /*
 void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("sgd" == method) {
+    if ("SGD" == method) {
         //*m_pW -= (*m_pdW) * lr;
         matAdd(1.0, m_pW, -lr, m_pdW, m_pW);
         //*m_pB -= (*m_pdB) * lr;

@@ -63,8 +63,8 @@ void Segmentation3DNet::quicklySwitchTrainG_D(){
         }
         m_pGNet->averageParaGradient(i);
         m_pDNet->averageParaGradient(i*2-ignoreGx);
-        m_pGNet->optimize("sgd");
-        m_pDNet->optimize("sgd");
+        m_pGNet->optimize("SGD");
+        m_pDNet->optimize("SGD");
         ++batch;
     }
 }
@@ -102,7 +102,7 @@ void Segmentation3DNet::trainG(){
             ++nIter;
         }
         m_pGNet->averageParaGradient(i);
-        m_pGNet->optimize("sgd");
+        m_pGNet->optimize("SGD");
         ++batch;
     }
 }
@@ -152,7 +152,7 @@ void Segmentation3DNet::trainD(){
             ++nIter;
         }
         m_pDNet->averageParaGradient(i*2-ignoreGx);
-        m_pDNet->optimize("sgd");
+        m_pDNet->optimize("SGD");
         ++batch;
     }
 }
@@ -234,7 +234,7 @@ void Segmentation3DNet::pretrainD() {
             ++nIter;
         }
         m_pDNet->averageParaGradient(i*2-ignoreStub);
-        m_pDNet->optimize("sgd");
+        m_pDNet->optimize("SGD");
         ++batch;
     }
 }
