@@ -319,8 +319,15 @@ void ConvolutionBasicLayer::allocateOptimizerMem(const string method) {
 }
 
 void ConvolutionBasicLayer::freeOptimizerMem() {
-    delete m_pBM;
-    delete m_pBR;
+    if (nullptr != m_pBM) {
+        delete m_pBM;
+        m_pBM = nullptr;
+    }
+    if (nullptr != m_pBR) {
+        delete m_pBR;
+        m_pBR = nullptr;
+    }
+
     for (int i = 0; i < m_numFilters; ++i) {
         if (nullptr != m_pWM[i]){
             delete m_pWM[i];
@@ -331,8 +338,8 @@ void ConvolutionBasicLayer::freeOptimizerMem() {
             m_pWR[i] = nullptr;
         }
     }
-    delete[] m_pWM;
-    delete[] m_pWR;
+    delete[] m_pWM; m_pWM = nullptr;
+    delete[] m_pWR; m_pWR = nullptr;
 }
 
 

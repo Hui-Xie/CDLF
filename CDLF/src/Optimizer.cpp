@@ -46,7 +46,7 @@ AdamOptimizer::~AdamOptimizer() {
 }
 
 void AdamOptimizer::adam(Tensor<float> *pM, Tensor<float> *pR, const Tensor<float> *pG, Tensor<float> *pW) {
-    int t = m_t;
+    const int t = m_t;
     matAdd(m_beta1, pM, 1-m_beta1, pG, pM);
 
     Tensor<float> G2(pG->getDims());

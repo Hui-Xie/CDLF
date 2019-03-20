@@ -124,7 +124,7 @@ void FCLayer::updateLRs(const float deltaLoss) {
     axpy(-deltaLoss, &squareGradientInv, m_pWLr);
     //  Naive implementation
     //for (int i=0; i<N; ++i){
-     //   if (0 != m_pdW->e(i)){
+     //   if (0 != m_pdW->e(i)){  //todo: Important judgment,need to put into blas implementation.
      //       m_pWLr->e(i) -= deltaLossBatch/(m_pdW->e(i)*m_pdW->e(i));
      //   }
     //}

@@ -41,8 +41,13 @@ Net::~Net() {
 }
 
 void Net::setLearningRate(const float learningRate) {
-    m_optimizer->m_lr = learningRate;
-    cout<<"Info: now set global learning rate = "<<learningRate<<endl;
+    if (nullptr != m_optimizer){
+        m_optimizer->m_lr = learningRate;
+        cout<<"Info: now set global learning rate = "<<learningRate<<endl;
+    }
+    else {
+        cout<<"Info: network has no optimizer."<<endl;
+    }
 }
 
 void Net::setLossTolerance(const float tolerance) {
@@ -96,7 +101,12 @@ string Net::getName() {
 }
 
 float Net::getLearningRate() {
-    return m_optimizer->m_lr;
+    if (nullptr != m_optimizer){
+        return m_optimizer->m_lr;
+    }
+    else{
+        return 0;
+    }
 }
 
 float Net::getLossTolerance() {
