@@ -62,11 +62,15 @@ int main(int argc, char *argv[]) {
 #endif
 
     NonconvexNet net("./NonConvextNet", layerWidthVector);
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
+
     if (isEmptyDir(net.getDir())) {
         net.build();
         net.initialize();
         net.setJudgeLoss(false); //for nonconvex case
-        net.setLearningRate(0.01);
+        //net.setLearningRate(0.01);
         net.setLossTolerance(0.02);
         net.setBatchSize(30);
     } else {

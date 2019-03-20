@@ -48,10 +48,13 @@ int main(int argc, char *argv[]) {
     Seg3DDataManager dataMgr(dataSetDir);
 
     SegmentGNet Gnet(netDir+"/GNet");
+    AdamOptimizer adamOptimizerG(0.001,0.9,0.999);
+    Gnet.setOptimizer(&adamOptimizerG);
+
     if (isEmptyDir(Gnet.getDir())) {
         Gnet.build();
         Gnet.initialize();
-        Gnet.setLearningRate(0.001);
+        //Gnet.setLearningRate(0.001);
         Gnet.setLossTolerance(0.02);
         Gnet.setBatchSize(3);
 
@@ -62,10 +65,13 @@ int main(int argc, char *argv[]) {
     Gnet.printArchitecture();
 
     SegmentDNet Dnet(netDir +"/DNet");
+    AdamOptimizer adamOptimizerD(0.001,0.9,0.999);
+    Dnet.setOptimizer(&adamOptimizerD);
+
     if (isEmptyDir(Dnet.getDir())) {
         Dnet.build();
         Dnet.initialize();
-        Dnet.setLearningRate(0.001);
+        //Dnet.setLearningRate(0.001);
         Dnet.setLossTolerance(0.02);
         Dnet.setBatchSize(3);
     }

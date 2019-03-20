@@ -62,10 +62,14 @@ int main(int argc, char *argv[]){
 
     // Construct FeedForwardNet and Train, Test
     MnistConvNet net(netDir, &mnist);
+
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
     if (isEmptyDir(net.getDir())) {
         net.build();
         net.initialize();
-        net.setLearningRate(0.001);
+        //net.setLearningRate(0.001);
         net.setLossTolerance(0.02);
         net.setBatchSize(100);
     }
@@ -74,7 +78,7 @@ int main(int argc, char *argv[]){
     }
     net.printArchitecture();
     net.setUnlearningLayerID(2);
-    net.setLearningRate(learningRate);
+    //net.setLearningRate(learningRate);
 
     int epoch= 20000;
     float accuracy = 0;

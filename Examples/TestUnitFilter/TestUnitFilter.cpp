@@ -26,10 +26,13 @@ int main (int argc, char *argv[])
 #endif
 
     UnitFilterNet net("./UnitfilterNet");
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
     if (isEmptyDir(net.getDir())) {
         net.build();
         net.initialize();
-        net.setLearningRate(0.01);
+        //net.setLearningRate(0.01);
         net.setLossTolerance(0.02);
         net.setBatchSize(20);
     }

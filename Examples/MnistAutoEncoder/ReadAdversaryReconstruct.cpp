@@ -40,6 +40,9 @@ int main(int argc, char *argv[]){
 
     //Load MnistAutoEncoder Net
     MnistAutoEncoder net(netDir, nullptr);
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
     if (!isEmptyDir(net.getDir())) {
         net.load();  //at Jan  3th,2018, the trained G net has an accuracy of 97.43%
     }
@@ -48,7 +51,7 @@ int main(int argc, char *argv[]){
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(0.001);
+    //net.setLearningRate(0.001);
     net.setUnlearningLayerID(200);  // 18 is the FC2 behind the Softmax of original G net.
 
     vector<string> advFileVector;

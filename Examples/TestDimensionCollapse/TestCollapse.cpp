@@ -22,12 +22,15 @@ int main (int argc, char *argv[])
     string netDir = "/home/hxie1/temp_netParameters/CollapseNet";
 
     CollapseNet net(netDir);
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
 
     if (isEmptyDir(net.getDir())) {
         net.build();
         net.initialize();
         // config network parameters;
-        net.setLearningRate(0.001);
+        //net.setLearningRate(0.001);
         net.setLossTolerance(0.02);
         net.setBatchSize(20);
     }

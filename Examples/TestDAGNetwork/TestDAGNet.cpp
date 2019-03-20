@@ -28,12 +28,14 @@ int main (int argc, char *argv[])
 #endif
 
     DAGNet net("/home/hxie1/temp_netParameters/DAGNet");
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
 
     if (isEmptyDir(net.getDir())) {
         net.build();
         //net.buildSimple();
         net.initialize();
-        net.setLearningRate(0.01);
+        //net.setLearningRate(0.01);
         net.setLossTolerance(0.02);
         net.setBatchSize(20);
         net.setEpoch(100);

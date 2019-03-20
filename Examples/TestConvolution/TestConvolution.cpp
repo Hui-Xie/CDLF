@@ -37,11 +37,14 @@ int main (int argc, char *argv[])
 
     ConvNet net(netDir);
 
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
     net.load();
 
     //test a special network.
     //net.build();
-    net.setLearningRate(0.0001);
+    //net.setLearningRate(0.0001);
     //net.setBatchSize(20);
     //net.setEpoch(1000);
 

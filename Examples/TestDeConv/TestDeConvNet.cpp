@@ -39,6 +39,10 @@ int main(int argc, char *argv[]){
 
     //Load MnistAutoEncoder Net
     DeConvNet net(netDir);
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
+    net.setOptimizer(&adamOptimizer);
+
+
     if (!isEmptyDir(net.getDir())) {
         net.load();
     }
@@ -47,7 +51,7 @@ int main(int argc, char *argv[]){
         return -2;
     }
     net.printArchitecture();
-    net.setLearningRate(learningRate);
+    //net.setLearningRate(learningRate);
     net.setUnlearningLayerID(10);
 
     //net.setOneSampleTrain(true);
