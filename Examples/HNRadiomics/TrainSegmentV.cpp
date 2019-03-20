@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
     HNSegVNet net(netDir);
 #endif
 
-    AdamOptimizer adamOptimizer(0.01,0.9,0.999);
+    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
     net.setOptimizer(&adamOptimizer);
 
     cout<<"=========================================="<<endl;
@@ -61,14 +61,13 @@ int main(int argc, char *argv[]){
     }
     //net.defineAssemblyLoss();
     net.printArchitecture();
-    net.setLearningRate(learningRate);
+    //net.setLearningRate(learningRate);
     //net.initializeLRs(learningRate);
     net.detectSoftmaxBeforeLoss();
-
     net.allocateOptimizerMem("Adam");
 
     //for one sample training
-    net.setOneSampleTrain(true);
+    //net.setOneSampleTrain(true);
 
     HNDataManager dataMgr(dataDir);
     net.m_pDataMgr = &dataMgr;
@@ -83,6 +82,7 @@ int main(int argc, char *argv[]){
 
         net.test();
 
+        /*
         //decay learning rate
         if ( 0 == (i+1)%10){
             float R = net.getLearningRate();
@@ -92,6 +92,7 @@ int main(int argc, char *argv[]){
             }
             net.setLearningRate(newR);
         }
+        */
 
         if (net.getOneSampleTrain()) break;
 
