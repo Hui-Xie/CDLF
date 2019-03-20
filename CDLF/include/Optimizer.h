@@ -16,6 +16,7 @@ public:
     float getLearningRate();
 
     float m_lr;
+    string m_type;
 };
 
 class SGDOptimizer: public Optimizer{

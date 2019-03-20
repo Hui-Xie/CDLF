@@ -94,6 +94,7 @@ void Net::setOneSampleTrain(bool oneSample){
 
 void Net::setOptimizer(Optimizer* optimizer){
     m_optimizer = optimizer;
+    cout<<"Info: net uses "<<m_optimizer->m_type<< " optimizer."<<endl;
 }
 
 string Net::getName() {

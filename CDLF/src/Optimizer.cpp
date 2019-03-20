@@ -6,6 +6,7 @@
 
 Optimizer::Optimizer(const float lr) {
    m_lr = lr;
+   m_type = "Optimizer";
 }
 
 Optimizer::~Optimizer() {
@@ -22,7 +23,7 @@ float Optimizer::getLearningRate() {
 
 
 SGDOptimizer::SGDOptimizer(const float lr) : Optimizer(lr) {
-
+    m_type = "SGD";
 }
 
 SGDOptimizer::~SGDOptimizer() {
@@ -39,6 +40,7 @@ AdamOptimizer::AdamOptimizer(const float lr, const float beta1, const float beta
    m_beta2 = beta2;
    m_epsilon = 1e-8;
    m_t = 1;
+    m_type = "Adam";
 }
 
 AdamOptimizer::~AdamOptimizer() {
