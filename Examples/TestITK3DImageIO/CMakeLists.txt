@@ -19,7 +19,7 @@ if(ITK_FOUND)
 
     set(TestITK3DImageIOSRCS TestITK3DImageIO.cpp TestITKDataMgr.cpp ${ITKImageIODir}/ITKDataManager.cpp)
     add_executable(TestITK3DImageIO ${TestITK3DImageIOSRCS})
-    target_link_libraries(TestITK3DImageIO  ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
+    target_link_libraries(TestITK3DImageIO  ${ITK_LIBRARIES} ${CDLFLib}  )
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
 endif(ITK_FOUND)

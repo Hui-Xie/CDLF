@@ -12,4 +12,4 @@ include_directories(${MNISTDir})
 
 set(GenerateAdvMnistSRC GenerateAdvMnist.cpp ${MNISTDir}/MNIST.cpp AdverMnistNet.cpp)
 add_executable(GenerateAdvMnist ${GenerateAdvMnistSRC})
-target_link_libraries(GenerateAdvMnist ${CDLFLib} ${CUDA_LIBRARIES})
+target_link_libraries(GenerateAdvMnist ${CDLFLib}  )

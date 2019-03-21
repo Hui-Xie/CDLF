@@ -10,7 +10,7 @@ if(ITK_FOUND)
 
     set(TestITK4DImageIOSRCS TestITK4DImageIO.cpp)
     add_executable(TestITK4DImageIO ${TestITK4DImageIOSRCS})
-    target_link_libraries(TestITK4DImageIO  ${ITK_LIBRARIES} ${CDLFLib} ${CUDA_LIBRARIES})
+    target_link_libraries(TestITK4DImageIO  ${ITK_LIBRARIES} ${CDLFLib}  )
 else(ITK_FOUND )
     message("Infor: we can not find ITK.")
 endif(ITK_FOUND)

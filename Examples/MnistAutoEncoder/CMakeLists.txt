@@ -11,14 +11,14 @@ include_directories(${MNISTDir})
 
 set(TrainMnistAutoEncoderSRC TrainMnistAutoEncoder.cpp ${MNISTDir}/MNIST.cpp MnistAutoEncoder.cpp)
 add_executable(TrainMnistAutoEncoder ${TrainMnistAutoEncoderSRC})
-target_link_libraries(TrainMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES} )
+target_link_libraries(TrainMnistAutoEncoder ${CDLFLib}   )
 
 
 set(TestMnistAutoEncoderSRC TestMnistAutoEncoder.cpp ${MNISTDir}/MNIST.cpp MnistAutoEncoder.cpp)
 add_executable(TestMnistAutoEncoder ${TestMnistAutoEncoderSRC})
-target_link_libraries(TestMnistAutoEncoder ${CDLFLib} ${CUDA_LIBRARIES})
+target_link_libraries(TestMnistAutoEncoder ${CDLFLib}  )
 
 
 set(ReadAdversaryReconstructSRC ReadAdversaryReconstruct.cpp ${MNISTDir}/MNIST.cpp MnistAutoEncoder.cpp)
 add_executable(ReadAdversaryReconstruct ${ReadAdversaryReconstructSRC})
-target_link_libraries(ReadAdversaryReconstruct ${CDLFLib} ${CUDA_LIBRARIES})
+target_link_libraries(ReadAdversaryReconstruct ${CDLFLib}  )
