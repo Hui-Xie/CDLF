@@ -98,10 +98,11 @@ set(MKL_LIBRARY ${MKLROOT}/lib/intel64/libmkl_intel_lp64.so
 set(IPP_LIBRARY    ${IPPROOT}/lib/intel64/libippcore.so
                    ${IPPROOT}/lib/intel64/libippvm.so
                    ${IPPROOT}/lib/intel64/libipps.so
-                   ${IPPROOT}/lib/intel64/libippi.so )
+                   ${IPPROOT}/lib/intel64/libippi.so  )
 
 
 #set(CDLFLib libCDLF.dll)  # for windows dll
+message("3333333" ${IPP_LIBRARY})
 set(CDLFLib libCDLF.so pthread  ${IPP_LIBRARY} ${MKL_LIBRARY} ${Cudnn_LIBRARY} ${CUDA_Library})    # for Linux
 
 add_subdirectory(CDLF)

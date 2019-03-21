@@ -12,7 +12,7 @@
 #include "CPUAttr.h"
 #include <thread>
 #include <mkl.h>
-#include "ipp.h"
+#include <ipp.h>
 
 #ifdef Use_GPU
   #include <cuda_runtime.h>
@@ -97,22 +97,19 @@ void Tensor<ValueType>::freeMem() {
 template<class ValueType>
 void Tensor<ValueType>::zeroInitialize() {
     int N = getLength();
-    ippsSet_32f(0, m_data, N);
-    /*
+    #pragma omp parallel for
     for (int i = 0; i < N; ++i) {
         e(i) = 0;
     }
-    */
 }
 
 template<class ValueType>
 void Tensor<ValueType>::uniformInitialize(const ValueType x) {
     int N = getLength();
-    ippsSet_32f(x, m_data, N);
-    /*
+    #pragma omp parallel for
     for (int i = 0; i < N; ++i) {
         e(i) = x;
-    }*/
+    }
 }
 
 
