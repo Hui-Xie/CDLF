@@ -39,8 +39,8 @@ int main(int argc, char *argv[]){
 
     //Load MnistAutoEncoder Net
     DeConvNet net(netDir);
-    //AdamOptimizer optimizer(0.001,0.9,0.999);
-    SGDOptimizer optimizer(0.1);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    //SGDOptimizer optimizer(0.1);
     net.setOptimizer(&optimizer);
 
 
