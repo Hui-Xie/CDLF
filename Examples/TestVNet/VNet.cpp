@@ -41,7 +41,7 @@ void VNet::train(){
             cout<<"Inf: finished one forward and backward propragation at "<<getCurTimeStr()<<endl;
         }
         averageParaGradient(batchSize);
-        optimize("SGD");
+        optimize();
         ++i;
 
     }

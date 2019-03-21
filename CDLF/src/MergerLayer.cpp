@@ -124,7 +124,7 @@ void MergerLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void MergerLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void MergerLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

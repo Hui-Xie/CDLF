@@ -205,25 +205,25 @@ void ConvolutionBasicLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void ConvolutionBasicLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 */
 
-void ConvolutionBasicLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("SGD" == method) {
-        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
+void ConvolutionBasicLayer::updateParameters(Optimizer* pOptimizer) {
+    if ("SGD" == pOptimizer->m_type) {
+        SGDOptimizer* optimizer = (SGDOptimizer*) pOptimizer;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            sgdOptimizer->sgd(m_pdW[idxF], m_pW[idxF]);
+            optimizer->sgd(m_pdW[idxF], m_pW[idxF]);
         }
-        sgdOptimizer->sgd(m_pdB, m_pB);
+        optimizer->sgd(m_pdB, m_pB);
     }
-    else if ("Adam" == method){
-        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
+    else if ("Adam" == pOptimizer->m_type){
+        AdamOptimizer* optimizer = (AdamOptimizer*) pOptimizer;
         for (int idxF = 0; idxF < m_numFilters; ++idxF) {
-            adamOptimizer->adam(m_pWM[idxF], m_pWR[idxF], m_pdW[idxF], m_pW[idxF]);
+            optimizer->adam(m_pWM[idxF], m_pWR[idxF], m_pdW[idxF], m_pW[idxF]);
         }
-        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
+        optimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
     }
     else {
         cout<<"Error: incorrect optimizer name."<<endl;

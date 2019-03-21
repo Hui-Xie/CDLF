@@ -82,7 +82,7 @@ void BranchLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void BranchLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void BranchLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

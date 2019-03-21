@@ -58,7 +58,7 @@ void CollapseNet::train(){
             backwardPropagate(true);
         }
         averageParaGradient(batchSize);
-        optimize("SGD");
+        optimize();
         printIteration(lossLayer, i);
         ++i;
     }

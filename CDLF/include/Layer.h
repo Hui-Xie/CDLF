@@ -74,7 +74,7 @@ public:
 
     //virtual  void initializeLRs(const float lr) = 0;  // initialize all various learning rates
     //virtual  void updateLRs(const float deltaLoss) = 0;
-    virtual  void updateParameters(const string& method, Optimizer* pOptimizer) = 0;
+    virtual  void updateParameters(Optimizer* pOptimizer) = 0;
 
     virtual  int getNumParameters() = 0; // return the number of learning parameters
 

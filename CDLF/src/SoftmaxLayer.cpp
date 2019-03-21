@@ -119,7 +119,7 @@ void SoftmaxLayer::updateLRs(const float deltaLoss) {
 
 }
 */
-void SoftmaxLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void SoftmaxLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

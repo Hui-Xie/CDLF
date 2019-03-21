@@ -49,8 +49,8 @@ int main(int argc, char *argv[]){
 
     //Load Mnist Net
     AdverMnistNet net(netDir);
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
     if (!isEmptyDir(net.getDir())) {
         net.load();
@@ -62,6 +62,7 @@ int main(int argc, char *argv[]){
     net.printArchitecture();
     //net.setLearningRate(10000);
     net.setLambda(0.000001);// lambda* lr ==1 means erase changes differing with origin Tensor.
+    net.allocateOptimizerMem(optimizer.m_type);
 
     //create Adversarial data directory
     //advDataDir +="/"+ getCurTimeStr();  //todo: debug stage, No need it now.

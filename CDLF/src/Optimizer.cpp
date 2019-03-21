@@ -40,7 +40,7 @@ AdamOptimizer::AdamOptimizer(const float lr, const float beta1, const float beta
    m_beta2 = beta2;
    m_epsilon = 1e-8;
    m_t = 1;
-    m_type = "Adam";
+   m_type = "Adam";
 }
 
 AdamOptimizer::~AdamOptimizer() {

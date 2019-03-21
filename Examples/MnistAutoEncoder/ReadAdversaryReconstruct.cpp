@@ -40,8 +40,8 @@ int main(int argc, char *argv[]){
 
     //Load MnistAutoEncoder Net
     MnistAutoEncoder net(netDir, nullptr);
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
     if (!isEmptyDir(net.getDir())) {
         net.load();  //at Jan  3th,2018, the trained G net has an accuracy of 97.43%

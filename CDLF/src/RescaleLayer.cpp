@@ -107,7 +107,7 @@ void RescaleLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void RescaleLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void RescaleLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

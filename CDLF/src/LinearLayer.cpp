@@ -81,16 +81,16 @@ void LinearLayer::backward(bool computeW, bool computeX){
     }
 }
 
-void LinearLayer::updateParameters( const string& method, Optimizer* pOptimizer){
-    if ("SGD" == method){
-        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
-        sgdOptimizer->sgd(m_pdB, m_pB);
-        sgdOptimizer->sgd(m_pdK, m_pK);
+void LinearLayer::updateParameters(Optimizer* pOptimizer){
+    if ("SGD" == pOptimizer->m_type){
+        SGDOptimizer* optimizer = (SGDOptimizer*) pOptimizer;
+        optimizer->sgd(m_pdB, m_pB);
+        optimizer->sgd(m_pdK, m_pK);
     }
-    else if ("Adam" == method){
-        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
-        adamOptimizer->adam(m_pKM, m_pKR, m_pdK, m_pK);
-        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
+    else if ("Adam" == pOptimizer->m_type){
+        AdamOptimizer* optimizer = (AdamOptimizer*) pOptimizer;
+        optimizer->adam(m_pKM, m_pKR, m_pdK, m_pK);
+        optimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
     }
     else{
         cout<<"Error: incorrect optimizer name."<<endl;

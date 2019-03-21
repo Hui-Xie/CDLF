@@ -68,15 +68,15 @@ void FeedForwardNet::backwardPropagate(bool computeW) {
     }
 }
 
-void FeedForwardNet::optimize(const string& method){
+void FeedForwardNet::optimize(){
     for (map<int, Layer *>::iterator iter = m_layers.begin(); iter != m_layers.end(); ++iter) {
         if (iter->second->m_id >= m_unlearningLayerID) {
-            iter->second->updateParameters(method,m_optimizer);
+            iter->second->updateParameters(m_optimizer);
         }
     }
-    if ("Adam" == method){
-        AdamOptimizer* adamOptimizer = (AdamOptimizer*) m_optimizer;
-        adamOptimizer->increaseIteration();
+    if ("Adam" == m_optimizer->m_type){
+        AdamOptimizer* optimizer = (AdamOptimizer*) m_optimizer;
+        optimizer->increaseIteration();
     }
 }
 

@@ -77,7 +77,7 @@ void ExponentialLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ExponentialLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void ExponentialLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

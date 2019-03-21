@@ -54,7 +54,7 @@ void ConvexNet::train() {
             ++nIter;
         }
         averageParaGradient(i);
-        optimize("SGD");
+        optimize();
         printIteration(lossLayer, nIter, true);
         ++nBatch;
     }

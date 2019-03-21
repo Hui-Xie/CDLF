@@ -94,7 +94,7 @@ void NormalizationLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void NormalizationLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void NormalizationLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

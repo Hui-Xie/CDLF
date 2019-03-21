@@ -64,7 +64,7 @@ void IdentityLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void IdentityLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void IdentityLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

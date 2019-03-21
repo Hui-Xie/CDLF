@@ -59,12 +59,13 @@ int main (int argc, char *argv[])
 
     ConvexNet net(netDir);
 
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
     net.load();
     //net.setLearningRate(0.01);
     net.printArchitecture();
+    net.allocateOptimizerMem(optimizer.m_type);
 
     net.train();
     net.test();

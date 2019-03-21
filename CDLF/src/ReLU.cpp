@@ -106,7 +106,7 @@ void ReLU::updateLRs(const float deltaLoss) {
 
 }
 
-void ReLU::updateParameters(const string& method, Optimizer* pOptimizer) {
+void ReLU::updateParameters(Optimizer* pOptimizer) {
   //null
 }
 

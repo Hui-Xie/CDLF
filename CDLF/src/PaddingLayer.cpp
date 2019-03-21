@@ -90,7 +90,7 @@ void PaddingLayer::updateLRs(const float deltaLoss) {
 
 }
 */
-void PaddingLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void PaddingLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

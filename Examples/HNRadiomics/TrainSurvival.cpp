@@ -47,8 +47,8 @@ int main(int argc, char *argv[]){
     HNSurvivalNet net(netDir);
 #endif
 
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
     cout<<"=========================================="<<endl;
     cout<<"Info: this is "<<net.getName() <<" net."<<endl;
@@ -64,6 +64,7 @@ int main(int argc, char *argv[]){
     net.printArchitecture();
     //net.setLearningRate(learningRate);
     net.setUnlearningLayerID(300);
+    net.allocateOptimizerMem(optimizer.m_type);
 
     //for one sample training
     //net.setOneSampleTrain(true);

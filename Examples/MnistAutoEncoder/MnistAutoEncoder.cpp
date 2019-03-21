@@ -45,7 +45,7 @@ void MnistAutoEncoder::train() {
             ++nIter;
         }
         averageParaGradient(i);
-        optimize("SGD");
+        optimize();
         ++nBatch;
 
         //debug

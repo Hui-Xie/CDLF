@@ -44,7 +44,7 @@ public:
     //virtual  void updateLRs(const float deltaLoss);
     virtual void allocateOptimizerMem(const string method);
     virtual void freeOptimizerMem();
-    virtual  void updateParameters(const string& method, Optimizer* pOptimizer);
+    virtual  void updateParameters(Optimizer* pOptimizer);
 
     virtual  int getNumParameters();
     virtual  void save(const string& netDir);

@@ -83,7 +83,7 @@ void MaxPoolingLayer::backward(bool computeW, bool computeX) {
     }
 }
 
-void MaxPoolingLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void MaxPoolingLayer::updateParameters(Optimizer* pOptimizer) {
     //null
 }
 

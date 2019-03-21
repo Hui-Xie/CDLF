@@ -73,7 +73,7 @@ void ReshapeLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ReshapeLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void ReshapeLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

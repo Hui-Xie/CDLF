@@ -89,7 +89,7 @@ void SubTensorLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SubTensorLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void SubTensorLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

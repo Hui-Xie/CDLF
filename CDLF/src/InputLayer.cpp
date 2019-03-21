@@ -40,7 +40,7 @@ void InputLayer::updateLRs(const float deltaLoss) {
     //null
 }
 
-void InputLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void InputLayer::updateParameters(Optimizer* pOptimizer) {
     //null
 }
 

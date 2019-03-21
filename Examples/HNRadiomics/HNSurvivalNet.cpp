@@ -80,7 +80,7 @@ void HNSurvivalNet::train() {
             ++n;
         }
         averageParaGradient(i);
-        optimize("SGD");
+        optimize();
         ++batch;
     }
     m_loss /=n;

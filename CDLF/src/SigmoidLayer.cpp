@@ -110,7 +110,7 @@ void SigmoidLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void SigmoidLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void SigmoidLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

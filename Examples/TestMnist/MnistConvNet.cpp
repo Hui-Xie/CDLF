@@ -41,7 +41,7 @@ void MnistConvNet::train(){
             ++nIter;
         }
         averageParaGradient(i);
-        optimize("SGD");
+        optimize();
         ++nBatch;
     }
 }

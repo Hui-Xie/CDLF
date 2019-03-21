@@ -202,7 +202,7 @@ void LossLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void LossLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void LossLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 

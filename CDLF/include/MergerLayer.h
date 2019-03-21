@@ -29,7 +29,7 @@ public:
 
     virtual  void initializeLRs(const float lr);
     virtual  void updateLRs(const float deltaLoss);
-    virtual  void updateParameters(const string& method, Optimizer* pOptimizer);
+    virtual  void updateParameters(Optimizer* pOptimizer);
 
     virtual void addPreviousLayer(Layer* prevLayer);
     void delPreviousLayer(Layer* prevLayer);

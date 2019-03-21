@@ -48,8 +48,8 @@ int main(int argc, char *argv[]) {
     Seg3DDataManager dataMgr(dataSetDir);
 
     SegmentGNet Gnet(netDir+"/GNet");
-    AdamOptimizer adamOptimizerG(0.001,0.9,0.999);
-    Gnet.setOptimizer(&adamOptimizerG);
+    AdamOptimizer optimizerG(0.001,0.9,0.999);
+    Gnet.setOptimizer(&optimizerG);
 
     if (isEmptyDir(Gnet.getDir())) {
         Gnet.build();
@@ -63,10 +63,11 @@ int main(int argc, char *argv[]) {
     }
     Gnet.setUnlearningLayerID(30);
     Gnet.printArchitecture();
+    Gnet.allocateOptimizerMem(optimizerG.m_type);
 
     SegmentDNet Dnet(netDir +"/DNet");
-    AdamOptimizer adamOptimizerD(0.001,0.9,0.999);
-    Dnet.setOptimizer(&adamOptimizerD);
+    AdamOptimizer optimizerD(0.001,0.9,0.999);
+    Dnet.setOptimizer(&optimizerD);
 
     if (isEmptyDir(Dnet.getDir())) {
         Dnet.build();
@@ -80,6 +81,7 @@ int main(int argc, char *argv[]) {
     }
     Dnet.setUnlearningLayerID(9);
     Dnet.printArchitecture();
+    Dnet.allocateOptimizerMem(optimizerD.m_type);
 
 
     StubNetForD stubNet(netDir+"/StubNet");

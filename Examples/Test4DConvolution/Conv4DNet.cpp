@@ -34,7 +34,7 @@ void Conv4DNet::train(){
             backwardPropagate(true);
         }
         averageParaGradient(batchSize);
-        optimize("SGD");
+        optimize();
         printIteration(lossLayer, i);
         ++i;
     }

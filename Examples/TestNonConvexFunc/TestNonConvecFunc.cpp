@@ -62,8 +62,8 @@ int main(int argc, char *argv[]) {
 #endif
 
     NonconvexNet net("./NonConvextNet", layerWidthVector);
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
 
     if (isEmptyDir(net.getDir())) {
@@ -76,6 +76,7 @@ int main(int argc, char *argv[]) {
     } else {
         net.load();
     }
+    net.allocateOptimizerMem(optimizer.m_type);
 
 
     net.train();

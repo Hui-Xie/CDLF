@@ -18,8 +18,8 @@ int main (int argc, char *argv[])
 
 
     VNet net("/home/hxie1/temp_netParameters/VNet");
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
     if (isEmptyDir(net.getDir())) {
         net.build();
@@ -33,6 +33,7 @@ int main (int argc, char *argv[])
     }
     net.setUnlearningLayerID(10);
     net.printArchitecture();
+    net.allocateOptimizerMem(optimizer.m_type);
 
     //  run network
     net.train();

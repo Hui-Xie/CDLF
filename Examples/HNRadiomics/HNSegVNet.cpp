@@ -187,7 +187,7 @@ void HNSegVNet::train() {
         m_lastBatchLoss = m_batchLoss;
 
         */
-        optimize("Adam");
+        optimize();
 
         // for global learning rate
         //sgd(learningRate, i)

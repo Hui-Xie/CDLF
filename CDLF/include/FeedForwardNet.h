@@ -15,7 +15,7 @@ public:
 
     void forwardPropagate();
     void backwardPropagate(bool computeW);
-    void optimize(const string& method);
+    void optimize();
 
     void allocateOptimizerMem(const string method);
     void freeOptimizerMem();

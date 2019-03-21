@@ -147,8 +147,8 @@ void FCLayer::updateLRs(const float deltaLoss) {
 */
 
 
-void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("SGD" == method) {
+void FCLayer::updateParameters(Optimizer* pOptimizer) {
+    if ("SGD" == pOptimizer->m_type) {
         /*  for parameter-wise learning rate
         Tensor<float> lrdw(m_pdW->getDims());
         int N = m_pW->getLength();
@@ -161,15 +161,15 @@ void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
         axpy(-1.0, &lrdB, m_pB);
         */
 
-        SGDOptimizer* sgdOptimizer = (SGDOptimizer*) pOptimizer;
-        sgdOptimizer->sgd(m_pdW, m_pW);
-        sgdOptimizer->sgd(m_pdB, m_pB);
+        SGDOptimizer* optimizer = (SGDOptimizer*) pOptimizer;
+        optimizer->sgd(m_pdW, m_pW);
+        optimizer->sgd(m_pdB, m_pB);
 
     }
-    else if ("Adam" == method){
-        AdamOptimizer* adamOptimizer = (AdamOptimizer*) pOptimizer;
-        adamOptimizer->adam(m_pWM, m_pWR, m_pdW, m_pW);
-        adamOptimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
+    else if ("Adam" == pOptimizer->m_type){
+        AdamOptimizer* optimizer = (AdamOptimizer*) pOptimizer;
+        optimizer->adam(m_pWM, m_pWR, m_pdW, m_pW);
+        optimizer->adam(m_pBM, m_pBR, m_pdB, m_pB);
     }
     else{
         cout<<"Error: incorrect optimizer name."<<endl;
@@ -177,8 +177,8 @@ void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
 }
 
 /*
-void FCLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
-    if ("SGD" == method) {
+void FCLayer::updateParameters(Optimizer* pOptimizer) {
+    if ("SGD" == pOptimizer->m_type) {
         //*m_pW -= (*m_pdW) * lr;
         matAdd(1.0, m_pW, -lr, m_pdW, m_pW);
         //*m_pB -= (*m_pdB) * lr;

@@ -22,8 +22,8 @@ int main (int argc, char *argv[])
     string netDir = "/home/hxie1/temp_netParameters/CollapseNet";
 
     CollapseNet net(netDir);
-    AdamOptimizer adamOptimizer(0.001,0.9,0.999);
-    net.setOptimizer(&adamOptimizer);
+    AdamOptimizer optimizer(0.001,0.9,0.999);
+    net.setOptimizer(&optimizer);
 
 
     if (isEmptyDir(net.getDir())) {
@@ -38,6 +38,7 @@ int main (int argc, char *argv[])
         net.load();
     }
     net.printArchitecture();
+    net.allocateOptimizerMem(optimizer.m_type);
 
     //  run network
     net.train();

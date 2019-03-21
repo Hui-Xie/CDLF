@@ -122,7 +122,7 @@ void ConcatenateLayer::updateLRs(const float deltaLoss) {
 
 }
 
-void ConcatenateLayer::updateParameters(const string& method, Optimizer* pOptimizer) {
+void ConcatenateLayer::updateParameters(Optimizer* pOptimizer) {
 
 }
 
