@@ -12,6 +12,11 @@
    #include <CudnnTransposedConvolution.h>
 #endif
 
+//Notes:
+// GPU version TransposedConvolution is OK
+// but CPU version TransposedConvolution has problem.
+
+
 TransposedConvolutionLayer::TransposedConvolutionLayer(const int id, const string &name, Layer *prevLayer,
                                                        const vector<int> &filterSize,
                                                        const vector<int>& stride, const int numFilters)
