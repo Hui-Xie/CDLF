@@ -65,6 +65,8 @@ public:
 protected:
     void updateFeatureFilterSize();
 
+    void randomizeW(Tensor<float>* pW);
+
     /*  for Bias cudnn test
     void beforeGPUCheckdBAnddY();
     void afterGPUCheckdB();

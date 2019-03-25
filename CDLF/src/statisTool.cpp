@@ -13,8 +13,8 @@
 // these functions can not GPU parallel.
 
 void generateGaussian(Tensor<float>* yTensor,const float mu, const float sigma ){
-    int N = yTensor->getLength();
-    unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count() + rand()%5000;
+    const int N = yTensor->getLength();
+    unsigned randSeed = std::chrono::system_clock::now().time_since_epoch().count();
     std::mt19937_64 randEngine(randSeed);
     for(int i=0; i<N; ++i){
        yTensor->e(i) =  stats::rnorm(mu,sigma,randEngine);

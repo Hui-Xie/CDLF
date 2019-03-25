@@ -173,10 +173,18 @@ void ConvolutionBasicLayer::constructFiltersAndY() {
     */
 }
 
+//use randomizeW need srand (time(NULL)) outside.
+void ConvolutionBasicLayer::randomizeW(Tensor<float>* pW){
+    float sigma2 = (rand()%m_OneFilterN+1.0)/(m_OneFilterN*m_OneFilterN); // the range of sigma2 is from 1/(N*N) to 1/N;
+    float mu = 0;
+    generateGaussian(pW, mu, sqrt(sigma2));
+}
 
 void ConvolutionBasicLayer::initialize(const string &initialMethod) {
+    srand (time(NULL));
     for (int i = 0; i < m_numFilters; ++i) {
-        generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
+        //generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
+        randomizeW(m_pW[i]);
     }
     generateGaussian(m_pB, 0, 1.0 / m_numFilters);
 }
@@ -259,16 +267,18 @@ void ConvolutionBasicLayer::load(const string &netDir) {
         return;
     }
     else {
+        srand (time(NULL));
         for (int i = 0; i < m_numFilters; ++i) {
             filename = layerDir + "/W" + to_string(i) + ".csv";
             if (! m_pW[i]->load(filename)){
-                generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
+                //generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
+                randomizeW(m_pW[i]);
             }
         }
 
         filename = layerDir + "/B.csv";
         if (! m_pB->load(filename)){
-            generateGaussian(m_pB, 0, sqrt(1.0 / m_numFilters));
+            generateGaussian(m_pB, 0, 1.0 / m_numFilters);
         }
     }
 }
