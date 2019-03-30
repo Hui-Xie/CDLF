@@ -99,7 +99,9 @@ int main(int argc, char *argv[]) {
             resampleFilter->SetOutputOrigin(origin);
             resampleFilter->SetOutputSpacing(newSpacing);
             resampleFilter->SetSize(newImageSize);
+            resampleFilter->SetOutputDirection(direction);
             resampleFilter->SetInput(image);
+
 
             // Write the result
 
