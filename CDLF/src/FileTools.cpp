@@ -89,6 +89,11 @@ void createDir(const string &dirPath) {
 
 void getFileVector(const string& dir, vector<string>& fileVector){
     DIR* pDir = opendir(dir.c_str());
+    if (nullptr == pDir){
+        printf("Error: program can not recognize path %s. Maybe you need to use absolute path.\n", dir.c_str());
+        std::exit(0);
+        return;
+    }
     struct dirent* pEntry;
     while ((pEntry = readdir(pDir)) != NULL) {
         if (pEntry->d_type == DT_REG && '.' != pEntry->d_name[0]){
