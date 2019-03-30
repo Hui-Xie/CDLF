@@ -186,7 +186,7 @@ void ConvolutionBasicLayer::initialize(const string &initialMethod) {
         //generateGaussian(m_pW[i], 0, sqrt(1.0 / m_OneFilterN));
         randomizeW(m_pW[i]);
     }
-    generateGaussian(m_pB, 0, 1.0 / m_numFilters);
+    generateGaussian(m_pB, 0, 1.0 / (m_numFilters*m_OneFilterN));
 }
 
 void ConvolutionBasicLayer::zeroParaGradient() {
@@ -278,7 +278,7 @@ void ConvolutionBasicLayer::load(const string &netDir) {
 
         filename = layerDir + "/B.csv";
         if (! m_pB->load(filename)){
-            generateGaussian(m_pB, 0, 1.0 / m_numFilters);
+            generateGaussian(m_pB, 0, 1.0 / (m_numFilters*m_OneFilterN));
         }
     }
 }
