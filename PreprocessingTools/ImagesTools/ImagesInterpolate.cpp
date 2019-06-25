@@ -113,6 +113,8 @@ int main(int argc, char *argv[]) {
                 // get z index of all labeled slices
                 vector<int> labelledZIndexVector;
                 itk::ImageSliceConstIteratorWithIndex<ImageType> sliceIt(image, region);
+                sliceIt.SetFirstDirection(0);
+                sliceIt.SetSecondDirection(1);
                 sliceIt.GoToBegin();
                 int sliceIndex = 0;
                 while( !sliceIt.IsAtEnd() )
