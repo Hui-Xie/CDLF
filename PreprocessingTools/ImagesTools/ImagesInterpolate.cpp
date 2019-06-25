@@ -136,7 +136,6 @@ int main(int argc, char *argv[]) {
                         else{
                             sliceIt.NextLine();
                         }
-
                     }
                     if (labelled){
                         labelledZIndexVector.push_back(sliceIndex)
@@ -153,16 +152,26 @@ int main(int argc, char *argv[]) {
                         zLow = (labelledZIndexVector[n-1] + labelledZIndexVector[n])/2;
                     }
                     int zHigh = std::min(sliceL + radius, int(oldImageSize[2]-1));
-                    if (n<Len-1 && zHigh >= labelledZIndexVector[n+1]){
+                    if (n<Len-1 && zHigh >= labelledZIndexVector[n+1]-radius){
                         zHigh = (labelledZIndexVector[n] + labelledZIndexVector[n+1])/2;
                     }
 
-                    for (int j= zLow - radius; j<=zHigh;  ++j ){
-
-                    }
+                    for(int x=0; x < oldImageSize[0]; ++x)
+                        for (int y =0; y<oldImageSize[1];++y){
+                            const ImageType::IndexType labelIndex = {{x,y,sliceL}};    // Position of {X,Y,Z}
+                            PixelType value = image->GetPixel(labelIndex);
+                            for (int z= zLow; z<=zHigh;  ++z ){
+                                if (z == sliceL){
+                                    continue;
+                                }
+                                else{
+                                    const ImageType::IndexType disperseIndex = {{x,y,z}};
+                                    image->SetPixel(disperseIndex, value);
+                                }
+                            }
+                        }
                 }
             }
-
 
             typedef itk::IdentityTransform<double, Dimension> Transform;
             Transform::Pointer transform = Transform::New();
