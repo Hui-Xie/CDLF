@@ -138,7 +138,7 @@ int main(int argc, char *argv[]) {
                         }
                     }
                     if (labelled){
-                        labelledZIndexVector.push_back(sliceIndex)
+                        labelledZIndexVector.push_back(sliceIndex);
                     }
                     ++sliceIndex;
                     sliceIt.NextSlice();
